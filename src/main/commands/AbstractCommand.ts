@@ -7,20 +7,20 @@ export abstract class AbstractCommand {
     constructor() {}
 
     abstract emit(...args: Array<string>): void
-    
+
     public getName(): string {
-        return this.name;
+        return this.name
     }
 
     public getDescription(): string {
-        return this.description;
+        return this.description
     }
 
     public getCategory(): string {
-        return this.category;
+        return this.category
     }
 
     public getUsage(): string {
-        return this.usage;
+        return this.usage
     }
 }

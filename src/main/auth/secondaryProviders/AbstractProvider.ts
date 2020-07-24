@@ -1,4 +1,3 @@
-
 export abstract class AbstractSecondProvider {
     private type: string
     abstract config: any
@@ -10,10 +9,10 @@ export abstract class AbstractSecondProvider {
     abstract emit(login: string, password: string, ip: string): string | boolean
 
     public getType(): string {
-        return this.type;
+        return this.type
     }
 }
 
 export class SecondProviderConfig {
     type: string
-} 
+}

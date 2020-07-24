@@ -1,4 +1,4 @@
-import { LauncherServer } from "../LauncherServer";
+import { LauncherServer } from "../LauncherServer"
 
 export class AuthManager {
     ls: LauncherServer
@@ -7,19 +7,11 @@ export class AuthManager {
         this.ls = ls
     }
 
-    registerProviders(): void {
-        
-    }
+    registerProviders(): void {}
 
-    registerHandlers(): void {
+    registerHandlers(): void {}
 
-    }
+    registerTextureProviders(): void {}
 
-    registerTextureProviders(): void {
-        
-    }
-
-    registerHwidHandlers(): void {
-        
-    }
+    registerHwidHandlers(): void {}
 }

@@ -1,4 +1,4 @@
-import { AbstractProvider } from "./AbstractProvider";
+import { AbstractProvider } from "./AbstractProvider"
 
 export class AcceptAuthProvider extends AbstractProvider {
     config: any
@@ -12,6 +12,4 @@ export class AcceptAuthProvider extends AbstractProvider {
     }
 }
 
-export class Config {
-
-}
+export class Config {}

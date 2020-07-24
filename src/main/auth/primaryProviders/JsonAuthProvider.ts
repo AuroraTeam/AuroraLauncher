@@ -1,6 +1,6 @@
-import { AbstractProvider } from "./AbstractProvider";
-import axios, { AxiosInstance, AxiosResponse, Method } from 'axios';
-import { METHODS } from "http";
+import { AbstractProvider } from "./AbstractProvider"
+import axios, { AxiosInstance, AxiosResponse, Method } from "axios"
+import { METHODS } from "http"
 
 export class JsonAuthProvider extends AbstractProvider {
     config: Config
@@ -14,10 +14,10 @@ export class JsonAuthProvider extends AbstractProvider {
         const response = axios.create({
             url: this.config.url,
             method: "POST",
-            responseType: 'json',
+            responseType: "json",
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         })
         return false
     }

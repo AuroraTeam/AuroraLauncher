@@ -6,7 +6,7 @@ export class StorageHelper {
     static updatesDir: string = path.resolve(StorageHelper.storageDir, "updates")
     static profilesDir: string = path.resolve(StorageHelper.storageDir, "profiles")
     static modulesDir: string = path.resolve(StorageHelper.storageDir, "modules")
-    static configFile: string = path.resolve(StorageHelper.storageDir, "LauncherServerConfig.js")
+    static configFile: string = path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json")
 
     static createMissing(): void {
         if (!fs.existsSync(this.storageDir)) fs.mkdirSync(this.storageDir)

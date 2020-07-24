@@ -1,26 +1,26 @@
-require("source-map-support").install();
-// import { LauncherSocket } from './requests/websocket';
-import { LauncherServerConfig, ConfigManager } from "./LauncherServerConfig";
-import { StorageHelper } from "./helpers/StorageHelper";
-import { AuthManager } from "./auth/AuthManager";
-import { CommandsManager } from "./commands/CommandsManager";
-import { createWebSocketStream } from "ws";
+require("source-map-support").install()
+import { ConfigManager } from "./LauncherServerConfig"
+import { StorageHelper } from "./helpers/StorageHelper"
+import { AuthManager } from "./auth/AuthManager"
+import { CommandsManager } from "./commands/CommandsManager"
+import { MirrorManager } from "./mirror/MirrorManager"
 
 export class LauncherServer {
-  config: ConfigManager;
-  // websocket: LauncherSocket
-  AuthManager: AuthManager;
-  CommandsManager: CommandsManager;
+    config: ConfigManager
+    AuthManager: AuthManager
+    CommandsManager: CommandsManager
+    MirrorManager: MirrorManager
 
-  constructor() {
-    StorageHelper.createMissing();
-    this.config = new ConfigManager();
-    this.AuthManager = new AuthManager(this);
-    this.CommandsManager = new CommandsManager(this);
-  }
+    constructor() {
+        StorageHelper.createMissing()
+        this.config = new ConfigManager()
+        this.AuthManager = new AuthManager(this)
+        this.CommandsManager = new CommandsManager(this)
+        this.MirrorManager = new MirrorManager(this)
+    }
 
-  main(): void {}
+    main(): void {}
 }
 
-const ls = new LauncherServer();
-ls.main();
+const ls = new LauncherServer()
+ls.main()

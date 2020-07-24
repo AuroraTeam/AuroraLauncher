@@ -1,6 +1,6 @@
-import { LauncherServer } from "../LauncherServer"
+import { LauncherServer } from "./../LauncherServer"
 
-export class CommandsManager {
+export class MirrorManager {
     ls: LauncherServer
 
     constructor(ls: LauncherServer) {

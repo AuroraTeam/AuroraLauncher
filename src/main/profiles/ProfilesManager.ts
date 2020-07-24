@@ -1,4 +1,4 @@
-import { LauncherServer } from '../LauncherServer';
+import { LauncherServer } from "../LauncherServer"
 
 export class ProfilesManager {
     ls: LauncherServer

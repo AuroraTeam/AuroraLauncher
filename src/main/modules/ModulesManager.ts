@@ -1,4 +1,4 @@
-import { LauncherServer } from '../LauncherServer';
+import { LauncherServer } from "../LauncherServer"
 
 export class ModulesManager extends NodeJS.EventEmitter {
     ls: LauncherServer
@@ -9,7 +9,5 @@ export class ModulesManager extends NodeJS.EventEmitter {
         this.loadModules()
     }
 
-    private loadModules(): void {
-
-    }
+    private loadModules(): void {}
 }
