@@ -50,7 +50,15 @@ export class ConfigManager {
     }
   }
 
-  getProperty(property: string): any {}
+  getProperty(property: string): any {
+    const path = property.split('.');
+    let prop: any = this.config;
+    path.forEach((el) => {
+      if (prop === undefined) throw new Error('getProperty error');
+      prop = prop[el];
+    })
+    return prop;
+  }
 
   getDefaults(): LauncherServerConfig {
     const config = new LauncherServerConfig();
