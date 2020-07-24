@@ -7,8 +7,6 @@ import fs = require("fs");
 import path = require("path");
 import { StorageHelper } from "./helpers/StorageHelper";
 
-
-
 class WebSocketConfig {
   address: string;
   ip: string;
@@ -44,7 +42,11 @@ export class ConfigManager {
   private config: LauncherServerConfig;
 
   constructor() {
-    if (fs.existsSync(path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json"))) {
+    if (
+      fs.existsSync(
+        path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json")
+      )
+    ) {
       this.load();
     } else {
       this.config = this.getDefaults();
@@ -55,26 +57,24 @@ export class ConfigManager {
   getProperty(property: string): any {}
 
   getDefaults(): LauncherServerConfig {
-    const config = new LauncherServerConfig;
+    const config = new LauncherServerConfig();
     config.configVersion = "1";
     config.env = Envirovement.DEV;
-    config.updatesUrl = [
-      'https://mirror.aurora-launcher.ru/'
-    ];
-    config.auth = new AuthConfig;
-    config.auth.primaryProvider = new PrimaryProviderConfig;
-    config.auth.primaryProvider.type = 'none';
-    config.auth.secondProvider = new SecondProviderConfig;
-    config.auth.secondProvider.type = 'none';
-    config.auth.authHandler = new AuthHandlerConfig;
-    config.auth.authHandler.type = 'none';
-    config.auth.textureProvider = new TextureProviderConfig;
-    config.auth.textureProvider.type = 'none';
-    config.hwid = new HwidHandlerConfig;
-    config.hwid.type = 'none';
-    config.ws = new WebSocketConfig;
-    config.ws.address = 'ws://localhost:1370/';
-    config.ws.ip = '0.0.0.0';
+    config.updatesUrl = ["https://mirror.aurora-launcher.ru/"];
+    config.auth = new AuthConfig();
+    config.auth.primaryProvider = new PrimaryProviderConfig();
+    config.auth.primaryProvider.type = "none";
+    config.auth.secondProvider = new SecondProviderConfig();
+    config.auth.secondProvider.type = "none";
+    config.auth.authHandler = new AuthHandlerConfig();
+    config.auth.authHandler.type = "none";
+    config.auth.textureProvider = new TextureProviderConfig();
+    config.auth.textureProvider.type = "none";
+    config.hwid = new HwidHandlerConfig();
+    config.hwid.type = "none";
+    config.ws = new WebSocketConfig();
+    config.ws.address = "ws://localhost:1370/";
+    config.ws.ip = "0.0.0.0";
     config.ws.port = 1370;
     return config;
   }
@@ -87,9 +87,9 @@ export class ConfigManager {
       this.config = JSON.parse(config.toString());
     } catch (e) {
       if (e instanceof SyntaxError) {
-        console.error()
+        console.error();
       }
-      console.error(e)
+      console.error(e);
     }
   }
 
