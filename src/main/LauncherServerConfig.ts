@@ -6,7 +6,6 @@ import { HwidHandlerConfig } from "./hwid/AbstractHwidHandler";
 import fs = require("fs");
 import path = require("path");
 import { StorageHelper } from "./helpers/StorageHelper";
-import colors = require("colors/safe")
 
 
 
@@ -33,19 +32,19 @@ export class LauncherServerConfig {
 
   env: Envirovement;
 
+  updatesUrl: Array<string>;
+
   auth: AuthConfig;
   hwid: HwidHandlerConfig;
 
   ws: WebSocketConfig;
-
-  updatesUrl: string;
 }
 
 export class ConfigManager {
   private config: LauncherServerConfig;
 
   constructor() {
-    if (fs.existsSync(path.resolve(StorageHelper.storageDir, "Server.json"))) {
+    if (fs.existsSync(path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json"))) {
       this.load();
     } else {
       this.config = this.getDefaults();
@@ -56,12 +55,33 @@ export class ConfigManager {
   getProperty(property: string): any {}
 
   getDefaults(): LauncherServerConfig {
-    return this.config;
+    const config = new LauncherServerConfig;
+    config.configVersion = "1";
+    config.env = Envirovement.DEV;
+    config.updatesUrl = [
+      'https://mirror.aurora-launcher.ru/'
+    ];
+    config.auth = new AuthConfig;
+    config.auth.primaryProvider = new PrimaryProviderConfig;
+    config.auth.primaryProvider.type = 'none';
+    config.auth.secondProvider = new SecondProviderConfig;
+    config.auth.secondProvider.type = 'none';
+    config.auth.authHandler = new AuthHandlerConfig;
+    config.auth.authHandler.type = 'none';
+    config.auth.textureProvider = new TextureProviderConfig;
+    config.auth.textureProvider.type = 'none';
+    config.hwid = new HwidHandlerConfig;
+    config.hwid.type = 'none';
+    config.ws = new WebSocketConfig;
+    config.ws.address = 'ws://localhost:1370/';
+    config.ws.ip = '0.0.0.0';
+    config.ws.port = 1370;
+    return config;
   }
 
   load(): void {
     const config = fs.readFileSync(
-      path.resolve(StorageHelper.storageDir, "Server.json")
+      path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json")
     );
     try {
       this.config = JSON.parse(config.toString());
@@ -75,7 +95,7 @@ export class ConfigManager {
 
   save(): void {
     fs.writeFileSync(
-      path.resolve(StorageHelper.storageDir, "Server.json"),
+      path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json"),
       JSON.stringify(this.config, null, 4)
     );
   }
