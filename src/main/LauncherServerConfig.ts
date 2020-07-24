@@ -42,11 +42,7 @@ export class ConfigManager {
   private config: LauncherServerConfig;
 
   constructor() {
-    if (
-      fs.existsSync(
-        path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json")
-      )
-    ) {
+    if (fs.existsSync(StorageHelper.configFile)) {
       this.load();
     } else {
       this.config = this.getDefaults();
@@ -80,9 +76,7 @@ export class ConfigManager {
   }
 
   load(): void {
-    const config = fs.readFileSync(
-      path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json")
-    );
+    const config = fs.readFileSync(StorageHelper.configFile);
     try {
       this.config = JSON.parse(config.toString());
     } catch (e) {
@@ -94,9 +88,6 @@ export class ConfigManager {
   }
 
   save(): void {
-    fs.writeFileSync(
-      path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json"),
-      JSON.stringify(this.config, null, 4)
-    );
+    fs.writeFileSync(StorageHelper.configFile, JSON.stringify(this.config, null, 4));
   }
 }
