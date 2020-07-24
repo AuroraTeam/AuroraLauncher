@@ -9,9 +9,9 @@ export class StorageHelper {
     static configFile: string = path.resolve(StorageHelper.storageDir, "Server.js")
 
     static createMissing(): void {
-        if (!fs.existsSync(StorageHelper.storageDir)) fs.mkdirSync(StorageHelper.storageDir)
-        if (!fs.existsSync(StorageHelper.updatesDir)) fs.mkdirSync(StorageHelper.updatesDir)
-        if (!fs.existsSync(StorageHelper.profilesDir)) fs.mkdirSync(StorageHelper.profilesDir)
-        if (!fs.existsSync(StorageHelper.modulesDir)) fs.mkdirSync(StorageHelper.modulesDir)
+        if (!fs.existsSync(this.storageDir)) fs.mkdirSync(this.storageDir)
+        if (!fs.existsSync(this.updatesDir)) fs.mkdirSync(this.updatesDir)
+        if (!fs.existsSync(this.profilesDir)) fs.mkdirSync(this.profilesDir)
+        if (!fs.existsSync(this.modulesDir)) fs.mkdirSync(this.modulesDir)
     }
 }
