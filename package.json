@@ -1,0 +1,24 @@
+{
+    "name": "Server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "LauncherServer.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/LauncherServer.js",
+        "dev": "npm run build && npm run start"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^12.12.21",
+        "@types/ws": "^7.2.6",
+        "source-map-support": "^0.5.19",
+        "typescript": "^3.9.6"
+    },
+    "dependencies": {
+        "axios": "^0.19.2",
+        "colors": "^1.4.0"
+    }
+}
