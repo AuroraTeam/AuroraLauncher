@@ -29,10 +29,11 @@ export class CommandsManager {
 
         // test
         this.console.on('line', line => {
-            let cmd = line.trim()
-            console.log(`Received: ${line}`)
+            const args = line.trim().split(/ +/)
+            const cmd = args.shift()
+            console.log(`Received command: ${cmd}, args: ${args}`)
             if (!this.commands.has(cmd)) return console.error(`Command \`${cmd}\` not found!`)
-            this.commands.get(cmd).emit()
+            this.commands.get(cmd).emit(...args)
         })
     }
 }
