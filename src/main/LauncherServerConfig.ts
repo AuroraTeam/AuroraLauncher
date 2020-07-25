@@ -53,8 +53,8 @@ export class ConfigManager {
         const path = property.split(".");
         let prop: any = this.config;
         path.forEach((el) => {
-            if (prop === undefined) throw new Error("getProperty error");
             prop = prop[el];
+            if (prop === undefined) throw new Error("getProperty error");
         });
         return prop;
     }
@@ -95,9 +95,6 @@ export class ConfigManager {
     }
 
     save(): void {
-        fs.writeFileSync(
-            StorageHelper.configFile,
-            JSON.stringify(this.config, null, 4)
-        );
+        fs.writeFileSync(StorageHelper.configFile, JSON.stringify(this.config, null, 4));
     }
 }
