@@ -4,27 +4,31 @@ export class LogHelper {
     }
 
     static debug(msg: any) {
-        this.log(LogLevel.DEV, msg)
+        this.log(LogLevel.DEBUG, msg)
     }
 
     static info(msg: any) {
-        this.log(LogLevel.DEV, msg)
+        this.log(LogLevel.INFO, msg)
     }
 
     static warn(msg: any) {
-        this.log(LogLevel.DEV, msg)
+        this.log(LogLevel.WARN, msg)
     }
 
     static error(msg: any) {
-        this.log(LogLevel.DEV, msg)
+        this.log(LogLevel.ERROR, msg)
     }
 
-    static raw(msg: any) {}
+    static fatal(msg: any) {
+        this.log(LogLevel.FATAL, msg)
+    }
+
+    static raw(msg: any) {
+        this.log(LogLevel.RAW, msg)
+    }
 
     private static log(level: LogLevel, msg: any) {
-        switch (level) {
-            case "dev":
-        }
+
     }
 }
 
@@ -34,4 +38,6 @@ enum LogLevel {
     INFO = "info",
     WARN = "warn",
     ERROR = "error",
+    FATAL = "fatal",
+    RAW = "raw"
 }
