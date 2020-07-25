@@ -2,6 +2,8 @@ import { LauncherServer } from "../LauncherServer"
 import * as ReadLine from "readline"
 import { AbstractCommand } from "./AbstractCommand"
 import { StopCommand } from "./StopCommand"
+import { VersionCommand } from "./VersionCommands"
+import { HelpCommand } from "./HelpCommand"
 
 export class CommandsManager {
     ls: LauncherServer
@@ -16,6 +18,8 @@ export class CommandsManager {
 
     private commandsInit(): void {
         this.registerCommand(new StopCommand(this.ls))
+        this.registerCommand(new VersionCommand(this.ls))
+        this.registerCommand(new HelpCommand(this.ls))
     }
 
     registerCommand(x: AbstractCommand): void {

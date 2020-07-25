@@ -1,5 +1,5 @@
 {
-    "name": "aurora-launchserver",
+    "name": "aurora-launcherserver",
     "version": "0.0.1",
     "description": "",
     "main": "LauncherServer.js",

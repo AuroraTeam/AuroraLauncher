@@ -21,7 +21,7 @@ export abstract class AbstractCommand {
         return this.description
     }
 
-    public getCategory(): string {
+    public getCategory(): Category {
         return this.category
     }
 
