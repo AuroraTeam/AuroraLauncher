@@ -1,12 +1,17 @@
+import { LauncherServer } from "./../LauncherServer"
+
 export abstract class AbstractCommand {
+    ls: LauncherServer
     abstract name: string
     abstract description: string
-    abstract category: string
+    abstract category: Category
     abstract usage: string
 
-    constructor() {}
+    constructor(ls: LauncherServer) {
+        this.ls = ls
+    }
 
-    abstract emit(...args: Array<string>): void
+    abstract execute(...args: Array<string>): void
 
     public getName(): string {
         return this.name
@@ -23,4 +28,11 @@ export abstract class AbstractCommand {
     public getUsage(): string {
         return this.usage
     }
+}
+
+export enum Category {
+    AUTH = "auth",
+    BASIC = "basic",
+    UPDATES = "updates",
+    COMMON = "common",
 }

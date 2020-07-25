@@ -1,12 +1,12 @@
-import { AbstractCommand } from "./AbstractCommand"
+import { AbstractCommand, Category } from "./AbstractCommand"
 
 export class StopCommand extends AbstractCommand {
-    name: string
-    description: string
-    category: string
+    name: string = "stop"
+    description: string = "Тормоз этой хуеты"
+    category: Category = Category.BASIC
     usage: string
 
-    emit(): void {
+    execute(): void {
         process.exit(0)
     }
 }

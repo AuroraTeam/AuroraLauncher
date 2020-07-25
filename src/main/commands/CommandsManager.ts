@@ -5,8 +5,8 @@ import { StopCommand } from "./StopCommand"
 
 export class CommandsManager {
     ls: LauncherServer
-    console: ReadLine.Interface
-    commands: Map<string, AbstractCommand>
+    console: ReadLine.Interface = ReadLine.createInterface(process.stdin)
+    commands: Map<string, AbstractCommand> = new Map()
 
     constructor(ls: LauncherServer) {
         this.ls = ls
@@ -15,25 +15,19 @@ export class CommandsManager {
     }
 
     private commandsInit(): void {
-        this.commands = new Map()
-        this.commands.set('stop', new StopCommand)
-        //this.commands.set('example2', new ExampleCommand2);
-        //this.commands.set('example3', new ExampleCommand3);
+        this.registerCommand(new StopCommand(this.ls))
+    }
+
+    registerCommand(x: AbstractCommand): void {
+        this.commands.set(x.getName(), x)
     }
 
     private consoleInit(): void {
-        this.console = ReadLine.createInterface({
-            input: process.stdin,
-            output: process.stdout
-        })
-
-        // test
-        this.console.on('line', line => {
+        this.console.on("line", (line) => {
             const args = line.trim().split(/ +/)
             const cmd = args.shift()
-            console.log(`Received command: ${cmd}, args: ${args}`)
             if (!this.commands.has(cmd)) return console.error(`Command \`${cmd}\` not found!`)
-            this.commands.get(cmd).emit(...args)
+            this.commands.get(cmd).execute(...args)
         })
     }
 }
