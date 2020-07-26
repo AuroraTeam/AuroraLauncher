@@ -1,5 +1,6 @@
 import { AbstractCommand, Category } from "./AbstractCommand"
 import * as colors from "colors/safe"
+import { LogHelper } from "../helpers/LogHelper"
 
 export class HelpCommand extends AbstractCommand {
     name: string = "help"
@@ -17,9 +18,9 @@ export class HelpCommand extends AbstractCommand {
         })
 
         commandsList.forEach((category, category_name) => {
-            console.log(`=== ${category_name} ===`)
+            LogHelper.info(`=== [ ${category_name.toUpperCase()} ] ===`)
             category.forEach((command) => {
-                console.log(
+                LogHelper.info(
                     colors.bold(command.name) +
                     ` – ${command.description}`
                 )

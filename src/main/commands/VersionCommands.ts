@@ -1,4 +1,5 @@
 import { AbstractCommand, Category } from "./AbstractCommand"
+import { LogHelper } from "../helpers/LogHelper"
 import * as colors from "colors/safe"
 
 export class VersionCommand extends AbstractCommand {
@@ -8,7 +9,7 @@ export class VersionCommand extends AbstractCommand {
     usage: string
 
     execute(): void {
-        console.log(
+        LogHelper.raw(
             colors.bold(
                 colors.cyan("AuroraLauncher ") +
                 colors.green("LauncherServer ") +
