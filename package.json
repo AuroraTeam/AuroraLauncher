@@ -1,26 +1,35 @@
 {
-    "name": "aurora-launcherserver",
-    "version": "0.0.1",
-    "description": "",
+    "name": "auroralauncher-launcherserver",
+    "version": "0.0.1-dev",
+    "license": "GPLv3",
+    "description": "LauncherServer for AuroraLauncher",
+    "keywords": [
+        "minecraft",
+        "launcher",
+        "forge"
+    ],
+    "homepage": "https://aurora-launcher.ru",
+    "bugs": {
+        "url": "https://gitlab.com/aurorateam/launcherserver/issues"
+    },
+    "author": "",
+    "contributors": [],
+    "repository": "gitlab:aurorateam/launcherserver",
     "main": "LauncherServer.js",
     "scripts": {
+        "clean": "rimraf dist",
         "build": "tsc",
-        "pre-build": "node pre-build.js",
         "start": "node dist/LauncherServer.js",
-        "dev": "npm run pre-build && npm run build && npm run start"
+        "dev": "npm run clean && npm run build && npm run start"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
     "devDependencies": {
         "@types/node": "^12.12.21",
         "@types/ws": "^7.2.6",
+        "axios": "^0.19.2",
+        "colors": "^1.4.0",
         "rimraf": "^3.0.2",
+        "semver": "^7.3.2",
         "source-map-support": "^0.5.19",
         "typescript": "^3.9.6"
-    },
-    "dependencies": {
-        "axios": "^0.19.2",
-        "colors": "^1.4.0"
     }
 }
