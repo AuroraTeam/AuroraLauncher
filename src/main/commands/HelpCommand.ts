@@ -8,12 +8,12 @@ export class HelpCommand extends AbstractCommand {
     category: Category = Category.BASIC
     usage: string
 
-    execute(): void {
-        let commandsList: Map<Category, Array<AbstractCommand>> = new Map;
+    invoke(): void {
+        let commandsList: Map<Category, Array<AbstractCommand>> = new Map()
         this.ls.CommandsManager.commands.forEach((value) => {
-            let arr: Array<AbstractCommand> =
-                commandsList.has(value.getCategory()) ? 
-                commandsList.get(value.getCategory()) : []
+            let arr: Array<AbstractCommand> = commandsList.has(value.getCategory())
+                ? commandsList.get(value.getCategory())
+                : []
             arr.push(value)
             commandsList.set(value.getCategory(), arr)
         })
@@ -21,12 +21,8 @@ export class HelpCommand extends AbstractCommand {
         commandsList.forEach((category, category_name) => {
             LogHelper.info(`=== [ ${category_name.toUpperCase()} ] ===`)
             category.forEach((command) => {
-                LogHelper.info(
-                    colors.bold(command.name) +
-                    ` – ${command.description}`
-                )
+                LogHelper.info(colors.bold(command.name) + ` – ${command.description}`)
             })
         })
-
     }
 }

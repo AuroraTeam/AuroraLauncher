@@ -7,7 +7,7 @@ import { HelpCommand } from "./HelpCommand"
 
 export class CommandsManager {
     ls: LauncherServer
-    console: ReadLine.Interface = ReadLine.createInterface(process.stdin)
+    readonly console: ReadLine.Interface = ReadLine.createInterface(process.stdin)
     commands: Map<string, AbstractCommand> = new Map()
 
     constructor(ls: LauncherServer) {
@@ -31,7 +31,7 @@ export class CommandsManager {
             const args = line.trim().split(/ +/)
             const cmd = args.shift()
             if (!this.commands.has(cmd)) return console.error(`Command \`${cmd}\` not found!`)
-            this.commands.get(cmd).execute(...args)
+            this.commands.get(cmd).invoke(...args)
         })
     }
 }

@@ -6,7 +6,7 @@ export class StopCommand extends AbstractCommand {
     category: Category = Category.BASIC
     usage: string
 
-    execute(): void {
+    invoke(): void {
         process.exit(0)
     }
 }

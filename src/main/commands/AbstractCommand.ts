@@ -11,7 +11,7 @@ export abstract class AbstractCommand {
         this.ls = ls
     }
 
-    abstract execute(...args: Array<string>): void
+    abstract invoke(...args: Array<string>): void
 
     public getName(): string {
         return this.name
