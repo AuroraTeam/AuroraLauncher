@@ -1,74 +1,80 @@
 import * as colors from "colors/safe"
 
 export class LogHelper {
-    static dev(msg: any) {
-        this.log(LogLevel.DEV, msg)
+    static debug(msg: any, ...args: any) {
+        this.log(LogLevel.DEBUG, msg, ...args)
     }
 
-    static debug(msg: any) {
-        this.log(LogLevel.DEBUG, msg)
+    static dev(msg: any, ...args: any) {
+        this.log(LogLevel.DEV, msg, ...args)
     }
 
-    static info(msg: any) {
-        this.log(LogLevel.INFO, msg)
+    static error(msg: any, ...args: any) {
+        this.log(LogLevel.ERROR, msg, ...args)
     }
 
-    static warn(msg: any) {
-        this.log(LogLevel.WARN, msg)
+    static fatal(msg: any, ...args: any) {
+        this.log(LogLevel.FATAL, msg, ...args)
+        process.exit(1)
     }
 
-    static error(msg: any) {
-        this.log(LogLevel.ERROR, msg)
+    static info(msg: any, ...args: any) {
+        this.log(LogLevel.INFO, msg, ...args)
     }
 
-    static fatal(msg: any) {
-        this.log(LogLevel.FATAL, msg)
+    static raw(msg: any, ...args: any) {
+        this.log(LogLevel.RAW, msg, ...args)
     }
 
-    static raw(msg: any) {
-        this.log(LogLevel.RAW, msg)
+    static warn(msg: any, ...args: any) {
+        this.log(LogLevel.WARN, msg, ...args)
     }
 
-    private static log(level: LogLevel, msg: any) {
-        let prefix = (new Date).toLocaleString('ru', {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit"
-        }).replace(/-/g, ".")
-        if (level === LogLevel.RAW) {
-            console.log(msg)
-        } else {
-            let color: Function
-            switch (level) {
-                case LogLevel.DEV:
-                case LogLevel.DEBUG:
-                    color = colors.green
-                    break;
-                case LogLevel.INFO:
-                    color = colors.cyan
-                    break;
-                case LogLevel.WARN:
-                    color = colors.yellow
-                    break;
-                case LogLevel.ERROR:
-                case LogLevel.FATAL:
-                    color = colors.red
-                    break;
-            }
-            console.log(colors.gray(prefix) + color(` [${level.toUpperCase()}] `) + msg);
+    private static log(level: LogLevel, msg: any, ...args: any) {
+        if (level == LogLevel.RAW) return console.log(msg, ...args)
+
+        const date = new Date()
+            .toLocaleString("ru", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            })
+            .replace(/-/g, ".")
+
+        let coloredStr: string = colors.gray(date)
+        switch (level) {
+            case LogLevel.DEBUG:
+                coloredStr = coloredStr.concat(colors.green(` [${level.toUpperCase()}] `), msg)
+                break
+            case LogLevel.DEV:
+                coloredStr = coloredStr.concat(colors.green(` [${level.toUpperCase()}] `), msg)
+                break
+            case LogLevel.ERROR:
+                coloredStr = coloredStr.concat(colors.red(` [${level.toUpperCase()}] ${msg}`))
+                break
+            case LogLevel.FATAL:
+                coloredStr = coloredStr.concat(colors.red(` [${level.toUpperCase()}] ${msg}`))
+                break
+            case LogLevel.INFO:
+                coloredStr = coloredStr.concat(colors.cyan(` [${level.toUpperCase()}] `), msg)
+                break
+            case LogLevel.WARN:
+                coloredStr = coloredStr.concat(colors.yellow(` [${level.toUpperCase()}] ${msg}`))
+                break
         }
+        console.log(coloredStr, ...args)
     }
 }
 
 enum LogLevel {
-    DEV = "dev",
     DEBUG = "debug",
-    INFO = "info",
-    WARN = "warn",
+    DEV = "dev",
     ERROR = "error",
     FATAL = "fatal",
-    RAW = "raw"
+    INFO = "info",
+    RAW = "raw",
+    WARN = "warn",
 }
