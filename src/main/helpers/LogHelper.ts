@@ -1,3 +1,5 @@
+import * as colors from "colors/safe"
+
 export class LogHelper {
     static dev(msg: any) {
         this.log(LogLevel.DEV, msg)
@@ -28,7 +30,36 @@ export class LogHelper {
     }
 
     private static log(level: LogLevel, msg: any) {
-
+        let prefix = (new Date).toLocaleString('ru', {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        }).replace(/-/g, ".")
+        if (level === LogLevel.RAW) {
+            console.log(msg)
+        } else {
+            let color: Function
+            switch (level) {
+                case LogLevel.DEV:
+                case LogLevel.DEBUG:
+                    color = colors.green
+                    break;
+                case LogLevel.INFO:
+                    color = colors.cyan
+                    break;
+                case LogLevel.WARN:
+                    color = colors.yellow
+                    break;
+                case LogLevel.ERROR:
+                case LogLevel.FATAL:
+                    color = colors.red
+                    break;
+            }
+            console.log(colors.gray(prefix) + color(` [${level.toUpperCase()}] `) + msg);
+        }
     }
 }
 
