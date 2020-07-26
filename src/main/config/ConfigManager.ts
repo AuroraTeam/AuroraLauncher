@@ -29,7 +29,7 @@ export class ConfigManager {
         let prop: any = this.config
         path.forEach((el) => {
             prop = prop[el]
-            if (prop === undefined) LogHelper.fatal("Property '" + property + "' not found!")
+            if (prop === undefined) LogHelper.fatal(`Property ${property} not found!`)
         })
         return prop
     }
@@ -64,7 +64,7 @@ export class ConfigManager {
         } catch (e) {
             if (e instanceof SyntaxError) {
                 LogHelper.error(e)
-                LogHelper.fatal("Json syntax broken. Try delete LauncherServerConfig.json")
+                LogHelper.fatal("Json syntax broken. Try fix or delete LauncherServerConfig.json")
             }
         }
     }

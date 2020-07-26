@@ -12,9 +12,9 @@ export class VersionCommand extends AbstractCommand {
         LogHelper.raw(
             colors.bold(
                 colors.cyan("AuroraLauncher ") +
-                    colors.green("LauncherServer ") +
-                    "v" +
-                    colors.yellow(process.env.npm_package_version)
+                colors.green("LauncherServer ") +
+                "v" +
+                colors.yellow(process.env.npm_package_version)
             )
         )
     }
