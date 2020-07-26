@@ -5,8 +5,9 @@
     "main": "LauncherServer.js",
     "scripts": {
         "build": "tsc",
+        "pre-build": "node pre-build.js",
         "start": "node dist/LauncherServer.js",
-        "dev": "npm run build && npm run start"
+        "dev": "npm run pre-build && npm run build && npm run start"
     },
     "keywords": [],
     "author": "",
@@ -14,6 +15,7 @@
     "devDependencies": {
         "@types/node": "^12.12.21",
         "@types/ws": "^7.2.6",
+        "rimraf": "^3.0.2",
         "source-map-support": "^0.5.19",
         "typescript": "^3.9.6"
     },
