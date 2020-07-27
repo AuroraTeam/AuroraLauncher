@@ -5,8 +5,8 @@ import { VersionCommand } from "./VersionCommands"
 import { HelpCommand } from "./HelpCommand"
 
 export class CommandsManager {
-    readonly console: ReadLine.Interface = ReadLine.createInterface(process.stdin)
     commands: Map<string, AbstractCommand> = new Map()
+    console: ReadLine.Interface
 
     constructor() {
         this.commandsInit()
@@ -24,6 +24,15 @@ export class CommandsManager {
     }
 
     private consoleInit(): void {
+        this.console = ReadLine.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+            completer: (line: string) => {
+                const completions = Array.from(this.commands.keys())
+                const hits = completions.filter((c) => c.startsWith(line))
+                return [hits.length ? hits : completions, line]
+            }
+        })
         this.console.on("line", (line) => {
             const args = line.trim().split(/ +/)
             const cmd = args.shift()
