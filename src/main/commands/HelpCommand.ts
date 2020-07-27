@@ -1,6 +1,6 @@
 import { App } from "../LauncherServer"
 import { AbstractCommand, Category } from "./AbstractCommand"
-import * as colors from "colors/safe"
+import { bold } from "colors/safe"
 import { LogHelper } from "../helpers/LogHelper"
 
 export class HelpCommand extends AbstractCommand {
@@ -21,7 +21,7 @@ export class HelpCommand extends AbstractCommand {
         commandsList.forEach((category, category_name) => {
             LogHelper.info(`=== [ ${category_name.toUpperCase()} ] ===`)
             category.forEach((command) => {
-                LogHelper.info(colors.bold(command.name) + ` – ${command.description}`)
+                LogHelper.info(bold(command.name) + ` – ${command.description}`)
             })
         })
     }
