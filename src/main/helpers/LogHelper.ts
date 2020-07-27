@@ -47,22 +47,22 @@ export class LogHelper {
         let coloredStr: string = colors.gray(date)
         switch (level) {
             case LogLevel.DEBUG:
-                coloredStr = coloredStr.concat(colors.green(` [${level.toUpperCase()}] `), msg)
+                coloredStr += colors.green(` [${level.toUpperCase()}] `) + msg
                 break
             case LogLevel.DEV:
-                coloredStr = coloredStr.concat(colors.green(` [${level.toUpperCase()}] `), msg)
+                coloredStr += colors.green(` [${level.toUpperCase()}] `) + msg
                 break
             case LogLevel.ERROR:
-                coloredStr = coloredStr.concat(colors.red(` [${level.toUpperCase()}] ${msg}`))
+                coloredStr += colors.red(` [${level.toUpperCase()}] ${msg}`)
                 break
             case LogLevel.FATAL:
-                coloredStr = coloredStr.concat(colors.red(` [${level.toUpperCase()}] ${msg}`))
+                coloredStr += colors.red(` [${level.toUpperCase()}] ${msg}`)
                 break
             case LogLevel.INFO:
-                coloredStr = coloredStr.concat(colors.cyan(` [${level.toUpperCase()}] `), msg)
+                coloredStr += colors.cyan(` [${level.toUpperCase()}] `) + msg
                 break
             case LogLevel.WARN:
-                coloredStr = coloredStr.concat(colors.yellow(` [${level.toUpperCase()}] ${msg}`))
+                coloredStr += colors.yellow(` [${level.toUpperCase()}] ${msg}`)
                 break
         }
         console.log(coloredStr, ...args)
