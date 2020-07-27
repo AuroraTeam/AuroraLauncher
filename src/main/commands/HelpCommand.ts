@@ -1,3 +1,4 @@
+import { App } from "../LauncherServer"
 import { AbstractCommand, Category } from "./AbstractCommand"
 import * as colors from "colors/safe"
 import { LogHelper } from "../helpers/LogHelper"
@@ -10,7 +11,7 @@ export class HelpCommand extends AbstractCommand {
 
     invoke(): void {
         let commandsList: Map<Category, Array<AbstractCommand>> = new Map()
-        this.ls.CommandsManager.commands.forEach((value) => {
+        App.CommandsManager.commands.forEach((value) => {
             let arr: Array<AbstractCommand> = commandsList.has(value.getCategory()) ?
                 commandsList.get(value.getCategory()) : []
             arr.push(value)

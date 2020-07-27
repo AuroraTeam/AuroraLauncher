@@ -2,12 +2,7 @@ import { LauncherServer } from "../LauncherServer"
 import { EventEmitter } from "events"
 
 export class ModulesManager extends EventEmitter {
-    ls: LauncherServer
 
-    constructor(ls: LauncherServer) {
-        super()
-        this.ls = ls
-    }
 }
 
 export declare interface ModulesManager {

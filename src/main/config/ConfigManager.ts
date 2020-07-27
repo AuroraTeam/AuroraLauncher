@@ -1,4 +1,3 @@
-import { LauncherServer } from "../LauncherServer"
 import { LauncherServerConfig, Envirovement, AuthConfig, WebSocketConfig } from "./LauncherServerConfig"
 import { StorageHelper } from "../helpers/StorageHelper"
 import fs = require("fs")
@@ -9,11 +8,9 @@ import { TextureProviderConfig } from "../auth/textureProviders/AbstractTextureP
 import { LogHelper } from "./../helpers/LogHelper"
 
 export class ConfigManager {
-    ls: LauncherServer
     private config: LauncherServerConfig
 
-    constructor(ls: LauncherServer) {
-        this.ls = ls
+    constructor() {
         if (fs.existsSync(StorageHelper.configFile)) {
             LogHelper.info("Loading configuration")
             this.load()

@@ -1,15 +1,8 @@
-import { LauncherServer } from "./../LauncherServer"
-
 export abstract class AbstractCommand {
-    ls: LauncherServer
     abstract name: string
     abstract description: string
     abstract category: Category
     abstract usage: string
-
-    constructor(ls: LauncherServer) {
-        this.ls = ls
-    }
 
     abstract invoke(...args: Array<string>): void
 
