@@ -1,5 +1,5 @@
-import path = require("path")
-import fs = require("fs")
+import * as path from "path"
+import * as fs from "fs"
 
 export class StorageHelper {
     static storageDir: string = path.resolve(__dirname, "..", "..", "storage")
