@@ -1,7 +1,6 @@
 {
     "name": "auroralauncher-launcherserver",
     "version": "0.0.1-dev",
-    "license": "GPLv3",
     "description": "LauncherServer for AuroraLauncher",
     "keywords": [
         "minecraft",
@@ -12,15 +11,16 @@
     "bugs": {
         "url": "https://gitlab.com/aurorateam/launcherserver/issues"
     },
+    "repository": "gitlab:aurorateam/launcherserver",
+    "license": "GPLv3",
     "author": "",
     "contributors": [],
-    "repository": "gitlab:aurorateam/launcherserver",
     "main": "LauncherServer.js",
     "scripts": {
-        "clean": "rimraf dist",
         "build": "tsc",
-        "start": "node dist/LauncherServer.js",
-        "dev": "npm run clean && npm run build && npm run start"
+        "clean": "rimraf dist",
+        "dev": "npm run clean && npm run build && npm run start",
+        "start": "node dist/LauncherServer.js"
     },
     "devDependencies": {
         "@types/node": "^12.12.21",
