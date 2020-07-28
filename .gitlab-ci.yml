@@ -6,7 +6,9 @@ before_script:
 build:
     stage: build
     script: npm run build:prod
+    after_script:
+        - cp dist/LauncherServer.js ./
     artifacts:
         expire_in: 6 week
         paths:
-            - dist/
+            - LauncherServer.js
