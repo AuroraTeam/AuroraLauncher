@@ -1,0 +1,12 @@
+image: node:latest
+
+before_script:
+    - npm install
+
+build:
+    stage: build
+    script: npm run build:prod
+    artifacts:
+        expire_in: 6 week
+        paths:
+            - dist
