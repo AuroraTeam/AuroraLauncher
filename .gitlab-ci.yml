@@ -9,4 +9,4 @@ build:
     artifacts:
         expire_in: 6 week
         paths:
-            - dist
+            - dist/
