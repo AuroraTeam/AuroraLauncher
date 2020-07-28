@@ -1,6 +1,4 @@
 import { AbstractProvider } from "./AbstractProvider"
-import axios, { AxiosInstance, AxiosResponse, Method } from "axios"
-import { METHODS } from "http"
 
 export class JsonAuthProvider extends AbstractProvider {
     config: Config
@@ -11,14 +9,6 @@ export class JsonAuthProvider extends AbstractProvider {
     }
 
     emit(login: string, password: string, ip: string): string | boolean {
-        const response = axios.create({
-            url: this.config.url,
-            method: "POST",
-            responseType: "json",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
         return false
     }
 }

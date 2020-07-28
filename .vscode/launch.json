@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/src/main/LauncherServer.ts",
+            "preLaunchTask": "npm: build:dev",
+            "outFiles": ["${workspaceRoot}/dist/LauncherServer.js"],
+            "console": "integratedTerminal",
+            "sourceMaps": true
+        }
+    ]
+}

@@ -17,19 +17,22 @@
     "contributors": [],
     "main": "LauncherServer.js",
     "scripts": {
-        "build": "tsc",
+        "build:dev": "cross-env NODE_ENV=development webpack",
+        "build:prod": "cross-env NODE_ENV=production webpack",
         "clean": "rimraf dist",
-        "dev": "npm run clean && npm run build && npm run start",
         "start": "node dist/LauncherServer.js"
     },
     "devDependencies": {
         "@types/node": "^12.12.21",
         "@types/ws": "^7.2.6",
-        "axios": "^0.19.2",
         "colors": "^1.4.0",
+        "cross-env": "^7.0.2",
         "rimraf": "^3.0.2",
         "semver": "^7.3.2",
         "source-map-support": "^0.5.19",
-        "typescript": "^3.9.6"
+        "ts-loader": "^8.0.1",
+        "typescript": "^3.9.6",
+        "webpack": "^4.44.0",
+        "webpack-cli": "^3.3.12"
     }
 }
