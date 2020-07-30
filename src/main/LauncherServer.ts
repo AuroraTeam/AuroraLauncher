@@ -23,10 +23,10 @@ export class LauncherServer {
         LogHelper.raw(
             colors.bold(
                 colors.cyan("AuroraLauncher ") +
-                colors.green("LauncherServer ") +
-                "v" +
-                colors.yellow(`${process.env.npm_package_version} `) +
-                colors.blue("https://gitlab.com/aurorateam")
+                    colors.green("LauncherServer ") +
+                    "v" +
+                    colors.yellow(`${process.env.npm_package_version} `) +
+                    colors.blue("https://gitlab.com/aurorateam")
             )
         )
         LogHelper.raw(colors.bold(colors.green("Documentation page ") + colors.blue("https://aurora-launcher.ru/wiki")))
