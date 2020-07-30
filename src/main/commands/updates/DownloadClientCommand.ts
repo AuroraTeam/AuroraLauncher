@@ -1,12 +1,16 @@
-import { AbstractCommand, Category } from "./AbstractCommand";
-import { App } from "../LauncherServer";
-import { LogHelper } from "../helpers/LogHelper";
+import { AbstractCommand, Category } from "../AbstractCommand";
+import { App } from "../../LauncherServer";
+import { LogHelper } from "../../helpers/LogHelper";
 
 export class DownloadClientCommand extends AbstractCommand {
-    name: string = "downloadclient"
-    description: string = "скачать клиент"
-    category: Category = Category.UPDATES
-    usage: string = "downloadclient версия-клиента название-папки"
+    constructor() {
+        super(
+            "downloadclient",
+            "Загрузить клиент с зеркала",
+            Category.UPDATES,
+            "<version> <folder name>"
+        )
+    }
 
     invoke(...args: string[]): void {
         const [clientName, dirName] = args;

@@ -1,12 +1,16 @@
-import { AbstractCommand, Category } from "./AbstractCommand";
-import { App } from "../LauncherServer";
-import { LogHelper } from "../helpers/LogHelper";
+import { AbstractCommand, Category } from "../AbstractCommand";
+import { App } from "../../LauncherServer";
+import { LogHelper } from "../../helpers/LogHelper";
 
 export class DownloadAssetCommand extends AbstractCommand {
-    name: string = "downloadasset"
-    description: string = "скачать ассеты"
-    category: Category = Category.UPDATES
-    usage: string = "downloadasset версия-ассетов название-папки"
+    constructor() {
+        super(
+            "downloadasset",
+            "Загрузить ресурсы с зеркала",
+            Category.UPDATES,
+            "<version> <folder name>"
+        )
+    }
 
     invoke(...args: string[]): void {
         const [clientName, dirName] = args;

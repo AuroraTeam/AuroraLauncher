@@ -1,10 +1,12 @@
 import * as ReadLine from "readline"
+
+import { LogHelper } from "../helpers/LogHelper"
 import { AbstractCommand } from "./AbstractCommand"
-import { StopCommand } from "./StopCommand"
-import { VersionCommand } from "./VersionCommands"
-import { HelpCommand } from "./HelpCommand"
-import { DownloadClientCommand } from "./DownloadClientCommand"
-import { DownloadAssetCommand } from "./DownloadAssetCommand"
+import { AboutCommand } from "./basic/AboutCommand"
+import { HelpCommand } from "./basic/HelpCommand"
+import { StopCommand } from "./basic/StopCommand"
+import { DownloadAssetCommand } from "./updates/DownloadAssetCommand"
+import { DownloadClientCommand } from "./updates/DownloadClientCommand"
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
@@ -17,7 +19,7 @@ export class CommandsManager {
 
     private commandsInit(): void {
         this.registerCommand(new StopCommand())
-        this.registerCommand(new VersionCommand())
+        this.registerCommand(new AboutCommand())
         this.registerCommand(new HelpCommand())
         this.registerCommand(new DownloadClientCommand())
         this.registerCommand(new DownloadAssetCommand())
@@ -35,12 +37,13 @@ export class CommandsManager {
                 const completions = Array.from(this.commands.keys())
                 const hits = completions.filter((c) => c.startsWith(line))
                 return [hits.length ? hits : completions, line]
-            }
+            },
         })
         this.console.on("line", (line) => {
             const args = line.trim().split(/ +/)
             const cmd = args.shift()
-            if (!this.commands.has(cmd)) return console.error(`Command \`${cmd}\` not found!`)
+            if (!this.commands.has(cmd)) return LogHelper.error(`Command "${cmd}" not found!`)
+            LogHelper.debug(`Invoke "${cmd}" command`)
             this.commands.get(cmd).invoke(...args)
         })
     }

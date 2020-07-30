@@ -1,8 +1,18 @@
 export abstract class AbstractCommand {
-    abstract name: string
-    abstract description: string
-    abstract category: Category
-    abstract usage: string
+    private readonly name: string
+    private readonly description: string
+    private readonly category: Category
+    private readonly usage: string
+
+    // <arg> - опциональный аргумент
+    // [arg] - обязательный аргумент
+
+    constructor(name: string, description: string, category: Category, usage?: string) {
+        this.name = name
+        this.description = description
+        this.category = category
+        this.usage = usage
+    }
 
     abstract invoke(...args: Array<string>): void
 
