@@ -17,19 +17,16 @@ export class MirrorManager {
     async downloadClient(clientName: string, dirName: string) {
         const mirrors: string[] = App.ConfigManager.getProperty('updatesUrl')
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
-
-        if (fs.existsSync(clientDir)) return LogHelper.error('Папка клиента с таким названием уже существует!')
-
+        if (fs.existsSync(clientDir)) return LogHelper.error('Папка с таким названием уже существует!')
         const existClients: Map<number, string> = new Map
 
         App.CommandsManager.console.pause()
         await Promise.all( // async mirror check
             mirrors.map(async (mirror, i) => {
-                const json = new URL(`/clients/${clientName}.json`, mirror)
-                const zip = new URL(`/clients/${clientName}.zip`, mirror)
-                if (await this.existFile(json) && await this.existFile(zip)) {
-                    existClients.set(i, mirror)
-                }
+                if (
+                    await this.existFile(new URL(`/clients/${clientName}.json`, mirror)) &&
+                    await this.existFile(new URL(`/clients/${clientName}.zip`, mirror))
+                ) existClients.set(i, mirror)
             })
         )
 
@@ -72,9 +69,54 @@ export class MirrorManager {
         App.CommandsManager.console.resume()
     }
 
-    downloadAssets() {
-        const mirrors = App.ConfigManager.getProperty('updatesUrl')
-        console.log(mirrors)
+    async downloadAssets(assetsName: string, dirName: string) {
+        const mirrors: string[] = App.ConfigManager.getProperty('updatesUrl')
+        const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
+        if (fs.existsSync(assetsDir)) return LogHelper.error('Папка с таким названием уже существует!')
+        const existAssets: Map<number, string> = new Map
+
+        App.CommandsManager.console.pause()
+        await Promise.all( // async mirror check
+            mirrors.map(async (mirror, i) => {
+                if (await this.existFile(new URL(`/assets/${assetsName}.zip`, mirror)))
+                    existAssets.set(i, mirror)
+            })
+        )
+
+        if (existAssets.size == 0) {
+            LogHelper.error(`Ассеты не найдены!`)
+            App.CommandsManager.console.resume()
+            return
+        }
+
+        const mirror = existAssets.get(0)
+        let assets: string
+
+        try {
+            LogHelper.info("Ассеты найдены, загрузка...")
+            assets = await this.downloadFile(new URL(`/assets/${assetsName}.zip`, mirror))
+        } catch (error) {
+            LogHelper.error("Ошибка при загрузке ассетов!")
+            LogHelper.debug(error)
+            App.CommandsManager.console.resume()
+            return
+        }
+
+        try {
+            fs.mkdirSync(assetsDir)
+            await decompress(assets.toString(), assetsDir)
+        } catch (error) {
+            fs.rmdirSync(assetsDir)
+            LogHelper.error("Ошибка при распаковке ассетов!")
+            LogHelper.debug(error)
+            App.CommandsManager.console.resume()
+            return
+        } finally {
+            rimraf(path.resolve(StorageHelper.tempDir, "*"), () => {})
+        }
+
+        LogHelper.info("Ассеты успешно загружены!")
+        App.CommandsManager.console.resume()
     }
 
     downloadFile(url: URL): Promise<string> {

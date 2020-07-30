@@ -6,7 +6,7 @@ export class DownloadClientCommand extends AbstractCommand {
     name: string = "downloadclient"
     description: string = "скачать клиент"
     category: Category = Category.UPDATES
-    usage: string = "downloadclient название-клиента название-папки"
+    usage: string = "downloadclient версия-клиента название-папки"
 
     invoke(...args: string[]): void {
         const [clientName, dirName] = args;
