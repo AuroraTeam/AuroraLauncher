@@ -3,6 +3,7 @@ import { AbstractCommand } from "./AbstractCommand"
 import { StopCommand } from "./StopCommand"
 import { VersionCommand } from "./VersionCommands"
 import { HelpCommand } from "./HelpCommand"
+import { DownloadClientCommand } from "./DownloadClientCommand"
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
@@ -17,6 +18,7 @@ export class CommandsManager {
         this.registerCommand(new StopCommand())
         this.registerCommand(new VersionCommand())
         this.registerCommand(new HelpCommand())
+        this.registerCommand(new DownloadClientCommand())
     }
 
     registerCommand(x: AbstractCommand): void {
