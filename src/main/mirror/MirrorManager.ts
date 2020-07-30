@@ -9,9 +9,11 @@ import { LogHelper } from "../helpers/LogHelper"
 import { URL } from "url"
 import * as decompress from "decompress"
 import * as rimraf from "rimraf"
+import * as cliProgress from "cli-progress"
 
 // TODO Реализовать работу с http2
 // TODO dev logs
+// TODO Рефакторнуть это говно, выглядит страшно
 export class MirrorManager {
 
     async downloadClient(clientName: string, dirName: string) {
@@ -42,7 +44,7 @@ export class MirrorManager {
 
         try {
             LogHelper.info("Клиент найден, загрузка...")
-            profile = await this.downloadFile(new URL(`/clients/${clientName}.json`, mirror))
+            profile = await this.downloadFile(new URL(`/clients/${clientName}.json`, mirror), false)
             client = await this.downloadFile(new URL(`/clients/${clientName}.zip`, mirror))
         } catch (error) {
             LogHelper.error("Ошибка при загрузке клиента!")
@@ -119,16 +121,27 @@ export class MirrorManager {
         App.CommandsManager.console.resume()
     }
 
-    downloadFile(url: URL): Promise<string> {
+    downloadFile(url: URL, showProgress: boolean = true): Promise<string> {
         const handler = url.protocol === "https:" ? https : http
         const tempFilename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
         const tempFile = fs.createWriteStream(tempFilename)
+
         return new Promise((resolve, reject) => {
             handler.get(url, res => {
                 res.pipe(tempFile)
-                // res.on('data', (chunk) => {
-                //     console.log(chunk)
-                // })
+                if (showProgress) {
+                    let downloaded = 0
+                    const progressBar = this.getProgressBar(
+                        parseInt(res.headers['content-length'], 10)
+                    )
+                    res.on('data', (chunk) => {
+                        downloaded += chunk.length
+                        progressBar.update(downloaded)
+                    })
+                    res.on('end', () => {
+                        progressBar.stop()
+                    });
+                }
                 res.on('end', () => {
                     resolve(tempFilename)
                 });
@@ -151,5 +164,35 @@ export class MirrorManager {
                 resolve(false)
             }).end()
         })
+    }
+
+    // TODO выкинуть в хелпер, или куда-то ещё
+    getProgressBar(filesize: number) {
+        const progressBar = new cliProgress.SingleBar({
+            format: (options, params) => {
+                // calculate barsize
+                const completeSize = Math.round(params.progress*options.barsize)
+                const incompleteSize = options.barsize-completeSize
+
+                // generate bar string by stripping the pre-rendered strings
+                const bar = options.barCompleteString.substr(0, completeSize) +
+                    options.barIncompleteString.substr(0, incompleteSize)
+
+                function bytesToSize(bytes: number) {
+                    const sizes = ['Bytes', 'KB', 'MB']
+                    if (bytes === 0) return 'n/a'
+                    const i = Math.floor(Math.log(bytes) / Math.log(1024))
+                    if (i === 0) return `${bytes} ${sizes[i]})`
+                    return `${(bytes / (1024 ** i)).toFixed(1)} ${sizes[i]}`
+                }
+
+                return `${bar} ${(params.progress*100).toFixed(2)}% | Осталось: ${params.eta}s | ${bytesToSize(params.value)}/${bytesToSize(params.total)}`
+            },
+            clearOnComplete: true
+        }, cliProgress.Presets.shades_classic)
+        
+        progressBar.start(filesize, 0)
+
+        return progressBar
     }
 }
