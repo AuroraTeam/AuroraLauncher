@@ -39,11 +39,12 @@ export class CommandsManager {
                 return [hits.length ? hits : completions, line]
             },
         })
+        this.console.setPrompt("")
         this.console.on("line", (line) => {
             const args = line.trim().split(/ +/)
             const cmd = args.shift()
             if (!this.commands.has(cmd)) return LogHelper.error(`Command "${cmd}" not found!`)
-            LogHelper.debug(`Invoke "${cmd}" command`)
+            LogHelper.dev(`Invoke "${cmd}" command`)
             this.commands.get(cmd).invoke(...args)
         })
     }

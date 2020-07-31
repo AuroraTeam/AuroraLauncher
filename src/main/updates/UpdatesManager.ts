@@ -1,3 +1,1 @@
-export class UpdatesManager {
-
-}
+export class UpdatesManager {}

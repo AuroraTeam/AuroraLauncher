@@ -1,7 +1,8 @@
+import * as colors from "colors/safe"
+
+import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
-import * as colors from "colors/safe"
-import { LogHelper } from "../../helpers/LogHelper"
 
 export class HelpCommand extends AbstractCommand {
     constructor() {

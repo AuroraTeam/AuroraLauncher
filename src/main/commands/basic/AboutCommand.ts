@@ -5,11 +5,7 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class AboutCommand extends AbstractCommand {
     constructor() {
-        super(
-            "about",
-            "Выводит информацию о продукте",
-            Category.BASIC
-        )
+        super("about", "Выводит информацию о продукте", Category.BASIC)
     }
 
     invoke(): void {

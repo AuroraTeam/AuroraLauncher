@@ -1,9 +1,6 @@
-import { LauncherServer } from "../LauncherServer"
 import { EventEmitter } from "events"
 
-export class ModulesManager extends EventEmitter {
-
-}
+export class ModulesManager extends EventEmitter {}
 
 export declare interface ModulesManager {
     on(event: "postInit", listener: Function): this

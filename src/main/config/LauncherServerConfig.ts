@@ -1,6 +1,6 @@
+import { AuthHandlerConfig } from "../auth/authHandlers/AbstractHandler"
 import { PrimaryProviderConfig } from "../auth/primaryProviders/AbstractProvider"
 import { SecondProviderConfig } from "../auth/secondaryProviders/AbstractProvider"
-import { AuthHandlerConfig } from "../auth/authHandlers/AbstractHandler"
 import { TextureProviderConfig } from "../auth/textureProviders/AbstractTextureProvider"
 import { HwidHandlerConfig } from "../hwid/AbstractHwidHandler"
 

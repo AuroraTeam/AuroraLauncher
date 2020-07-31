@@ -1,3 +1,1 @@
-export class ProfilesManager {
-
-}
+export class ProfilesManager {}

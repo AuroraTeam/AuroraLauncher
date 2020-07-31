@@ -1,34 +1,37 @@
+import { randomBytes } from "crypto"
 import * as fs from "fs"
-import * as path from "path"
 import * as http from "http"
 import * as https from "https"
-import { randomBytes } from "crypto"
-import { App } from "../LauncherServer"
-import { StorageHelper } from "../helpers/StorageHelper"
-import { LogHelper } from "../helpers/LogHelper"
+import * as path from "path"
 import { URL } from "url"
+
 import * as decompress from "decompress"
 import * as rimraf from "rimraf"
+
+import { LogHelper } from "../helpers/LogHelper"
 import { ProgressBarHelper } from "../helpers/ProgressBarHelper"
+import { StorageHelper } from "../helpers/StorageHelper"
+import { App } from "../LauncherServer"
 
 // TODO Реализовать работу с http2
 // TODO dev logs
 // TODO Рефакторнуть это говно, выглядит страшно
 export class MirrorManager {
-
     async downloadClient(clientName: string, dirName: string) {
-        const mirrors: string[] = App.ConfigManager.getProperty('updatesUrl')
+        const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
-        if (fs.existsSync(clientDir)) return LogHelper.error('Папка с таким названием уже существует!')
-        const existClients: Map<number, string> = new Map
+        if (fs.existsSync(clientDir)) return LogHelper.error("Папка с таким названием уже существует!")
+        const existClients: Map<number, string> = new Map()
 
         App.CommandsManager.console.pause()
-        await Promise.all( // async mirror check
+        await Promise.all(
+            // async mirror check
             mirrors.map(async (mirror, i) => {
                 if (
-                    await this.existFile(new URL(`/clients/${clientName}.json`, mirror)) &&
-                    await this.existFile(new URL(`/clients/${clientName}.zip`, mirror))
-                ) existClients.set(i, mirror)
+                    (await this.existFile(new URL(`/clients/${clientName}.json`, mirror))) &&
+                    (await this.existFile(new URL(`/clients/${clientName}.zip`, mirror)))
+                )
+                    existClients.set(i, mirror)
             })
         )
 
@@ -72,16 +75,16 @@ export class MirrorManager {
     }
 
     async downloadAssets(assetsName: string, dirName: string) {
-        const mirrors: string[] = App.ConfigManager.getProperty('updatesUrl')
+        const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
-        if (fs.existsSync(assetsDir)) return LogHelper.error('Папка с таким названием уже существует!')
-        const existAssets: Map<number, string> = new Map
+        if (fs.existsSync(assetsDir)) return LogHelper.error("Папка с таким названием уже существует!")
+        const existAssets: Map<number, string> = new Map()
 
         App.CommandsManager.console.pause()
-        await Promise.all( // async mirror check
+        await Promise.all(
+            // async mirror check
             mirrors.map(async (mirror, i) => {
-                if (await this.existFile(new URL(`/assets/${assetsName}.zip`, mirror)))
-                    existAssets.set(i, mirror)
+                if (await this.existFile(new URL(`/assets/${assetsName}.zip`, mirror))) existAssets.set(i, mirror)
             })
         )
 
@@ -127,41 +130,44 @@ export class MirrorManager {
         const tempFile = fs.createWriteStream(tempFilename)
 
         return new Promise((resolve, reject) => {
-            handler.get(url, res => {
-                res.pipe(tempFile)
-                if (showProgress) {
-                    let downloaded = 0
-                    const progressBar = ProgressBarHelper.getProgressBar()
-                    progressBar.start(parseInt(res.headers['content-length'], 10), 0)
-                    res.on('data', (chunk) => {
-                        downloaded += chunk.length
-                        progressBar.update(downloaded)
+            handler
+                .get(url, (res) => {
+                    res.pipe(tempFile)
+                    if (showProgress) {
+                        let downloaded = 0
+                        const progressBar = ProgressBarHelper.getProgressBar()
+                        progressBar.start(parseInt(res.headers["content-length"], 10), 0)
+                        res.on("data", (chunk) => {
+                            downloaded += chunk.length
+                            progressBar.update(downloaded)
+                        })
+                        res.on("end", () => {
+                            progressBar.stop()
+                        })
+                    }
+                    res.on("end", () => {
+                        resolve(tempFilename)
                     })
-                    res.on('end', () => {
-                        progressBar.stop()
-                    });
-                }
-                res.on('end', () => {
-                    resolve(tempFilename)
-                });
-            }).on('error', (err) => {
-                fs.unlinkSync(tempFilename)
-                reject(err)
-            })
+                })
+                .on("error", (err) => {
+                    fs.unlinkSync(tempFilename)
+                    reject(err)
+                })
         })
     }
 
     existFile(url: URL): Promise<boolean> {
         const handler = url.protocol === "https:" ? https : http
         return new Promise((resolve) => {
-            handler.request(url, {method: 'HEAD'}, res => {
-                return new RegExp(/2[\d]{2}/).test(res.statusCode.toString())
-                    ? resolve(true)
-                    : resolve(false)
-            }).on('error', (err) => {
-                LogHelper.error(err)
-                resolve(false)
-            }).end()
+            handler
+                .request(url, { method: "HEAD" }, (res) => {
+                    return new RegExp(/2[\d]{2}/).test(res.statusCode.toString()) ? resolve(true) : resolve(false)
+                })
+                .on("error", (err) => {
+                    LogHelper.error(err)
+                    resolve(false)
+                })
+                .end()
         })
     }
 }

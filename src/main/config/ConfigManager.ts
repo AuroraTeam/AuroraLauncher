@@ -1,11 +1,11 @@
-import { LauncherServerConfig, Envirovement, AuthConfig, WebSocketConfig } from "./LauncherServerConfig"
-import { StorageHelper } from "../helpers/StorageHelper"
-import fs = require("fs")
+import { LogHelper } from "./../helpers/LogHelper"
+import { AuthHandlerConfig } from "../auth/authHandlers/AbstractHandler"
 import { PrimaryProviderConfig } from "../auth/primaryProviders/AbstractProvider"
 import { SecondProviderConfig } from "../auth/secondaryProviders/AbstractProvider"
-import { AuthHandlerConfig } from "../auth/authHandlers/AbstractHandler"
 import { TextureProviderConfig } from "../auth/textureProviders/AbstractTextureProvider"
-import { LogHelper } from "./../helpers/LogHelper"
+import { StorageHelper } from "../helpers/StorageHelper"
+import { AuthConfig, Envirovement, LauncherServerConfig, WebSocketConfig } from "./LauncherServerConfig"
+import fs = require("fs")
 
 export class ConfigManager {
     private config: LauncherServerConfig

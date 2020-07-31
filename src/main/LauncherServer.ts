@@ -1,5 +1,7 @@
 require("source-map-support").install()
+
 import * as colors from "colors/safe"
+
 import { AuthManager } from "./auth/AuthManager"
 import { CommandsManager } from "./commands/CommandsManager"
 import { ConfigManager } from "./config/ConfigManager"
