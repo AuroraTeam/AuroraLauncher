@@ -20,14 +20,16 @@ export class LauncherServer {
     readonly ModulesManager: ModulesManager
     readonly SocketManager: SocketManager
     readonly UpdatesManager: UpdatesManager
+    readonly Version: string // TODO Version
 
     constructor() {
+        this.Version = "0.0.1-dev"
         LogHelper.raw(
             colors.bold(
                 colors.cyan("AuroraLauncher ") +
                     colors.green("LauncherServer ") +
                     "v" +
-                    colors.yellow(`${process.env.npm_package_version} `) +
+                    colors.yellow(`${this.Version} `) +
                     colors.blue("https://gitlab.com/aurorateam")
             )
         )
