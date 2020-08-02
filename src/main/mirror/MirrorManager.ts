@@ -135,7 +135,7 @@ export class MirrorManager {
                     res.pipe(tempFile)
                     if (showProgress) {
                         let downloaded = 0
-                        const progressBar = ProgressBarHelper.getProgressBar()
+                        const progressBar = ProgressBarHelper.getDownloadProgressBar()
                         progressBar.start(parseInt(res.headers["content-length"], 10), 0)
                         res.on("data", (chunk) => {
                             downloaded += chunk.length

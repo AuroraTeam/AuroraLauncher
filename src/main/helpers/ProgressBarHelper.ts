@@ -1,7 +1,21 @@
 import * as cliProgress from "cli-progress"
 
+// TODO переписать в полноценный хелпер, либо выкинуть функционал в LogHelper
+// Возможно придётся пилить самопис вместо cli-progress, но это не точно
+
 export class ProgressBarHelper {
+
     static getProgressBar() {
+        return new cliProgress.SingleBar({
+            format: '{bar} {percentage}%',
+            clearOnComplete: true,
+            hideCursor: true,
+            barCompleteChar: '\u2588',
+            barIncompleteChar: '\u2591'
+        })
+    }
+
+    static getDownloadProgressBar() {
         return new cliProgress.SingleBar({
             format: (options, params) => {
                 // calculate barsize
