@@ -1,8 +1,8 @@
 import * as colors from "colors/safe"
 
 import { LogHelper } from "../../helpers/LogHelper"
-import { AbstractCommand, Category } from "../AbstractCommand"
 import { VersionHelper } from "../../helpers/VersionHelper"
+import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class AboutCommand extends AbstractCommand {
     constructor() {

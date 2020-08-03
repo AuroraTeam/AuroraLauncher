@@ -1,10 +1,10 @@
-import { valid, SemVer } from "semver";
+import { SemVer, valid } from "semver"
 
 export enum VersionType {
     RELEASE = "release", // or STABLE?
     DEV = "dev",
     TESTING = "testing",
-    LTS = "lts"
+    LTS = "lts",
     // etc?
 }
 
@@ -28,7 +28,7 @@ export class VersionHelper {
 
     /**
      * **Обёртка над `semver.valid`**
-     * 
+     *
      * Возвращает обработанную версию в виде строки или null, если она недействительна
      * @param version - Версия в виде строки или объекта SemVer
      * @returns `string` или `null`

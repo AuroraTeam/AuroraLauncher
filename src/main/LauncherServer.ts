@@ -7,11 +7,11 @@ import { CommandsManager } from "./commands/CommandsManager"
 import { ConfigManager } from "./config/ConfigManager"
 import { LogHelper } from "./helpers/LogHelper"
 import { StorageHelper } from "./helpers/StorageHelper"
+import { VersionHelper } from "./helpers/VersionHelper"
 import { MirrorManager } from "./mirror/MirrorManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { SocketManager } from "./requests/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
-import { VersionHelper } from "./helpers/VersionHelper"
 
 export class LauncherServer {
     readonly ConfigManager: ConfigManager

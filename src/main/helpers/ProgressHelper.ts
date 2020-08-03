@@ -15,23 +15,23 @@ export class ProgressHelper {
 
     private static getProgress(options: progress.Options, type: ProgressType) {
         let info = progress(options)
-        process.stdout.write('\x1B[?25l') // Hide cursor
-        info.on('progress', progress => {
+        process.stdout.write("\x1B[?25l") // Hide cursor
+        info.on("progress", (progress) => {
             process.stdout.clearLine(0)
             process.stdout.cursorTo(0)
             switch (type) {
                 case ProgressType.LOADING:
                     process.stdout.write(this.getLoadingProgressTemplate(progress))
-                    break;
+                    break
                 case ProgressType.DOWNLOAD:
                     process.stdout.write(this.getDownloadProgressTemplate(progress))
-                    break;
+                    break
             }
         })
-        info.on('end', () => {
+        info.on("end", () => {
             process.stdout.clearLine(0)
             process.stdout.cursorTo(0)
-            process.stdout.write('\x1B[?25h') // Show cursor
+            process.stdout.write("\x1B[?25h") // Show cursor
         })
         return info
     }
@@ -56,12 +56,11 @@ export class ProgressHelper {
 
     private static getBar(percentage: number): string {
         // calculate barsize
-        const completeSize = Math.round(percentage / 100 * this.barsize)
+        const completeSize = Math.round((percentage / 100) * this.barsize)
         const incompleteSize = this.barsize - completeSize
 
         // generate bar string by stripping the pre-rendered strings
-        return this.barCompleteChar.repeat(completeSize)
-        +  this.barIncompleteChar.repeat(incompleteSize)
+        return this.barCompleteChar.repeat(completeSize) + this.barIncompleteChar.repeat(incompleteSize)
     }
 
     private static bytesToSize(bytes: number): string {
@@ -75,5 +74,5 @@ export class ProgressHelper {
 
 export enum ProgressType {
     DOWNLOAD,
-    LOADING
+    LOADING,
 }

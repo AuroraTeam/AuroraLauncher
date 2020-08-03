@@ -131,14 +131,12 @@ export class MirrorManager {
 
         return new Promise((resolve, reject) => {
             handler
-                .get(url, res => {
-                    res
-                        .pipe(
-                            ProgressHelper.getDownloadProgressBar({
-                                length: parseInt(res.headers["content-length"], 10)
-                            })
-                        )
-                        .pipe(tempFile)
+                .get(url, (res) => {
+                    res.pipe(
+                        ProgressHelper.getDownloadProgressBar({
+                            length: parseInt(res.headers["content-length"], 10),
+                        })
+                    ).pipe(tempFile)
                     res.on("end", () => {
                         resolve(tempFilename)
                     })
@@ -154,7 +152,7 @@ export class MirrorManager {
         const handler = url.protocol === "https:" ? https : http
         return new Promise((resolve) => {
             handler
-                .request(url, { method: "HEAD" }, res => {
+                .request(url, { method: "HEAD" }, (res) => {
                     return new RegExp(/2[\d]{2}/).test(res.statusCode.toString()) ? resolve(true) : resolve(false)
                 })
                 .on("error", (err) => {
