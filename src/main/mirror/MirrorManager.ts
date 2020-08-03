@@ -9,7 +9,7 @@ import * as decompress from "decompress"
 import * as rimraf from "rimraf"
 
 import { LogHelper } from "../helpers/LogHelper"
-import { ProgressBarHelper } from "../helpers/ProgressBarHelper"
+import { ProgressHelper } from "../helpers/ProgressHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
 
@@ -47,7 +47,7 @@ export class MirrorManager {
 
         try {
             LogHelper.info("Клиент найден, загрузка...")
-            profile = await this.downloadFile(new URL(`/clients/${clientName}.json`, mirror), false)
+            profile = await this.downloadFile(new URL(`/clients/${clientName}.json`, mirror))
             client = await this.downloadFile(new URL(`/clients/${clientName}.zip`, mirror))
         } catch (error) {
             LogHelper.error("Ошибка при загрузке клиента!")
@@ -124,27 +124,21 @@ export class MirrorManager {
         App.CommandsManager.console.resume()
     }
 
-    downloadFile(url: URL, showProgress: boolean = true): Promise<string> {
+    downloadFile(url: URL): Promise<string> {
         const handler = url.protocol === "https:" ? https : http
         const tempFilename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
         const tempFile = fs.createWriteStream(tempFilename)
 
         return new Promise((resolve, reject) => {
             handler
-                .get(url, (res) => {
-                    res.pipe(tempFile)
-                    if (showProgress) {
-                        let downloaded = 0
-                        const progressBar = ProgressBarHelper.getDownloadProgressBar()
-                        progressBar.start(parseInt(res.headers["content-length"], 10), 0)
-                        res.on("data", (chunk) => {
-                            downloaded += chunk.length
-                            progressBar.update(downloaded)
-                        })
-                        res.on("end", () => {
-                            progressBar.stop()
-                        })
-                    }
+                .get(url, res => {
+                    res
+                        .pipe(
+                            ProgressHelper.getDownloadProgressBar({
+                                length: parseInt(res.headers["content-length"], 10)
+                            })
+                        )
+                        .pipe(tempFile)
                     res.on("end", () => {
                         resolve(tempFilename)
                     })
@@ -160,7 +154,7 @@ export class MirrorManager {
         const handler = url.protocol === "https:" ? https : http
         return new Promise((resolve) => {
             handler
-                .request(url, { method: "HEAD" }, (res) => {
+                .request(url, { method: "HEAD" }, res => {
                     return new RegExp(/2[\d]{2}/).test(res.statusCode.toString()) ? resolve(true) : resolve(false)
                 })
                 .on("error", (err) => {
