@@ -11,6 +11,7 @@ import { MirrorManager } from "./mirror/MirrorManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { SocketManager } from "./requests/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
+import { VersionHelper } from "./helpers/VersionHelper"
 
 export class LauncherServer {
     readonly ConfigManager: ConfigManager
@@ -20,16 +21,14 @@ export class LauncherServer {
     readonly ModulesManager: ModulesManager
     readonly SocketManager: SocketManager
     readonly UpdatesManager: UpdatesManager
-    readonly Version: string // TODO Version
 
     constructor() {
-        this.Version = "0.0.1-dev"
         LogHelper.raw(
             colors.bold(
                 colors.cyan("AuroraLauncher ") +
                     colors.green("LauncherServer ") +
                     "v" +
-                    colors.yellow(`${this.Version} `) +
+                    colors.yellow(`${VersionHelper.getVersion()} `) +
                     colors.blue("https://gitlab.com/aurorateam")
             )
         )

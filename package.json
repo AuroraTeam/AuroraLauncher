@@ -28,6 +28,7 @@
         "@types/decompress": "^4.2.3",
         "@types/node": "^12.12.21",
         "@types/rimraf": "^3.0.0",
+        "@types/semver": "^7.3.1",
         "@types/ws": "^7.2.6",
         "cli-progress": "^3.8.2",
         "colors": "^1.4.0",
