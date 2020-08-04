@@ -15,8 +15,13 @@ import { App } from "../LauncherServer"
 
 // TODO Реализовать работу с http2
 // TODO dev logs
-// TODO Рефакторнуть это говно, выглядит страшно
+
 export class MirrorManager {
+    /**
+     * Скачивание клиена с зеркала
+     * @param clientName - Название архива с файлами клиента
+     * @param dirName - Название конечной папки
+     */
     async downloadClient(clientName: string, dirName: string) {
         const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
@@ -74,6 +79,11 @@ export class MirrorManager {
         App.CommandsManager.console.resume()
     }
 
+    /**
+     * Скачивание ассетов с зеркала
+     * @param assetsName - Название архива с файлами ассетов
+     * @param dirName - Название конечной папки
+     */
     async downloadAssets(assetsName: string, dirName: string) {
         const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
@@ -82,7 +92,6 @@ export class MirrorManager {
 
         App.CommandsManager.console.pause()
         await Promise.all(
-            // async mirror check
             mirrors.map(async (mirror, i) => {
                 if (await this.existFile(new URL(`/assets/${assetsName}.zip`, mirror))) existAssets.set(i, mirror)
             })
@@ -124,6 +133,11 @@ export class MirrorManager {
         App.CommandsManager.console.resume()
     }
 
+    /**
+     * Скачивание файла с зеркала
+     * @param url - Объект Url, содержащий ссылку на файл
+     * @returns Promise который вернёт название временного файла в случае успеха
+     */
     downloadFile(url: URL): Promise<string> {
         const handler = url.protocol === "https:" ? https : http
         const tempFilename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
@@ -148,6 +162,11 @@ export class MirrorManager {
         })
     }
 
+    /**
+     * Проверка наличия файла на зеркале
+     * @param url - Объект Url, содержащий ссылку на файл
+     * @returns Promise который вернёт `true` в случае существования файла или `false` при его отсутствии или ошибке
+     */
     existFile(url: URL): Promise<boolean> {
         const handler = url.protocol === "https:" ? https : http
         return new Promise((resolve) => {
