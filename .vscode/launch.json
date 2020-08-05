@@ -10,6 +10,7 @@
             "preLaunchTask": "npm: build:dev",
             "outFiles": ["${workspaceRoot}/dist/LauncherServer.js"],
             "console": "integratedTerminal",
+            "args": ["--dev"],
             "sourceMaps": true
         }
     ]

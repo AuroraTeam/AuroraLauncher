@@ -1,11 +1,16 @@
 import * as colors from "colors/safe"
 
 export class LogHelper {
+    static readonly isDevEnabled = process.argv.includes("--dev")
+    static readonly isDebugEnabled = process.argv.includes("--debug") || process.argv.includes("--dev")
+
     static debug(msg: any, ...args: any) {
+        if (!this.isDebugEnabled) return
         this.log(LogLevel.DEBUG, msg, ...args)
     }
 
     static dev(msg: any, ...args: any) {
+        if (!this.isDevEnabled) return
         this.log(LogLevel.DEV, msg, ...args)
     }
 
