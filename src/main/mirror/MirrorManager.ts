@@ -4,14 +4,13 @@ import * as http from "http"
 import * as https from "https"
 import * as path from "path"
 import { URL } from "url"
-
-import * as decompress from "decompress"
 import * as rimraf from "rimraf"
 
 import { LogHelper } from "../helpers/LogHelper"
 import { ProgressHelper } from "../helpers/ProgressHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
+import { ZipHelper } from "../helpers/ZipHelper"
 
 // TODO Реализовать работу с http2
 // TODO dev logs
@@ -46,7 +45,7 @@ export class MirrorManager {
             return
         }
 
-        const mirror = existClients.get(0)
+        const mirror = existClients.values().next().value
         let profile: string
         let client: string
 
@@ -64,7 +63,8 @@ export class MirrorManager {
         fs.copyFileSync(profile.toString(), path.resolve(StorageHelper.profilesDir, `${dirName}.json`))
         try {
             fs.mkdirSync(clientDir)
-            await decompress(client.toString(), clientDir)
+            LogHelper.info("Клиент загружен, распаковка...")
+            await ZipHelper.unzipArchive(client.toString(), clientDir)
         } catch (error) {
             fs.rmdirSync(clientDir)
             LogHelper.error("Ошибка при распаковке клиента!")
@@ -103,7 +103,7 @@ export class MirrorManager {
             return
         }
 
-        const mirror = existAssets.get(0)
+        const mirror = existAssets.values().next().value
         let assets: string
 
         try {
@@ -118,7 +118,8 @@ export class MirrorManager {
 
         try {
             fs.mkdirSync(assetsDir)
-            await decompress(assets.toString(), assetsDir)
+            LogHelper.info("Ассеты загружены, распаковка...")
+            await ZipHelper.unzipArchive(assets.toString(), assetsDir)
         } catch (error) {
             fs.rmdirSync(assetsDir)
             LogHelper.error("Ошибка при распаковке ассетов!")
@@ -152,7 +153,16 @@ export class MirrorManager {
                         })
                     ).pipe(tempFile)
                     res.on("end", () => {
-                        resolve(tempFilename)
+                        /**
+                         * Крайне интересный костыль
+                         * без него при скачивании с очень быстрой скоростью (например с локалхоста)
+                         * архиватор отлетает с ошибкой `end of central directory record signature not found`
+                         * а также плывёт вывод в консоли
+                         * Пока хз как решить, так что оставлю пока так
+                         */
+                        setTimeout(() => {
+                            resolve(tempFilename)
+                        }, 10)
                     })
                 })
                 .on("error", (err) => {

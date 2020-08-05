@@ -5,7 +5,7 @@ export class ProgressHelper {
     static barIncompleteChar: string = "\u2591"
     static barsize: number = 20
 
-    static getLoadingProgressBar(options: progress.Options) {
+    static getLoadingProgressBar(options?: progress.Options) {
         return this.getProgress(options, ProgressType.LOADING)
     }
 
@@ -39,12 +39,12 @@ export class ProgressHelper {
     private static getLoadingProgressTemplate(progress: progress.Progress) {
         const string = "{bar} {percent}%" // Для выноса потом в lang файлы
         return string
-            .replace("{bar}", this.getBar(progress.percentage))
+            .replace("{bar}", this.getBar(progress.percentage, 40))
             .replace("{percent}", progress.percentage.toFixed(2))
     }
 
     private static getDownloadProgressTemplate(progress: progress.Progress) {
-        const string = "{bar} {percent}% Осталось: {eta}s | Скорость: {speed}/s {transferred}/{total}" // Аналогично
+        const string = "{bar} {percent}% | Осталось: {eta}s | Скорость: {speed}/s | {transferred}/{total}" // Аналогично
         return string
             .replace("{bar}", this.getBar(progress.percentage))
             .replace("{percent}", progress.percentage.toFixed(2))
@@ -54,10 +54,11 @@ export class ProgressHelper {
             .replace("{total}", this.bytesToSize(progress.length))
     }
 
-    private static getBar(percentage: number): string {
+    private static getBar(percentage: number, size: number = 0): string {
         // calculate barsize
-        const completeSize = Math.round((percentage / 100) * this.barsize)
-        const incompleteSize = this.barsize - completeSize
+        const barsize = size !== 0 ? size : this.barsize
+        const completeSize = Math.round((percentage / 100) * barsize)
+        const incompleteSize = barsize - completeSize
 
         // generate bar string by stripping the pre-rendered strings
         return this.barCompleteChar.repeat(completeSize) + this.barIncompleteChar.repeat(incompleteSize)
