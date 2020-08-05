@@ -38,8 +38,8 @@ export class CommandsManager {
                 const hits = completions.filter((c) => c.startsWith(line.toLowerCase()))
                 return [hits.length ? hits : completions, line]
             },
+            prompt: "",
         })
-        this.console.setPrompt("")
         this.console.on("line", (line) => {
             const args = line.trim().split(/ +/)
             const cmd = args.shift().toLowerCase()
