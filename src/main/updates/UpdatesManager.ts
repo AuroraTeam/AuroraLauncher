@@ -17,8 +17,8 @@ export class UpdatesManager {
         if (folders.length !== 0) {
             LogHelper.info("Syncing updates dir")
             let startTime = new Date().getTime()
-            folders.forEach((el) => {
-                this.hDirs.set(el, this.hashDir(path.resolve(StorageHelper.updatesDir, el)))
+            folders.forEach(async (el) => {
+                this.hDirs.set(el, await this.hashDir(path.resolve(StorageHelper.updatesDir, el)))
                 LogHelper.info('Syncing "%s" - %dms', el, new Date().getTime() - startTime)
             })
             LogHelper.info("Syncing updates dir end")
@@ -27,16 +27,18 @@ export class UpdatesManager {
         }
     }
 
-    hashDir(inDir: string, arrayOfFiles?: HDir[]): HDir[] {
+    async hashDir(inDir: string, arrayOfFiles?: HDir[]): Promise<HDir[]> {
         let output: HDir[] = arrayOfFiles || []
         let dir: string[] = fs.readdirSync(inDir)
-        for (let p of dir) {
-            let hash: HDir = this.hashFile(path.resolve(inDir, p))
-            output.push(hash)
-            if (hash.isDir) {
-                output.concat(this.hashDir(hash.path, output))
-            }
-        }
+        await Promise.all(
+            dir.map(async (p) => {
+                let hash: HDir = this.hashFile(path.resolve(inDir, p))
+                output.push(hash)
+                if (hash.isDir) {
+                    output.concat(await this.hashDir(hash.path, output))
+                }
+            })
+        )
         return output
     }
 
