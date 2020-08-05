@@ -1,8 +1,10 @@
 import * as fs from "fs"
 import * as path from "path"
+
 import * as yauzl from "yauzl"
-import { ProgressHelper } from "./ProgressHelper"
+
 import { LogHelper } from "./LogHelper"
+import { ProgressHelper } from "./ProgressHelper"
 
 export class ZipHelper {
     /**
@@ -12,7 +14,7 @@ export class ZipHelper {
      */
     static unzipArchive(archive: string, destDir: string) {
         return new Promise((resolve) => {
-            yauzl.open(archive, {lazyEntries: true}, (err, zipfile) => {
+            yauzl.open(archive, { lazyEntries: true }, (err, zipfile) => {
                 if (err) LogHelper.error(err)
 
                 const length = zipfile.fileSize
@@ -27,7 +29,7 @@ export class ZipHelper {
                     } else {
                         remaining -= entry.compressedSize
                         progress.emit("progress", {
-                            percentage: (length - remaining) / length * 100
+                            percentage: ((length - remaining) / length) * 100,
                         })
                         zipfile.openReadStream(entry, (err, readStream) => {
                             if (err) throw err
@@ -42,7 +44,7 @@ export class ZipHelper {
                     progress.emit("end")
                     resolve(true)
                 })
-                zipfile.on("error", error => LogHelper.error(error))
+                zipfile.on("error", (error) => LogHelper.error(error))
             })
         })
     }
