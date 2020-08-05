@@ -6,7 +6,7 @@ export class ProfileConfig {
     version: string
     title: string
     uuid: string
-    server: Array<ProfileServer>
+    server: ProfileServer[]
     sortIndex: number
 
     // Assets
@@ -15,20 +15,19 @@ export class ProfileConfig {
 
     // Updates
     updatesDir: string
-    update: Array<string>
-    updateVerify: Array<string>
-    updateExclusions: Array<string>
-    updateOptional: ProfileOptional
+    update: string[]
+    updateWath: string[]
+    wathExclusions: string[]
+    updateOptional: ProfileOptional[]
 
     // Launch client
-    classPath: Array<string>
-    jvmArgs: Array<string>
-    clientArgs: Array<string>
+    classPath: string[]
+    jvmArgs: string[]
+    clientArgs: string[]
     mainClass: string
 
     // Whitelist
-    whiteListUsers: Array<string>
-    whiteListPermission: boolean
+    whiteListUsers: string[]
     hideProfile: boolean
     message: string
 }
@@ -39,8 +38,8 @@ export class ProfileOptional {
     description: string
     mark: boolean
     filename: string
-    conflict: Array<number>
-    children: ProfileOptional
+    conflict: number[]
+    children: ProfileOptional[]
 }
 
 export class ProfileServer {
