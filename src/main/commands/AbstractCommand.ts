@@ -8,7 +8,7 @@ export abstract class AbstractCommand {
     // [arg] - обязательный аргумент
 
     constructor(name: string, description: string, category: Category, usage?: string) {
-        this.name = name
+        this.name = name.toLowerCase()
         this.description = description
         this.category = category
         this.usage = usage

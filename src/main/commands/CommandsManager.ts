@@ -37,14 +37,14 @@ export class CommandsManager {
             output: process.stdout,
             completer: (line: string) => {
                 const completions = Array.from(this.commands.keys())
-                const hits = completions.filter((c) => c.startsWith(line))
+                const hits = completions.filter((c) => c.startsWith(line.toLowerCase()))
                 return [hits.length ? hits : completions, line]
             },
+            prompt: "",
         })
-        this.console.setPrompt("")
         this.console.on("line", (line) => {
             const args = line.trim().split(/ +/)
-            const cmd = args.shift()
+            const cmd = args.shift().toLowerCase()
             if (!this.commands.has(cmd)) return LogHelper.error(`Command "${cmd}" not found!`)
             LogHelper.dev(`Invoke "${cmd}" command`)
             this.commands.get(cmd).invoke(...args)

@@ -4,13 +4,14 @@ import * as http from "http"
 import * as https from "https"
 import * as path from "path"
 import { URL } from "url"
+
 import * as rimraf from "rimraf"
 
 import { LogHelper } from "../helpers/LogHelper"
 import { ProgressHelper } from "../helpers/ProgressHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
-import { App } from "../LauncherServer"
 import { ZipHelper } from "../helpers/ZipHelper"
+import { App } from "../LauncherServer"
 
 // TODO Реализовать работу с http2
 // TODO dev logs
@@ -140,11 +141,14 @@ export class MirrorManager {
      * @returns Promise который вернёт название временного файла в случае успеха
      */
     downloadFile(url: URL): Promise<string> {
-        const handler = url.protocol === "https:" ? https : http
-        const tempFilename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
-        const tempFile = fs.createWriteStream(tempFilename)
-
         return new Promise((resolve, reject) => {
+            const handler = url.protocol === "https:" ? https : http
+            const tempFilename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
+            const tempFile = fs.createWriteStream(tempFilename)
+            tempFile.on("close", () => {
+                resolve(tempFilename)
+            })
+
             handler
                 .get(url, (res) => {
                     res.pipe(
@@ -152,18 +156,6 @@ export class MirrorManager {
                             length: parseInt(res.headers["content-length"], 10),
                         })
                     ).pipe(tempFile)
-                    res.on("end", () => {
-                        /**
-                         * Крайне интересный костыль
-                         * без него при скачивании с очень быстрой скоростью (например с локалхоста)
-                         * архиватор отлетает с ошибкой `end of central directory record signature not found`
-                         * а также плывёт вывод в консоли
-                         * Пока хз как решить, так что оставлю пока так
-                         */
-                        setTimeout(() => {
-                            resolve(tempFilename)
-                        }, 10)
-                    })
                 })
                 .on("error", (err) => {
                     fs.unlinkSync(tempFilename)
@@ -178,8 +170,8 @@ export class MirrorManager {
      * @returns Promise который вернёт `true` в случае существования файла или `false` при его отсутствии или ошибке
      */
     existFile(url: URL): Promise<boolean> {
-        const handler = url.protocol === "https:" ? https : http
         return new Promise((resolve) => {
+            const handler = url.protocol === "https:" ? https : http
             handler
                 .request(url, { method: "HEAD" }, (res) => {
                     return new RegExp(/2[\d]{2}/).test(res.statusCode.toString()) ? resolve(true) : resolve(false)
