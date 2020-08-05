@@ -7,6 +7,7 @@ import { HelpCommand } from "./basic/HelpCommand"
 import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetCommand } from "./updates/DownloadAssetCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
+import { SyncUpdatesCommand } from './updates/SyncUpdatesCommand';
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
@@ -23,6 +24,7 @@ export class CommandsManager {
         this.registerCommand(new HelpCommand())
         this.registerCommand(new DownloadClientCommand())
         this.registerCommand(new DownloadAssetCommand())
+        this.registerCommand(new SyncUpdatesCommand())
     }
 
     registerCommand(x: AbstractCommand): void {
