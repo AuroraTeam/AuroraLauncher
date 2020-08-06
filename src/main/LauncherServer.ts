@@ -24,7 +24,10 @@ export class LauncherServer extends EventEmitter {
     private _SocketManager: SocketManager
     private _UpdatesManager: UpdatesManager
 
+    private inited: boolean = false
+
     main(): void {
+        if (this.inited) return
         LogHelper.raw(
             colors.bold(
                 colors.cyan("AuroraLauncher ") +
@@ -46,6 +49,7 @@ export class LauncherServer extends EventEmitter {
         this._UpdatesManager = new UpdatesManager()
         this.emit("postInit")
         LogHelper.info("Initialization end")
+        this.inited = true
     }
 
     get ConfigManager(): ConfigManager {
