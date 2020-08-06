@@ -11,7 +11,7 @@ export class HelpCommand extends AbstractCommand {
 
     invoke(): void {
         let commandsList: Map<Category, Array<AbstractCommand>> = new Map()
-        App.CommandsManager.commands.forEach((value) => {
+        App.getCommandsManager().commands.forEach((value) => {
             let arr: Array<AbstractCommand> = commandsList.has(value.getCategory())
                 ? commandsList.get(value.getCategory())
                 : []

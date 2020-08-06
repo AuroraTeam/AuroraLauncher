@@ -14,15 +14,43 @@ import { SocketManager } from "./requests/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
 
 export class LauncherServer {
-    readonly ConfigManager: ConfigManager
-    readonly AuthManager: AuthManager
-    readonly CommandsManager: CommandsManager
-    readonly MirrorManager: MirrorManager
-    readonly ModulesManager: ModulesManager
-    readonly SocketManager: SocketManager
-    readonly UpdatesManager: UpdatesManager
+    private ConfigManager: ConfigManager
+    private AuthManager: AuthManager
+    private CommandsManager: CommandsManager
+    private MirrorManager: MirrorManager
+    private ModulesManager: ModulesManager
+    private SocketManager: SocketManager
+    private UpdatesManager: UpdatesManager
 
-    constructor() {
+    public getConfigManager(): ConfigManager {
+        return this.ConfigManager;
+    }
+
+    public getAuthManager(): AuthManager {
+        return this.AuthManager;
+    }
+
+    public getCommandsManager(): CommandsManager {
+        return this.CommandsManager;
+    }
+
+    public getMirrorManager(): MirrorManager {
+        return this.MirrorManager;
+    }
+
+    public getModulesManager(): ModulesManager {
+        return this.ModulesManager;
+    }
+
+    public getSocketManager(): SocketManager {
+        return this.SocketManager;
+    }
+
+    public getUpdatesManager(): UpdatesManager {
+        return this.UpdatesManager;
+    }
+
+    main(): void {
         LogHelper.raw(
             colors.bold(
                 colors.cyan("AuroraLauncher ") +
@@ -48,3 +76,4 @@ export class LauncherServer {
 }
 
 export const App = new LauncherServer()
+App.main()

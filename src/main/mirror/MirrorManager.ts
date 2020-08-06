@@ -23,12 +23,12 @@ export class MirrorManager {
      * @param dirName - Название конечной папки
      */
     async downloadClient(clientName: string, dirName: string) {
-        const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
+        const mirrors: string[] = App.getConfigManager().getProperty("updatesUrl")
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
         if (fs.existsSync(clientDir)) return LogHelper.error("Папка с таким названием уже существует!")
         const existClients: Map<number, string> = new Map()
 
-        App.CommandsManager.console.pause()
+        App.getCommandsManager().console.pause()
         await Promise.all(
             // async mirror check
             mirrors.map(async (mirror, i) => {
@@ -42,7 +42,7 @@ export class MirrorManager {
 
         if (existClients.size == 0) {
             LogHelper.error(`Клиент не найден!`)
-            App.CommandsManager.console.resume()
+            App.getCommandsManager().console.resume()
             return
         }
 
@@ -57,7 +57,7 @@ export class MirrorManager {
         } catch (error) {
             LogHelper.error("Ошибка при загрузке клиента!")
             LogHelper.debug(error)
-            App.CommandsManager.console.resume()
+            App.getCommandsManager().console.resume()
             return
         }
 
@@ -70,14 +70,14 @@ export class MirrorManager {
             fs.rmdirSync(clientDir)
             LogHelper.error("Ошибка при распаковке клиента!")
             LogHelper.debug(error)
-            App.CommandsManager.console.resume()
+            App.getCommandsManager().console.resume()
             return
         } finally {
             rimraf(path.resolve(StorageHelper.tempDir, "*"), () => {})
         }
 
         LogHelper.info("Клиент успешно загружен!")
-        App.CommandsManager.console.resume()
+        App.getCommandsManager().console.resume()
     }
 
     /**
@@ -86,12 +86,12 @@ export class MirrorManager {
      * @param dirName - Название конечной папки
      */
     async downloadAssets(assetsName: string, dirName: string) {
-        const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
+        const mirrors: string[] = App.getConfigManager().getProperty("updatesUrl")
         const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
         if (fs.existsSync(assetsDir)) return LogHelper.error("Папка с таким названием уже существует!")
         const existAssets: Map<number, string> = new Map()
 
-        App.CommandsManager.console.pause()
+        App.getCommandsManager().console.pause()
         await Promise.all(
             mirrors.map(async (mirror, i) => {
                 if (await this.existFile(new URL(`/assets/${assetsName}.zip`, mirror))) existAssets.set(i, mirror)
@@ -100,7 +100,7 @@ export class MirrorManager {
 
         if (existAssets.size == 0) {
             LogHelper.error(`Ассеты не найдены!`)
-            App.CommandsManager.console.resume()
+            App.getCommandsManager().console.resume()
             return
         }
 
@@ -113,7 +113,7 @@ export class MirrorManager {
         } catch (error) {
             LogHelper.error("Ошибка при загрузке ассетов!")
             LogHelper.debug(error)
-            App.CommandsManager.console.resume()
+            App.getCommandsManager().console.resume()
             return
         }
 
@@ -125,14 +125,14 @@ export class MirrorManager {
             fs.rmdirSync(assetsDir)
             LogHelper.error("Ошибка при распаковке ассетов!")
             LogHelper.debug(error)
-            App.CommandsManager.console.resume()
+            App.getCommandsManager().console.resume()
             return
         } finally {
             rimraf(path.resolve(StorageHelper.tempDir, "*"), () => {})
         }
 
         LogHelper.info("Ассеты успешно загружены!")
-        App.CommandsManager.console.resume()
+        App.getCommandsManager().console.resume()
     }
 
     /**

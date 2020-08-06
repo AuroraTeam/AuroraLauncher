@@ -54,9 +54,9 @@ export class UpdatesManager {
         return output
     }
 
-    unpackAssets(): void {}
+    unindexAssets(): void {}
 
-    packAssets(): void {}
+    indexAssets(): void {}
 }
 
 export class HDir {
@@ -64,4 +64,15 @@ export class HDir {
     isDir: boolean
     hashsum?: string
     size?: string
+}
+
+export class digestDir {
+    child: digestDir[] | digestFile[]
+    name: string
+}
+
+export class digestFile {
+    name: string
+    hashsum: string
+    size: number
 }
