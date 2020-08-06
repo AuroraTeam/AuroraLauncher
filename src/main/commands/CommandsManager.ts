@@ -7,7 +7,7 @@ import { HelpCommand } from "./basic/HelpCommand"
 import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetCommand } from "./updates/DownloadAssetCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
-import { SyncUpdatesCommand } from './updates/SyncUpdatesCommand';
+import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()

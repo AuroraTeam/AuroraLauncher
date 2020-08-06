@@ -1,5 +1,7 @@
 require("source-map-support").install()
 
+import { EventEmitter } from "events"
+
 import * as colors from "colors/safe"
 
 import { AuthManager } from "./auth/AuthManager"
@@ -13,7 +15,7 @@ import { ModulesManager } from "./modules/ModulesManager"
 import { SocketManager } from "./requests/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
 
-export class LauncherServer {
+export class LauncherServer extends EventEmitter {
     private _ConfigManager: ConfigManager
     private _AuthManager: AuthManager
     private _CommandsManager: CommandsManager
@@ -21,34 +23,6 @@ export class LauncherServer {
     private _ModulesManager: ModulesManager
     private _SocketManager: SocketManager
     private _UpdatesManager: UpdatesManager
-
-    get ConfigManager(): ConfigManager {
-        return this._ConfigManager;
-    }
-
-    get AuthManager(): AuthManager {
-        return this._AuthManager;
-    }
-
-    get CommandsManager(): CommandsManager {
-        return this._CommandsManager;
-    }
-
-    get MirrorManager(): MirrorManager {
-        return this._MirrorManager;
-    }
-
-    get ModulesManager(): ModulesManager {
-        return this._ModulesManager;
-    }
-
-    get SocketManager(): SocketManager {
-        return this._SocketManager;
-    }
-
-    get UpdatesManager(): UpdatesManager {
-        return this._UpdatesManager;
-    }
 
     main(): void {
         LogHelper.raw(
@@ -70,10 +44,52 @@ export class LauncherServer {
         this._ModulesManager = new ModulesManager()
         this._SocketManager = new SocketManager()
         this._UpdatesManager = new UpdatesManager()
+        this.emit("postInit")
         LogHelper.info("Initialization end")
-        this.ModulesManager.emit("postInit")
+    }
+
+    get ConfigManager(): ConfigManager {
+        return this._ConfigManager
+    }
+
+    get AuthManager(): AuthManager {
+        return this._AuthManager
+    }
+
+    get CommandsManager(): CommandsManager {
+        return this._CommandsManager
+    }
+
+    get MirrorManager(): MirrorManager {
+        return this._MirrorManager
+    }
+
+    get ModulesManager(): ModulesManager {
+        return this._ModulesManager
+    }
+
+    get SocketManager(): SocketManager {
+        return this._SocketManager
+    }
+
+    get UpdatesManager(): UpdatesManager {
+        return this._UpdatesManager
     }
 }
 
 export const App = new LauncherServer()
 App.main()
+
+export declare interface LauncherServer {
+    on(event: "postInit", listener: Function): this
+    once(event: "postInit", listener: Function): this
+    addListener(event: "postInit", listener: Function): this
+    removeListener(event: "postInit", listener: Function): this
+    emit(event: "postInit"): boolean
+
+    on(event: "close", listener: Function): this
+    once(event: "close", listener: Function): this
+    addListener(event: "close", listener: Function): this
+    removeListener(event: "close", listener: Function): this
+    emit(event: "close"): boolean
+}
