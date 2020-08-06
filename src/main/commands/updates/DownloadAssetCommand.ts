@@ -11,6 +11,6 @@ export class DownloadAssetCommand extends AbstractCommand {
         const [clientName, dirName] = args
         if (!clientName) return LogHelper.error("Укажите название/версию ассетов!")
         if (!dirName) return LogHelper.error("Укажите название папки для ассетов!")
-        App.getMirrorManager().downloadAssets(clientName, dirName)
+        App.MirrorManager.downloadAssets(clientName, dirName)
     }
 }

@@ -7,6 +7,6 @@ export class SyncUpdatesCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        App.getUpdatesManager().hashUpdatesDir()
+        App.UpdatesManager.hashUpdatesDir()
     }
 }

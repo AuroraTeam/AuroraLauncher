@@ -14,40 +14,40 @@ import { SocketManager } from "./requests/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
 
 export class LauncherServer {
-    private ConfigManager: ConfigManager
-    private AuthManager: AuthManager
-    private CommandsManager: CommandsManager
-    private MirrorManager: MirrorManager
-    private ModulesManager: ModulesManager
-    private SocketManager: SocketManager
-    private UpdatesManager: UpdatesManager
+    private _ConfigManager: ConfigManager
+    private _AuthManager: AuthManager
+    private _CommandsManager: CommandsManager
+    private _MirrorManager: MirrorManager
+    private _ModulesManager: ModulesManager
+    private _SocketManager: SocketManager
+    private _UpdatesManager: UpdatesManager
 
-    public getConfigManager(): ConfigManager {
-        return this.ConfigManager;
+    get ConfigManager(): ConfigManager {
+        return this._ConfigManager;
     }
 
-    public getAuthManager(): AuthManager {
-        return this.AuthManager;
+    get AuthManager(): AuthManager {
+        return this._AuthManager;
     }
 
-    public getCommandsManager(): CommandsManager {
-        return this.CommandsManager;
+    get CommandsManager(): CommandsManager {
+        return this._CommandsManager;
     }
 
-    public getMirrorManager(): MirrorManager {
-        return this.MirrorManager;
+    get MirrorManager(): MirrorManager {
+        return this._MirrorManager;
     }
 
-    public getModulesManager(): ModulesManager {
-        return this.ModulesManager;
+    get ModulesManager(): ModulesManager {
+        return this._ModulesManager;
     }
 
-    public getSocketManager(): SocketManager {
-        return this.SocketManager;
+    get SocketManager(): SocketManager {
+        return this._SocketManager;
     }
 
-    public getUpdatesManager(): UpdatesManager {
-        return this.UpdatesManager;
+    get UpdatesManager(): UpdatesManager {
+        return this._UpdatesManager;
     }
 
     main(): void {
@@ -63,13 +63,13 @@ export class LauncherServer {
         LogHelper.raw(colors.bold(colors.green("Documentation page ") + colors.blue("https://aurora-launcher.ru/wiki")))
         StorageHelper.createMissing()
         LogHelper.info("Initialization start")
-        this.ConfigManager = new ConfigManager()
-        this.AuthManager = new AuthManager()
-        this.CommandsManager = new CommandsManager()
-        this.MirrorManager = new MirrorManager()
-        this.ModulesManager = new ModulesManager()
-        this.SocketManager = new SocketManager()
-        this.UpdatesManager = new UpdatesManager()
+        this._ConfigManager = new ConfigManager()
+        this._AuthManager = new AuthManager()
+        this._CommandsManager = new CommandsManager()
+        this._MirrorManager = new MirrorManager()
+        this._ModulesManager = new ModulesManager()
+        this._SocketManager = new SocketManager()
+        this._UpdatesManager = new UpdatesManager()
         LogHelper.info("Initialization end")
         this.ModulesManager.emit("postInit")
     }

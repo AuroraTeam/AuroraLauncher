@@ -11,6 +11,6 @@ export class DownloadClientCommand extends AbstractCommand {
         const [clientName, dirName] = args
         if (!clientName) return LogHelper.error("Укажите название/версию клиента!")
         if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
-        App.getMirrorManager().downloadClient(clientName, dirName)
+        App.MirrorManager.downloadClient(clientName, dirName)
     }
 }
