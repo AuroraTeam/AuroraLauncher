@@ -8,6 +8,7 @@ import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetCommand } from "./updates/DownloadAssetCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
+import { App } from "../LauncherServer"
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
@@ -45,7 +46,7 @@ export class CommandsManager {
         this.console.on("line", (line) => {
             const args = line.trim().split(/ +/)
             const cmd = args.shift().toLowerCase()
-            if (!this.commands.has(cmd)) return LogHelper.error(`Command "${cmd}" not found!`)
+            if (!this.commands.has(cmd)) return LogHelper.error(App.LangManager.getTranslate("CommandsManager.cmdNotFound"), cmd)
             LogHelper.dev(`Invoke "${cmd}" command`)
             this.commands.get(cmd).invoke(...args)
         })

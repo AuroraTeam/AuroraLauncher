@@ -1,0 +1,5 @@
+{
+    "CommandsManager": {
+        "cmdNotFound" : "Command `%s` not found!"
+    }
+}

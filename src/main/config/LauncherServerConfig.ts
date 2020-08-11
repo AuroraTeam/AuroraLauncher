@@ -24,6 +24,7 @@ export enum Envirovement {
 
 export class LauncherServerConfig {
     configVersion: string
+    lang: string
 
     env: Envirovement
 

@@ -14,9 +14,11 @@ import { MirrorManager } from "./mirror/MirrorManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { SocketManager } from "./requests/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
+import { LangManager } from "./langs/LangManager"
 
 export class LauncherServer extends EventEmitter {
     private _ConfigManager: ConfigManager
+    private _LangManager: LangManager
     private _AuthManager: AuthManager
     private _CommandsManager: CommandsManager
     private _MirrorManager: MirrorManager
@@ -41,6 +43,7 @@ export class LauncherServer extends EventEmitter {
         StorageHelper.createMissing()
         LogHelper.info("Initialization start")
         this._ConfigManager = new ConfigManager()
+        this._LangManager = new LangManager()
         this._AuthManager = new AuthManager()
         this._CommandsManager = new CommandsManager()
         this._MirrorManager = new MirrorManager()
@@ -54,6 +57,10 @@ export class LauncherServer extends EventEmitter {
 
     get ConfigManager(): ConfigManager {
         return this._ConfigManager
+    }
+
+    get LangManager(): LangManager {
+        return this._LangManager
     }
 
     get AuthManager(): AuthManager {

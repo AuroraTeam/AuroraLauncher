@@ -34,6 +34,7 @@ export class ConfigManager {
     getDefaults(): LauncherServerConfig {
         const config = new LauncherServerConfig()
         config.configVersion = "1"
+        config.lang = "ru"
         config.env = Envirovement.DEV
         config.updatesUrl = ["https://mirror.aurora-launcher.ru/"]
         config.auth = new AuthConfig()
