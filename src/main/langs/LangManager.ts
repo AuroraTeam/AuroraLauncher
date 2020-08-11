@@ -1,5 +1,3 @@
-import * as ruLang from "./ru.json";
-import * as enLang from "./en.json";
 import { App } from "../LauncherServer";
 import { LogHelper } from "../helpers/LogHelper";
 
@@ -8,8 +6,8 @@ export class LangManager {
     currentLang: string = App.ConfigManager.getProperty("lang")
 
     constructor() {
-        this.langList.set("ru", ruLang)
-        this.langList.set("en", enLang)
+        this.langList.set("ru", require("./ru.json"))
+        this.langList.set("en", require("./en.json"))
     }
 
     getTranslate(langString: string): string {
