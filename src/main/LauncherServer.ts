@@ -9,7 +9,6 @@ import { CommandsManager } from "./commands/CommandsManager"
 import { ConfigManager } from "./config/ConfigManager"
 import { LogHelper } from "./helpers/LogHelper"
 import { StorageHelper } from "./helpers/StorageHelper"
-import { VersionHelper } from "./helpers/VersionHelper"
 import { MirrorManager } from "./mirror/MirrorManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { SocketManager } from "./requests/SocketManager"
@@ -35,8 +34,8 @@ export class LauncherServer extends EventEmitter {
                 colors.cyan("AuroraLauncher ") +
                     colors.green("LauncherServer ") +
                     "v" +
-                    colors.yellow(`${VersionHelper.getVersion()} `) +
-                    colors.blue("https://gitlab.com/aurorateam")
+                    colors.yellow(require("../../package").version) +
+                    colors.blue(" https://gitlab.com/aurorateam")
             )
         )
         LogHelper.raw(colors.bold(colors.green("Documentation page ") + colors.blue("https://aurora-launcher.ru/wiki")))

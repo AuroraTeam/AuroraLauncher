@@ -1,7 +1,6 @@
 import * as colors from "colors/safe"
 
 import { LogHelper } from "../../helpers/LogHelper"
-import { VersionHelper } from "../../helpers/VersionHelper"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class AboutCommand extends AbstractCommand {
@@ -15,7 +14,7 @@ export class AboutCommand extends AbstractCommand {
                 colors.cyan("AuroraLauncher ") +
                     colors.green("LauncherServer ") +
                     "v" +
-                    colors.yellow(`${VersionHelper.getVersion()} `)
+                    colors.yellow(require("../../../../package").version + " ")
             )
         )
 

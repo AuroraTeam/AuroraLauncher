@@ -15,7 +15,7 @@ module.exports = {
         filename: "LauncherServer.js",
     },
     resolve: {
-        extensions: [".ts", ".js"], //resolve all the modules other than index.ts
+        extensions: [".ts", ".js", ".json"], //resolve all the modules other than index.ts
     },
     module: {
         rules: [
