@@ -6,6 +6,7 @@ import { TextureProviderConfig } from "../auth/textureProviders/AbstractTextureP
 import { StorageHelper } from "../helpers/StorageHelper"
 import { AuthConfig, Envirovement, LauncherServerConfig, WebSocketConfig } from "./LauncherServerConfig"
 import fs = require("fs")
+import { App } from "../LauncherServer"
 
 export class ConfigManager {
     private config: LauncherServerConfig
@@ -21,12 +22,15 @@ export class ConfigManager {
         }
     }
 
-    getProperty(property: string): any {
+    getProperty(property: string, raw: boolean = false): any {
         const path = property.split(".")
         let prop: any = this.config
         path.forEach((el) => {
             prop = prop[el]
-            if (prop === undefined) LogHelper.fatal(`Property ${property} not found!`)
+            if (prop === undefined) {
+                if (!raw) LogHelper.fatal(App.LangManager.getTranslate("ConfigManager.propNotFound"), property)
+                return prop
+            }
         })
         return prop
     }
@@ -34,7 +38,7 @@ export class ConfigManager {
     getDefaults(): LauncherServerConfig {
         const config = new LauncherServerConfig()
         config.configVersion = "1"
-        config.lang = "ru"
+        config.lang = "en"
         config.env = Envirovement.DEV
         config.updatesUrl = ["https://mirror.aurora-launcher.ru/"]
         config.auth = new AuthConfig()

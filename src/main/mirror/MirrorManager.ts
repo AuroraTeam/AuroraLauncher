@@ -25,7 +25,7 @@ export class MirrorManager {
     async downloadClient(clientName: string, dirName: string) {
         const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
-        if (fs.existsSync(clientDir)) return LogHelper.error("Папка с таким названием уже существует!")
+        if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
         const existClients: Map<number, string> = new Map()
 
         App.CommandsManager.console.pause()
@@ -41,7 +41,7 @@ export class MirrorManager {
         )
 
         if (existClients.size == 0) {
-            LogHelper.error(`Клиент не найден!`)
+            LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.notFound"))
             App.CommandsManager.console.resume()
             return
         }
@@ -51,11 +51,11 @@ export class MirrorManager {
         let client: string
 
         try {
-            LogHelper.info("Клиент найден, загрузка...")
+            LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.download"))
             profile = await this.downloadFile(new URL(`/clients/${clientName}.json`, mirror))
             client = await this.downloadFile(new URL(`/clients/${clientName}.zip`, mirror))
         } catch (error) {
-            LogHelper.error("Ошибка при загрузке клиента!")
+            LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.downloadErr"))
             LogHelper.debug(error)
             App.CommandsManager.console.resume()
             return
@@ -64,11 +64,11 @@ export class MirrorManager {
         fs.copyFileSync(profile.toString(), path.resolve(StorageHelper.profilesDir, `${dirName}.json`))
         try {
             fs.mkdirSync(clientDir)
-            LogHelper.info("Клиент загружен, распаковка...")
+            LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.unpacking"))
             await ZipHelper.unzipArchive(client.toString(), clientDir)
         } catch (error) {
             fs.rmdirSync(clientDir)
-            LogHelper.error("Ошибка при распаковке клиента!")
+            LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.unpackingErr"))
             LogHelper.debug(error)
             App.CommandsManager.console.resume()
             return
@@ -76,7 +76,7 @@ export class MirrorManager {
             rimraf(path.resolve(StorageHelper.tempDir, "*"), () => {})
         }
 
-        LogHelper.info("Клиент успешно загружен!")
+        LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.success"))
         App.CommandsManager.console.resume()
     }
 
@@ -88,7 +88,7 @@ export class MirrorManager {
     async downloadAssets(assetsName: string, dirName: string) {
         const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
-        if (fs.existsSync(assetsDir)) return LogHelper.error("Папка с таким названием уже существует!")
+        if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
         const existAssets: Map<number, string> = new Map()
 
         App.CommandsManager.console.pause()
@@ -99,7 +99,7 @@ export class MirrorManager {
         )
 
         if (existAssets.size == 0) {
-            LogHelper.error(`Ассеты не найдены!`)
+            LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.notFound"))
             App.CommandsManager.console.resume()
             return
         }
@@ -108,10 +108,10 @@ export class MirrorManager {
         let assets: string
 
         try {
-            LogHelper.info("Ассеты найдены, загрузка...")
+            LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.download"))
             assets = await this.downloadFile(new URL(`/assets/${assetsName}.zip`, mirror))
         } catch (error) {
-            LogHelper.error("Ошибка при загрузке ассетов!")
+            LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.downloadErr"))
             LogHelper.debug(error)
             App.CommandsManager.console.resume()
             return
@@ -119,11 +119,11 @@ export class MirrorManager {
 
         try {
             fs.mkdirSync(assetsDir)
-            LogHelper.info("Ассеты загружены, распаковка...")
+            LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.unpacking"))
             await ZipHelper.unzipArchive(assets.toString(), assetsDir)
         } catch (error) {
             fs.rmdirSync(assetsDir)
-            LogHelper.error("Ошибка при распаковке ассетов!")
+            LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.unpackingErr"))
             LogHelper.debug(error)
             App.CommandsManager.console.resume()
             return
@@ -131,7 +131,7 @@ export class MirrorManager {
             rimraf(path.resolve(StorageHelper.tempDir, "*"), () => {})
         }
 
-        LogHelper.info("Ассеты успешно загружены!")
+        LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.success"))
         App.CommandsManager.console.resume()
     }
 

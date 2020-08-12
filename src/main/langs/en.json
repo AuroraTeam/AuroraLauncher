@@ -1,5 +1,40 @@
 {
+    "LauncherServer" : {
+        "initEnd": "Initialization end"
+    },
+    "ConfigManager" : {
+        "propNotFound": "Property \"%s\" not found!"
+    },
+    "LangManager" : {
+        "strNotFound": "String \"%s\" not found!"
+    },
     "CommandsManager": {
-        "cmdNotFound" : "Command `%s` not found!"
+        "cmdNotFound": "Command \"%s\" not found!",
+        "invokeCmd": "Invoke %s command"
+    },
+    "MirrorManager": {
+        "dirExist": "A folder with this name already exists!",
+        "client": {
+            "notFound": "Client not found!",
+            "download": "Client found, downloading ...",
+            "downloadErr": "Error downloading client!",
+            "unpacking": "Client loaded, unpacking ...",
+            "unpackingErr": "Error unpacking client!",
+            "success": "Client loaded successfully!"
+        },
+        "assets": {
+            "notFound": "No assets found!",
+            "download": "Assets found, loading ...",
+            "downloadErr": "Error downloading assets!",
+            "unpacking": "Assets loaded, unpacking ...",
+            "unpackingErr": "Error unpacking assets!",
+            "success": "Assets loaded successfully!"
+        }
+    },
+    "UpdatesManager": {
+        "sync": "Syncing updates dir",
+        "syncTime": "Syncing \"%s\" - %dms",
+        "syncEnd": "Syncing updates dir end",
+        "syncSkip": "Updates dir empty. Skip sync"
     }
 }

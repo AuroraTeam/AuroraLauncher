@@ -50,7 +50,7 @@ export class LauncherServer extends EventEmitter {
         this._SocketManager = new SocketManager()
         this._UpdatesManager = new UpdatesManager()
         this.emit("postInit")
-        LogHelper.info("Initialization end")
+        LogHelper.info(this.LangManager.getTranslate("LauncherServer.initEnd"))
         this.inited = true
     }
 

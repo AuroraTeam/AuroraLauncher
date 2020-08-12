@@ -4,6 +4,7 @@ import * as path from "path"
 
 import { LogHelper } from "./../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
+import { App } from "../LauncherServer"
 
 export class UpdatesManager {
     hDirs: Map<string, HDir[]> = new Map()
@@ -15,15 +16,15 @@ export class UpdatesManager {
     hashUpdatesDir(): void {
         let folders = fs.readdirSync(StorageHelper.updatesDir)
         if (folders.length !== 0) {
-            LogHelper.info("Syncing updates dir")
+            LogHelper.info(App.LangManager.getTranslate("UpdatesManager.sync"))
             let startTime = new Date().getTime()
             folders.forEach((el) => {
                 this.hDirs.set(el, this.hashDir(path.resolve(StorageHelper.updatesDir, el)))
-                LogHelper.info('Syncing "%s" - %dms', el, new Date().getTime() - startTime)
+                LogHelper.info(App.LangManager.getTranslate("UpdatesManager.syncTime"), el, new Date().getTime() - startTime)
             })
-            LogHelper.info("Syncing updates dir end")
+            LogHelper.info(App.LangManager.getTranslate("UpdatesManager.syncEnd"))
         } else {
-            LogHelper.info("Updates dir empty. Skip sync")
+            LogHelper.info(App.LangManager.getTranslate("UpdatesManager.syncSkip"))
         }
     }
 
