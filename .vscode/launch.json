@@ -6,9 +6,8 @@
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceRoot}",
-            "program": "${workspaceRoot}/src/main/LauncherServer.ts",
+            "program": "${workspaceRoot}/dist/LauncherServer.js",
             "preLaunchTask": "npm: build:dev",
-            "outFiles": ["${workspaceRoot}/dist/LauncherServer.js"],
             "console": "integratedTerminal",
             "args": ["--dev"],
             "sourceMaps": true
