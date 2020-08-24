@@ -7,10 +7,12 @@ export class DownloadAssetCommand extends AbstractCommand {
         super("downloadasset", "Загрузить ресурсы с зеркала", Category.UPDATES, "<version> <folder name>")
     }
 
-    invoke(...args: string[]): void {
+    async invoke(...args: string[]): Promise<void> {
         const [clientName, dirName] = args
         if (!clientName) return LogHelper.error("Укажите название/версию ассетов!")
         if (!dirName) return LogHelper.error("Укажите название папки для ассетов!")
-        App.MirrorManager.downloadAssets(clientName, dirName)
+        App.CommandsManager.console.pause()
+        await App.MirrorManager.downloadAssets(clientName, dirName)
+        App.CommandsManager.console.resume()
     }
 }

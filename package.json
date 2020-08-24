@@ -24,7 +24,7 @@
         "start": "node dist/LauncherServer.js"
     },
     "devDependencies": {
-        "@types/node": "^12.12.21",
+        "@types/node": "^12.12.50",
         "@types/progress-stream": "^2.0.0",
         "@types/rimraf": "^3.0.0",
         "@types/semver": "^7.3.1",
