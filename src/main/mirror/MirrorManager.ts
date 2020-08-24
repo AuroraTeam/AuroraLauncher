@@ -35,7 +35,8 @@ export class MirrorManager {
             })
         )
 
-        if (existClients.size == 0) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.notFound"))
+        if (existClients.size == 0)
+            return LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.notFound"))
 
         const mirror = existClients.values().next().value
         let profile: string

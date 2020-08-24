@@ -1,8 +1,8 @@
-import { App } from "../LauncherServer";
-import { LogHelper } from "../helpers/LogHelper";
+import { LogHelper } from "../helpers/LogHelper"
+import { App } from "../LauncherServer"
 
 export class LangManager {
-    langList: Map<string, Object> = new Map
+    langList: Map<string, Object> = new Map()
     currentLang: string = App.ConfigManager.getProperty("lang", true) || "en"
 
     constructor() {
@@ -13,7 +13,7 @@ export class LangManager {
 
     getTranslate(langString: string): string {
         const path = langString.split(".")
-        let dictionary: any  = this.langList.get(this.currentLang)
+        let dictionary: any = this.langList.get(this.currentLang)
         path.forEach((el) => {
             dictionary = dictionary[el]
             if (dictionary === undefined) LogHelper.fatal(this.getTranslate("LangManager.strNotFound"), langString)

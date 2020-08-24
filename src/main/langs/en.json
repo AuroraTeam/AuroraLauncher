@@ -1,11 +1,11 @@
 {
-    "LauncherServer" : {
+    "LauncherServer": {
         "initEnd": "Initialization end"
     },
-    "ConfigManager" : {
+    "ConfigManager": {
         "propNotFound": "Property \"%s\" not found!"
     },
-    "LangManager" : {
+    "LangManager": {
         "strNotFound": "String \"%s\" not found!"
     },
     "CommandsManager": {

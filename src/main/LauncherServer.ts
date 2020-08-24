@@ -9,11 +9,11 @@ import { CommandsManager } from "./commands/CommandsManager"
 import { ConfigManager } from "./config/ConfigManager"
 import { LogHelper } from "./helpers/LogHelper"
 import { StorageHelper } from "./helpers/StorageHelper"
+import { LangManager } from "./langs/LangManager"
 import { MirrorManager } from "./mirror/MirrorManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { SocketManager } from "./requests/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
-import { LangManager } from "./langs/LangManager"
 
 export class LauncherServer extends EventEmitter {
     private _ConfigManager: ConfigManager

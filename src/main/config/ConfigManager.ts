@@ -4,9 +4,9 @@ import { PrimaryProviderConfig } from "../auth/primaryProviders/AbstractProvider
 import { SecondProviderConfig } from "../auth/secondaryProviders/AbstractProvider"
 import { TextureProviderConfig } from "../auth/textureProviders/AbstractTextureProvider"
 import { StorageHelper } from "../helpers/StorageHelper"
+import { App } from "../LauncherServer"
 import { AuthConfig, Envirovement, LauncherServerConfig, WebSocketConfig } from "./LauncherServerConfig"
 import fs = require("fs")
-import { App } from "../LauncherServer"
 
 export class ConfigManager {
     private config: LauncherServerConfig

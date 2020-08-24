@@ -20,7 +20,11 @@ export class UpdatesManager {
             let startTime = new Date().getTime()
             folders.forEach((el) => {
                 this.hDirs.set(el, this.hashDir(path.resolve(StorageHelper.updatesDir, el)))
-                LogHelper.info(App.LangManager.getTranslate("UpdatesManager.syncTime"), el, new Date().getTime() - startTime)
+                LogHelper.info(
+                    App.LangManager.getTranslate("UpdatesManager.syncTime"),
+                    el,
+                    new Date().getTime() - startTime
+                )
             })
             LogHelper.info(App.LangManager.getTranslate("UpdatesManager.syncEnd"))
         } else {

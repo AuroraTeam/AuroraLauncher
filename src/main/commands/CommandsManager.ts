@@ -1,6 +1,7 @@
 import * as ReadLine from "readline"
 
 import { LogHelper } from "../helpers/LogHelper"
+import { App } from "../LauncherServer"
 import { AbstractCommand } from "./AbstractCommand"
 import { AboutCommand } from "./basic/AboutCommand"
 import { HelpCommand } from "./basic/HelpCommand"
@@ -8,7 +9,6 @@ import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetCommand } from "./updates/DownloadAssetCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
-import { App } from "../LauncherServer"
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
@@ -46,7 +46,8 @@ export class CommandsManager {
         this.console.on("line", (line) => {
             const args = line.trim().split(/ +/)
             const cmd = args.shift().toLowerCase()
-            if (!this.commands.has(cmd)) return LogHelper.error(App.LangManager.getTranslate("CommandsManager.cmdNotFound"), cmd)
+            if (!this.commands.has(cmd))
+                return LogHelper.error(App.LangManager.getTranslate("CommandsManager.cmdNotFound"), cmd)
             LogHelper.dev(App.LangManager.getTranslate("CommandsManager.invokeCmd"), cmd)
             this.commands.get(cmd).invoke(...args)
         })

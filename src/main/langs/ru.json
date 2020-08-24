@@ -1,11 +1,11 @@
 {
-    "LauncherServer" : {
+    "LauncherServer": {
         "initEnd": "Инициализация завершена"
     },
-    "ConfigManager" : {
+    "ConfigManager": {
         "propNotFound": "Свойство \"%s\" не найдено!"
     },
-    "LangManager" : {
+    "LangManager": {
         "strNotFound": "Строка \"%s\" не найдена!"
     },
     "CommandsManager": {
