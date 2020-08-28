@@ -8,6 +8,24 @@ export class WebSocketConfig {
     address: string
     ip: string
     port: number
+    useSSL: boolean
+    ssl: {
+        cert: string
+        key: string
+    }
+
+    getDefaults() {
+        const defaults = new WebSocketConfig()
+        defaults.address = "ws://localhost:1370/"
+        defaults.ip = "0.0.0.0"
+        defaults.port = 1370
+        defaults.useSSL = false
+        defaults.ssl = {
+            cert: "/path/to/cert.pem",
+            key: "/path/to/key.pem",
+        }
+        return defaults
+    }
 }
 
 export class AuthConfig {

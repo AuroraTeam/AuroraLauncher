@@ -52,10 +52,7 @@ export class ConfigManager {
         config.auth.textureProvider.type = "none"
         config.hwid = new AuthHandlerConfig()
         config.hwid.type = "none"
-        config.ws = new WebSocketConfig()
-        config.ws.address = "ws://localhost:1370/"
-        config.ws.ip = "0.0.0.0"
-        config.ws.port = 1370
+        config.ws = new WebSocketConfig().getDefaults()
         return config
     }
 
