@@ -47,26 +47,28 @@ export class SocketManager {
     }
 
     requestListener(req: http.IncomingMessage, res: http.ServerResponse) {
+        const urlPath = path.resolve(StorageHelper.updatesDir, req.url.slice(1))
         if (App.ConfigManager.getProperty("ws.hideListing")) {
             res.writeHead(404)
             res.end()
             return
         }
 
-        if (!fs.existsSync(path.resolve(StorageHelper.updatesDir, req.url.slice(1)))) {
+        if (!fs.existsSync(urlPath)) {
             res.writeHead(404)
             res.end("Not found!")
             return
         }
 
         res.writeHead(200)
-        let stats = fs.statSync(path.resolve(StorageHelper.updatesDir, req.url.slice(1)))
+        let stats = fs.statSync(urlPath)
         if (stats.isDirectory()) {
-            const list = fs.readdirSync(path.resolve(StorageHelper.updatesDir, req.url.slice(1)))
+            const list = fs.readdirSync(urlPath)
             const parent = req.url.slice(-1) == "/" ? req.url.slice(0, -1) : req.url
             res.end(list.map((el) => `<a href="${parent}/${el}">${el}</a>`).join("<br>"))
+            // TODO выход из подпапок через ".."
         } else {
-            res.end(fs.readFileSync(path.resolve(StorageHelper.updatesDir, req.url.slice(1))))
+            res.end(fs.readFileSync(urlPath))
         }
     }
 }
