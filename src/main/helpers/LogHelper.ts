@@ -1,4 +1,8 @@
+import * as fs from "fs"
+
 import * as colors from "colors/safe"
+
+import { StorageHelper } from "./StorageHelper"
 
 export class LogHelper {
     static readonly isDevEnabled = process.argv.includes("--dev")
@@ -36,7 +40,10 @@ export class LogHelper {
     }
 
     private static log(level: LogLevel, msg: any, ...args: any) {
-        if (level == LogLevel.RAW) return console.log(msg, ...args)
+        if (level === LogLevel.RAW) {
+            fs.appendFileSync(StorageHelper.logFile, colors.strip(msg) + "\n")
+            return console.log(msg, ...args)
+        }
 
         const date = new Date()
             .toLocaleString("ru", {
@@ -71,6 +78,7 @@ export class LogHelper {
                 break
         }
         console.log(coloredStr, ...args)
+        fs.appendFileSync(StorageHelper.logFile, colors.strip(coloredStr) + "\n")
     }
 }
 

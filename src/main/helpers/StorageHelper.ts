@@ -9,6 +9,7 @@ export class StorageHelper {
     static logsDir: string = path.resolve(StorageHelper.storageDir, "logs")
     static tempDir: string = path.resolve(StorageHelper.storageDir, "temp")
     static configFile: string = path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json")
+    static logFile: string = path.resolve(StorageHelper.logsDir, "LauncherServer.log")
 
     static createMissing(): void {
         if (!fs.existsSync(this.updatesDir)) fs.mkdirSync(this.updatesDir)
