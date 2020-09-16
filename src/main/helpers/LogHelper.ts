@@ -1,4 +1,5 @@
 import * as fs from "fs"
+import { format } from "util"
 
 import * as colors from "colors/safe"
 
@@ -39,12 +40,8 @@ export class LogHelper {
         this.log(LogLevel.WARN, msg, ...args)
     }
 
-    // а args в лог файлы не подставляются же блять
     private static log(level: LogLevel, msg: any, ...args: any) {
-        if (level === LogLevel.RAW) {
-            console.log(msg, ...args)
-            return this.logToFile(msg)
-        }
+        if (level === LogLevel.RAW) return this.rawLog(msg, ...args)
 
         const date = new Date()
             .toLocaleString("ru", {
@@ -78,12 +75,18 @@ export class LogHelper {
                 coloredStr += colors.yellow(` [${level.toUpperCase()}] ${msg}`)
                 break
         }
-        console.log(coloredStr, ...args)
-        this.logToFile(coloredStr)
+        this.rawLog(coloredStr, ...args)
     }
 
-    private static logToFile(msg: string) {
-        fs.appendFileSync(StorageHelper.logFile, colors.strip(msg) + "\n")
+    /*
+     * Заменил console.log на это
+     * https://nodejs.org/api/util.html#util_util_format_format_args
+     * Оно даже обратно совместимо с console.log (те же подстановочные символы)
+     */
+    private static rawLog(msg: any, ...args: any) {
+        const message = format(msg, ...args) + "\n"
+        process.stdout.write(message)
+        fs.appendFileSync(StorageHelper.logFile, colors.strip(message))
     }
 }
 

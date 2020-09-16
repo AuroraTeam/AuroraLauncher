@@ -74,7 +74,7 @@ export class SocketManager {
             res.write("<style>*{font-family:monospace; font-size:14px}</style>")
             if (parent.length !== 0) {
                 // list.unshift('..') // Рабочее решeние в одну строку
-                let root = parent.split('/').slice(0, -1).join('/')
+                let root = parent.split("/").slice(0, -1).join("/")
                 res.write(SocketUtils.getLink(root || "/", "..") + "<br>")
             }
             res.end(list.map((el) => SocketUtils.getLink(`${parent}/${el}`, el)).join("<br>"))
