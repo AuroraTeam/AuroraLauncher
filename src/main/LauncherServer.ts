@@ -29,6 +29,7 @@ export class LauncherServer extends EventEmitter {
 
     main(): void {
         if (this.inited) return
+        StorageHelper.createMissing()
         LogHelper.raw(
             colors.bold(
                 colors.cyan("AuroraLauncher ") +
@@ -39,7 +40,6 @@ export class LauncherServer extends EventEmitter {
             )
         )
         LogHelper.raw(colors.bold(colors.green("Documentation page ") + colors.blue("https://aurora-launcher.ru/wiki")))
-        StorageHelper.createMissing()
         LogHelper.info("Initialization start")
         this._ConfigManager = new ConfigManager()
         this._LangManager = new LangManager()
