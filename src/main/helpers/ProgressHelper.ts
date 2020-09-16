@@ -1,4 +1,5 @@
 import * as progress from "progress-stream"
+import { App } from "../LauncherServer"
 
 export class ProgressHelper {
     static barCompleteChar: string = "\u2588"
@@ -37,15 +38,13 @@ export class ProgressHelper {
     }
 
     private static getLoadingProgressTemplate(progress: progress.Progress) {
-        const string = "{bar} {percent}%" // Для выноса потом в lang файлы
-        return string
+        return App.LangManager.getTranslate("ProgressHelper.loading")
             .replace("{bar}", this.getBar(progress.percentage, 40))
             .replace("{percent}", progress.percentage.toFixed(2))
     }
 
     private static getDownloadProgressTemplate(progress: progress.Progress) {
-        const string = "{bar} {percent}% | Осталось: {eta}s | Скорость: {speed}/s | {transferred}/{total}" // Аналогично
-        return string
+        return App.LangManager.getTranslate("ProgressHelper.download")
             .replace("{bar}", this.getBar(progress.percentage))
             .replace("{percent}", progress.percentage.toFixed(2))
             .replace("{eta}", progress.eta.toString())

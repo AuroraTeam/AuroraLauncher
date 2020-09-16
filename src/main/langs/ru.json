@@ -36,5 +36,9 @@
         "syncTime": "Папка \"%s\" - %dms",
         "syncEnd": "Синхронизация завершена",
         "syncSkip": "Папка updates пуста. Синхронизация пропущена"
+    },
+    "ProgressHelper": {
+        "loading": "{bar} {percent}%",
+        "download": "{bar} {percent}% | Осталось: {eta}s | Скорость: {speed}/s | {transferred}/{total}"
     }
 }
