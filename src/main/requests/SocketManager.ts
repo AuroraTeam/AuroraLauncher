@@ -65,10 +65,21 @@ export class SocketManager {
         if (stats.isDirectory()) {
             const list = fs.readdirSync(urlPath)
             const parent = req.url.slice(-1) == "/" ? req.url.slice(0, -1) : req.url
-            res.end(list.map((el) => `<a href="${parent}/${el}">${el}</a>`).join("<br>"))
-            // TODO выход из подпапок через ".."
+            res.write("<style>*{font-family:monospace; font-size:14px}</style>")
+            if (parent.length !== 0) {
+                // list.unshift('..') // Рабочее решeние в одну строку
+                let root = parent.split('/').slice(0, -1).join('/')
+                res.write(SocketUtils.getLink(root || "/", "..") + "<br>")
+            }
+            res.end(list.map((el) => SocketUtils.getLink(`${parent}/${el}`, el)).join("<br>"))
         } else {
             res.end(fs.readFileSync(urlPath))
         }
+    }
+}
+
+export class SocketUtils {
+    static getLink(link: string, el: string) {
+        return `<a href="${link}">${el}</a>`
     }
 }
