@@ -9,7 +9,6 @@ import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
 
 // TODO
-// Возможность выключения файлового сервера (при использовании проксирования, например через nginx)
 // Реализовать работу с вебсокетом
 
 export class SocketManager {
@@ -21,29 +20,36 @@ export class SocketManager {
     }
 
     serverInit() {
-        if (App.ConfigManager.getProperty("ws.useSSL")) {
-            this.webServer = https.createServer(
-                {
-                    cert: path.resolve(StorageHelper.storageDir, App.ConfigManager.getProperty("ws.ssl.cert")),
-                    key: path.resolve(StorageHelper.storageDir, App.ConfigManager.getProperty("ws.ssl.key")),
-                },
-                this.requestListener
-            )
-        } else {
-            this.webServer = http.createServer(this.requestListener)
-        }
-        this.webSocketServer = new ws.Server({
-            server: this.webServer,
-        })
-
-        this.webSocketServer.on("connection", (ws: ws) => {
-            ws.on("message", (message) => {
-                console.log("received: %s", message)
+        if (App.ConfigManager.getProperty("ws.enableListing")) {
+            if (App.ConfigManager.getProperty("ws.useSSL")) {
+                this.webServer = https.createServer(
+                    {
+                        cert: path.resolve(StorageHelper.storageDir, App.ConfigManager.getProperty("ws.ssl.cert")),
+                        key: path.resolve(StorageHelper.storageDir, App.ConfigManager.getProperty("ws.ssl.key")),
+                    },
+                    this.requestListener
+                )
+            } else {
+                this.webServer = http.createServer(this.requestListener)
+            }
+            this.webSocketServer = new ws.Server({
+                server: this.webServer,
             })
-            ws.send("something")
-        })
+            this.webSocketServer.on("connection", (ws: ws) => this.wsListener(ws))
+            this.webServer.listen(App.ConfigManager.getProperty("ws.port"))
+        } else {
+            this.webSocketServer = new ws.Server({
+                port: App.ConfigManager.getProperty("ws.port"),
+            })
+            this.webSocketServer.on("connection", (ws: ws) => this.wsListener(ws))
+        }
+    }
 
-        this.webServer.listen(App.ConfigManager.getProperty("ws.port"))
+    wsListener(ws: ws) {
+        ws.on("message", (message) => {
+            console.log("received: %s", message)
+        })
+        ws.send("something")
     }
 
     requestListener(req: http.IncomingMessage, res: http.ServerResponse) {

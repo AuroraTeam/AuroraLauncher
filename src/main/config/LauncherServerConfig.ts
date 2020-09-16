@@ -8,6 +8,7 @@ export class WebSocketConfig {
     address: string
     ip: string
     port: number
+    enableListing: boolean
     hideListing: boolean
     useSSL: boolean
     ssl: {
@@ -20,6 +21,7 @@ export class WebSocketConfig {
         defaults.address = "ws://localhost:1370/"
         defaults.ip = "0.0.0.0"
         defaults.port = 1370
+        defaults.enableListing = true
         defaults.hideListing = false
         defaults.useSSL = false
         defaults.ssl = {
