@@ -39,10 +39,11 @@ export class LogHelper {
         this.log(LogLevel.WARN, msg, ...args)
     }
 
+    // а args в лог файлы не подставляются же блять
     private static log(level: LogLevel, msg: any, ...args: any) {
         if (level === LogLevel.RAW) {
-            fs.appendFileSync(StorageHelper.logFile, colors.strip(msg) + "\n")
-            return console.log(msg, ...args)
+            console.log(msg, ...args)
+            return this.logToFile(msg)
         }
 
         const date = new Date()
@@ -78,7 +79,11 @@ export class LogHelper {
                 break
         }
         console.log(coloredStr, ...args)
-        fs.appendFileSync(StorageHelper.logFile, colors.strip(coloredStr) + "\n")
+        this.logToFile(coloredStr)
+    }
+
+    private static logToFile(msg: string) {
+        fs.appendFileSync(StorageHelper.logFile, colors.strip(msg) + "\n")
     }
 }
 
