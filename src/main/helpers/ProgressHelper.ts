@@ -39,7 +39,7 @@ export class ProgressHelper {
 
     private static getLoadingProgressTemplate(progress: progress.Progress) {
         return App.LangManager.getTranslate("ProgressHelper.loading")
-            .replace("{bar}", this.getBar(progress.percentage, 40))
+            .replace("{bar}", this.getBar(progress.percentage, this.barsize * 2))
             .replace("{percent}", progress.percentage.toFixed(2))
     }
 
