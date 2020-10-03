@@ -1,4 +1,5 @@
 import * as progress from "progress-stream"
+
 import { App } from "../LauncherServer"
 
 export class ProgressHelper {

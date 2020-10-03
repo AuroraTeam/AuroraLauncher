@@ -15,4 +15,10 @@ export abstract class AbstractSecondProvider {
 
 export class SecondProviderConfig {
     type: string
+
+    static getDefaults(): SecondProviderConfig {
+        const defaults = new SecondProviderConfig()
+        defaults.type = "none"
+        return defaults
+    }
 }

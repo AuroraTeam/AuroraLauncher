@@ -1,9 +1,6 @@
 import { LogHelper } from "./../helpers/LogHelper"
-import { AuthHandlerConfig } from "../auth/authHandlers/AbstractHandler"
-import { PrimaryProviderConfig } from "../auth/primaryProviders/AbstractProvider"
-import { SecondProviderConfig } from "../auth/secondaryProviders/AbstractProvider"
-import { TextureProviderConfig } from "../auth/textureProviders/AbstractTextureProvider"
 import { StorageHelper } from "../helpers/StorageHelper"
+import { HwidHandlerConfig } from "../hwid/AbstractHwidHandler"
 import { App } from "../LauncherServer"
 import { AuthConfig, Envirovement, LauncherServerConfig, WebSocketConfig } from "./LauncherServerConfig"
 import fs = require("fs")
@@ -41,18 +38,9 @@ export class ConfigManager {
         config.lang = "en"
         config.env = Envirovement.DEV
         config.updatesUrl = ["https://mirror.aurora-launcher.ru/"]
-        config.auth = new AuthConfig()
-        config.auth.primaryProvider = new PrimaryProviderConfig()
-        config.auth.primaryProvider.type = "none"
-        config.auth.secondProvider = new SecondProviderConfig()
-        config.auth.secondProvider.type = "none"
-        config.auth.authHandler = new AuthHandlerConfig()
-        config.auth.authHandler.type = "none"
-        config.auth.textureProvider = new TextureProviderConfig()
-        config.auth.textureProvider.type = "none"
-        config.hwid = new AuthHandlerConfig()
-        config.hwid.type = "none"
-        config.ws = new WebSocketConfig().getDefaults()
+        config.auth = AuthConfig.getDefaults()
+        config.hwid = HwidHandlerConfig.getDefaults()
+        config.ws = WebSocketConfig.getDefaults()
         return config
     }
 

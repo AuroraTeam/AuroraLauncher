@@ -16,7 +16,7 @@ export class WebSocketConfig {
         key: string
     }
 
-    getDefaults() {
+    static getDefaults(): WebSocketConfig {
         const defaults = new WebSocketConfig()
         defaults.address = "ws://localhost:1370/"
         defaults.ip = "0.0.0.0"
@@ -37,10 +37,20 @@ export class AuthConfig {
     secondProvider: SecondProviderConfig
     authHandler: AuthHandlerConfig
     textureProvider: TextureProviderConfig
+
+    static getDefaults(): AuthConfig {
+        const defaults = new AuthConfig()
+        defaults.primaryProvider = PrimaryProviderConfig.getDefaults()
+        defaults.secondProvider = SecondProviderConfig.getDefaults()
+        defaults.authHandler = AuthHandlerConfig.getDefaults()
+        defaults.textureProvider = TextureProviderConfig.getDefaults()
+        return defaults
+    }
 }
 
 export enum Envirovement {
     PRODUCTION = "prod",
+    DEBUG = "debug",
     DEV = "dev",
 }
 

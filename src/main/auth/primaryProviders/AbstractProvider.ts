@@ -15,4 +15,10 @@ export abstract class AbstractProvider {
 
 export class PrimaryProviderConfig {
     type: string
+
+    static getDefaults(): PrimaryProviderConfig {
+        const defaults = new PrimaryProviderConfig()
+        defaults.type = "none"
+        return defaults
+    }
 }
