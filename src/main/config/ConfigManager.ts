@@ -21,7 +21,7 @@ export class ConfigManager {
 
     // TODO Remake
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getProperty(property: string, raw = false): any  {
+    getProperty(property: string, raw = false): any {
         const path = property.split(".")
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let prop: any = this.config

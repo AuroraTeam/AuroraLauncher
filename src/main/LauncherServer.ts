@@ -90,7 +90,6 @@ export class LauncherServer extends EventEmitter {
 
 export const App = new LauncherServer()
 App.main()
-LogHelper.error(new Error('Test'))
 
 export declare interface LauncherServer {
     on(event: "postInit", listener: () => void): this

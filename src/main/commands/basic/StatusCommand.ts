@@ -7,6 +7,6 @@ export class AboutCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        LogHelper.info('Method not implemented')
+        LogHelper.info("Method not implemented")
     }
 }
