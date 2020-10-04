@@ -9,12 +9,15 @@
     ],
     "homepage": "https://aurora-launcher.ru",
     "bugs": {
-        "url": "https://gitlab.com/aurorateam/launcherserver/issues"
+        "url": "https://github.com/AuroraTeam/LauncherServer/issues"
     },
-    "repository": "gitlab:aurorateam/launcherserver",
-    "license": "GPLv3",
-    "author": "",
-    "contributors": [],
+    "repository": "github:aurorateam/launcherserver",
+    "license": "GPL-3.0",
+    "author": "AuroraTeam",
+    "contributors": [
+        "JoCat (https://github.com/JoCat)",
+        "Loomel (https://github.com/LoomeL)"
+    ],
     "main": "LauncherServer.js",
     "scripts": {
         "build:dev": "cross-env NODE_ENV=development webpack",
