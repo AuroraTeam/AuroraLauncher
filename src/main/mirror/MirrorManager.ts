@@ -19,7 +19,7 @@ export class MirrorManager {
      * @param clientName - Название архива с файлами клиента
      * @param dirName - Название конечной папки
      */
-    async downloadClient(clientName: string, dirName: string) {
+    async downloadClient(clientName: string, dirName: string): Promise<void> {
         const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
         if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
@@ -63,7 +63,9 @@ export class MirrorManager {
             LogHelper.debug(error)
             return
         } finally {
-            rimraf(path.resolve(StorageHelper.tempDir, "*"), () => {})
+            rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
+                LogHelper.warn(e)
+            })
         }
 
         LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.success"))
@@ -74,7 +76,7 @@ export class MirrorManager {
      * @param assetsName - Название архива с файлами ассетов
      * @param dirName - Название конечной папки
      */
-    async downloadAssets(assetsName: string, dirName: string) {
+    async downloadAssets(assetsName: string, dirName: string): Promise<void> {
         const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
         if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
@@ -110,7 +112,9 @@ export class MirrorManager {
             LogHelper.debug(error)
             return
         } finally {
-            rimraf(path.resolve(StorageHelper.tempDir, "*"), () => {})
+            rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
+                LogHelper.warn(e)
+            })
         }
 
         LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.success"))

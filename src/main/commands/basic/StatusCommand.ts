@@ -6,5 +6,7 @@ export class AboutCommand extends AbstractCommand {
         super("status", "Выводит статус сервера", Category.BASIC)
     }
 
-    invoke(): void {}
+    invoke(): void {
+        LogHelper.info('Method not implemented')
+    }
 }

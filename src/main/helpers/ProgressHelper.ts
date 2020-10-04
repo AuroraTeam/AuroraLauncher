@@ -3,20 +3,20 @@ import * as progress from "progress-stream"
 import { App } from "../LauncherServer"
 
 export class ProgressHelper {
-    static barCompleteChar: string = "\u2588"
-    static barIncompleteChar: string = "\u2591"
-    static barsize: number = 20
+    static barCompleteChar = "\u2588"
+    static barIncompleteChar = "\u2591"
+    static barsize = 20
 
-    static getLoadingProgressBar(options?: progress.Options) {
+    static getLoadingProgressBar(options?: progress.Options): progress.ProgressStream {
         return this.getProgress(options, ProgressType.LOADING)
     }
 
-    static getDownloadProgressBar(options: progress.Options) {
+    static getDownloadProgressBar(options: progress.Options): progress.ProgressStream {
         return this.getProgress(options, ProgressType.DOWNLOAD)
     }
 
-    private static getProgress(options: progress.Options, type: ProgressType) {
-        let info = progress(options)
+    private static getProgress(options: progress.Options, type: ProgressType): progress.ProgressStream {
+        const info = progress(options)
         process.stdout.write("\x1B[?25l") // Hide cursor
         info.on("progress", (progress) => {
             process.stdout.clearLine(0)
@@ -54,7 +54,7 @@ export class ProgressHelper {
             .replace("{total}", this.bytesToSize(progress.length))
     }
 
-    private static getBar(percentage: number, size: number = 0): string {
+    private static getBar(percentage: number, size = 0): string {
         // calculate barsize
         const barsize = size !== 0 ? size : this.barsize
         const completeSize = Math.round((percentage / 100) * barsize)

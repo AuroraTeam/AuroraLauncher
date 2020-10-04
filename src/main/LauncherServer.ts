@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 require("source-map-support").install()
 
 import { EventEmitter } from "events"
@@ -25,7 +26,7 @@ export class LauncherServer extends EventEmitter {
     private _SocketManager: SocketManager
     private _UpdatesManager: UpdatesManager
 
-    private inited: boolean = false
+    private inited = false
 
     main(): void {
         if (this.inited) return
@@ -89,17 +90,23 @@ export class LauncherServer extends EventEmitter {
 
 export const App = new LauncherServer()
 App.main()
+LogHelper.error(new Error('Test'))
 
 export declare interface LauncherServer {
-    on(event: "postInit", listener: Function): this
-    once(event: "postInit", listener: Function): this
-    addListener(event: "postInit", listener: Function): this
-    removeListener(event: "postInit", listener: Function): this
+    on(event: "postInit", listener: () => void): this
+    once(event: "postInit", listener: () => void): this
+    addListener(event: "postInit", listener: () => void): this
+    removeListener(event: "postInit", listener: () => void): this
     emit(event: "postInit"): boolean
 
-    on(event: "close", listener: Function): this
-    once(event: "close", listener: Function): this
-    addListener(event: "close", listener: Function): this
-    removeListener(event: "close", listener: Function): this
+    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+    on(event: "close", listener: () => void): this
+    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+    once(event: "close", listener: () => void): this
+    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+    addListener(event: "close", listener: () => void): this
+    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+    removeListener(event: "close", listener: () => void): this
+    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
     emit(event: "close"): boolean
 }

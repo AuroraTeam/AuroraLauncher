@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fs from "fs"
 import { format } from "util"
 
@@ -9,34 +11,34 @@ export class LogHelper {
     static readonly isDevEnabled = process.argv.includes("--dev")
     static readonly isDebugEnabled = process.argv.includes("--debug") || process.argv.includes("--dev")
 
-    static debug(msg: any, ...args: any) {
+    static debug(msg: any, ...args: any): void {
         if (!this.isDebugEnabled) return
         this.log(LogLevel.DEBUG, msg, ...args)
     }
 
-    static dev(msg: any, ...args: any) {
+    static dev(msg: any, ...args: any): void {
         if (!this.isDevEnabled) return
         this.log(LogLevel.DEV, msg, ...args)
     }
 
-    static error(msg: any, ...args: any) {
+    static error(msg: any, ...args: any): void {
         this.log(LogLevel.ERROR, msg, ...args)
     }
 
-    static fatal(msg: any, ...args: any) {
+    static fatal(msg: any, ...args: any): void {
         this.log(LogLevel.FATAL, msg, ...args)
         process.exit(1)
     }
 
-    static info(msg: any, ...args: any) {
+    static info(msg: any, ...args: any): void {
         this.log(LogLevel.INFO, msg, ...args)
     }
 
-    static raw(msg: any, ...args: any) {
+    static raw(msg: any, ...args: any): void {
         this.log(LogLevel.RAW, msg, ...args)
     }
 
-    static warn(msg: any, ...args: any) {
+    static warn(msg: any, ...args: any): void {
         this.log(LogLevel.WARN, msg, ...args)
     }
 

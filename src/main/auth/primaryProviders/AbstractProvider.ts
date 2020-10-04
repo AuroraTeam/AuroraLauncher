@@ -1,5 +1,6 @@
 export abstract class AbstractProvider {
     private type: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     abstract config: any
 
     constructor(type: string) {

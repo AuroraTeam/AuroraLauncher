@@ -14,10 +14,10 @@ export class UpdatesManager {
     }
 
     hashUpdatesDir(): void {
-        let folders = fs.readdirSync(StorageHelper.updatesDir)
+        const folders = fs.readdirSync(StorageHelper.updatesDir)
         if (folders.length !== 0) {
             LogHelper.info(App.LangManager.getTranslate("UpdatesManager.sync"))
-            let startTime = new Date().getTime()
+            const startTime = new Date().getTime()
             folders.forEach((el) => {
                 this.hDirs.set(el, this.hashDir(path.resolve(StorageHelper.updatesDir, el)))
                 LogHelper.info(
@@ -33,10 +33,10 @@ export class UpdatesManager {
     }
 
     hashDir(inDir: string, arrayOfFiles?: HDir[]): HDir[] {
-        let output: HDir[] = arrayOfFiles || []
-        let dir: string[] = fs.readdirSync(inDir)
-        for (let p of dir) {
-            let hash: HDir = this.hashFile(path.resolve(inDir, p))
+        const output: HDir[] = arrayOfFiles || []
+        const dir: string[] = fs.readdirSync(inDir)
+        for (const p of dir) {
+            const hash: HDir = this.hashFile(path.resolve(inDir, p))
             output.push(hash)
             if (hash.isDir) {
                 output.concat(this.hashDir(hash.path, output))
@@ -46,8 +46,8 @@ export class UpdatesManager {
     }
 
     hashFile(path: string): HDir {
-        let output: HDir = new HDir()
-        let dir = fs.statSync(path)
+        const output: HDir = new HDir()
+        const dir = fs.statSync(path)
         output.path = path
         if (dir.isDirectory()) {
             output.isDir = true
@@ -59,8 +59,10 @@ export class UpdatesManager {
         return output
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     unindexAssets(): void {}
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     indexAssets(): void {}
 }
 

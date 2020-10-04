@@ -19,7 +19,7 @@ export class SocketManager {
         this.serverInit()
     }
 
-    serverInit() {
+    serverInit(): void {
         if (App.ConfigManager.getProperty("ws.enableListing")) {
             if (App.ConfigManager.getProperty("ws.useSSL")) {
                 this.webServer = https.createServer(
@@ -45,14 +45,14 @@ export class SocketManager {
         }
     }
 
-    wsListener(ws: ws) {
+    wsListener(ws: ws): void {
         ws.on("message", (message) => {
             console.log("received: %s", message)
         })
         ws.send("something")
     }
 
-    requestListener(req: http.IncomingMessage, res: http.ServerResponse) {
+    requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
         const urlPath = path.resolve(StorageHelper.updatesDir, req.url.slice(1))
         if (App.ConfigManager.getProperty("ws.hideListing")) {
             res.writeHead(404)
@@ -67,14 +67,14 @@ export class SocketManager {
         }
 
         res.writeHead(200)
-        let stats = fs.statSync(urlPath)
+        const stats = fs.statSync(urlPath)
         if (stats.isDirectory()) {
             const list = fs.readdirSync(urlPath)
             const parent = req.url.slice(-1) == "/" ? req.url.slice(0, -1) : req.url
             res.write("<style>*{font-family:monospace; font-size:14px}</style>")
             if (parent.length !== 0) {
                 // list.unshift('..') // Рабочее решeние в одну строку
-                let root = parent.split("/").slice(0, -1).join("/")
+                const root = parent.split("/").slice(0, -1).join("/")
                 res.write(SocketUtils.getLink(root || "/", "..") + "<br>")
             }
             res.end(list.map((el) => SocketUtils.getLink(`${parent}/${el}`, el)).join("<br>"))
@@ -85,7 +85,7 @@ export class SocketManager {
 }
 
 export class SocketUtils {
-    static getLink(link: string, el: string) {
+    static getLink(link: string, el: string): string {
         return `<a href="${link}">${el}</a>`
     }
 }

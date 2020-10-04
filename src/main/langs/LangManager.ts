@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-var-requires */
+// TODO Я горел и пытался как-то реализовать нормально, но безуспешно, так что пока оставил как есть
+
 import { LogHelper } from "../helpers/LogHelper"
 import { App } from "../LauncherServer"
 

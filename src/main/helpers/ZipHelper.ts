@@ -12,7 +12,7 @@ export class ZipHelper {
      * @param archive - путь до архива
      * @param destDir - конечная папка
      */
-    static unzipArchive(archive: string, destDir: string) {
+    static unzipArchive(archive: string, destDir: string): Promise<boolean> {
         return new Promise((resolve) => {
             yauzl.open(archive, { lazyEntries: true }, (err, zipfile) => {
                 if (err) LogHelper.error(err)
