@@ -1,0 +1,52 @@
+name: Release Build
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 12
+
+      - name: Download dependencies
+        run: npm install
+
+      - name: Build LauncherServer
+        run: npm run build:prod
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          name: LauncherServer
+          path: dist
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Aurora LauncherServer ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+      - name: Upload release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/LauncherServer.js
+          asset_name: LauncherServer.js
+          asset_content_type: application/javascript

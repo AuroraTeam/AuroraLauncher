@@ -1,8 +1,8 @@
-name: Build
+name: Testing Build
 
 on:
   push:
-    branches: [ master, 'feature/gh-workflows' ]
+    branches: [ testing ]
 
 jobs:
   build:
@@ -19,16 +19,13 @@ jobs:
       - name: Download dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build:prod
-
-      - name: Copy result file to main dir
-        run: cp dist/LauncherServer.js ./
+      - name: Build LauncherServer
+        run: npm run build:dev
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.0
         with:
-          name: LauncherServer
-          path: dist/LauncherServer.js
+          name: LauncherServer Testing
+          path: dist
           if-no-files-found: error
           retention-days: 30
