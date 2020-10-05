@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-var-requires */
-// TODO Я горел и пытался как-то реализовать нормально, но безуспешно, так что пока оставил как есть
+// Я горел и пытался как-то реализовать нормально, но безуспешно, так что пока оставил как есть
+// Пошло оно в очко, пускай остаётся так
 
 import { LogHelper } from "../helpers/LogHelper"
 import { App } from "../LauncherServer"
 
 export class LangManager {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     langList: Map<string, Object> = new Map()
     currentLang: string = App.ConfigManager.getProperty("lang", true) || "en"
 

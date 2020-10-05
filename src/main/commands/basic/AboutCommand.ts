@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import * as colors from "colors/safe"
 
 import { LogHelper } from "../../helpers/LogHelper"
