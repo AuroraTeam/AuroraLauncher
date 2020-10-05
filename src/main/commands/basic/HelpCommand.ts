@@ -10,18 +10,14 @@ export class HelpCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        // TODO Сделать понятней
-        const commandsList: Map<Category, Array<AbstractCommand>> = new Map()
-        App.CommandsManager.commands.forEach((value) => {
-            const arr: Array<AbstractCommand> = commandsList.has(value.getCategory())
-                ? commandsList.get(value.getCategory())
-                : []
-            arr.push(value)
-            commandsList.set(value.getCategory(), arr)
+        const commandsList: Map<Category, AbstractCommand[]> = new Map(Object.values(Category).map(c => [c, []]))
+        Array.from(App.CommandsManager.commands.values()).forEach((command) => {
+            commandsList.get(command.getCategory()).push(command)
         })
 
         commandsList.forEach((category, category_name) => {
-            LogHelper.info(`=== [ ${category_name.toUpperCase()} ] ===`)
+            if (category.length === 0) return
+            LogHelper.info(`=== [ %s ] ===`, category_name.toUpperCase())
             category.forEach((command) => {
                 LogHelper.info(
                     `${colors.bold(command.getName())}${
