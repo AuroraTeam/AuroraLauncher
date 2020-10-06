@@ -64,7 +64,7 @@ export class MirrorManager {
             return
         } finally {
             rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
-                LogHelper.warn(e)
+                if (e !== null) LogHelper.warn(e)
             })
         }
 
@@ -113,7 +113,7 @@ export class MirrorManager {
             return
         } finally {
             rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
-                LogHelper.warn(e)
+                if (e !== null) LogHelper.warn(e)
             })
         }
 
