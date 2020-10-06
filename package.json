@@ -16,7 +16,7 @@
     "author": "AuroraTeam",
     "contributors": [
         "JoCat (https://github.com/JoCat)",
-        "Loomel (https://github.com/LoomeL)"
+        "LoomeL (https://github.com/LoomeL)"
     ],
     "main": "LauncherServer.js",
     "scripts": {
