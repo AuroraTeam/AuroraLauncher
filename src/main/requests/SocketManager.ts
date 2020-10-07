@@ -46,10 +46,25 @@ export class SocketManager {
     }
 
     wsListener(ws: ws): void {
-        ws.on("message", (message) => {
-            console.log("received: %s", message)
+        ws.on("message", (message: string) => {
+            let data
+            try {
+                data = JSON.parse(message)
+            } catch (error) {
+                return ws.send(`[Error] ${error.message}`)
+            }
+            switch (data.type) {
+                case "ping":
+                    this.wsSend(ws, {
+                        response: "pong",
+                    })
+                    break
+
+                default:
+                    ws.send("[Error] Unknown request type")
+                    break
+            }
         })
-        ws.send("something")
     }
 
     requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
@@ -72,10 +87,14 @@ export class SocketManager {
             const list = fs.readdirSync(urlPath)
             const parent = req.url.slice(-1) == "/" ? req.url.slice(0, -1) : req.url
             res.write("<style>*{font-family:monospace; font-size:14px}</style>")
-            if (parent.length !== 0) list.unshift('..')
+            if (parent.length !== 0) list.unshift("..")
             res.end(list.map((el) => `<a href="${parent}/${el}">${el}</a>`).join("<br>"))
         } else {
             res.end(fs.readFileSync(urlPath))
         }
+    }
+
+    private wsSend(ws: ws, data: Object): void {
+        ws.send(JSON.stringify(data))
     }
 }
