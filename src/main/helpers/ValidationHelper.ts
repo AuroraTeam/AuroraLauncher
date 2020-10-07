@@ -1,5 +1,4 @@
 export class ValidationHelper {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static username(username: string): boolean {
         return false
     }

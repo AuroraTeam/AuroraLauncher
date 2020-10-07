@@ -8,7 +8,6 @@ export class JsonAuthProvider extends AbstractProvider {
         this.config = config
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     emit(login: string, password: string, ip: string): string | boolean {
         return false
     }
@@ -19,13 +18,11 @@ export interface Config {
     secret?: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Response {
     login?: string
     error?: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Request {
     login: string
     password: string

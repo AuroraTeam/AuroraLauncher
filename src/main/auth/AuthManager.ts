@@ -1,13 +1,17 @@
 export class AuthManager {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    registerProviders(): void {}
+    registerProviders(): void {
+        return
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    registerHandlers(): void {}
+    registerHandlers(): void {
+        return
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    registerTextureProviders(): void {}
+    registerTextureProviders(): void {
+        return
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    registerHwidHandlers(): void {}
+    registerHwidHandlers(): void {
+        return
+    }
 }

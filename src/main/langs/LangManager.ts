@@ -5,7 +5,6 @@ import { LogHelper } from "../helpers/LogHelper"
 import { App } from "../LauncherServer"
 
 export class LangManager {
-    // eslint-disable-next-line @typescript-eslint/ban-types
     langList: Map<string, Object> = new Map()
     currentLang: string = App.ConfigManager.getProperty("lang", true) || "en"
 

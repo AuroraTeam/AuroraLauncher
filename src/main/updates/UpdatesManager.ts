@@ -59,11 +59,13 @@ export class UpdatesManager {
         return output
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    unindexAssets(): void {}
+    unindexAssets(): void {
+        return
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    indexAssets(): void {}
+    indexAssets(): void {
+        return
+    }
 }
 
 export class HDir {

@@ -10,7 +10,7 @@ export class HelpCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        const commandsList: Map<Category, AbstractCommand[]> = new Map(Object.values(Category).map(c => [c, []]))
+        const commandsList: Map<Category, AbstractCommand[]> = new Map(Object.values(Category).map((c) => [c, []]))
         Array.from(App.CommandsManager.commands.values()).forEach((command) => {
             commandsList.get(command.getCategory()).push(command)
         })
