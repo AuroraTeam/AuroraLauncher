@@ -5,6 +5,7 @@ import * as path from "path"
 
 import * as ws from "ws"
 
+import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
 
@@ -47,21 +48,30 @@ export class SocketManager {
 
     wsListener(ws: ws): void {
         ws.on("message", (message: string) => {
+            LogHelper.dev(`New WebSocket request ${message}`)
             let data
             try {
                 data = JSON.parse(message)
             } catch (error) {
-                return ws.send(`[Error] ${error.message}`)
+                return this.wsSend(ws, {
+                    requestUUID: data.requestUUID,
+                    type: "error",
+                    message: error.message,
+                })
             }
             switch (data.type) {
                 case "ping":
                     this.wsSend(ws, {
+                        requestUUID: data.requestUUID,
                         response: "pong",
                     })
                     break
-
                 default:
-                    ws.send("[Error] Unknown request type")
+                    this.wsSend(ws, {
+                        requestUUID: data.requestUUID,
+                        type: "error",
+                        message: "Unknown request type",
+                    })
                     break
             }
         })
