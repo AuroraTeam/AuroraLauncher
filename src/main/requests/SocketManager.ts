@@ -8,13 +8,14 @@ import * as ws from "ws"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
+import { RequestsManager, RequestsMap } from "./RequestsManager"
 
-// TODO
-// Реализовать работу с вебсокетом
+// TODO почистить, сделать красиво
 
 export class SocketManager {
     webServer: http.Server | https.Server
     webSocketServer: ws.Server
+    wsRequests: RequestsMap = new RequestsManager().requests
 
     constructor() {
         this.serverInit()
@@ -59,20 +60,14 @@ export class SocketManager {
                     message: error.message,
                 })
             }
-            switch (data.type) {
-                case "ping":
-                    this.wsSend(ws, {
-                        requestUUID: data.requestUUID,
-                        response: "pong",
-                    })
-                    break
-                default:
-                    this.wsSend(ws, {
-                        requestUUID: data.requestUUID,
-                        type: "error",
-                        message: "Unknown request type",
-                    })
-                    break
+            if (this.wsRequests.has(data.type)) {
+                this.wsSend(ws, this.wsRequests.get(data.type).invoke(data))
+            } else {
+                this.wsSend(ws, {
+                    requestUUID: data.requestUUID,
+                    type: "error",
+                    message: "Unknown request type",
+                })
             }
         })
     }
