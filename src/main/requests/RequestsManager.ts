@@ -14,21 +14,3 @@ export class RequestsManager {
         this.requests.set(x.getType(), x)
     }
 }
-
-export interface wsRequest {
-    type: string
-    requestUUID: string
-}
-
-export interface wsResponse {
-    requestUUID: string
-    response?: string
-    error?: string
-    message?: string
-}
-
-// export interface wsErrorResponse {
-//     requestUUID: string
-//     error?: string
-//     message?: string
-// }

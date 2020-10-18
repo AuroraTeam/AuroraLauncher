@@ -9,6 +9,7 @@ import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
 import { RequestsManager, RequestsMap } from "./RequestsManager"
+import { wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
 
 // TODO почистить, сделать красиво
 
@@ -50,13 +51,13 @@ export class SocketManager {
     wsListener(ws: ws): void {
         ws.on("message", (message: string) => {
             LogHelper.dev(`New WebSocket request ${message}`)
-            let data
+            let data: wsRequest
             try {
                 data = JSON.parse(message)
             } catch (error) {
                 return this.wsSend(ws, {
-                    requestUUID: data.requestUUID,
-                    type: "error",
+                    uuid: data.uuid,
+                    code: 100,
                     message: error.message,
                 })
             }
@@ -64,8 +65,8 @@ export class SocketManager {
                 this.wsSend(ws, this.wsRequests.get(data.type).invoke(data))
             } else {
                 this.wsSend(ws, {
-                    requestUUID: data.requestUUID,
-                    type: "error",
+                    uuid: data.uuid,
+                    code: 101,
                     message: "Unknown request type",
                 })
             }
@@ -99,7 +100,7 @@ export class SocketManager {
         }
     }
 
-    private wsSend(ws: ws, data: Object): void {
+    private wsSend(ws: ws, data: wsResponse | wsErrorResponse): void {
         ws.send(JSON.stringify(data))
     }
 }

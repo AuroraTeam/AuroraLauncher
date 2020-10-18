@@ -1,5 +1,4 @@
-import { wsRequest, wsResponse } from "../RequestsManager"
-import { AbstractRequest } from "./AbstractRequest"
+import { AbstractRequest, wsRequest, wsResponse } from "./AbstractRequest"
 
 export class PingRequest extends AbstractRequest {
     constructor() {
@@ -8,8 +7,10 @@ export class PingRequest extends AbstractRequest {
 
     invoke(data: wsRequest): wsResponse {
         return {
-            requestUUID: data.requestUUID,
-            response: "pong",
+            uuid: data.uuid,
+            data: {
+                result: "pong"
+            }                
         }
     }
 }
