@@ -1,14 +1,5 @@
 export abstract class AbstractRequest {
-    private readonly type: string
-    // private requestUUID: string
-
-    constructor(type: string) {
-        this.type = type
-    }
-
-    getType(): string {
-        return this.type
-    }
+    protected type: string
 
     abstract invoke(data: wsRequest): wsResponse | wsErrorResponse
 }

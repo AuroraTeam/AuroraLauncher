@@ -1,9 +1,7 @@
 import { AbstractRequest, wsRequest, wsResponse } from "./AbstractRequest"
 
 export class PingRequest extends AbstractRequest {
-    constructor() {
-        super("ping")
-    }
+    type = "ping"
 
     invoke(data: wsRequest): wsResponse {
         return {

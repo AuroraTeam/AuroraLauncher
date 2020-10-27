@@ -1,9 +1,7 @@
 import { AbstractRequest, wsErrorResponse, wsRequest } from "./AbstractRequest"
 
 export class UnknownRequest extends AbstractRequest {
-    constructor() {
-        super("unknown")
-    }
+    type = "unknown"
 
     invoke(data: wsRequest): wsErrorResponse {
         return {
