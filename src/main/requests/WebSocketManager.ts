@@ -1,26 +1,16 @@
 import * as ws from "ws"
 
 import { LogHelper } from "../helpers/LogHelper"
-import { AbstractRequest, wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
-import { PingRequest } from "./types/PingRequest"
-import { UnknownRequest } from "./types/UnknownRequest"
+import { RequestsManager, RequestsMap } from "./RequestsManager"
+import { wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
 
 export class WebSocketManager {
     webSocketServer: ws.Server
-    requests: Map<string, AbstractRequest> = new Map()
-
-    constructor() {
-        this.registerRequest(new UnknownRequest())
-        this.registerRequest(new PingRequest())
-    }
+    requests: RequestsMap = new RequestsManager().requests
 
     webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)
         this.webSocketServer.on("connection", (ws: ws) => this.requestListener(ws))
-    }
-
-    registerRequest(x: AbstractRequest): void {
-        this.requests.set(x.getType(), x)
     }
 
     requestListener(ws: ws): void {
