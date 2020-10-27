@@ -9,8 +9,8 @@ export class PingRequest extends AbstractRequest {
         return {
             uuid: data.uuid,
             data: {
-                result: "pong"
-            }
+                result: "pong",
+            },
         }
     }
 }
