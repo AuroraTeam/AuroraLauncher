@@ -64,11 +64,7 @@ export class SocketManager {
             if (this.wsRequests.has(data.type)) {
                 this.wsSend(ws, this.wsRequests.get(data.type).invoke(data))
             } else {
-                this.wsSend(ws, {
-                    uuid: data.uuid,
-                    code: 101,
-                    message: "Unknown request type",
-                })
+                this.wsSend(ws, this.wsRequests.get("unknown").invoke(data))
             }
         })
     }

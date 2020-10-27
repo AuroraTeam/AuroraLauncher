@@ -10,7 +10,7 @@ export class PingRequest extends AbstractRequest {
             uuid: data.uuid,
             data: {
                 result: "pong"
-            }                
+            }
         }
     }
 }
