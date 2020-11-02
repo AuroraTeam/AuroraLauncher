@@ -2,19 +2,15 @@ name: Testing Build
 
 on:
   push:
-    branches: [ testing ]
+    branches: [ testing, 'feature/gh-workflows' ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    image: node:latest
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
-        with:
-          node-version: 12
 
       - name: Download dependencies
         run: npm install
