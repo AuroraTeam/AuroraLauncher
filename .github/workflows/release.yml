@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    image: node:latest
+    container: node:latest
 
     steps:
       - uses: actions/checkout@v2
