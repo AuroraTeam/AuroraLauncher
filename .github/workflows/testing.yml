@@ -2,7 +2,7 @@ name: Testing Build
 
 on:
   push:
-    branches: [ testing, 'feature/gh-workflows' ]
+    branches: [ testing ]
 
 jobs:
   build:
