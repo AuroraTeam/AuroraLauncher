@@ -6,7 +6,7 @@ export class UnknownRequest extends AbstractRequest {
     invoke(data: wsRequest): wsErrorResponse {
         return {
             uuid: data.uuid,
-            code: 101,
+            code: 102,
             message: "Unknown request type",
         }
     }

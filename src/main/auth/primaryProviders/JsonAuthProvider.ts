@@ -1,12 +1,8 @@
 import { AbstractProvider } from "./AbstractProvider"
 
 export class JsonAuthProvider extends AbstractProvider {
+    type = "json"
     config: Config
-
-    constructor(config: Config) {
-        super("json")
-        this.config = config
-    }
 
     emit(login: string, password: string, ip: string): string | boolean {
         return false

@@ -1,12 +1,12 @@
 import * as ws from "ws"
 
 import { LogHelper } from "../helpers/LogHelper"
-import { RequestsManager, RequestsMap } from "./RequestsManager"
+import { RequestsManager } from "./RequestsManager"
 import { wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
 
 export class WebSocketManager {
     webSocketServer: ws.Server
-    requests: RequestsMap = new RequestsManager().requests
+    requestManager: RequestsManager = new RequestsManager()
 
     webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)
@@ -16,7 +16,12 @@ export class WebSocketManager {
     requestListener(ws: ws): void {
         ws.on("message", (message: string) => {
             LogHelper.dev(`New WebSocket request ${message}`)
-            let data: wsRequest
+            let data: wsRequest & {
+                data: {
+                    ip: string
+                }
+            }
+
             try {
                 data = JSON.parse(message)
             } catch (error) {
@@ -26,11 +31,24 @@ export class WebSocketManager {
                     message: error.message,
                 })
             }
-            if (this.requests.has(data.type)) {
-                this.wsSend(ws, this.requests.get(data.type).invoke(data))
-            } else {
-                this.wsSend(ws, this.requests.get("unknown").invoke(data))
+
+            if (data.uuid === undefined) {
+                return this.wsSend(ws, {
+                    uuid: data.uuid,
+                    code: 101,
+                    message: "Request UUID is undefined",
+                })
             }
+            if (data.type === undefined) {
+                return this.wsSend(ws, {
+                    uuid: data.uuid,
+                    code: 101,
+                    message: "Request type is undefined",
+                })
+            }
+
+            data.data.ip = ws.url
+            this.wsSend(ws, this.requestManager.getRequest(data))
         })
     }
 

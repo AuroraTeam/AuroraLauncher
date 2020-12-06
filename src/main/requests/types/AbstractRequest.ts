@@ -2,6 +2,10 @@ export abstract class AbstractRequest {
     protected type: string
 
     abstract invoke(data: wsRequest): wsResponse | wsErrorResponse
+
+    getType(): string {
+        return this.type
+    }
 }
 
 export interface wsRequest {

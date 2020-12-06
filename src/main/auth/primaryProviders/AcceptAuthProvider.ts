@@ -1,13 +1,10 @@
 import { AbstractProvider } from "./AbstractProvider"
 
 export class AcceptAuthProvider extends AbstractProvider {
+    type = "accept"
     config: any
 
-    constructor(config: any) {
-        super("accept")
-    }
-
-    emit(login: string, password: string, ip: string): string | boolean {
+    emit(login: string): string | boolean {
         return login
     }
 }
