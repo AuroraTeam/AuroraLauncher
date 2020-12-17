@@ -1,4 +1,5 @@
 require("source-map-support").install()
+const version = require("../../package").version
 
 import { EventEmitter } from "events"
 
@@ -33,10 +34,10 @@ export class LauncherServer extends EventEmitter {
         LogHelper.raw(
             colors.bold(
                 colors.cyan("AuroraLauncher ") +
-                    colors.green("LauncherServer ") +
-                    "v" +
-                    colors.yellow(require("../../package").version) +
-                    colors.blue(" https://gitlab.com/aurorateam")
+                colors.green("LauncherServer ") +
+                "v" +
+                colors.yellow(version) +
+                colors.blue(" https://github.com/AuroraTeam")
             )
         )
         LogHelper.raw(colors.bold(colors.green("Documentation page ") + colors.blue("https://aurora-launcher.ru/wiki")))
@@ -96,15 +97,11 @@ export declare interface LauncherServer {
     addListener(event: "postInit", listener: () => void): this
     removeListener(event: "postInit", listener: () => void): this
     emit(event: "postInit"): boolean
-
-    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+    
+    /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
     on(event: "close", listener: () => void): this
-    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
     once(event: "close", listener: () => void): this
-    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
     addListener(event: "close", listener: () => void): this
-    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
     removeListener(event: "close", listener: () => void): this
-    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
     emit(event: "close"): boolean
 }

@@ -32,17 +32,16 @@ export class UpdatesManager {
         }
     }
 
-    hashDir(inDir: string, arrayOfFiles?: HDir[]): HDir[] {
-        const output: HDir[] = arrayOfFiles || []
+    hashDir(inDir: string, arrayOfFiles: HDir[] = []): HDir[] {
         const dir: string[] = fs.readdirSync(inDir)
         for (const p of dir) {
             const hash: HDir = this.hashFile(path.resolve(inDir, p))
-            output.push(hash)
+            arrayOfFiles.push(hash)
             if (hash.isDir) {
-                output.concat(this.hashDir(hash.path, output))
+                arrayOfFiles.concat(this.hashDir(hash.path, arrayOfFiles))
             }
         }
-        return output
+        return arrayOfFiles
     }
 
     hashFile(path: string): HDir {
@@ -68,6 +67,7 @@ export class UpdatesManager {
     }
 }
 
+// TODO HFile?
 export class HDir {
     path: string
     isDir: boolean
