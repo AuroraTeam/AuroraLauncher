@@ -4,7 +4,7 @@ export class JsonAuthProvider extends AbstractProvider {
     type = "json"
     config: Config
 
-    emit(login: string, password: string, ip: string): object {
+    emit(login: string, password: string, ip: string): any {
         return
     }
 }
