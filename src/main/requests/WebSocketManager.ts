@@ -1,3 +1,5 @@
+import * as http from "http"
+
 import * as ws from "ws"
 
 import { LogHelper } from "../helpers/LogHelper"
@@ -10,10 +12,10 @@ export class WebSocketManager {
 
     webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)
-        this.webSocketServer.on("connection", (ws: ws) => this.requestListener(ws))
+        this.webSocketServer.on("connection", (ws: ws, req: http.IncomingMessage) => this.requestListener(ws, req))
     }
 
-    requestListener(ws: ws): void {
+    requestListener(ws: ws, req: http.IncomingMessage): void {
         ws.on("message", (message: string) => {
             LogHelper.dev(`New WebSocket request ${message}`)
             let data: wsRequest & {
@@ -47,7 +49,7 @@ export class WebSocketManager {
                 })
             }
 
-            data.data.ip = ws.url
+            data.data.ip = req.socket.remoteAddress
             this.wsSend(ws, this.requestsManager.getRequest(data))
         })
     }
