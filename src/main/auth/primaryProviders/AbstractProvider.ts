@@ -1,8 +1,9 @@
+import { wsErrorResponseWithoutUUID, wsResponseWithoutUUID } from "../../requests/types/AbstractRequest"
 export abstract class AbstractProvider {
     protected type: string
     abstract config: any
 
-    abstract emit(login: string, password: string, ip: string): string | boolean
+    abstract emit(login: string, password: string, ip: string): wsResponseWithoutUUID | wsErrorResponseWithoutUUID
 
     public getType(): string {
         return this.type
