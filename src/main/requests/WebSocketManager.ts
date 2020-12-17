@@ -6,7 +6,7 @@ import { wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
 
 export class WebSocketManager {
     webSocketServer: ws.Server
-    requestManager: RequestsManager = new RequestsManager()
+    requestsManager: RequestsManager = new RequestsManager()
 
     webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)
@@ -48,7 +48,7 @@ export class WebSocketManager {
             }
 
             data.data.ip = ws.url
-            this.wsSend(ws, this.requestManager.getRequest(data))
+            this.wsSend(ws, this.requestsManager.getRequest(data))
         })
     }
 

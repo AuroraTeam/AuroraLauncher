@@ -3,10 +3,8 @@ import { AuthRequest } from "./types/AuthRequest"
 import { PingRequest } from "./types/PingRequest"
 import { UnknownRequest } from "./types/UnknownRequest"
 
-export type RequestsMap = Map<string, AbstractRequest>
-
 export class RequestsManager {
-    requests: RequestsMap = new Map()
+    requests: Map<string, AbstractRequest> = new Map()
 
     constructor() {
         this.registerRequest(new UnknownRequest())
