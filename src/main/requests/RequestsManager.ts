@@ -16,12 +16,16 @@ export class RequestsManager {
         this.requests.set(x.getType(), x)
     }
 
-    // TODO вывести работу с uud сюда
     getRequest(data: wsRequest): wsResponse | wsErrorResponse {
+        let res
         if (this.requests.has(data.type)) {
-            return this.requests.get(data.type).invoke(data)
+            res = this.requests.get(data.type).invoke(data)
         } else {
-            return this.requests.get("unknown").invoke(data)
+            res = this.requests.get("unknown").invoke(data)
+        }
+        return {
+            ...res,
+            uuid: data.uuid,
         }
     }
 }

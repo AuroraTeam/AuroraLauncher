@@ -1,7 +1,7 @@
 export abstract class AbstractRequest {
     protected type: string
 
-    abstract invoke(data: wsRequest): wsResponse | wsErrorResponse
+    abstract invoke(data: wsRequest): wsResponseWithoutUUID | wsErrorResponseWithoutUUID
 
     getType(): string {
         return this.type
@@ -24,6 +24,9 @@ export interface wsErrorResponse {
     code: number
     message: string
 }
+
+export type wsResponseWithoutUUID = Omit<wsResponse, "uuid">
+export type wsErrorResponseWithoutUUID = Omit<wsErrorResponse, "uuid">
 
 /**
  * Строка являющаяся валидным uuidv4 токеном

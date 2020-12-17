@@ -1,11 +1,10 @@
-import { AbstractRequest, wsErrorResponse, wsRequest } from "./AbstractRequest"
+import { AbstractRequest, wsErrorResponseWithoutUUID } from "./AbstractRequest"
 
 export class UnknownRequest extends AbstractRequest {
     type = "unknown"
 
-    invoke(data: wsRequest): wsErrorResponse {
+    invoke(): wsErrorResponseWithoutUUID {
         return {
-            uuid: data.uuid,
             code: 102,
             message: "Unknown request type",
         }

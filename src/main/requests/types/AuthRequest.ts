@@ -2,7 +2,7 @@ import { AbstractProvider } from "../../auth/primaryProviders/AbstractProvider"
 import { AcceptAuthProvider } from "../../auth/primaryProviders/AcceptAuthProvider"
 import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
-import { AbstractRequest, wsErrorResponse, wsRequest, wsResponse } from "./AbstractRequest"
+import { AbstractRequest, wsErrorResponseWithoutUUID, wsRequest, wsResponseWithoutUUID } from "./AbstractRequest"
 
 export class AuthRequest extends AbstractRequest {
     type = "auth"
@@ -13,12 +13,11 @@ export class AuthRequest extends AbstractRequest {
         this.providers.set("accept", new AcceptAuthProvider())
     }
 
-    invoke({ uuid, data }: wsAuthRequest): wsResponse | wsErrorResponse {
+    invoke({ data }: wsAuthRequest): wsResponseWithoutUUID | wsErrorResponseWithoutUUID {
         const provider = this.providers.get(App.ConfigManager.getProperty("auth.primaryProvider.type"))
         if (provider === undefined) {
             LogHelper.error("primaryProvider is undefined")
             return {
-                uuid: uuid,
                 code: 103,
                 message: "primaryProvider is undefined",
             }
@@ -27,7 +26,6 @@ export class AuthRequest extends AbstractRequest {
         const result = provider.emit(data.login, data.password, data.ip)
 
         return {
-            uuid: uuid,
             data: {
                 login: result,
             },

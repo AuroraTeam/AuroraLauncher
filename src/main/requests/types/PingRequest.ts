@@ -1,11 +1,10 @@
-import { AbstractRequest, wsRequest, wsResponse } from "./AbstractRequest"
+import { AbstractRequest, wsResponseWithoutUUID } from "./AbstractRequest"
 
 export class PingRequest extends AbstractRequest {
     type = "ping"
 
-    invoke(data: wsRequest): wsResponse {
+    invoke(): wsResponseWithoutUUID {
         return {
-            uuid: data.uuid,
             data: {
                 result: "pong",
             },
