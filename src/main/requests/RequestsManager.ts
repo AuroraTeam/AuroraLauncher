@@ -1,6 +1,7 @@
 import { AbstractRequest, wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
 import { AuthRequest } from "./types/AuthRequest"
 import { PingRequest } from "./types/PingRequest"
+import { ProfilesRequest } from "./types/ProfilesRequest"
 import { UnknownRequest } from "./types/UnknownRequest"
 
 export class RequestsManager {
@@ -10,6 +11,7 @@ export class RequestsManager {
         this.registerRequest(new UnknownRequest())
         this.registerRequest(new PingRequest())
         this.registerRequest(new AuthRequest())
+        this.registerRequest(new ProfilesRequest())
     }
 
     registerRequest(x: AbstractRequest): void {
