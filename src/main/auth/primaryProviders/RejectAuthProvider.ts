@@ -15,5 +15,5 @@ export class RejectAuthProvider extends AbstractProvider {
 }
 
 export class RejectAuthProviderConfig {
-    message: string = App.ConfigManager.getProperty('auth.primaryProvider.message', true) || "Auth rejected"
+    message: string = App.ConfigManager.getProperty("auth.primaryProvider.message", true) || "Auth rejected"
 }

@@ -1,4 +1,4 @@
-import { v4 } from "uuid"
+import { v5 } from "uuid"
 
 import { wsResponseWithoutUUID } from "../../requests/types/AbstractRequest"
 import { AbstractProvider } from "./AbstractProvider"
@@ -11,8 +11,7 @@ export class AcceptAuthProvider extends AbstractProvider {
         return {
             data: {
                 login,
-                userUUID: v4(),
-                accessToken: v4(),
+                userUUID: v5(login, "814f98b5-f66d-4456-87dc-f4eed8f6ca73"),
             },
         }
     }
