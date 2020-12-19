@@ -8,6 +8,7 @@ import { HelpCommand } from "./basic/HelpCommand"
 import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetCommand } from "./updates/DownloadAssetCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
+import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
 
 export class CommandsManager {
@@ -26,6 +27,7 @@ export class CommandsManager {
         this.registerCommand(new DownloadClientCommand())
         this.registerCommand(new DownloadAssetCommand())
         this.registerCommand(new SyncUpdatesCommand())
+        this.registerCommand(new SyncProfilesCommand())
     }
 
     registerCommand(x: AbstractCommand): void {
