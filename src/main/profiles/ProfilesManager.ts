@@ -3,6 +3,7 @@ import * as path from "path"
 
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
+import { App } from "../LauncherServer"
 import { ProfileConfig } from "./ProfileConfig"
 
 export class ProfilesManager {
@@ -17,7 +18,9 @@ export class ProfilesManager {
      */
     loadProfiles(): void {
         const files = fs.readdirSync(StorageHelper.profilesDir)
-        if (files.length === 0) return LogHelper.info("Skip sync profiles")
+
+        if (files.length === 0) return LogHelper.info(App.LangManager.getTranslate("ProfilesManager.syncSkip"))
+        else LogHelper.info(App.LangManager.getTranslate("ProfilesManager.sync"))
 
         files.forEach((file) => {
             if (!file.endsWith(".json")) return
@@ -27,11 +30,11 @@ export class ProfilesManager {
                 this.profiles.push(data)
             } catch (e) {
                 if (e instanceof SyntaxError)
-                    LogHelper.error(`Json syntax broken. Try fix or delete ${file}`)
-                else
-                    LogHelper.error(e)
+                    LogHelper.error(App.LangManager.getTranslate("ProfilesManager.loadingErr"), file)
+                else LogHelper.error(e)
             }
         })
+        LogHelper.info(App.LangManager.getTranslate("ProfilesManager.syncEnd"))
     }
 
     /**

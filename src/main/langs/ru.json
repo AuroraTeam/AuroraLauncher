@@ -40,5 +40,11 @@
     "ProgressHelper": {
         "loading": "{bar} {percent}%",
         "download": "{bar} {percent}% | Осталось: {eta}s | Скорость: {speed}/s | {transferred}/{total}"
+    },
+    "ProfilesManager": {
+        "sync": "Синхронизация папки profiles",
+        "syncEnd": "Синхронизация завершена",
+        "syncSkip": "Папка profiles пуста. Синхронизация пропущена",
+        "loadingErr": "Json cинтаксис нарушен. Попробуйте исправить или удалить файл profiles/%s"
     }
 }
