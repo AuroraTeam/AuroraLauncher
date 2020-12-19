@@ -13,6 +13,7 @@ import { StorageHelper } from "./helpers/StorageHelper"
 import { LangManager } from "./langs/LangManager"
 import { MirrorManager } from "./mirror/MirrorManager"
 import { ModulesManager } from "./modules/ModulesManager"
+import { ProfilesManager } from "./profiles/ProfilesManager"
 import { SocketManager } from "./requests/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
 
@@ -25,6 +26,7 @@ export class LauncherServer extends EventEmitter {
     private _ModulesManager: ModulesManager
     private _SocketManager: SocketManager
     private _UpdatesManager: UpdatesManager
+    private _ProfilesManager: ProfilesManager
 
     private inited = false
 
@@ -50,6 +52,7 @@ export class LauncherServer extends EventEmitter {
         this._ModulesManager = new ModulesManager()
         this._SocketManager = new SocketManager()
         this._UpdatesManager = new UpdatesManager()
+        this._ProfilesManager = new ProfilesManager()
         this.emit("postInit")
         LogHelper.info(this.LangManager.getTranslate("LauncherServer.initEnd"))
         this.inited = true
@@ -85,6 +88,10 @@ export class LauncherServer extends EventEmitter {
 
     get UpdatesManager(): UpdatesManager {
         return this._UpdatesManager
+    }
+
+    get ProfilesManager(): ProfilesManager {
+        return this._ProfilesManager
     }
 }
 
