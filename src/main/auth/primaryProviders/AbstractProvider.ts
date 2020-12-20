@@ -15,7 +15,7 @@ export class PrimaryProviderConfig {
 
     static getDefaults(): PrimaryProviderConfig {
         const defaults = new PrimaryProviderConfig()
-        defaults.type = "none"
+        defaults.type = "accept"
         return defaults
     }
 }
