@@ -49,7 +49,7 @@ export class WebSocketManager {
                 })
             }
 
-            if (data.data === undefined) data.data = {ip: req.socket.remoteAddress}
+            if (data.data === undefined) data.data = { ip: req.socket.remoteAddress }
             else data.data.ip = req.socket.remoteAddress
 
             this.wsSend(ws, this.requestsManager.getRequest(data))
