@@ -57,10 +57,16 @@ export class LauncherServer extends EventEmitter {
                     colors.green("LauncherServer ") +
                     "v" +
                     colors.yellow(version) +
-                    colors.blue(" https://github.com/AuroraTeam")
+                    colors.green("\nCopyright (C) 2020 - 2021 ") +
+                    colors.blue("AuroraTeam (https://github.com/AuroraTeam)") +
+                    colors.green(
+                        "\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `license w'." +
+                            "\nThis is free software, and you are welcome to redistribute it under certain conditions; type `license c' for details."
+                    ) +
+                    colors.green("\nDocumentation page ") +
+                    colors.blue("https://aurora-launcher.ru/wiki")
             )
         )
-        LogHelper.raw(colors.bold(colors.green("Documentation page ") + colors.blue("https://aurora-launcher.ru/wiki")))
         LogHelper.info("Initialization start")
         this._ConfigManager = new ConfigManager()
         this._LangManager = new LangManager()

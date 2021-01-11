@@ -23,6 +23,7 @@ import { App } from "../LauncherServer"
 import { AbstractCommand } from "./AbstractCommand"
 import { AboutCommand } from "./basic/AboutCommand"
 import { HelpCommand } from "./basic/HelpCommand"
+import { LicenseCommand } from "./basic/LicenseCommand"
 import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetCommand } from "./updates/DownloadAssetCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
@@ -46,6 +47,7 @@ export class CommandsManager {
         this.registerCommand(new DownloadAssetCommand())
         this.registerCommand(new SyncUpdatesCommand())
         this.registerCommand(new SyncProfilesCommand())
+        this.registerCommand(new LicenseCommand())
     }
 
     registerCommand(x: AbstractCommand): void {
