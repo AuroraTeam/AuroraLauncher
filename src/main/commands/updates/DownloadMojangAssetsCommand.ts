@@ -16,21 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { MojangManager } from "../../download/MojangManager"
 import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
-export class DownloadAssetCommand extends AbstractCommand {
+export class DownloadMojangAssetsCommand extends AbstractCommand {
     constructor() {
-        super("downloadasset", "Загрузить ресурсы с зеркала", Category.UPDATES, "<version> <folder name>")
+        super("downloadmojangassets", "Загрузить ресурсы с зеркала Mojang", Category.UPDATES, "<version> <folder name>")
     }
 
     async invoke(...args: string[]): Promise<void> {
-        const [clientName, dirName] = args
-        if (!clientName) return LogHelper.error("Укажите название/версию ассетов!")
+        const [assetsVer, dirName] = args
+        if (!assetsVer) return LogHelper.error("Укажите название/версию ассетов!")
         if (!dirName) return LogHelper.error("Укажите название папки для ассетов!")
         App.CommandsManager.console.pause()
-        await App.MirrorManager.downloadAssets(clientName, dirName)
+        await new MojangManager().downloadAssets(assetsVer, dirName)
         App.CommandsManager.console.resume()
     }
 }

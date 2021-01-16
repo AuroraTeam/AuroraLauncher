@@ -29,7 +29,6 @@ import { ConfigManager } from "./config/ConfigManager"
 import { LogHelper } from "./helpers/LogHelper"
 import { StorageHelper } from "./helpers/StorageHelper"
 import { LangManager } from "./langs/LangManager"
-import { MirrorManager } from "./mirror/MirrorManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
 import { SocketManager } from "./requests/SocketManager"
@@ -40,7 +39,6 @@ export class LauncherServer extends EventEmitter {
     private _LangManager: LangManager
     private _AuthManager: AuthManager
     private _CommandsManager: CommandsManager
-    private _MirrorManager: MirrorManager
     private _ModulesManager: ModulesManager
     private _SocketManager: SocketManager
     private _UpdatesManager: UpdatesManager
@@ -72,7 +70,6 @@ export class LauncherServer extends EventEmitter {
         this._LangManager = new LangManager()
         this._AuthManager = new AuthManager()
         this._CommandsManager = new CommandsManager()
-        this._MirrorManager = new MirrorManager()
         this._ModulesManager = new ModulesManager()
         this._SocketManager = new SocketManager()
         this._UpdatesManager = new UpdatesManager()
@@ -96,10 +93,6 @@ export class LauncherServer extends EventEmitter {
 
     get CommandsManager(): CommandsManager {
         return this._CommandsManager
-    }
-
-    get MirrorManager(): MirrorManager {
-        return this._MirrorManager
     }
 
     get ModulesManager(): ModulesManager {

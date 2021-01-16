@@ -16,22 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { MirrorManager } from "../../download/MirrorManager"
+import { MojangManager } from "../../download/MojangManager"
 import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
-export class DownloadClientCommand extends AbstractCommand {
+export class DownloadMojangClientCommand extends AbstractCommand {
     constructor() {
-        super("downloadclient", "Загрузить клиент с зеркала", Category.UPDATES, "<version> <folder name>")
+        super("downloadmojangclient", "Загрузить клиент с зеркала Mojang", Category.UPDATES, "<version> <folder name>")
     }
 
     async invoke(...args: string[]): Promise<void> {
-        const [clientName, dirName] = args
-        if (!clientName) return LogHelper.error("Укажите название/версию клиента!")
+        const [clientVer, dirName] = args
+        if (!clientVer) return LogHelper.error("Укажите название/версию клиента!")
         if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
         App.CommandsManager.console.pause()
-        await new MirrorManager().downloadClient(clientName, dirName)
+        new MojangManager().downloadClient(clientVer, dirName)
         App.CommandsManager.console.resume()
     }
 }

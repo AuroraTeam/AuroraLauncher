@@ -43,6 +43,7 @@
         "cross-env": "^7.0.2",
         "eslint": "^7.10.0",
         "import-sort-style-module": "^6.0.0",
+        "p-map": "^4.0.0",
         "prettier": "^2.0.5",
         "prettier-plugin-import-sort": "0.0.4",
         "progress-stream": "^2.0.0",

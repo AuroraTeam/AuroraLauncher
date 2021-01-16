@@ -21,17 +21,18 @@ import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
-export class DownloadClientCommand extends AbstractCommand {
+export class DownloadAssetsCommand extends AbstractCommand {
     constructor() {
-        super("downloadclient", "Загрузить клиент с зеркала", Category.UPDATES, "<version> <folder name>")
+        super("downloadassets", "Загрузить ресурсы с зеркала", Category.UPDATES, "<version> <folder name>")
     }
 
     async invoke(...args: string[]): Promise<void> {
         const [clientName, dirName] = args
-        if (!clientName) return LogHelper.error("Укажите название/версию клиента!")
-        if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
+        if (!clientName) return LogHelper.error("Укажите название/версию ассетов!")
+        if (!dirName) return LogHelper.error("Укажите название папки для ассетов!")
+
         App.CommandsManager.console.pause()
-        await new MirrorManager().downloadClient(clientName, dirName)
+        await new MirrorManager().downloadAssets(clientName, dirName)
         App.CommandsManager.console.resume()
     }
 }
