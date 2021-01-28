@@ -31,6 +31,7 @@ import * as rimraf from "rimraf"
 import { LogHelper } from "../helpers/LogHelper"
 import { ProgressHelper } from "../helpers/ProgressHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
+import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
 
 export class MojangManager {
@@ -60,22 +61,21 @@ export class MojangManager {
         const librariesDir = path.resolve(clientDir, "libraries")
         fs.mkdirSync(librariesDir)
 
-        LogHelper.info("Download libraries and natives")
-        await pMap(
-            libraries,
-            async (lib) => {
-                if (lib.rules !== undefined) {
-                    const rules = {
-                        allow: [] as string[],
-                        disallow: [] as string[],
-                    }
+        LogHelper.info("Download libraries and natives, please wait...")
+        await Promise.all(
+            libraries.map(async (lib) => {
+                const rules = {
+                    allow: [] as string[],
+                    disallow: [] as string[],
+                }
 
+                if (lib.rules !== undefined) {
                     lib.rules.forEach((rule: { action: "allow" | "disallow"; os: any }) => {
                         if (rule.os !== undefined) rules[rule.action].push(rule.os.name)
                     })
 
-                    // Выкидываем ненужные либы lwjgl
-                    if (rules.disallow.includes("osx") && (lib.name as string).includes("lwjgl")) return
+                    // Игнорируем ненужные либы lwjgl
+                    if ((lib.name as string).includes("lwjgl") && rules.disallow.includes("osx")) return
                 }
 
                 if (lib.downloads.artifact !== undefined) {
@@ -97,17 +97,28 @@ export class MojangManager {
                         natives.push(lib.natives[key])
                     }
 
-                    for (const native of natives) {
-                        const nativeData: any = lib.downloads.classifiers[native]
-
-                        const nativeFile = await this.downloadFile(new URL(nativeData.url), false)
-                        fs.copyFileSync(nativeFile, path.resolve(nativesDir, path.basename(nativeData.path)))
+                    // Ещё один костыль для lwjgl
+                    if ((lib.name as string).includes("lwjgl") && rules.allow.includes("osx")) {
+                        natives.push("natives-linux", "natives-windows")
                     }
+
+                    // Костыль для твич либ
+                    // if (natives.includes('natives-windows-${arch}')) {
+                    //     natives.push("natives-windows-32")
+                    // }
+
+                    await Promise.all(
+                        natives.map(async (native) => {
+                            const nativeData: any = lib.downloads.classifiers[native]
+                            if (nativeData === undefined) return
+
+                            const nativeFile = await this.downloadFile(new URL(nativeData.url), false)
+                            await ZipHelper.unzipArchive(nativeFile, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
+                        })
+                    )
                 }
-            },
-            { concurrency: 4 }
+            })
         )
-        // Не потоки конечно, но хоть что-то
 
         rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
             if (e !== null) LogHelper.warn(e)
@@ -129,24 +140,27 @@ export class MojangManager {
         if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
         fs.mkdirSync(assetsDir)
 
-        const assetsFile = await this.downloadFile(new URL(version.assetIndex.url))
+        const assetsFile = await this.downloadFile(new URL(version.assetIndex.url), false)
         fs.mkdirSync(path.resolve(assetsDir, "indexes"))
         const json = path.resolve(assetsDir, `indexes/${assetsVer}.json`)
         fs.copyFileSync(assetsFile, json)
 
         const assetsData = JSON.parse(fs.readFileSync(json).toString()).objects
 
-        const assetsHashes = []
+        const assetsHashes: Map<string, number> = new Map()
 
         for (const key in assetsData) {
-            assetsHashes.push(assetsData[key].hash)
+            assetsHashes.set(assetsData[key].hash, assetsData[key].size)
         }
 
-        LogHelper.info("Download assets")
-        // TODO ProgressBar по количеству файлов или по размеру
+        const totalSize = version.assetIndex.totalSize
+        let downloaded = 0
+
+        LogHelper.info("Download assets, please wait...")
+        const progress = ProgressHelper.getLoadingProgressBar()
         await pMap(
             assetsHashes,
-            async (hash) => {
+            async ([hash, size]) => {
                 const assetFile = await this.downloadFile(
                     new URL(`${hash.slice(0, 2)}/${hash}`, "https://resources.download.minecraft.net/"),
                     false
@@ -155,10 +169,15 @@ export class MojangManager {
                 const assetDir = path.resolve(assetsDir, `objects/${hash.slice(0, 2)}`)
                 if (!fs.existsSync(assetDir)) fs.mkdirSync(assetDir, { recursive: true })
                 fs.copyFileSync(assetFile, path.resolve(assetDir, hash))
+
+                downloaded += size
+                progress.emit("progress", {
+                    percentage: (downloaded / totalSize) * 100,
+                })
             },
-            { concurrency: 4 }
+            { concurrency: 64 }
         )
-        // Не потоки конечно, но хоть что-то
+        progress.emit("end")
 
         rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
             if (e !== null) LogHelper.warn(e)

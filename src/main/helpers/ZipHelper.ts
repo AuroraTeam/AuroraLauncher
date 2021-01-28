@@ -30,32 +30,36 @@ export class ZipHelper {
      * @param archive - путь до архива
      * @param destDir - конечная папка
      */
-    static unzipArchive(archive: string, destDir: string): Promise<boolean> {
+    static unzipArchive(archive: string, destDir: string, whitelist: string[] = []): Promise<boolean> {
         return new Promise((resolve) => {
             yauzl.open(archive, { lazyEntries: true }, (err, zipfile) => {
                 if (err) LogHelper.error(err)
 
                 const length = zipfile.fileSize
-                let remaining = length
+                let downloaded = 0
                 const progress = ProgressHelper.getLoadingProgressBar()
 
                 zipfile.readEntry()
                 zipfile.on("entry", (entry: yauzl.Entry) => {
                     if (/\/$/.test(entry.fileName)) {
-                        fs.mkdirSync(path.resolve(destDir, entry.fileName))
+                        if (whitelist.length == 0) fs.mkdirSync(path.resolve(destDir, entry.fileName))
                         zipfile.readEntry()
                     } else {
-                        remaining -= entry.compressedSize
+                        downloaded += entry.compressedSize
                         progress.emit("progress", {
-                            percentage: ((length - remaining) / length) * 100,
+                            percentage: (downloaded / length) * 100,
                         })
-                        zipfile.openReadStream(entry, (err, readStream) => {
-                            if (err) throw err
-                            readStream.pipe(fs.createWriteStream(path.resolve(destDir, entry.fileName)))
-                            readStream.on("end", () => {
-                                zipfile.readEntry()
+                        if (whitelist.length > 0 && !whitelist.includes(path.extname(entry.fileName))) {
+                            zipfile.readEntry()
+                        } else {
+                            zipfile.openReadStream(entry, (err, readStream) => {
+                                if (err) throw err
+                                readStream.pipe(fs.createWriteStream(path.resolve(destDir, entry.fileName)))
+                                readStream.on("end", () => {
+                                    zipfile.readEntry()
+                                })
                             })
-                        })
+                        }
                     }
                 })
                 zipfile.on("end", () => {

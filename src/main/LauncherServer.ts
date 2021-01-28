@@ -17,6 +17,7 @@
  */
 
 require("source-map-support").install()
+
 const version = require("../../package").version
 
 import { EventEmitter } from "events"
