@@ -62,61 +62,24 @@ export class MojangManager {
         fs.mkdirSync(librariesDir)
 
         LogHelper.info("Download libraries and natives, please wait...")
+        const librariesList = this.librariesParse(libraries)
+
         await Promise.all(
-            libraries.map(async (lib) => {
-                const rules = {
-                    allow: [] as string[],
-                    disallow: [] as string[],
-                }
+            Array.from(librariesList.libraries).map(async (lib) => {
+                const libFile = await this.downloadFile(new URL(lib, "https://libraries.minecraft.net/"), false)
+                fs.mkdirSync(path.resolve(librariesDir, path.dirname(lib)), { recursive: true })
+                fs.copyFileSync(libFile, path.resolve(librariesDir, lib))
+            })
+        )
 
-                if (lib.rules !== undefined) {
-                    lib.rules.forEach((rule: { action: "allow" | "disallow"; os: any }) => {
-                        if (rule.os !== undefined) rules[rule.action].push(rule.os.name)
-                    })
+        // Natives
+        const nativesDir = path.resolve(clientDir, "natives")
+        fs.mkdirSync(nativesDir)
 
-                    // Игнорируем ненужные либы lwjgl
-                    if ((lib.name as string).includes("lwjgl") && rules.disallow.includes("osx")) return
-                }
-
-                if (lib.downloads.artifact !== undefined) {
-                    const libFile = await this.downloadFile(new URL(lib.downloads.artifact.url), false)
-                    fs.mkdirSync(path.resolve(librariesDir, path.dirname(lib.downloads.artifact.path)), {
-                        recursive: true,
-                    })
-                    fs.copyFileSync(libFile, path.resolve(librariesDir, lib.downloads.artifact.path))
-                }
-
-                // TODO Распаковка нативок
-                // Natives
-                if (lib.natives !== undefined) {
-                    const nativesDir = path.resolve(clientDir, "natives")
-                    if (!fs.existsSync(nativesDir)) fs.mkdirSync(nativesDir)
-
-                    const natives = []
-                    for (const key in lib.natives) {
-                        natives.push(lib.natives[key])
-                    }
-
-                    // Ещё один костыль для lwjgl
-                    if ((lib.name as string).includes("lwjgl") && rules.allow.includes("osx")) {
-                        natives.push("natives-linux", "natives-windows")
-                    }
-
-                    // Костыль для твич либ
-                    // if (natives.includes('natives-windows-${arch}')) {
-                    //     natives.push("natives-windows-32")
-                    // }
-
-                    await Promise.all(
-                        natives.map(async (native) => {
-                            const nativeData: any = lib.downloads.classifiers[native]
-                            if (nativeData === undefined) return
-
-                            const nativeFile = await this.downloadFile(new URL(nativeData.url), false)
-                            await ZipHelper.unzipArchive(nativeFile, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
-                        })
-                    )
-                }
+        await Promise.all(
+            Array.from(librariesList.natives).map(async (native) => {
+                const nativeFile = await this.downloadFile(new URL(native, "https://libraries.minecraft.net/"), false)
+                await ZipHelper.unzipArchive(nativeFile, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
             })
         )
 
@@ -184,6 +147,63 @@ export class MojangManager {
         })
 
         LogHelper.info("Done")
+    }
+
+    /**
+     * Получить список библиотек и нативных файлов для скачивания
+     * @param libraries Объект со списком библиотек и нативных файлов
+     */
+    librariesParse(libraries: any[]): typeof filteredData {
+        const filteredData = {
+            libraries: new Set() as Set<string>,
+            natives: new Set() as Set<string>,
+        }
+
+        libraries.forEach((lib) => {
+            const rules = {
+                allow: [] as string[],
+                disallow: [] as string[],
+            }
+
+            if (lib.rules !== undefined) {
+                lib.rules.forEach((rule: { action: "allow" | "disallow"; os: any }) => {
+                    if (rule.os !== undefined) rules[rule.action].push(rule.os.name)
+                })
+
+                // Игнорируем ненужные либы lwjgl
+                if ((lib.name as string).includes("lwjgl") && rules.disallow.includes("osx")) return
+            }
+
+            if (lib.downloads.artifact !== undefined) {
+                filteredData.libraries.add(lib.downloads.artifact.path)
+            }
+
+            // Natives
+            if (lib.natives !== undefined) {
+                const natives = []
+                for (const key in lib.natives) {
+                    natives.push(lib.natives[key])
+                }
+
+                // Ещё один костыль для lwjgl
+                if ((lib.name as string).includes("lwjgl") && rules.allow.includes("osx")) {
+                    natives.push("natives-linux", "natives-windows")
+                }
+
+                // Костыль для твич либ
+                // if (natives.includes('natives-windows-${arch}')) {
+                //     natives.push("natives-windows-32")
+                // }
+
+                natives.forEach((native) => {
+                    const nativeData = lib.downloads.classifiers[native]
+                    if (nativeData === undefined) return
+                    filteredData.natives.add(nativeData.path)
+                })
+            }
+        })
+
+        return filteredData
     }
 
     /**
