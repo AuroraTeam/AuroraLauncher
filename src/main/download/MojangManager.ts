@@ -38,7 +38,7 @@ export class MojangManager {
     // TODO Профили
 
     /**
-     * Скачивание клиена с зеркала Mojang
+     * Скачивание клиента с зеркала Mojang
      * @param clientVer - Версия клиента
      * @param dirName - Название конечной папки
      */
@@ -153,7 +153,7 @@ export class MojangManager {
      * Получить список библиотек и нативных файлов для скачивания
      * @param libraries Объект со списком библиотек и нативных файлов
      */
-    librariesParse(libraries: any[]): typeof filteredData {
+    librariesParse(libraries: any[]): { libraries: Set<string>, natives: Set<string> } {
         const filteredData = {
             libraries: new Set() as Set<string>,
             natives: new Set() as Set<string>,
