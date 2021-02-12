@@ -18,7 +18,7 @@
 
 export class ValidationHelper {
     static username(username: string): boolean {
-        return false
+        return /^[A-Za-z0-9_]{4,16}$/.test(username)
     }
 
     static email(email: string): boolean {

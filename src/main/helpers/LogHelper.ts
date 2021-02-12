@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import * as fs from "fs"
 import { format } from "util"
 
@@ -27,38 +28,38 @@ export class LogHelper {
     static readonly isDevEnabled = process.argv.includes("--dev")
     static readonly isDebugEnabled = process.argv.includes("--debug") || process.argv.includes("--dev")
 
-    static debug(msg: any, ...args: any): void {
+    static debug(msg: any, ...args: any[]): void {
         if (!this.isDebugEnabled) return
         this.log(LogLevel.DEBUG, msg, ...args)
     }
 
-    static dev(msg: any, ...args: any): void {
+    static dev(msg: any, ...args: any[]): void {
         if (!this.isDevEnabled) return
         this.log(LogLevel.DEV, msg, ...args)
     }
 
-    static error(msg: any, ...args: any): void {
+    static error(msg: any, ...args: any[]): void {
         this.log(LogLevel.ERROR, msg, ...args)
     }
 
-    static fatal(msg: any, ...args: any): void {
+    static fatal(msg: any, ...args: any[]): void {
         this.log(LogLevel.FATAL, msg, ...args)
         process.exit(1)
     }
 
-    static info(msg: any, ...args: any): void {
+    static info(msg: any, ...args: any[]): void {
         this.log(LogLevel.INFO, msg, ...args)
     }
 
-    static raw(msg: any, ...args: any): void {
+    static raw(msg: any, ...args: any[]): void {
         this.log(LogLevel.RAW, msg, ...args)
     }
 
-    static warn(msg: any, ...args: any): void {
+    static warn(msg: any, ...args: any[]): void {
         this.log(LogLevel.WARN, msg, ...args)
     }
 
-    private static log(level: LogLevel, msg: any, ...args: any) {
+    private static log(level: LogLevel, msg: any, ...args: any[]) {
         if (level === LogLevel.RAW) return this.rawLog(msg, ...args)
 
         const date = new Date()
@@ -75,14 +76,10 @@ export class LogHelper {
         let coloredStr: string = colors.gray(date)
         switch (level) {
             case LogLevel.DEBUG:
-                coloredStr += colors.green(` [${level.toUpperCase()}] `) + msg
-                break
             case LogLevel.DEV:
                 coloredStr += colors.green(` [${level.toUpperCase()}] `) + msg
                 break
             case LogLevel.ERROR:
-                coloredStr += colors.red(` [${level.toUpperCase()}] ${msg}`)
-                break
             case LogLevel.FATAL:
                 coloredStr += colors.red(` [${level.toUpperCase()}] ${msg}`)
                 break
@@ -101,7 +98,7 @@ export class LogHelper {
      * https://nodejs.org/api/util.html#util_util_format_format_args
      * Оно даже обратно совместимо с console.log (те же подстановочные символы)
      */
-    private static rawLog(msg: any, ...args: any) {
+    private static rawLog(msg: any, ...args: any[]) {
         const message = format(msg, ...args) + "\n"
         process.stdout.write(message)
         fs.appendFileSync(StorageHelper.logFile, colors.strip(message))
