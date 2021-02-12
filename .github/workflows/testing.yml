@@ -14,10 +14,10 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.2
         with:
-          node-version: 12
+          node-version: 14
 
       - name: Download dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build LauncherServer
         run: npm run build:dev

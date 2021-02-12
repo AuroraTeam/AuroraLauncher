@@ -14,10 +14,13 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.2
         with:
-          node-version: 12
+          node-version: 14
+
+      - name: Get version value, set to env
+        run: echo "PACKAGE_VERSION=v$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Download dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build LauncherServer
         run: npm run build:prod
@@ -36,10 +39,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Aurora LauncherServer ${{ github.ref }}
-          draft: true
-          prerelease: false
+          tag_name: ${{ env.PACKAGE_VERSION }}
+          release_name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
 
       - name: Upload release
         uses: actions/upload-release-asset@v1
