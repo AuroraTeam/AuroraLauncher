@@ -22,10 +22,10 @@ import * as path from "path"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
-import { ProfileConfig } from "./ProfileConfig"
+import { ClientProfile, ClientProfileConfig } from "./ProfileConfig"
 
 export class ProfilesManager {
-    profiles: ProfileConfig[] = []
+    profiles: ClientProfile[] = []
 
     constructor() {
         this.loadProfiles()
@@ -45,7 +45,7 @@ export class ProfilesManager {
 
             try {
                 const data = JSON.parse(fs.readFileSync(path.resolve(StorageHelper.profilesDir, file)).toString())
-                this.profiles.push(data)
+                this.profiles.push(new ClientProfile(data))
             } catch (e) {
                 if (e instanceof SyntaxError)
                     LogHelper.error(App.LangManager.getTranslate("ProfilesManager.loadingErr"), file)
@@ -61,5 +61,11 @@ export class ProfilesManager {
     reloadProfiles(): void {
         this.profiles = []
         this.loadProfiles()
+    }
+
+    createProfile(parametrs: ClientProfileConfig): void {
+        const profile = new ClientProfile(parametrs)
+        fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${parametrs.clientDir}.json`), profile.toString())
+        return
     }
 }

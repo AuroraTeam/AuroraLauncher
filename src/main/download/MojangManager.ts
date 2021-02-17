@@ -33,10 +33,9 @@ import { ProgressHelper } from "../helpers/ProgressHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
+import { ClientProfileConfig } from "../profiles/ProfileConfig"
 
 export class MojangManager {
-    // TODO Профили
-
     /**
      * Скачивание клиента с зеркала Mojang
      * @param clientVer - Версия клиента
@@ -87,6 +86,13 @@ export class MojangManager {
             if (e !== null) LogHelper.warn(e)
         })
 
+        //Profiles
+        App.ProfilesManager.createProfile({
+            version: clientVer,
+            clientDir: dirName,
+            assetsDir: `assets${version.assets}`,
+            assetsIndex: version.assets,
+        } as ClientProfileConfig)
         LogHelper.info("Done")
     }
 
@@ -153,7 +159,7 @@ export class MojangManager {
      * Получить список библиотек и нативных файлов для скачивания
      * @param libraries Объект со списком библиотек и нативных файлов
      */
-    librariesParse(libraries: any[]): { libraries: Set<string>, natives: Set<string> } {
+    librariesParse(libraries: any[]): { libraries: Set<string>; natives: Set<string> } {
         const filteredData = {
             libraries: new Set() as Set<string>,
             natives: new Set() as Set<string>,

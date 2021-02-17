@@ -16,15 +16,58 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export interface ProfileConfig {
+import { v4 } from "uuid"
+
+export class ClientProfile {
+    constructor(config: ClientProfileConfig) {
+        Object.assign(this, this.defaults, config)
+        this.validate()
+    }
+
+    validate(): void {
+        return // TODO Валидация конфигов
+    }
+
+    private get defaults(): ClientProfileConfig {
+        return {
+            configVersion: 0,
+            uuid: v4(),
+            servers: [
+                {
+                    ip: "127.0.0.1",
+                    port: "25565",
+                    title: "clientTitle",
+                    whiteListType: "null",
+                },
+            ],
+            sortIndex: 0,
+            version: "1.16.5",
+            clientDir: "clientDir",
+            assetsIndex: "1.16.5",
+            assetsDir: "assetsDir",
+            update: [],
+            updateVerify: [],
+            updateExclusions: [],
+            mainClass: "net.minecraft.client.main.Main",
+            classPath: ["libraries", "minecraft.jar"],
+            jvmArgs: [],
+            clientArgs: [],
+        }
+    }
+
+    public toString(): string {
+        return JSON.stringify(this, null, 4)
+    }
+}
+
+export interface ClientProfileConfig {
     //Don`t touch
-    configVersion: string
+    configVersion: number
 
     // Profile information
-    // title: string
     uuid: string
-    servers: ProfileServer[]
     sortIndex: number
+    servers: ProfileServer[]
 
     // Client
     version: string
@@ -53,12 +96,12 @@ export interface ProfileServer {
     title: string
 
     // Whitelist
-    whiteListType: "users" | "uuids" | "permissions"
-    whiteListPermisson: number // permission в виде битового флага (пока только как возможный вариант)
-    whiteListUsers: string[] // Список игроков по никнейму
-    whiteListUUIDs: string[] // Список игроков по uuid
-    hideProfile: boolean
-    message: string
+    whiteListType: "null" | "users" | "uuids" | "permissions"
+    whiteListPermisson?: number // permission в виде битового флага (пока только как возможный вариант)
+    whiteListUsers?: string[] // Список игроков по никнейму
+    whiteListUUIDs?: string[] // Список игроков по uuid
+    hideProfile?: boolean
+    message?: string
 }
 
 // export interface ProfileOptional {
