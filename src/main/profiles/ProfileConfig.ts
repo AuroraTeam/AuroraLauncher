@@ -45,11 +45,6 @@ export interface ProfileConfig {
     classPath: string[]
     jvmArgs: string[]
     clientArgs: string[]
-
-    // Whitelist
-    // whiteListUsers: string[]
-    // hideProfile: boolean
-    // message: string
 }
 
 export interface ProfileServer {
@@ -57,11 +52,13 @@ export interface ProfileServer {
     port: string
     title: string
 
-    // Может стоит это перенести сюда?)
     // Whitelist
-    // whiteListUsers: string[]
-    // hideProfile: boolean
-    // message: string
+    whiteListType: "users" | "uuids" | "permissions"
+    whiteListPermisson: number // permission в виде битового флага (пока только как возможный вариант)
+    whiteListUsers: string[] // Список игроков по никнейму
+    whiteListUUIDs: string[] // Список игроков по uuid
+    hideProfile: boolean
+    message: string
 }
 
 // export interface ProfileOptional {
