@@ -16,52 +16,60 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export class ProfileConfig {
+export interface ProfileConfig {
     //Don`t touch
     configVersion: string
 
     // Profile information
-    version: string
-    title: string
+    // title: string
     uuid: string
-    server: ProfileServer[]
+    servers: ProfileServer[]
     sortIndex: number
+
+    // Client
+    version: string
+    clientDir: string
 
     // Assets
     assetsIndex: string
     assetsDir: string
 
     // Updates
-    updatesDir: string
     update: string[]
-    updateWath: string[]
-    wathExclusions: string[]
-    updateOptional: ProfileOptional[]
+    updateVerify: string[]
+    updateExclusions: string[]
+    // updateOptional: ProfileOptional[]
 
     // Launch client
+    mainClass: string
     classPath: string[]
     jvmArgs: string[]
     clientArgs: string[]
-    mainClass: string
 
     // Whitelist
-    whiteListUsers: string[]
-    hideProfile: boolean
-    message: string
+    // whiteListUsers: string[]
+    // hideProfile: boolean
+    // message: string
 }
 
-export class ProfileOptional {
-    id: number
-    name: string
-    description: string
-    mark: boolean
-    filename: string
-    conflict: number[]
-    children: ProfileOptional[]
-}
-
-export class ProfileServer {
+export interface ProfileServer {
     ip: string
     port: string
     title: string
+
+    // Может стоит это перенести сюда?)
+    // Whitelist
+    // whiteListUsers: string[]
+    // hideProfile: boolean
+    // message: string
 }
+
+// export interface ProfileOptional {
+//     id: number
+//     name: string
+//     description: string
+//     mark: boolean
+//     filename: string
+//     conflict: number[]
+//     children: ProfileOptional[]
+// }
