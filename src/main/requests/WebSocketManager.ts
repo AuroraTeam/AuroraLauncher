@@ -20,6 +20,7 @@ import * as http from "http"
 
 import * as ws from "ws"
 
+import { JsonHelper } from "../helpers/JSONHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { RequestsManager } from "./RequestsManager"
 import { wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
@@ -43,7 +44,7 @@ export class WebSocketManager {
             }
 
             try {
-                data = JSON.parse(message)
+                data = JsonHelper.toJSON(message)
             } catch (error) {
                 return this.wsSend(ws, {
                     uuid: data.uuid,
@@ -75,6 +76,6 @@ export class WebSocketManager {
     }
 
     private wsSend(ws: ws, data: wsResponse | wsErrorResponse): void {
-        ws.send(JSON.stringify(data))
+        ws.send(JsonHelper.toString(data))
     }
 }

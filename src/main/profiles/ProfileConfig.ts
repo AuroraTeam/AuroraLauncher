@@ -18,6 +18,8 @@
 
 import { v4 } from "uuid"
 
+import { JsonHelper } from "../helpers/JSONHelper"
+
 export class ClientProfile {
     constructor(config: ClientProfileConfig) {
         Object.assign(this, this.defaults, config)
@@ -56,7 +58,7 @@ export class ClientProfile {
     }
 
     public toString(): string {
-        return JSON.stringify(this, null, 4)
+        return JsonHelper.toString(this, true)
     }
 }
 

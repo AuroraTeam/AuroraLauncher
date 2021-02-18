@@ -28,6 +28,7 @@ import { URL } from "url"
 import * as pMap from "p-map"
 import * as rimraf from "rimraf"
 
+import { JsonHelper } from "../helpers/JSONHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { ProgressHelper } from "../helpers/ProgressHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
@@ -114,7 +115,7 @@ export class MojangManager {
         const json = path.resolve(assetsDir, `indexes/${assetsVer}.json`)
         fs.copyFileSync(assetsFile, json)
 
-        const assetsData = JSON.parse(fs.readFileSync(json).toString()).objects
+        const assetsData = JsonHelper.toJSON(fs.readFileSync(json).toString()).objects
 
         const assetsHashes: Map<string, number> = new Map()
 
@@ -280,7 +281,7 @@ export class MojangManager {
 
         let versions
         try {
-            versions = JSON.parse(versionsData).versions
+            versions = JsonHelper.toJSON(versionsData).versions
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error("Error parsing JSON data")
@@ -294,7 +295,7 @@ export class MojangManager {
         }
 
         try {
-            return JSON.parse(await this.readFile(_version.url))
+            return JsonHelper.toJSON(await this.readFile(_version.url))
         } catch (error) {
             LogHelper.debug(error)
             return

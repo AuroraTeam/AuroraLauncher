@@ -17,6 +17,7 @@
  */
 
 import { LogHelper } from "./../helpers/LogHelper"
+import { JsonHelper } from "../helpers/JSONHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { HwidHandlerConfig } from "../hwid/AbstractHwidHandler"
 import { App } from "../LauncherServer"
@@ -65,7 +66,7 @@ export class ConfigManager {
     load(): void {
         const config = fs.readFileSync(StorageHelper.configFile)
         try {
-            this.config = JSON.parse(config.toString())
+            this.config = JsonHelper.toJSON(config.toString())
         } catch (e) {
             if (e instanceof SyntaxError) {
                 LogHelper.error(e)
@@ -75,6 +76,6 @@ export class ConfigManager {
     }
 
     save(): void {
-        fs.writeFileSync(StorageHelper.configFile, JSON.stringify(this.config, null, 4))
+        fs.writeFileSync(StorageHelper.configFile, JsonHelper.toString(this.config, true))
     }
 }

@@ -19,6 +19,7 @@
 import * as fs from "fs"
 import * as path from "path"
 
+import { JsonHelper } from "../helpers/JSONHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
@@ -44,7 +45,9 @@ export class ProfilesManager {
             if (!file.endsWith(".json")) return
 
             try {
-                const data = JSON.parse(fs.readFileSync(path.resolve(StorageHelper.profilesDir, file)).toString())
+                const data = JsonHelper.toJSON(
+                    fs.readFileSync(path.resolve(StorageHelper.profilesDir, file)).toString()
+                )
                 this.profiles.push(new ClientProfile(data))
             } catch (e) {
                 if (e instanceof SyntaxError)
