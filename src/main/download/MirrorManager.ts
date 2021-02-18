@@ -144,7 +144,7 @@ export class MirrorManager {
      * @returns Promise который вернёт название временного файла в случае успеха
      */
     downloadFile(url: URL): Promise<string> {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             const handler = url.protocol === "https:" ? https : http
             const tempFilename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
             const tempFile = fs.createWriteStream(tempFilename)
@@ -173,7 +173,7 @@ export class MirrorManager {
      * @returns Promise который вернёт `true` в случае существования файла или `false` при его отсутствии или ошибке
      */
     existFile(url: URL): Promise<boolean> {
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             const handler = url.protocol === "https:" ? https : http
             handler
                 .request(url, { method: "HEAD" }, (res) => {
