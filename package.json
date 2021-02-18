@@ -16,7 +16,8 @@
     "author": "AuroraTeam",
     "contributors": [
         "JoCat (https://github.com/JoCat)",
-        "LoomeL (https://github.com/LoomeL)"
+        "LoomeL (https://github.com/LoomeL)",
+        "FIXxp (https://github.com/FIXxp)"
     ],
     "main": "LauncherServer.js",
     "scripts": {
@@ -64,5 +65,8 @@
             "style": "module",
             "parser": "typescript"
         }
+    },
+    "dependencies": {
+        "mvn-artifact-download": "^5.1.0"
     }
 }
