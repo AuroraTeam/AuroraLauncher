@@ -16,22 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { randomBytes } from "crypto"
 import * as fs from "fs"
-import * as http from "http"
-import * as https from "https"
 import * as path from "path"
 import { URL } from "url"
 
 import * as rimraf from "rimraf"
 
 import { LogHelper } from "../helpers/LogHelper"
-import { ProgressHelper } from "../helpers/ProgressHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
+import { DownloadManager } from "./DownloadManager"
 
-export class MirrorManager {
+export class MirrorManager extends DownloadManager {
     /**
      * Скачивание клиена с зеркала
      * @param clientName - Название архива с файлами клиента
@@ -136,54 +133,5 @@ export class MirrorManager {
         }
 
         LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.success"))
-    }
-
-    /**
-     * Скачивание файла с зеркала
-     * @param url - Объект Url, содержащий ссылку на файл
-     * @returns Promise который вернёт название временного файла в случае успеха
-     */
-    downloadFile(url: URL): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const handler = url.protocol === "https:" ? https : http
-            const tempFilename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
-            const tempFile = fs.createWriteStream(tempFilename)
-            tempFile.on("close", () => {
-                resolve(tempFilename)
-            })
-
-            handler
-                .get(url, (res) => {
-                    res.pipe(
-                        ProgressHelper.getDownloadProgressBar({
-                            length: parseInt(res.headers["content-length"], 10),
-                        })
-                    ).pipe(tempFile)
-                })
-                .on("error", (err) => {
-                    fs.unlinkSync(tempFilename)
-                    reject(err)
-                })
-        })
-    }
-
-    /**
-     * Проверка наличия файла на зеркале
-     * @param url - Объект Url, содержащий ссылку на файл
-     * @returns Promise который вернёт `true` в случае существования файла или `false` при его отсутствии или ошибке
-     */
-    existFile(url: URL): Promise<boolean> {
-        return new Promise((resolve) => {
-            const handler = url.protocol === "https:" ? https : http
-            handler
-                .request(url, { method: "HEAD" }, (res) => {
-                    new RegExp(/2[\d]{2}/).test(res.statusCode.toString()) ? resolve(true) : resolve(false)
-                })
-                .on("error", (err) => {
-                    LogHelper.error(err)
-                    resolve(false)
-                })
-                .end()
-        })
     }
 }

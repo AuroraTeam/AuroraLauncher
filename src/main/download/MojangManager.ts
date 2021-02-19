@@ -19,7 +19,6 @@
 // TODO Ещё больше try/catch для отлова возможных ошибок
 // TODO Перевод
 
-import { randomBytes } from "crypto"
 import * as fs from "fs"
 import * as https from "https"
 import * as path from "path"
@@ -35,8 +34,9 @@ import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
 import { ClientProfileConfig } from "../profiles/ProfileConfig"
+import { DownloadManager } from "./DownloadManager"
 
-export class MojangManager {
+export class MojangManager extends DownloadManager {
     /**
      * Скачивание клиента с зеркала Mojang
      * @param clientVer - Версия клиента
@@ -211,38 +211,6 @@ export class MojangManager {
         })
 
         return filteredData
-    }
-
-    /**
-     * Скачивание файла с зеркала с зеркала Mojang (https only)
-     * @param url - Объект Url, содержащий ссылку на файл
-     * @returns Promise который вернёт название временного файла в случае успеха
-     */
-    downloadFile(url: URL, showProgress = true): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const tempFilename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
-            const tempFile = fs.createWriteStream(tempFilename)
-            tempFile.on("close", () => {
-                resolve(tempFilename)
-            })
-
-            https
-                .get(url, (res) => {
-                    if (showProgress) {
-                        res.pipe(
-                            ProgressHelper.getDownloadProgressBar({
-                                length: parseInt(res.headers["content-length"], 10),
-                            })
-                        ).pipe(tempFile)
-                    } else {
-                        res.pipe(tempFile)
-                    }
-                })
-                .on("error", (err) => {
-                    fs.unlinkSync(tempFilename)
-                    reject(err)
-                })
-        })
     }
 
     /**
