@@ -20,7 +20,35 @@ import { v4 } from "uuid"
 
 import { JsonHelper } from "../helpers/JSONHelper"
 
-export class ClientProfile {
+export class ClientProfile implements ClientProfileConfig {
+    //Don`t touch
+    configVersion: number
+
+    // Profile information
+    uuid: string
+    sortIndex: number
+    servers: ProfileServer[]
+
+    // Client
+    version: string
+    clientDir: string
+
+    // Assets
+    assetsIndex: string
+    assetsDir: string
+
+    // Updates
+    update: string[]
+    updateVerify: string[]
+    updateExclusions: string[]
+    // updateOptional: ProfileOptional[]
+
+    // Launch client
+    mainClass: string
+    classPath: string[]
+    jvmArgs: string[]
+    clientArgs: string[]
+
     constructor(config: ClientProfileConfig) {
         Object.assign(this, this.defaults, config)
         this.validate()

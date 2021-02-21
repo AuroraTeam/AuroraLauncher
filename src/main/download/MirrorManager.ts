@@ -22,13 +22,13 @@ import { URL } from "url"
 
 import * as rimraf from "rimraf"
 
+import { HttpHelper } from "../helpers/HttpHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
-import { DownloadManager } from "./DownloadManager"
 
-export class MirrorManager extends DownloadManager {
+export class MirrorManager {
     /**
      * Скачивание клиена с зеркала
      * @param clientName - Название архива с файлами клиента
@@ -43,8 +43,8 @@ export class MirrorManager extends DownloadManager {
         await Promise.all(
             mirrors.map(async (mirror, i) => {
                 if (
-                    (await this.existFile(new URL(`/clients/${clientName}.json`, mirror))) &&
-                    (await this.existFile(new URL(`/clients/${clientName}.zip`, mirror)))
+                    (await HttpHelper.existFile(new URL(`/clients/${clientName}.json`, mirror))) &&
+                    (await HttpHelper.existFile(new URL(`/clients/${clientName}.zip`, mirror)))
                 )
                     existClients.set(i, mirror)
             })
@@ -59,8 +59,8 @@ export class MirrorManager extends DownloadManager {
 
         try {
             LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.download"))
-            profile = await this.downloadFile(new URL(`/clients/${clientName}.json`, mirror))
-            client = await this.downloadFile(new URL(`/clients/${clientName}.zip`, mirror))
+            profile = await HttpHelper.downloadFile(new URL(`/clients/${clientName}.json`, mirror))
+            client = await HttpHelper.downloadFile(new URL(`/clients/${clientName}.zip`, mirror))
         } catch (error) {
             LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.downloadErr"))
             LogHelper.debug(error)
@@ -99,7 +99,7 @@ export class MirrorManager extends DownloadManager {
 
         await Promise.all(
             mirrors.map(async (mirror, i) => {
-                if (await this.existFile(new URL(`/assets/${assetsName}.zip`, mirror))) existAssets.set(i, mirror)
+                if (await HttpHelper.existFile(new URL(`/assets/${assetsName}.zip`, mirror))) existAssets.set(i, mirror)
             })
         )
 
@@ -110,7 +110,7 @@ export class MirrorManager extends DownloadManager {
 
         try {
             LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.download"))
-            assets = await this.downloadFile(new URL(`/assets/${assetsName}.zip`, mirror))
+            assets = await HttpHelper.downloadFile(new URL(`/assets/${assetsName}.zip`, mirror))
         } catch (error) {
             LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.downloadErr"))
             LogHelper.debug(error)

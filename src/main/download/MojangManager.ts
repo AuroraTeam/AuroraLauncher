@@ -20,13 +20,13 @@
 // TODO Перевод
 
 import * as fs from "fs"
-import * as https from "https"
 import * as path from "path"
 import { URL } from "url"
 
 import * as pMap from "p-map"
 import * as rimraf from "rimraf"
 
+import { HttpHelper } from "../helpers/HttpHelper"
 import { JsonHelper } from "../helpers/JSONHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { ProgressHelper } from "../helpers/ProgressHelper"
@@ -34,15 +34,16 @@ import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
 import { ClientProfileConfig } from "../profiles/ProfileConfig"
-import { DownloadManager } from "./DownloadManager"
 
-export class MojangManager extends DownloadManager {
+// TODO Перевод
+
+export class MojangManager {
     /**
      * Скачивание клиента с зеркала Mojang
      * @param clientVer - Версия клиента
      * @param dirName - Название конечной папки
      */
-    async downloadClient(clientVer: string, dirName: string): Promise<void> {
+    async downloadClient(clientVer: string, dirName: string, modloader = false): Promise<any> {
         const version: any = await this.getVersionInfo(clientVer)
         if (version === undefined) return
 
@@ -54,7 +55,7 @@ export class MojangManager extends DownloadManager {
         if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
         fs.mkdirSync(clientDir)
 
-        const clientFile = await this.downloadFile(new URL(client.url))
+        const clientFile = await HttpHelper.downloadFile(new URL(client.url))
         fs.copyFileSync(clientFile, path.resolve(clientDir, "minecraft.jar"))
 
         // Libraries
@@ -66,7 +67,7 @@ export class MojangManager extends DownloadManager {
 
         await Promise.all(
             Array.from(librariesList.libraries).map(async (lib) => {
-                const libFile = await this.downloadFile(new URL(lib, "https://libraries.minecraft.net/"), false)
+                const libFile = await HttpHelper.downloadFile(new URL(lib, "https://libraries.minecraft.net/"), false)
                 fs.mkdirSync(path.resolve(librariesDir, path.dirname(lib)), { recursive: true })
                 fs.copyFileSync(libFile, path.resolve(librariesDir, lib))
             })
@@ -78,23 +79,28 @@ export class MojangManager extends DownloadManager {
 
         await Promise.all(
             Array.from(librariesList.natives).map(async (native) => {
-                const nativeFile = await this.downloadFile(new URL(native, "https://libraries.minecraft.net/"), false)
+                const nativeFile = await HttpHelper.downloadFile(
+                    new URL(native, "https://libraries.minecraft.net/"),
+                    false
+                )
                 await ZipHelper.unzipArchive(nativeFile, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
             })
         )
 
-        rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
-            if (e !== null) LogHelper.warn(e)
-        })
+        if (!modloader) {
+            rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
+                if (e !== null) LogHelper.warn(e)
+            })
+            LogHelper.info("Done")
+        }
 
         //Profiles
-        App.ProfilesManager.createProfile({
+        return App.ProfilesManager.createProfile({
             version: clientVer,
             clientDir: dirName,
             assetsDir: `assets${version.assets}`,
             assetsIndex: version.assets,
         } as ClientProfileConfig)
-        LogHelper.info("Done")
     }
 
     /**
@@ -110,7 +116,7 @@ export class MojangManager extends DownloadManager {
         if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
         fs.mkdirSync(assetsDir)
 
-        const assetsFile = await this.downloadFile(new URL(version.assetIndex.url), false)
+        const assetsFile = await HttpHelper.downloadFile(new URL(version.assetIndex.url), false)
         fs.mkdirSync(path.resolve(assetsDir, "indexes"))
         const json = path.resolve(assetsDir, `indexes/${assetsVer}.json`)
         fs.copyFileSync(assetsFile, json)
@@ -131,7 +137,7 @@ export class MojangManager extends DownloadManager {
         await pMap(
             assetsHashes,
             async ([hash, size]) => {
-                const assetFile = await this.downloadFile(
+                const assetFile = await HttpHelper.downloadFile(
                     new URL(`${hash.slice(0, 2)}/${hash}`, "https://resources.download.minecraft.net/"),
                     false
                 )
@@ -213,34 +219,12 @@ export class MojangManager extends DownloadManager {
         return filteredData
     }
 
-    /**
-     * Просмотр файла (https only)
-     * @param url - Ссылка на файл
-     * @returns Promise который вернёт содержимое файла в случае успеха
-     */
-    readFile(url: string): Promise<string> {
-        return new Promise(function (resolve, reject) {
-            https
-                .get(url, (res) => {
-                    res.setEncoding("utf8")
-                    let data = ""
-                    res.on("data", (chunk) => {
-                        data += chunk
-                    })
-                    res.on("end", () => {
-                        resolve(data)
-                    })
-                })
-                .on("error", (err) => {
-                    reject(err)
-                })
-        })
-    }
-
     async getVersionInfo(version: string): Promise<any> {
         let versionsData
         try {
-            versionsData = await this.readFile("https://launchermeta.mojang.com/mc/game/version_manifest.json")
+            versionsData = await HttpHelper.readFile(
+                new URL("https://launchermeta.mojang.com/mc/game/version_manifest.json")
+            )
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error("Mojang site unavailable")
@@ -252,7 +236,7 @@ export class MojangManager extends DownloadManager {
             versions = JsonHelper.toJSON(versionsData).versions
         } catch (error) {
             LogHelper.debug(error)
-            LogHelper.error("Error parsing JSON data")
+            LogHelper.error("Error parsing versions data")
             return
         }
 
@@ -262,10 +246,20 @@ export class MojangManager extends DownloadManager {
             return
         }
 
+        let clientData
         try {
-            return JsonHelper.toJSON(await this.readFile(_version.url))
+            clientData = await HttpHelper.readFile(new URL(_version.url))
         } catch (error) {
             LogHelper.debug(error)
+            LogHelper.error("Client data not found")
+            return
+        }
+
+        try {
+            return JsonHelper.toJSON(clientData)
+        } catch (error) {
+            LogHelper.debug(error)
+            LogHelper.error("Error parsing client data")
             return
         }
     }

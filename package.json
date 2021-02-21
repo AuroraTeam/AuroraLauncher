@@ -65,8 +65,5 @@
             "style": "module",
             "parser": "typescript"
         }
-    },
-    "dependencies": {
-        "mvn-artifact-download": "^5.1.0"
     }
 }

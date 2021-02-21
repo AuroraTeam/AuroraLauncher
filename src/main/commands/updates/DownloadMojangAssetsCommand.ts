@@ -28,7 +28,7 @@ export class DownloadMojangAssetsCommand extends AbstractCommand {
 
     async invoke(...args: string[]): Promise<void> {
         const [assetsVer, dirName] = args
-        if (!assetsVer) return LogHelper.error("Укажите название/версию ассетов!")
+        if (!assetsVer) return LogHelper.error("Укажите версию ассетов!")
         if (!dirName) return LogHelper.error("Укажите название папки для ассетов!")
         App.CommandsManager.console.pause()
         await new MojangManager().downloadAssets(assetsVer, dirName)

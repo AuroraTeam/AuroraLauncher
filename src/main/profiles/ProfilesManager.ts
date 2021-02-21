@@ -66,9 +66,16 @@ export class ProfilesManager {
         this.loadProfiles()
     }
 
-    createProfile(parametrs: ClientProfileConfig): void {
+    createProfile(parametrs: ClientProfileConfig): string {
         const profile = new ClientProfile(parametrs)
+        this.profiles.push(profile)
         fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${parametrs.clientDir}.json`), profile.toString())
-        return
+        return profile.uuid
+    }
+
+    editProfile(uuid: string, parametrs: ClientProfileConfig): void {
+        const profile = this.profiles.find((p) => (p.uuid = uuid))
+        Object.assign(profile, parametrs)
+        fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`), profile.toString())
     }
 }

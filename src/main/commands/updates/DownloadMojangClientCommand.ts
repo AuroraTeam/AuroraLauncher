@@ -28,7 +28,7 @@ export class DownloadMojangClientCommand extends AbstractCommand {
 
     async invoke(...args: string[]): Promise<void> {
         const [clientVer, dirName] = args
-        if (!clientVer) return LogHelper.error("Укажите название/версию клиента!")
+        if (!clientVer) return LogHelper.error("Укажите версию клиента!")
         if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
         App.CommandsManager.console.pause()
         new MojangManager().downloadClient(clientVer, dirName)
