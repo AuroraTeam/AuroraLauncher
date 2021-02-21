@@ -17,7 +17,7 @@
  */
 
 import { App } from "../LauncherServer"
-import { WebServerManager } from "./WebserverManager"
+import { WebServerManager } from "./WebServerManager"
 import { WebSocketManager } from "./WebSocketManager"
 
 export class SocketManager {

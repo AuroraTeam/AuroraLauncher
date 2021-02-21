@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { LogHelper } from "./../../helpers/LogHelper"
+import { LogHelper } from "../../helpers/LogHelper"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class AboutCommand extends AbstractCommand {
