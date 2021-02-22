@@ -19,12 +19,26 @@
 import { App } from "../../LauncherServer"
 import { AbstractRequest, wsResponseWithoutUUID } from "./AbstractRequest"
 
-export class ProfilesRequest extends AbstractRequest {
-    type = "profiles"
+export class ServersRequest extends AbstractRequest {
+    type = "servers"
 
     invoke(): wsResponseWithoutUUID {
+        const servers: any[] = []
+        App.ProfilesManager.profiles.forEach((p) => {
+            p.servers.forEach((s) => {
+                servers.push({
+                    ip: s.ip,
+                    port: s.port,
+                    title: s.title,
+                    profileUUID: p.uuid,
+                })
+            })
+        })
+
         return {
-            data: App.ProfilesManager.profiles,
+            data: {
+                servers,
+            },
         }
     }
 }

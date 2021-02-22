@@ -35,7 +35,8 @@ export class UpdatesManager {
         const folders = fs.readdirSync(StorageHelper.updatesDir)
         if (folders.length !== 0) {
             LogHelper.info(App.LangManager.getTranslate("UpdatesManager.sync"))
-            folders.forEach((el) => { // async?
+            folders.forEach((el) => {
+                // async?
                 const startTime = new Date().getTime()
                 this.hDirs.set(el, this.hashDir(path.resolve(StorageHelper.updatesDir, el)))
                 LogHelper.info(

@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { LogHelper } from "../helpers/LogHelper"
 import { JsonHelper } from "../helpers/JSONHelper"
+import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { HwidHandlerConfig } from "../hwid/AbstractHwidHandler"
 import { App } from "../LauncherServer"
