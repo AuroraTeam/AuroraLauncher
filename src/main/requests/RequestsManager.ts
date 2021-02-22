@@ -22,6 +22,7 @@ import { PingRequest } from "./types/PingRequest"
 import { ProfileRequest } from "./types/ProfileRequest"
 import { ServersRequest } from "./types/ServersRequest"
 import { UnknownRequest } from "./types/UnknownRequest"
+import { UpdatesRequest } from "./types/UpdatesRequest"
 
 export class RequestsManager {
     requests: Map<string, AbstractRequest> = new Map()
@@ -32,6 +33,7 @@ export class RequestsManager {
         this.registerRequest(new AuthRequest())
         this.registerRequest(new ServersRequest())
         this.registerRequest(new ProfileRequest())
+        this.registerRequest(new UpdatesRequest())
     }
 
     registerRequest(x: AbstractRequest): void {
