@@ -19,6 +19,7 @@
 import { AbstractRequest, wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
 import { AuthRequest } from "./types/AuthRequest"
 import { PingRequest } from "./types/PingRequest"
+import { ProfileRequest } from "./types/ProfileRequest"
 import { ServersRequest } from "./types/ServersRequest"
 import { UnknownRequest } from "./types/UnknownRequest"
 
@@ -30,6 +31,7 @@ export class RequestsManager {
         this.registerRequest(new PingRequest())
         this.registerRequest(new AuthRequest())
         this.registerRequest(new ServersRequest())
+        this.registerRequest(new ProfileRequest())
     }
 
     registerRequest(x: AbstractRequest): void {
@@ -39,6 +41,7 @@ export class RequestsManager {
     getRequest(data: wsRequest): wsResponse | wsErrorResponse {
         let res
         if (this.requests.has(data.type)) {
+            // TODO invoke(data) => data.data
             res = this.requests.get(data.type).invoke(data)
         } else {
             res = this.requests.get("unknown").invoke(data)
