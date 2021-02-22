@@ -19,7 +19,7 @@
 import * as fs from "fs"
 import * as path from "path"
 
-import { JsonHelper } from "../helpers/JSONHelper"
+import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"

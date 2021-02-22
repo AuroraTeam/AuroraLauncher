@@ -20,7 +20,7 @@ import * as http from "http"
 
 import * as ws from "ws"
 
-import { JsonHelper } from "../helpers/JSONHelper"
+import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { RequestsManager } from "./RequestsManager"
 import { wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"

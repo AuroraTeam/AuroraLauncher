@@ -18,7 +18,7 @@
 
 import { v4 } from "uuid"
 
-import { JsonHelper } from "../helpers/JSONHelper"
+import { JsonHelper } from "../helpers/JsonHelper"
 
 export class ClientProfile implements ClientProfileConfig {
     //Don`t touch

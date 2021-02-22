@@ -26,7 +26,7 @@ import { URL } from "url"
 import * as rimraf from "rimraf"
 
 import { HttpHelper } from "../helpers/HttpHelper"
-import { JsonHelper } from "../helpers/JSONHelper"
+import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
