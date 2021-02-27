@@ -25,14 +25,6 @@ jobs:
       - name: Build LauncherServer
         run: npm run build:prod
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.0
-        with:
-          name: LauncherServer
-          path: dist
-          if-no-files-found: error
-          retention-days: 30
-
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
