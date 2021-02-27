@@ -83,7 +83,7 @@ export class MojangManager {
                     new URL(native, "https://libraries.minecraft.net/"),
                     false
                 )
-                await ZipHelper.unzipArchive(nativeFile, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
+                ZipHelper.unzipArchive(nativeFile, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
             })
         )
 
