@@ -25,8 +25,8 @@ export class UpdatesRequest extends AbstractRequest {
     invoke({ data }: wsRequest & { data: { dir: string } }): wsResponseWithoutUUID {
         return {
             data: {
-                hashes: App.UpdatesManager.hDirs.get(data.dir)
-            }
+                hashes: App.UpdatesManager.hDirs.get(data.dir),
+            },
         }
     }
 }

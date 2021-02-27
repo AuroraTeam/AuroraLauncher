@@ -46,6 +46,6 @@ export class ZipHelper {
             })
             zipfile.extractEntryTo(entry, destDir)
         })
-        progress.emit('end')
+        progress.emit("end")
     }
 }
