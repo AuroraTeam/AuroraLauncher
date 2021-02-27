@@ -37,7 +37,6 @@
         "@types/semver": "^7.3.1",
         "@types/uuid": "^8.3.0",
         "@types/ws": "^7.2.6",
-        "@types/yauzl": "^2.9.1",
         "@typescript-eslint/eslint-plugin": "^4.3.0",
         "@typescript-eslint/parser": "^4.3.0",
         "bufferutil": "^4.0.1",
@@ -58,8 +57,7 @@
         "uuid": "^8.3.2",
         "webpack": "^4.44.0",
         "webpack-cli": "^3.3.12",
-        "ws": "^7.3.1",
-        "yauzl": "github:nalhabash/yauzl#patch-fd-slicer"
+        "ws": "^7.3.1"
     },
     "importSort": {
         ".js, .jsx, .ts, .tsx": {
