@@ -1,9 +1,26 @@
+/**
+ * AuroraLauncher LauncherServer - Server for AuroraLauncher
+ * Copyright (C) 2020 - 2021 AuroraTeam
+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import * as fs from "fs"
 import * as path from "path"
 
-import * as yauzl from "yauzl"
+import * as AdmZip from "adm-zip"
 
-import { LogHelper } from "./LogHelper"
 import { ProgressHelper } from "./ProgressHelper"
 
 export class ZipHelper {
@@ -12,40 +29,23 @@ export class ZipHelper {
      * @param archive - путь до архива
      * @param destDir - конечная папка
      */
-    static unzipArchive(archive: string, destDir: string) {
-        return new Promise((resolve) => {
-            yauzl.open(archive, { lazyEntries: true }, (err, zipfile) => {
-                if (err) LogHelper.error(err)
+    static unzipArchive(archive: string, destDir: string, whitelist: string[] = []): void {
+        const zipfile = new AdmZip(archive)
+        const stat = fs.statSync(archive)
+        const length = stat.size
+        let downloaded = 0
+        const progress = ProgressHelper.getLoadingProgressBar()
 
-                const length = zipfile.fileSize
-                let remaining = length
-                const progress = ProgressHelper.getLoadingProgressBar()
+        zipfile.getEntries().forEach((entry) => {
+            if (entry.isDirectory) return
+            if (whitelist.length > 0 && !whitelist.includes(path.extname(entry.entryName))) return
 
-                zipfile.readEntry()
-                zipfile.on("entry", (entry: yauzl.Entry) => {
-                    if (/\/$/.test(entry.fileName)) {
-                        fs.mkdirSync(path.resolve(destDir, entry.fileName))
-                        zipfile.readEntry()
-                    } else {
-                        remaining -= entry.compressedSize
-                        progress.emit("progress", {
-                            percentage: ((length - remaining) / length) * 100,
-                        })
-                        zipfile.openReadStream(entry, (err, readStream) => {
-                            if (err) throw err
-                            readStream.pipe(fs.createWriteStream(path.resolve(destDir, entry.fileName)))
-                            readStream.on("end", () => {
-                                zipfile.readEntry()
-                            })
-                        })
-                    }
-                })
-                zipfile.on("end", () => {
-                    progress.emit("end")
-                    resolve(true)
-                })
-                zipfile.on("error", (error) => LogHelper.error(error))
+            downloaded += (entry.header as any).compressedSize
+            progress.emit("progress", {
+                percentage: (downloaded / length) * 100,
             })
+            zipfile.extractEntryTo(entry, destDir)
         })
+        progress.emit("end")
     }
 }

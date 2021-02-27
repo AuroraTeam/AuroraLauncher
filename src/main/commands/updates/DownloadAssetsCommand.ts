@@ -16,14 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { MirrorManager } from "../../download/MirrorManager"
+import { LogHelper } from "../../helpers/LogHelper"
+import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
-export class StopCommand extends AbstractCommand {
+export class DownloadAssetsCommand extends AbstractCommand {
     constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
+        super("downloadassets", "Загрузить ресурсы с зеркала", Category.UPDATES, "<version> <folder name>")
     }
 
-    invoke(): void {
-        process.exit(0)
+    async invoke(...args: string[]): Promise<void> {
+        const [clientName, dirName] = args
+        if (!clientName) return LogHelper.error("Укажите название/версию ассетов!")
+        if (!dirName) return LogHelper.error("Укажите название папки для ассетов!")
+
+        App.CommandsManager.console.pause()
+        await new MirrorManager().downloadAssets(clientName, dirName)
+        App.CommandsManager.console.resume()
     }
 }

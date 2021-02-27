@@ -16,14 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractCommand, Category } from "../AbstractCommand"
+import { AbstractRequest, wsResponseWithoutUUID } from "./AbstractRequest"
 
-export class StopCommand extends AbstractCommand {
-    constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
-    }
+export class PingRequest extends AbstractRequest {
+    type = "ping"
 
-    invoke(): void {
-        process.exit(0)
+    invoke(): wsResponseWithoutUUID {
+        return {
+            data: {
+                result: "pong",
+            },
+        }
     }
 }

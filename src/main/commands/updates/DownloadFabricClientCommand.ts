@@ -16,14 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { FabricManager } from "../../download/FabricManager"
+import { LogHelper } from "../../helpers/LogHelper"
+import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
-export class StopCommand extends AbstractCommand {
+export class DownloadFabricClientCommand extends AbstractCommand {
     constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
+        super("downloadfabrciclient", "Загрузить клиент c Fabric", Category.UPDATES, "<version> <folder name>")
     }
 
-    invoke(): void {
-        process.exit(0)
+    async invoke(...args: string[]): Promise<void> {
+        const [clientVer, dirName] = args
+        if (!clientVer) return LogHelper.error("Укажите версию клиента!")
+        if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
+        App.CommandsManager.console.pause()
+        new FabricManager().downloadClient(clientVer, dirName)
+        App.CommandsManager.console.resume()
     }
 }

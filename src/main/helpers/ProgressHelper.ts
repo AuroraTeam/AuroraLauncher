@@ -1,22 +1,40 @@
+/**
+ * AuroraLauncher LauncherServer - Server for AuroraLauncher
+ * Copyright (C) 2020 - 2021 AuroraTeam
+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import * as progress from "progress-stream"
 
 import { App } from "../LauncherServer"
 
 export class ProgressHelper {
-    static barCompleteChar: string = "\u2588"
-    static barIncompleteChar: string = "\u2591"
-    static barsize: number = 20
+    static barCompleteChar = "\u2588"
+    static barIncompleteChar = "\u2591"
+    static barsize = 20
 
-    static getLoadingProgressBar(options?: progress.Options) {
+    static getLoadingProgressBar(options?: progress.Options): progress.ProgressStream {
         return this.getProgress(options, ProgressType.LOADING)
     }
 
-    static getDownloadProgressBar(options: progress.Options) {
+    static getDownloadProgressBar(options: progress.Options): progress.ProgressStream {
         return this.getProgress(options, ProgressType.DOWNLOAD)
     }
 
-    private static getProgress(options: progress.Options, type: ProgressType) {
-        let info = progress(options)
+    private static getProgress(options: progress.Options, type: ProgressType): progress.ProgressStream {
+        const info = progress(options)
         process.stdout.write("\x1B[?25l") // Hide cursor
         info.on("progress", (progress) => {
             process.stdout.clearLine(0)
@@ -54,7 +72,7 @@ export class ProgressHelper {
             .replace("{total}", this.bytesToSize(progress.length))
     }
 
-    private static getBar(percentage: number, size: number = 0): string {
+    private static getBar(percentage: number, size = 0): string {
         // calculate barsize
         const barsize = size !== 0 ? size : this.barsize
         const completeSize = Math.round((percentage / 100) * barsize)

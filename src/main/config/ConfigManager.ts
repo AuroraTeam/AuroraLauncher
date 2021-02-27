@@ -1,4 +1,23 @@
-import { LogHelper } from "./../helpers/LogHelper"
+/**
+ * AuroraLauncher LauncherServer - Server for AuroraLauncher
+ * Copyright (C) 2020 - 2021 AuroraTeam
+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import { JsonHelper } from "../helpers/JsonHelper"
+import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { HwidHandlerConfig } from "../hwid/AbstractHwidHandler"
 import { App } from "../LauncherServer"
@@ -19,7 +38,7 @@ export class ConfigManager {
         }
     }
 
-    getProperty(property: string, raw: boolean = false): any {
+    getProperty(property: string, raw = false): any {
         const path = property.split(".")
         let prop: any = this.config
         path.forEach((el) => {
@@ -47,7 +66,7 @@ export class ConfigManager {
     load(): void {
         const config = fs.readFileSync(StorageHelper.configFile)
         try {
-            this.config = JSON.parse(config.toString())
+            this.config = JsonHelper.toJSON(config.toString())
         } catch (e) {
             if (e instanceof SyntaxError) {
                 LogHelper.error(e)
@@ -57,6 +76,6 @@ export class ConfigManager {
     }
 
     save(): void {
-        fs.writeFileSync(StorageHelper.configFile, JSON.stringify(this.config, null, 4))
+        fs.writeFileSync(StorageHelper.configFile, JsonHelper.toString(this.config, true))
     }
 }

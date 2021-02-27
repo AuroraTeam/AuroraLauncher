@@ -17,14 +17,30 @@
  */
 
 import { App } from "../../LauncherServer"
-import { AbstractCommand, Category } from "../AbstractCommand"
+import { AbstractRequest, wsResponseWithoutUUID } from "./AbstractRequest"
 
-export class SyncUpdatesCommand extends AbstractCommand {
-    constructor() {
-        super("syncupdates", "Синхронизировать папку updates", Category.UPDATES)
-    }
+export class ServersRequest extends AbstractRequest {
+    type = "servers"
 
-    invoke(): void {
-        App.UpdatesManager.hashUpdatesDir()
+    invoke(): wsResponseWithoutUUID {
+        const servers: any[] = []
+        App.ProfilesManager.profiles
+            .sort((a, b) => a.sortIndex - b.sortIndex)
+            .forEach((p) => {
+                p.servers.forEach((s) => {
+                    servers.push({
+                        ip: s.ip,
+                        port: s.port,
+                        title: s.title,
+                        profileUUID: p.uuid,
+                    })
+                })
+            })
+
+        return {
+            data: {
+                servers,
+            },
+        }
     }
 }

@@ -16,14 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractCommand, Category } from "../AbstractCommand"
+import { App } from "../../LauncherServer"
+import { AbstractRequest, wsRequest, wsResponseWithoutUUID } from "./AbstractRequest"
 
-export class StopCommand extends AbstractCommand {
-    constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
-    }
+export class ProfileRequest extends AbstractRequest {
+    type = "profile"
 
-    invoke(): void {
-        process.exit(0)
+    invoke({ data }: wsRequest): wsResponseWithoutUUID {
+        return {
+            data: {
+                profile: App.ProfilesManager.profiles.find((p) => p.uuid == (data as { uuid: string }).uuid),
+            },
+        }
     }
 }

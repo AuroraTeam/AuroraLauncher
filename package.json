@@ -9,31 +9,42 @@
     ],
     "homepage": "https://aurora-launcher.ru",
     "bugs": {
-        "url": "https://gitlab.com/aurorateam/launcherserver/issues"
+        "url": "https://github.com/AuroraTeam/LauncherServer/issues"
     },
-    "repository": "gitlab:aurorateam/launcherserver",
-    "license": "GPLv3",
-    "author": "",
-    "contributors": [],
+    "repository": "github:aurorateam/launcherserver",
+    "license": "GPL-3.0",
+    "author": "AuroraTeam",
+    "contributors": [
+        "JoCat (https://github.com/JoCat)",
+        "LoomeL (https://github.com/LoomeL)",
+        "FIXxp (https://github.com/FIXxp)"
+    ],
     "main": "LauncherServer.js",
     "scripts": {
         "build:dev": "cross-env NODE_ENV=development webpack",
         "build:prod": "cross-env NODE_ENV=production webpack",
         "clean": "rimraf dist",
-        "lint": "prettier --config .prettierrc.json --write \"src/**/*.*\"",
+        "prettier": "prettier --config .prettierrc.json --write \"src/**/*.*\"",
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix",
         "start": "node dist/LauncherServer.js"
     },
     "devDependencies": {
+        "@types/adm-zip": "^0.4.33",
         "@types/node": "^12.12.50",
         "@types/progress-stream": "^2.0.0",
         "@types/rimraf": "^3.0.0",
         "@types/semver": "^7.3.1",
+        "@types/uuid": "^8.3.0",
         "@types/ws": "^7.2.6",
-        "@types/yauzl": "^2.9.1",
+        "@typescript-eslint/eslint-plugin": "^4.3.0",
+        "@typescript-eslint/parser": "^4.3.0",
         "bufferutil": "^4.0.1",
         "colors": "^1.4.0",
         "cross-env": "^7.0.2",
+        "eslint": "^7.10.0",
         "import-sort-style-module": "^6.0.0",
+        "p-map": "^4.0.0",
         "prettier": "^2.0.5",
         "prettier-plugin-import-sort": "0.0.4",
         "progress-stream": "^2.0.0",
@@ -43,15 +54,18 @@
         "ts-loader": "^8.0.1",
         "typescript": "^3.9.7",
         "utf-8-validate": "^5.0.2",
+        "uuid": "^8.3.2",
         "webpack": "^4.44.0",
         "webpack-cli": "^3.3.12",
-        "ws": "^7.3.1",
-        "yauzl": "github:nalhabash/yauzl#patch-fd-slicer"
+        "ws": "^7.3.1"
     },
     "importSort": {
         ".js, .jsx, .ts, .tsx": {
             "style": "module",
             "parser": "typescript"
         }
+    },
+    "dependencies": {
+        "adm-zip": "^0.5.3"
     }
 }

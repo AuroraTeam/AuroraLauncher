@@ -16,14 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractCommand, Category } from "../AbstractCommand"
+import { AbstractRequest, wsErrorResponseWithoutUUID } from "./AbstractRequest"
 
-export class StopCommand extends AbstractCommand {
-    constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
-    }
+export class UnknownRequest extends AbstractRequest {
+    type = "unknown"
 
-    invoke(): void {
-        process.exit(0)
+    invoke(): wsErrorResponseWithoutUUID {
+        return {
+            code: 102,
+            message: "Unknown request type",
+        }
     }
 }

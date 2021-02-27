@@ -16,14 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
-export class StopCommand extends AbstractCommand {
+export class SyncProfilesCommand extends AbstractCommand {
     constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
+        super("syncprofiles", "Синхронизировать папку profiles", Category.UPDATES)
     }
 
     invoke(): void {
-        process.exit(0)
+        App.ProfilesManager.reloadProfiles()
     }
 }

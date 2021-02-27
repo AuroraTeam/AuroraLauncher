@@ -16,22 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { MirrorManager } from "../../download/MirrorManager"
 import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
-import { AbstractCommand, Category } from "../AbstractCommand"
+import { AbstractRequest, wsErrorResponseWithoutUUID, wsRequest, wsResponseWithoutUUID } from "./AbstractRequest"
 
-export class DownloadClientCommand extends AbstractCommand {
-    constructor() {
-        super("downloadclient", "Загрузить клиент с зеркала", Category.UPDATES, "<version> <folder name>")
+export class AuthRequest extends AbstractRequest {
+    type = "auth"
+
+    invoke({ data }: wsAuthRequest): wsResponseWithoutUUID | wsErrorResponseWithoutUUID {
+        const provider = App.AuthManager.providers.get(App.ConfigManager.getProperty("auth.primaryProvider.type"))
+        if (provider === undefined) {
+            LogHelper.error("primaryProvider is undefined")
+            return {
+                code: 103,
+                message: "primaryProvider is undefined",
+            }
+        }
+
+        return provider.emit(data.login, data.password, data.ip)
     }
+}
 
-    async invoke(...args: string[]): Promise<void> {
-        const [clientName, dirName] = args
-        if (!clientName) return LogHelper.error("Укажите название/версию клиента!")
-        if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
-        App.CommandsManager.console.pause()
-        await new MirrorManager().downloadClient(clientName, dirName)
-        App.CommandsManager.console.resume()
+interface wsAuthRequest extends wsRequest {
+    data: {
+        login: string
+        password: string
+        ip: string
     }
 }

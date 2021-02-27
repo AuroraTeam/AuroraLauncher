@@ -16,14 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractCommand, Category } from "../AbstractCommand"
-
-export class StopCommand extends AbstractCommand {
-    constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
+export class JsonHelper {
+    static toJSON(string: string): any {
+        return JSON.parse(string)
     }
 
-    invoke(): void {
-        process.exit(0)
+    static toString(data: object, pretty = false): string {
+        return pretty ? JSON.stringify(data, null, 4) : JSON.stringify(data)
     }
 }

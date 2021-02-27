@@ -16,14 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { MojangManager } from "../../download/MojangManager"
+import { LogHelper } from "../../helpers/LogHelper"
+import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
-export class StopCommand extends AbstractCommand {
+export class DownloadMojangClientCommand extends AbstractCommand {
     constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
+        super("downloadmojangclient", "Загрузить клиент с зеркала Mojang", Category.UPDATES, "<version> <folder name>")
     }
 
-    invoke(): void {
-        process.exit(0)
+    async invoke(...args: string[]): Promise<void> {
+        const [clientVer, dirName] = args
+        if (!clientVer) return LogHelper.error("Укажите версию клиента!")
+        if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
+        App.CommandsManager.console.pause()
+        new MojangManager().downloadClient(clientVer, dirName)
+        App.CommandsManager.console.resume()
     }
 }

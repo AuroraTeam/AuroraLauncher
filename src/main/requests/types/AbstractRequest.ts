@@ -16,14 +16,37 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractCommand, Category } from "../AbstractCommand"
+export abstract class AbstractRequest {
+    protected type: string
 
-export class StopCommand extends AbstractCommand {
-    constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
-    }
+    abstract invoke(data: wsRequest): wsResponseWithoutUUID | wsErrorResponseWithoutUUID
 
-    invoke(): void {
-        process.exit(0)
+    getType(): string {
+        return this.type
     }
 }
+
+export interface wsRequest {
+    type: string
+    uuid: uuidv4
+    data: object
+}
+
+export interface wsResponse {
+    uuid: uuidv4
+    data: object
+}
+
+export interface wsErrorResponse {
+    uuid: uuidv4
+    code: number
+    message: string
+}
+
+export type wsResponseWithoutUUID = Omit<wsResponse, "uuid">
+export type wsErrorResponseWithoutUUID = Omit<wsErrorResponse, "uuid">
+
+/**
+ * Строка являющаяся валидным uuidv4 токеном
+ */
+type uuidv4 = string

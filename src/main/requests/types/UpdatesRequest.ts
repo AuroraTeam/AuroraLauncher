@@ -16,14 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractCommand, Category } from "../AbstractCommand"
+import { App } from "../../LauncherServer"
+import { AbstractRequest, wsRequest, wsResponseWithoutUUID } from "./AbstractRequest"
 
-export class StopCommand extends AbstractCommand {
-    constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
-    }
+export class UpdatesRequest extends AbstractRequest {
+    type = "updates"
 
-    invoke(): void {
-        process.exit(0)
+    invoke({ data }: wsRequest & { data: { dir: string } }): wsResponseWithoutUUID {
+        return {
+            data: {
+                hashes: App.UpdatesManager.hDirs.get(data.dir),
+            },
+        }
     }
 }
