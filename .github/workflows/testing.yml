@@ -1,0 +1,31 @@
+name: Testing Build
+
+on:
+  push:
+    branches: [ testing ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 14
+
+      - name: Download dependencies
+        run: npm ci
+
+      - name: Build LauncherServer
+        run: npm run build:dev
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          name: LauncherServer Testing
+          path: dist
+          if-no-files-found: error
+          retention-days: 30
