@@ -120,9 +120,7 @@ export class MirrorManager {
         try {
             fs.mkdirSync(assetsDir)
             LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.unpacking"))
-            console.time('zip')
             ZipHelper.unzipArchive(assets.toString(), assetsDir)
-            console.timeEnd('zip')
         } catch (error) {
             fs.rmdirSync(assetsDir, { recursive: true })
             LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.unpackingErr"))
