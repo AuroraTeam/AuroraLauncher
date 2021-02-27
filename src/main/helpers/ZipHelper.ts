@@ -19,9 +19,8 @@
 import * as fs from "fs"
 import * as path from "path"
 
-import * as yauzl from "yauzl"
+import * as AdmZip from "adm-zip"
 
-import { LogHelper } from "./LogHelper"
 import { ProgressHelper } from "./ProgressHelper"
 
 export class ZipHelper {
@@ -30,44 +29,23 @@ export class ZipHelper {
      * @param archive - путь до архива
      * @param destDir - конечная папка
      */
-    static unzipArchive(archive: string, destDir: string, whitelist: string[] = []): Promise<boolean> {
-        return new Promise((resolve) => {
-            yauzl.open(archive, { lazyEntries: true }, (err, zipfile) => {
-                if (err) LogHelper.error(err)
+    static unzipArchive(archive: string, destDir: string, whitelist: string[] = []): void {
+        const zipfile = new AdmZip(archive)
+        const stat = fs.statSync(archive)
+        const length = stat.size
+        let downloaded = 0
+        const progress = ProgressHelper.getLoadingProgressBar()
 
-                const length = zipfile.fileSize
-                let downloaded = 0
-                const progress = ProgressHelper.getLoadingProgressBar()
+        zipfile.getEntries().forEach((entry) => {
+            if (entry.isDirectory) return
+            if (whitelist.length > 0 && !whitelist.includes(path.extname(entry.entryName))) return
 
-                zipfile.readEntry()
-                zipfile.on("entry", (entry: yauzl.Entry) => {
-                    if (/\/$/.test(entry.fileName)) {
-                        if (whitelist.length == 0) fs.mkdirSync(path.resolve(destDir, entry.fileName))
-                        zipfile.readEntry()
-                    } else {
-                        downloaded += entry.compressedSize
-                        progress.emit("progress", {
-                            percentage: (downloaded / length) * 100,
-                        })
-                        if (whitelist.length > 0 && !whitelist.includes(path.extname(entry.fileName))) {
-                            zipfile.readEntry()
-                        } else {
-                            zipfile.openReadStream(entry, (err, readStream) => {
-                                if (err) throw err
-                                readStream.pipe(fs.createWriteStream(path.resolve(destDir, entry.fileName)))
-                                readStream.on("end", () => {
-                                    zipfile.readEntry()
-                                })
-                            })
-                        }
-                    }
-                })
-                zipfile.on("end", () => {
-                    progress.emit("end")
-                    resolve(true)
-                })
-                zipfile.on("error", (error) => LogHelper.error(error))
+            downloaded += (entry.header as any).compressedSize
+            progress.emit("progress", {
+                percentage: (downloaded / length) * 100,
             })
+            zipfile.extractEntryTo(entry, destDir)
         })
+        progress.emit('end')
     }
 }

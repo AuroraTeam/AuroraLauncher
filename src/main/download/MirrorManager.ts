@@ -71,9 +71,9 @@ export class MirrorManager {
         try {
             fs.mkdirSync(clientDir)
             LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.unpacking"))
-            await ZipHelper.unzipArchive(client, clientDir)
+            ZipHelper.unzipArchive(client, clientDir)
         } catch (error) {
-            fs.rmdirSync(clientDir)
+            fs.rmdirSync(clientDir, { recursive: true })
             LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.unpackingErr"))
             LogHelper.debug(error)
             return
@@ -120,9 +120,11 @@ export class MirrorManager {
         try {
             fs.mkdirSync(assetsDir)
             LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.unpacking"))
-            await ZipHelper.unzipArchive(assets.toString(), assetsDir)
+            console.time('zip')
+            ZipHelper.unzipArchive(assets.toString(), assetsDir)
+            console.timeEnd('zip')
         } catch (error) {
-            fs.rmdirSync(assetsDir)
+            fs.rmdirSync(assetsDir, { recursive: true })
             LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.unpackingErr"))
             LogHelper.debug(error)
             return

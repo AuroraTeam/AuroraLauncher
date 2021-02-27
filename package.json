@@ -30,6 +30,7 @@
         "start": "node dist/LauncherServer.js"
     },
     "devDependencies": {
+        "@types/adm-zip": "^0.4.33",
         "@types/node": "^12.12.50",
         "@types/progress-stream": "^2.0.0",
         "@types/rimraf": "^3.0.0",
@@ -65,5 +66,8 @@
             "style": "module",
             "parser": "typescript"
         }
+    },
+    "dependencies": {
+        "adm-zip": "^0.5.3"
     }
 }
