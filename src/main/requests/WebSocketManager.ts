@@ -18,6 +18,7 @@
 
 import * as http from "http"
 
+import { NIL as NIL_UUID } from "uuid"
 import * as ws from "ws"
 
 import { JsonHelper } from "../helpers/JsonHelper"
@@ -47,7 +48,7 @@ export class WebSocketManager {
                 data = JsonHelper.toJSON(message)
             } catch (error) {
                 return this.wsSend(ws, {
-                    uuid: data.uuid,
+                    uuid: NIL_UUID,
                     code: 100,
                     message: error.message,
                 })
@@ -55,7 +56,7 @@ export class WebSocketManager {
 
             if (data.uuid === undefined) {
                 return this.wsSend(ws, {
-                    uuid: data.uuid,
+                    uuid: NIL_UUID,
                     code: 101,
                     message: "Request UUID is undefined",
                 })
