@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { MultiBar, Options, SingleBar } from "cli-progress"
+import { Format, GenericFormatter, MultiBar, Options, Params, SingleBar } from "cli-progress"
 
 import { App } from "../LauncherServer"
 
@@ -25,35 +25,27 @@ export class ProgressHelper {
     static barIncompleteChar = "\u2591"
     static barsize = 20
 
-    // private static getBar(percentage: number, size = 0): string {
-    //     // calculate barsize
-    //     const barsize = size !== 0 ? size : this.barsize
-    //     const completeSize = Math.round((percentage / 100) * barsize)
-    //     const incompleteSize = barsize - completeSize
+    public static getLoadingProgressBar(): SingleBar {
+        return this.getProgress(App.LangManager.getTranslate("ProgressHelper.loading"), this.barsize * 2)
+    }
 
-    //     // generate bar string by stripping the pre-rendered strings
-    //     return this.barCompleteChar.repeat(completeSize) + this.barIncompleteChar.repeat(incompleteSize)
-    // }
+    public static getDownloadProgressBar(): SingleBar {
+        return this.getProgress(this.downloadFormatter)
+    }
 
-    // private static bytesToSize(bytes: number): string {
-    //     const sizes = ["Bytes", "KB", "MB"]
-    //     if (bytes === 0) return "n/a"
-    //     const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    //     if (i === 0) return `${bytes} ${sizes[i]})`
-    //     return `${(bytes / 1024 ** i).toFixed(2)} ${sizes[i]}`
-    // }
+    public static getDownloadMultiProgressBar(): MultiBar {
+        return this.getMultiProgress(this.downloadFormatter)
+    }
 
-    // New progress
-
-    private static getProgress(format: string, barsize = 0): SingleBar {
+    private static getProgress(format: string | GenericFormatter, barsize = 0): SingleBar {
         return new SingleBar(this.getDefaultParams(format, barsize))
     }
 
-    private static getMultiProgress(format: string, barsize = 0): MultiBar {
+    private static getMultiProgress(format: string | GenericFormatter, barsize = 0): MultiBar {
         return new MultiBar(this.getDefaultParams(format, barsize))
     }
 
-    private static getDefaultParams(format: string, barsize: number): Options {
+    private static getDefaultParams(format: string | GenericFormatter, barsize: number): Options {
         return {
             format,
             barCompleteChar: this.barCompleteChar,
@@ -63,18 +55,34 @@ export class ProgressHelper {
             clearOnComplete: true,
             stopOnComplete: true,
             autopadding: true,
+            emptyOnZero: true,
         }
     }
 
-    public static getLoadingProgressBar(): SingleBar {
-        return this.getProgress(App.LangManager.getTranslate("ProgressHelper.loading"), this.barsize * 2)
+    private static downloadFormatter(options: Options, params: Params, payload: any) {
+        // Костылинг типов, ибо в тайпингах ошибка
+        // Кинул фикс https://github.com/DefinitelyTyped/DefinitelyTyped/pull/51492
+        const startTime = (params.startTime as unknown) as number
+        const elapsedTime = Math.round((Date.now() - startTime) / 1000)
+        const speed = params.value / elapsedTime
+        payload.speed = ProgressHelper.bytesToSize(isFinite(speed) ? speed : 0)
+
+        // Переопределение `скачано/всего`
+        payload.value_formatted = ProgressHelper.bytesToSize(params.value)
+        payload.total_formatted = ProgressHelper.bytesToSize(params.total)
+
+        return Format.Formatter(
+            { ...options, format: App.LangManager.getTranslate("ProgressHelper.download") },
+            params,
+            payload
+        )
     }
 
-    public static getDownloadProgressBar(): SingleBar {
-        return this.getProgress(App.LangManager.getTranslate("ProgressHelper.download"))
-    }
-
-    public static getDownloadMultiProgressBar(): MultiBar {
-        return this.getMultiProgress(App.LangManager.getTranslate("ProgressHelper.download"))
+    private static bytesToSize(bytes: number): string {
+        const sizes = ["Bytes", "KB", "MB"]
+        if (bytes === 0) return "0"
+        const i = Math.floor(Math.log(bytes) / Math.log(1024))
+        if (i === 0) return `${bytes} ${sizes[i]})`
+        return `${(bytes / 1024 ** i).toFixed(2)} ${sizes[i]}`
     }
 }

@@ -106,6 +106,7 @@ export class HttpHelper {
                 concurrency: 4,
             }
         )
+        multiProgress.stop() // Лучше закрывать ручками, ибо не успевает обработаться таймаут и появляется лишняя строка
     }
 
     /**
