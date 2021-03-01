@@ -32,8 +32,11 @@ import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
 import { ClientProfileConfig } from "../profiles/ProfileConfig"
 import { MojangManager } from "./MojangManager"
+import pMap = require("p-map")
 
 export class FabricManager extends MojangManager {
+    fabricLink = "https://maven.fabricmc.net/"
+
     /**
      * Скачивание клиента с зеркала Mojang + Fabric
      * @param clientVer - Версия клиента
@@ -54,18 +57,12 @@ export class FabricManager extends MojangManager {
             librariesList.add(lib.name)
         })
 
-        await Promise.all(
-            Array.from(librariesList).map(async (lib) => {
-                const link = this.getLibPath(lib)
-                const libFile = await HttpHelper.downloadFile(new URL(link, "https://maven.fabricmc.net/"), false)
-                fs.mkdirSync(path.resolve(librariesDir, path.dirname(link)), { recursive: true })
-                fs.copyFileSync(libFile, path.resolve(librariesDir, link))
-            })
-        )
-
-        rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
-            if (e !== null) LogHelper.warn(e)
-        })
+        pMap(librariesList, (async (lib) => {
+            const link = this.getLibPath(lib)
+            const libPath = path.resolve(librariesDir, link)
+            fs.mkdirSync(path.dirname(libPath), { recursive: true })
+            await HttpHelper.downloadFile(new URL(link, this.fabricLink), libPath, {showProgress: false})
+        }), { concurrency: 4 })
 
         //Profiles
         App.ProfilesManager.editProfile(profileUUID, {

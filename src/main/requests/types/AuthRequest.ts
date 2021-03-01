@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// TODO Только одна авторизация на клиента
+
 import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
 import { AbstractRequest, wsErrorResponseWithoutUUID, wsRequest, wsResponseWithoutUUID } from "./AbstractRequest"

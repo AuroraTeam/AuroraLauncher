@@ -38,8 +38,8 @@
         "syncSkip": "Папка updates пуста. Синхронизация пропущена"
     },
     "ProgressHelper": {
-        "loading": "{bar} {percent}%",
-        "download": "{bar} {percent}% | Осталось: {eta}s | Скорость: {speed}/s | {transferred}/{total}"
+        "loading": "{bar} {percentage}%",
+        "download": "{bar} {percentage}% | Осталось: {eta_formatted} | Скорость: {speed}/s | {value}/{total}"
     },
     "ProfilesManager": {
         "sync": "Синхронизация папки profiles",

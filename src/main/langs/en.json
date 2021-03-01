@@ -38,8 +38,8 @@
         "syncSkip": "Updates dir empty. Skip sync"
     },
     "ProgressHelper": {
-        "loading": "{bar} {percent}%",
-        "download": "{bar} {percent}% | Remaining: {eta}s | Speed: {speed}/s | {transferred}/{total}"
+        "loading": "{bar} {percentage}%",
+        "download": "{bar} {percentage}% | Remaining: {eta_formatted} | Speed: {speed}/s | {value}/{total}"
     },
     "ProfilesManager": {
         "sync": "Syncing profiles dir",

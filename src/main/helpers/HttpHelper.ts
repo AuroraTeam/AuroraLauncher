@@ -5,9 +5,9 @@ import * as https from "https"
 import * as path from "path"
 import { URL } from "url"
 
-import { LogHelper } from "../helpers/LogHelper"
-import { ProgressHelper } from "../helpers/ProgressHelper"
-import { StorageHelper } from "../helpers/StorageHelper"
+import { LogHelper } from "./LogHelper"
+import { ProgressHelper } from "./ProgressHelper"
+import { StorageHelper } from "./StorageHelper"
 
 export class HttpHelper {
     /**
@@ -55,36 +55,47 @@ export class HttpHelper {
         })
     }
 
-    // TODO мб имеет смысл отказаться от такого варианта с временной папкой и качать "в оперативку"
     /**
      * Скачивание файла
      * @param url - Объект Url, содержащий ссылку на файл
-     * @param showProgress - отображать прогресс бар или нет, по умолчанию `true`
-     * @returns Promise который вернёт название временного файла в случае успеха
+     * @param filename - путь до сохраняемого файла
+     * @returns Promise который вернёт название файла в случае успеха
      */
-    static downloadFile(url: URL, showProgress = true): Promise<string> {
+    static downloadFile(
+        url: URL,
+        filename: string | null,
+        options?: { showProgress?: boolean, saveToTempFile?: boolean }
+    ): Promise<string> {
+        options = Object.assign({ showProgress: true, saveToTempFile: false }, options)
+        
         return new Promise((resolve, reject) => {
-            const handler = url.protocol === "https:" ? https : http
-            const tempFilename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
-            const tempFile = fs.createWriteStream(tempFilename)
-            tempFile.on("close", () => {
-                resolve(tempFilename)
+            if (options.saveToTempFile) filename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
+            if (filename === null) reject("Filename not found")
+
+            const file = fs.createWriteStream(filename)
+            file.on("close", () => {
+                resolve(filename)
             })
 
+            const handler = url.protocol === "https:" ? https : http
             handler
                 .get(url, (res) => {
-                    if (showProgress) {
-                        res.pipe(
-                            ProgressHelper.getDownloadProgressBar({
-                                length: parseInt(res.headers["content-length"], 10),
-                            })
-                        ).pipe(tempFile)
-                    } else {
-                        res.pipe(tempFile)
+                    if (options.showProgress) {
+                        const progress = ProgressHelper.getDownloadProgressBar()
+                        progress.start(parseInt(res.headers["content-length"]) || 0, 0)
+                        res.on('data', (chunk: Buffer) => {
+                            progress.increment(chunk.length)
+                        })
+                        res.on("end", () => {
+                            progress.stop()
+                            process.stderr.clearLine(0)
+                            process.stderr.cursorTo(0)
+                        })
                     }
+                    res.pipe(file)
                 })
                 .on("error", (err) => {
-                    fs.unlinkSync(tempFilename)
+                    fs.unlinkSync(filename)
                     reject(err)
                 })
         })

@@ -32,20 +32,16 @@ export class ZipHelper {
     static unzipArchive(archive: string, destDir: string, whitelist: string[] = []): void {
         const zipfile = new AdmZip(archive)
         const stat = fs.statSync(archive)
-        const length = stat.size
-        let downloaded = 0
         const progress = ProgressHelper.getLoadingProgressBar()
+        progress.start(stat.size, 0)
 
         zipfile.getEntries().forEach((entry) => {
             if (entry.isDirectory) return
             if (whitelist.length > 0 && !whitelist.includes(path.extname(entry.entryName))) return
 
-            downloaded += (entry.header as any).compressedSize
-            progress.emit("progress", {
-                percentage: (downloaded / length) * 100,
-            })
+            progress.increment((entry.header as any).compressedSize)
             zipfile.extractEntryTo(entry, destDir)
         })
-        progress.emit("end")
+        progress.stop()
     }
 }

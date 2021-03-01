@@ -4,8 +4,7 @@
     "description": "LauncherServer for AuroraLauncher",
     "keywords": [
         "minecraft",
-        "launcher",
-        "forge"
+        "launcher"
     ],
     "homepage": "https://aurora-launcher.ru",
     "bugs": {
@@ -31,6 +30,7 @@
     },
     "devDependencies": {
         "@types/adm-zip": "^0.4.33",
+        "@types/cli-progress": "^3.9.0",
         "@types/node": "^12.20.4",
         "@types/progress-stream": "^2.0.1",
         "@types/rimraf": "^3.0.0",
@@ -52,6 +52,7 @@
     },
     "dependencies": {
         "adm-zip": "^0.5.3",
+        "cli-progress": "^3.9.0",
         "colors": "^1.4.0",
         "p-map": "^4.0.0",
         "progress-stream": "^2.0.0",

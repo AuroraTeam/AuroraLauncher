@@ -23,10 +23,12 @@ import { URL } from "url"
 import * as rimraf from "rimraf"
 
 import { HttpHelper } from "../helpers/HttpHelper"
+import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
+import { ClientProfileConfig } from "../profiles/ProfileConfig"
 
 export class MirrorManager {
     /**
@@ -38,36 +40,31 @@ export class MirrorManager {
         const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
         if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
-        const existClients: Map<number, string> = new Map()
 
-        await Promise.all(
-            mirrors.map(async (mirror, i) => {
-                if (
-                    (await HttpHelper.existFile(new URL(`/clients/${clientName}.json`, mirror))) &&
-                    (await HttpHelper.existFile(new URL(`/clients/${clientName}.zip`, mirror)))
-                )
-                    existClients.set(i, mirror)
-            })
-        )
+        const mirror = mirrors.find(async (mirror) => {
+            if (
+                (await HttpHelper.existFile(new URL(`/clients/${clientName}.json`, mirror))) &&
+                (await HttpHelper.existFile(new URL(`/clients/${clientName}.zip`, mirror)))
+            )
+                return true
+        })
+        if (mirror === undefined) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.notFound"))
 
-        if (existClients.size == 0)
-            return LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.notFound"))
-
-        const mirror = existClients.values().next().value
         let profile: string
         let client: string
 
         try {
             LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.download"))
-            profile = await HttpHelper.downloadFile(new URL(`/clients/${clientName}.json`, mirror))
-            client = await HttpHelper.downloadFile(new URL(`/clients/${clientName}.zip`, mirror))
+            profile = await HttpHelper.readFile(new URL(`/clients/${clientName}.json`, mirror))
+            client = await HttpHelper.downloadFile(new URL(`/clients/${clientName}.zip`, mirror), null, {
+                saveToTempFile: true,
+            })
         } catch (error) {
             LogHelper.error(App.LangManager.getTranslate("MirrorManager.client.downloadErr"))
             LogHelper.debug(error)
             return
         }
 
-        fs.copyFileSync(profile, path.resolve(StorageHelper.profilesDir, `${dirName}.json`))
         try {
             fs.mkdirSync(clientDir)
             LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.unpacking"))
@@ -78,11 +75,16 @@ export class MirrorManager {
             LogHelper.debug(error)
             return
         } finally {
-            rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
+            rimraf(client, (e) => {
                 if (e !== null) LogHelper.warn(e)
             })
         }
 
+        //Profiles
+        App.ProfilesManager.createProfile({
+            ...JsonHelper.toJSON(profile),
+            clientDir: dirName,
+        } as ClientProfileConfig)
         LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.success"))
     }
 
@@ -95,22 +97,19 @@ export class MirrorManager {
         const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
         const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
         if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
-        const existAssets: Map<number, string> = new Map()
 
-        await Promise.all(
-            mirrors.map(async (mirror, i) => {
-                if (await HttpHelper.existFile(new URL(`/assets/${assetsName}.zip`, mirror))) existAssets.set(i, mirror)
-            })
-        )
+        const mirror = mirrors.find(async (mirror) => {
+            if (await HttpHelper.existFile(new URL(`/assets/${assetsName}.zip`, mirror))) return true
+        })
+        if (mirror === undefined) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.notFound"))
 
-        if (existAssets.size == 0) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.notFound"))
-
-        const mirror = existAssets.values().next().value
         let assets: string
 
         try {
             LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.download"))
-            assets = await HttpHelper.downloadFile(new URL(`/assets/${assetsName}.zip`, mirror))
+            assets = await HttpHelper.downloadFile(new URL(`/assets/${assetsName}.zip`, mirror), null, {
+                saveToTempFile: true,
+            })
         } catch (error) {
             LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.downloadErr"))
             LogHelper.debug(error)
@@ -120,14 +119,14 @@ export class MirrorManager {
         try {
             fs.mkdirSync(assetsDir)
             LogHelper.info(App.LangManager.getTranslate("MirrorManager.assets.unpacking"))
-            ZipHelper.unzipArchive(assets.toString(), assetsDir)
+            ZipHelper.unzipArchive(assets, assetsDir)
         } catch (error) {
             fs.rmdirSync(assetsDir, { recursive: true })
             LogHelper.error(App.LangManager.getTranslate("MirrorManager.assets.unpackingErr"))
             LogHelper.debug(error)
             return
         } finally {
-            rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
+            rimraf(assets, (e) => {
                 if (e !== null) LogHelper.warn(e)
             })
         }
