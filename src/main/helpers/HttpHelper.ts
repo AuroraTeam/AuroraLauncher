@@ -15,7 +15,7 @@ import { StorageHelper } from "./StorageHelper"
 export class HttpHelper {
     /**
      * Проверка наличия файла
-     * @param url - Объект Url, содержащий ссылку на файл
+     * @param url - объект Url, содержащий ссылку на файл
      * @returns Promise, который вернёт `true`, в случае существования файла или `false` при его отсутствии или ошибке
      */
     public static existFile(url: URL): Promise<boolean> {
@@ -35,7 +35,7 @@ export class HttpHelper {
 
     /**
      * Просмотр файла
-     * @param url - Ссылка на файл
+     * @param url - ссылка на файл
      * @returns Promise, который вернёт содержимое файла, в случае успеха
      */
     public static readFile(url: URL): Promise<string> {
@@ -60,11 +60,11 @@ export class HttpHelper {
 
     /**
      * Скачивание файла
-     * @param url - Объект URL, содержащий ссылку на файл
+     * @param url - объект URL, содержащий ссылку на файл
      * @param filename - путь до сохраняемого файла
      * @param options - список опций:
      * @param options.showProgress - показывать прогресс бар, по умолчанию `true`
-     * @param options.saveToTempFile - Сохранять во временный файл, по умолчанию `false`
+     * @param options.saveToTempFile - сохранять во временный файл, по умолчанию `false`
      * @returns Promise который вернёт название файла в случае успеха
      */
     public static async downloadFile(
@@ -86,7 +86,7 @@ export class HttpHelper {
 
     /**
      * Скачивание файлов
-     * @param url - Итерируемый объект, содержащий ссылки на файлы (без домена)
+     * @param url - итерируемый объект, содержащий ссылки на файлы (без домена)
      * @param site - домен сайта, с которого будут качаться файлы
      * @param dirname - папка в которую будут сохранены все файлы
      */
@@ -110,9 +110,9 @@ export class HttpHelper {
 
     /**
      * Внутренняя функция скачивания файла
-     * @param url - Объект URL, содержащий ссылку на файл
+     * @param url - объект URL, содержащий ссылку на файл
      * @param filename - путь до сохраняемого файла
-     * @param progressBar - объёкт прогресс бара, если нужно отрисовывать прогресс скачивания
+     * @param progressBar - объект прогресс бара, если нужно отрисовывать прогресс скачивания
      * @returns Promise, который вернёт название файла, в случае успеха
      */
     private static download(url: URL, filename: string, progressBar?: SingleBar): Promise<string> {
