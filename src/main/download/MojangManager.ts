@@ -66,17 +66,7 @@ export class MojangManager {
         LogHelper.info("Download libraries and natives, please wait...")
         const librariesList = this.librariesParse(libraries)
 
-        await pMap(
-            librariesList.libraries,
-            async (lib) => {
-                const libPath = path.resolve(librariesDir, lib)
-                fs.mkdirSync(path.dirname(libPath), { recursive: true })
-                await HttpHelper.downloadFile(new URL(lib, this.clientsLink), libPath)
-            },
-            {
-                concurrency: 4,
-            }
-        )
+        await HttpHelper.downloadFiles(librariesList.libraries, this.clientsLink, librariesDir)
 
         // Natives
         const nativesDir = path.resolve(clientDir, "natives")

@@ -23,7 +23,7 @@ import * as fs from "fs"
 import * as path from "path"
 import { URL } from "url"
 
-import * as rimraf from "rimraf"
+import * as pMap from "p-map"
 
 import { HttpHelper } from "../helpers/HttpHelper"
 import { JsonHelper } from "../helpers/JsonHelper"
@@ -32,7 +32,6 @@ import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
 import { ClientProfileConfig } from "../profiles/ProfileConfig"
 import { MojangManager } from "./MojangManager"
-import pMap = require("p-map")
 
 export class FabricManager extends MojangManager {
     fabricLink = "https://maven.fabricmc.net/"
@@ -57,12 +56,16 @@ export class FabricManager extends MojangManager {
             librariesList.add(lib.name)
         })
 
-        pMap(librariesList, (async (lib) => {
-            const link = this.getLibPath(lib)
-            const libPath = path.resolve(librariesDir, link)
-            fs.mkdirSync(path.dirname(libPath), { recursive: true })
-            await HttpHelper.downloadFile(new URL(link, this.fabricLink), libPath, {showProgress: false})
-        }), { concurrency: 4 })
+        await pMap(
+            librariesList,
+            async (lib) => {
+                const link = this.getLibPath(lib)
+                const libPath = path.resolve(librariesDir, link)
+                fs.mkdirSync(path.dirname(libPath), { recursive: true })
+                await HttpHelper.downloadFile(new URL(link, this.fabricLink), libPath, { showProgress: false })
+            },
+            { concurrency: 4 }
+        )
 
         //Profiles
         App.ProfilesManager.editProfile(profileUUID, {

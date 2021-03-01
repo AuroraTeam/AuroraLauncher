@@ -16,9 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Transform, TransformCallback } from "stream"
-
-import * as cliProgress from "cli-progress"
+import { MultiBar, Options, SingleBar } from "cli-progress"
 
 import { App } from "../LauncherServer"
 
@@ -26,22 +24,6 @@ export class ProgressHelper {
     static barCompleteChar = "\u2588"
     static barIncompleteChar = "\u2591"
     static barsize = 20
-
-    // private static getLoadingProgressTemplate(progress: progress.Progress) {
-    //     return App.LangManager.getTranslate("ProgressHelper.loading")
-    //         .replace("{bar}", this.getBar(progress.percentage, this.barsize * 2))
-    //         .replace("{percent}", progress.percentage.toFixed(2))
-    // }
-
-    // private static getDownloadProgressTemplate(progress: progress.Progress) {
-    //     return App.LangManager.getTranslate("ProgressHelper.download")
-    //         .replace("{bar}", this.getBar(progress.percentage))
-    //         .replace("{percent}", progress.percentage.toFixed(2))
-    //         .replace("{eta}", progress.eta.toString())
-    //         .replace("{speed}", this.bytesToSize(progress.speed))
-    //         .replace("{transferred}", this.bytesToSize(progress.transferred))
-    //         .replace("{total}", this.bytesToSize(progress.length))
-    // }
 
     // private static getBar(percentage: number, size = 0): string {
     //     // calculate barsize
@@ -63,31 +45,36 @@ export class ProgressHelper {
 
     // New progress
 
-    public static getProgress(format: string, barsize = 0): cliProgress.SingleBar {
-        return new cliProgress.SingleBar({
+    private static getProgress(format: string, barsize = 0): SingleBar {
+        return new SingleBar(this.getDefaultParams(format, barsize))
+    }
+
+    private static getMultiProgress(format: string, barsize = 0): MultiBar {
+        return new MultiBar(this.getDefaultParams(format, barsize))
+    }
+
+    private static getDefaultParams(format: string, barsize: number): Options {
+        return {
             format,
             barCompleteChar: this.barCompleteChar,
             barIncompleteChar: this.barIncompleteChar,
             barsize: barsize !== 0 ? barsize : this.barsize,
             hideCursor: true,
-        })
+            clearOnComplete: true,
+            stopOnComplete: true,
+            autopadding: true,
+        }
     }
 
-    public static getMultiProgress(format: string, barsize = 0): cliProgress.MultiBar {
-        return new cliProgress.MultiBar({
-            format,
-            barCompleteChar: this.barCompleteChar,
-            barIncompleteChar: this.barIncompleteChar,
-            barsize: barsize !== 0 ? barsize : this.barsize,
-            hideCursor: true,
-        })
-    }
-
-    public static getLoadingProgressBar(): cliProgress.SingleBar {
+    public static getLoadingProgressBar(): SingleBar {
         return this.getProgress(App.LangManager.getTranslate("ProgressHelper.loading"), this.barsize * 2)
     }
 
-    public static getDownloadProgressBar(): cliProgress.SingleBar {
+    public static getDownloadProgressBar(): SingleBar {
         return this.getProgress(App.LangManager.getTranslate("ProgressHelper.download"))
+    }
+
+    public static getDownloadMultiProgressBar(): MultiBar {
+        return this.getMultiProgress(App.LangManager.getTranslate("ProgressHelper.download"))
     }
 }
