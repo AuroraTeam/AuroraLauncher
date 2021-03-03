@@ -60,10 +60,7 @@ export class ProgressHelper {
     }
 
     private static downloadFormatter(options: Options, params: Params, payload: any) {
-        // Костылинг типов, ибо в тайпингах ошибка
-        // Кинул фикс https://github.com/DefinitelyTyped/DefinitelyTyped/pull/51492
-        const startTime = (params.startTime as unknown) as number
-        const elapsedTime = Math.round((Date.now() - startTime) / 1000)
+        const elapsedTime = Math.round((Date.now() - params.startTime) / 1000)
         const speed = params.value / elapsedTime
         payload.speed = ProgressHelper.bytesToSize(isFinite(speed) ? speed : 0)
 
