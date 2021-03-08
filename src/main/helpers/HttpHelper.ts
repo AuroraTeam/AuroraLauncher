@@ -61,7 +61,7 @@ export class HttpHelper {
     /**
      * Скачивание файла
      * @param url - объект URL, содержащий ссылку на файл
-     * @param filename - путь до сохраняемого файла
+     * @param filePath - путь до сохраняемого файла
      * @param options - список опций:
      * @param options.showProgress - показывать прогресс бар, по умолчанию `true`
      * @param options.saveToTempFile - сохранять во временный файл, по умолчанию `false`
@@ -69,17 +69,17 @@ export class HttpHelper {
      */
     public static async downloadFile(
         url: URL,
-        filename: string | null,
+        filePath: string | null,
         options?: { showProgress?: boolean; saveToTempFile?: boolean }
     ): Promise<string> {
         options = Object.assign({ showProgress: true, saveToTempFile: false }, options)
 
-        if (options.saveToTempFile) filename = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
-        if (filename === null) return Promise.reject("Filename not found")
+        if (options.saveToTempFile) filePath = path.resolve(StorageHelper.tempDir, randomBytes(16).toString("hex"))
+        if (filePath === null) return Promise.reject("File path not found")
 
         return await this.download(
             url,
-            filename,
+            filePath,
             options.showProgress ? ProgressHelper.getDownloadProgressBar() : undefined
         )
     }
@@ -90,7 +90,12 @@ export class HttpHelper {
      * @param site - домен сайта, с которого будут качаться файлы
      * @param dirname - папка в которую будут сохранены все файлы
      */
-    public static async downloadFiles(urls: Iterable<string>, site: string, dirname: string): Promise<void> {
+    public static async downloadFiles(
+        urls: Iterable<string>,
+        site: string,
+        dirname: string,
+        callback?: (filePath: string) => void
+    ): Promise<void> {
         const multiProgress = ProgressHelper.getDownloadMultiProgressBar()
         await pMap(
             urls,
@@ -101,6 +106,7 @@ export class HttpHelper {
                 const progress = multiProgress.create(0, 0)
                 await this.download(new URL(filename, site), filePath, progress)
                 multiProgress.remove(progress)
+                if (callback) callback(filePath)
             },
             {
                 concurrency: 4,
@@ -112,22 +118,24 @@ export class HttpHelper {
     /**
      * Внутренняя функция скачивания файла
      * @param url - объект URL, содержащий ссылку на файл
-     * @param filename - путь до сохраняемого файла
+     * @param filePath - путь до сохраняемого файла
      * @param progressBar - объект прогресс бара, если нужно отрисовывать прогресс скачивания
      * @returns Promise, который вернёт название файла, в случае успеха
      */
-    private static download(url: URL, filename: string, progressBar?: SingleBar): Promise<string> {
+    private static download(url: URL, filePath: string, progressBar?: SingleBar): Promise<string> {
         return new Promise((resolve, reject) => {
-            const file = fs.createWriteStream(filename)
+            const file = fs.createWriteStream(filePath)
             file.on("close", () => {
-                resolve(filename)
+                resolve(filePath)
             })
 
             const handler = url.protocol === "https:" ? https : http
             handler
                 .get(url, (res) => {
                     if (progressBar !== undefined) {
-                        progressBar.start(parseInt(res.headers["content-length"]) || 0, 0)
+                        progressBar.start(parseInt(res.headers["content-length"]) || 0, 0, {
+                            filename: path.basename(filePath),
+                        })
                         res.on("data", (chunk: Buffer) => {
                             progressBar.increment(chunk.length)
                         })
@@ -135,7 +143,7 @@ export class HttpHelper {
                     res.pipe(file)
                 })
                 .on("error", (err) => {
-                    fs.unlinkSync(filename)
+                    fs.unlinkSync(filePath)
                     reject(err)
                 })
         })

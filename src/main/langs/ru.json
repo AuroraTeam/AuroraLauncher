@@ -39,7 +39,7 @@
     },
     "ProgressHelper": {
         "loading": "{bar} {percentage}%",
-        "download": "{bar} {percentage}% | Осталось: {eta_formatted} | Скорость: {speed}/s | {value_formatted}/{total_formatted}"
+        "download": "{bar} {percentage}% | Осталось: {eta_formatted} | Скорость: {speed}/s | {value_formatted}/{total_formatted} | {filename}"
     },
     "ProfilesManager": {
         "sync": "Синхронизация папки profiles",

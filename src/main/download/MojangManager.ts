@@ -23,13 +23,11 @@ import * as fs from "fs"
 import * as path from "path"
 import { URL } from "url"
 
-import * as pMap from "p-map"
 import * as rimraf from "rimraf"
 
 import { HttpHelper } from "../helpers/HttpHelper"
 import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
-import { ProgressHelper } from "../helpers/ProgressHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
@@ -72,20 +70,12 @@ export class MojangManager {
         const nativesDir = path.resolve(clientDir, "natives")
         fs.mkdirSync(nativesDir)
 
-        await pMap(
-            librariesList.natives,
-            async (native) => {
-                const nativeFile = await HttpHelper.downloadFile(new URL(native, this.clientsLink), null, {
-                    showProgress: false,
-                    saveToTempFile: true,
-                })
-                ZipHelper.unzipArchive(nativeFile, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
-                rimraf(nativeFile, (e) => {
-                    if (e !== null) LogHelper.warn(e)
-                })
-            },
-            { concurrency: 4 }
-        )
+        await HttpHelper.downloadFiles(librariesList.natives, this.clientsLink, StorageHelper.tempDir, (filePath) => {
+            ZipHelper.unzipArchive(filePath, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
+        })
+        rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
+            if (e !== null) LogHelper.warn(e)
+        })
 
         if (!modloader) LogHelper.info("Done")
 
@@ -111,43 +101,19 @@ export class MojangManager {
         if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
         fs.mkdirSync(assetsDir)
 
+        const assetsFile = await HttpHelper.readFile(new URL(version.assetIndex.url))
         fs.mkdirSync(path.resolve(assetsDir, "indexes"))
-        const assetsFile = await HttpHelper.downloadFile(
-            new URL(version.assetIndex.url),
-            path.resolve(assetsDir, `indexes/${version.assets}.json`),
-            { showProgress: false }
-        )
+        fs.writeFileSync(path.resolve(assetsDir, `indexes/${version.assets}.json`), assetsFile)
 
-        const assetsData = JsonHelper.toJSON(fs.readFileSync(assetsFile).toString()).objects
-
-        const assetsHashes: Map<string, number> = new Map()
-
+        const assetsData = JsonHelper.toJSON(assetsFile).objects
+        const assetsHashes: Set<string> = new Set()
         for (const key in assetsData) {
-            assetsHashes.set(assetsData[key].hash, assetsData[key].size)
+            const hash = assetsData[key].hash
+            assetsHashes.add(`${hash.slice(0, 2)}/${hash}`)
         }
 
         LogHelper.info("Download assets, please wait...")
-
-        // Временный костыль для прогресс бара
-        const progress = ProgressHelper.getLoadingProgressBar()
-        progress.start(version.assetIndex.totalSize, 0)
-
-        await pMap(
-            assetsHashes,
-            async ([hash, size]) => {
-                const assetDir = path.resolve(assetsDir, `objects/${hash.slice(0, 2)}`)
-                if (!fs.existsSync(assetDir)) fs.mkdirSync(assetDir, { recursive: true })
-
-                await HttpHelper.downloadFile(
-                    new URL(`${hash.slice(0, 2)}/${hash}`, this.assetsLink),
-                    path.resolve(assetDir, hash),
-                    { showProgress: false }
-                )
-                progress.increment(size)
-            },
-            { concurrency: 8 }
-        )
-        progress.stop()
+        await HttpHelper.downloadFiles(assetsHashes, this.assetsLink, path.resolve(assetsDir, "objects"))
         LogHelper.info("Done")
     }
 

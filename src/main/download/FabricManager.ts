@@ -19,11 +19,8 @@
 // TODO Ещё больше try/catch для отлова возможных ошибок
 // TODO Перевод
 
-import * as fs from "fs"
 import * as path from "path"
 import { URL } from "url"
-
-import * as pMap from "p-map"
 
 import { HttpHelper } from "../helpers/HttpHelper"
 import { JsonHelper } from "../helpers/JsonHelper"
@@ -51,21 +48,12 @@ export class FabricManager extends MojangManager {
         const librariesDir = path.resolve(StorageHelper.updatesDir, dirName, "libraries")
 
         LogHelper.info("Download Fabric libraries, please wait...")
-        const librariesList = new Set() as Set<string>
+        const librariesList: Set<string> = new Set()
         fabricVersion.libraries.forEach((lib: any) => {
-            librariesList.add(lib.name)
+            librariesList.add(this.getLibPath(lib.name))
         })
 
-        await pMap(
-            librariesList,
-            async (lib) => {
-                const link = this.getLibPath(lib)
-                const libPath = path.resolve(librariesDir, link)
-                fs.mkdirSync(path.dirname(libPath), { recursive: true })
-                await HttpHelper.downloadFile(new URL(link, this.fabricLink), libPath, { showProgress: false })
-            },
-            { concurrency: 4 }
-        )
+        await HttpHelper.downloadFiles(librariesList, this.fabricLink, librariesDir)
 
         //Profiles
         App.ProfilesManager.editProfile(profileUUID, {
