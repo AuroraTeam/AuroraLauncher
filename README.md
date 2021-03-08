@@ -1,7 +1,5 @@
-<div style="text-align:center;">
-    <img src="./logo.png" width="150px" height="150px">
-    <h1>Aurora LauncherServer</h1>
-</div>
+<p align="center"><img src="./logo.png" width="200px" height="200px"></p>
+<h1 align="center">Aurora LauncherServer</h1>
 
 На данный момент лаунчер-сервер как и сам лаунчер находится в разработке, но вы можете помочь мне с кодом или ведением задач. Или например предлагать свои идеи в раздел [Issues](https://github.com/AuroraTeam/LauncherServer/issues).  
 А также вы можете поддержать меня материально:  
