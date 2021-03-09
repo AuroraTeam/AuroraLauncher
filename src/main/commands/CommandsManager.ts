@@ -27,9 +27,6 @@ import { LicenseCommand } from "./basic/LicenseCommand"
 import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
-import { DownloadFabricClientCommand } from "./updates/DownloadFabricClientCommand"
-import { DownloadMojangAssetsCommand } from "./updates/DownloadMojangAssetsCommand"
-import { DownloadMojangClientCommand } from "./updates/DownloadMojangClientCommand"
 import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
 
@@ -51,9 +48,6 @@ export class CommandsManager {
         this.registerCommand(new SyncUpdatesCommand())
         this.registerCommand(new SyncProfilesCommand())
         this.registerCommand(new LicenseCommand())
-        this.registerCommand(new DownloadMojangAssetsCommand())
-        this.registerCommand(new DownloadMojangClientCommand())
-        this.registerCommand(new DownloadFabricClientCommand())
     }
 
     registerCommand(x: AbstractCommand): void {
