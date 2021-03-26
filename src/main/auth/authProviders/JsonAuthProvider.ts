@@ -16,12 +16,39 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export class HwidHandlerConfig {
-    type: string
+import { AbstractAuthProvider } from "./AbstractAuthProvider"
+export class JsonAuthProvider extends AbstractAuthProvider {
+    constructor() {
+        super("json")
+    }
+    // config: Config
 
-    static getDefaults(): HwidHandlerConfig {
-        const defaults = new HwidHandlerConfig()
-        defaults.type = "none"
-        return defaults
+    // emit(login: string, password: string, ip: string): any {
+    //     return
+    // }
+
+    emit(login: string): { data: { login: string } } {
+        return {
+            data: {
+                login,
+            },
+        }
     }
 }
+
+// export interface Config {
+//     url?: string
+//     secret?: string
+// }
+
+// interface Response {
+//     login?: string
+//     error?: string
+// }
+
+// interface Request {
+//     login: string
+//     password: string
+//     ip: string
+//     secret: string
+// }

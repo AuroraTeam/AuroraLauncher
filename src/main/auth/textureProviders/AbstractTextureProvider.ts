@@ -16,12 +16,5 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export class TextureProviderConfig {
-    type: string
-
-    static getDefaults(): TextureProviderConfig {
-        const defaults = new TextureProviderConfig()
-        defaults.type = "none"
-        return defaults
-    }
-}
+import { AbstractProvider } from "../AbstractProvider"
+export abstract class AbstractTextureProvider extends AbstractProvider {}

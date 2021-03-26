@@ -16,27 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export abstract class AbstractSecondProvider {
-    private type: string
-    abstract config: any
+import { wsErrorResponseWithoutUUID, wsResponseWithoutUUID } from "../../requests/types/AbstractRequest"
+import { AbstractProvider, AbstractProviderConfig } from "../AbstractProvider"
+import { AcceptAuthProvider } from "./AcceptAuthProvider"
+export abstract class AbstractAuthProvider extends AbstractProvider {
+    abstract emit(...args: any[]): wsResponseWithoutUUID | wsErrorResponseWithoutUUID // TODO Переделать
 
-    constructor(type: string) {
-        this.type = type
-    }
-
-    abstract emit(login: string, password: string, ip: string): string | boolean
-
-    public getType(): string {
-        return this.type
-    }
-}
-
-export class SecondProviderConfig {
-    type: string
-
-    static getDefaults(): SecondProviderConfig {
-        const defaults = new SecondProviderConfig()
-        defaults.type = "none"
-        return defaults
+    public static getDefaultConfig(): AbstractProviderConfig {
+        return {
+            type: AcceptAuthProvider.getType(),
+        }
     }
 }

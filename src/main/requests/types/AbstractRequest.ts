@@ -19,11 +19,11 @@
 export abstract class AbstractRequest {
     protected type: string
 
-    abstract invoke(data: wsRequest): wsResponseWithoutUUID | wsErrorResponseWithoutUUID
-
     getType(): string {
         return this.type
     }
+
+    abstract invoke(data: wsRequest): wsResponseWithoutUUID | wsErrorResponseWithoutUUID
 }
 
 export interface wsRequest {

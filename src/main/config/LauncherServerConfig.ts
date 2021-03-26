@@ -16,11 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AuthHandlerConfig } from "../auth/authHandlers/AbstractHandler"
-import { PrimaryProviderConfig } from "../auth/primaryProviders/AbstractProvider"
-import { SecondProviderConfig } from "../auth/secondaryProviders/AbstractProvider"
-import { TextureProviderConfig } from "../auth/textureProviders/AbstractTextureProvider"
-import { HwidHandlerConfig } from "../hwid/AbstractHwidHandler"
+import { AbstractProviderConfig } from "../auth/AbstractProvider"
+import { AbstractAuthProvider } from "../auth/authProviders/AbstractAuthProvider"
+import { AbstractTextureProvider } from "../auth/textureProviders/AbstractTextureProvider"
 
 export class WebSocketConfig {
     address: string
@@ -51,17 +49,13 @@ export class WebSocketConfig {
 }
 
 export class AuthConfig {
-    primaryProvider: PrimaryProviderConfig
-    secondProvider: SecondProviderConfig
-    authHandler: AuthHandlerConfig
-    textureProvider: TextureProviderConfig
+    authProvider: AbstractProviderConfig
+    textureProvider: AbstractProviderConfig
 
     static getDefaults(): AuthConfig {
         const defaults = new AuthConfig()
-        defaults.primaryProvider = PrimaryProviderConfig.getDefaults()
-        defaults.secondProvider = SecondProviderConfig.getDefaults()
-        defaults.authHandler = AuthHandlerConfig.getDefaults()
-        defaults.textureProvider = TextureProviderConfig.getDefaults()
+        defaults.authProvider = AbstractAuthProvider.getDefaultConfig()
+        defaults.textureProvider = AbstractTextureProvider.getDefaultConfig()
         return defaults
     }
 }
@@ -81,7 +75,6 @@ export class LauncherServerConfig {
     updatesUrl: Array<string>
 
     auth: AuthConfig
-    hwid: HwidHandlerConfig
 
     ws: WebSocketConfig
 }

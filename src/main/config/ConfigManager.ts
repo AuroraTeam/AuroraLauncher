@@ -19,7 +19,6 @@
 import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
-import { HwidHandlerConfig } from "../hwid/AbstractHwidHandler"
 import { App } from "../LauncherServer"
 import { AuthConfig, Envirovement, LauncherServerConfig, WebSocketConfig } from "./LauncherServerConfig"
 import fs = require("fs")
@@ -53,12 +52,11 @@ export class ConfigManager {
 
     getDefaults(): LauncherServerConfig {
         const config = new LauncherServerConfig()
-        config.configVersion = "1"
-        config.lang = "en"
+        config.configVersion = "0"
+        config.lang = "ru"
         config.env = Envirovement.DEV
         config.updatesUrl = ["https://mirror.aurora-launcher.ru/"]
         config.auth = AuthConfig.getDefaults()
-        config.hwid = HwidHandlerConfig.getDefaults()
         config.ws = WebSocketConfig.getDefaults()
         return config
     }

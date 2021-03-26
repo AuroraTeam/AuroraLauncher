@@ -16,22 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { App } from "../../LauncherServer"
-import { wsErrorResponseWithoutUUID } from "../../requests/types/AbstractRequest"
-import { AbstractProvider } from "./AbstractProvider"
+export abstract class AbstractProvider {
+    private type: string
 
-export class RejectAuthProvider extends AbstractProvider {
-    type = "reject"
-    config = new RejectAuthProviderConfig()
+    constructor(type: string) {
+        this.type = type
+    }
 
-    emit(): wsErrorResponseWithoutUUID {
+    public getType(): string {
+        return this.type
+    }
+
+    public static getDefaultConfig(): AbstractProviderConfig {
         return {
-            code: 200,
-            message: this.config.message,
+            type: "none",
         }
     }
 }
 
-export class RejectAuthProviderConfig {
-    message: string = App.ConfigManager.getProperty("auth.primaryProvider.message", true) || "Auth rejected"
+export interface AbstractProviderConfig {
+    type: string
 }

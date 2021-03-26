@@ -16,12 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export class AuthHandlerConfig {
-    type: string
+import { App } from "../../LauncherServer"
+import { wsErrorResponseWithoutUUID } from "../../requests/types/AbstractRequest"
+import { AbstractAuthProvider } from "./AbstractAuthProvider"
 
-    static getDefaults(): AuthHandlerConfig {
-        const defaults = new AuthHandlerConfig()
-        defaults.type = "none"
-        return defaults
+export class RejectAuthProvider extends AbstractAuthProvider {
+    config = new RejectAuthProviderConfig()
+
+    constructor() {
+        super("reject")
     }
+
+    emit(): wsErrorResponseWithoutUUID {
+        return {
+            code: 200,
+            message: this.config.message,
+        }
+    }
+}
+
+export class RejectAuthProviderConfig {
+    message: string = App.ConfigManager.getProperty("auth.authProvider.message", true) || "Auth rejected"
 }

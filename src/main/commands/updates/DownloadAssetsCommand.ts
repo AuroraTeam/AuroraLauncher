@@ -35,13 +35,13 @@ export class DownloadAssetsCommand extends AbstractCommand {
 
         App.CommandsManager.console.pause()
         switch (sourceType) {
-            case 'mirror':
+            case "mirror":
                 await new MirrorManager().downloadAssets(assetsName, dirName)
-                break;
-            case 'mojang':
+                break
+            case "mojang":
             default:
                 await new MojangManager().downloadAssets(assetsName, dirName)
-                break;
+                break
         }
         App.CommandsManager.console.resume()
     }

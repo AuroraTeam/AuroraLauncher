@@ -36,16 +36,16 @@ export class DownloadClientCommand extends AbstractCommand {
 
         App.CommandsManager.console.pause()
         switch (sourceType) {
-            case 'mirror':
+            case "mirror":
                 await new MirrorManager().downloadClient(clientName, dirName)
-                break;
-            case 'fabric':
+                break
+            case "fabric":
                 await new FabricManager().downloadClient(clientName, dirName)
-                break;
-            case 'mojang':
+                break
+            case "mojang":
             default:
                 await new MojangManager().downloadClient(clientName, dirName)
-                break;
+                break
         }
         App.CommandsManager.console.resume()
     }

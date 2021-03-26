@@ -16,39 +16,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractProvider } from "./primaryProviders/AbstractProvider"
-import { AcceptAuthProvider } from "./primaryProviders/AcceptAuthProvider"
-import { RejectAuthProvider } from "./primaryProviders/RejectAuthProvider"
+import { AbstractProvider } from "./AbstractProvider"
+import { AbstractAuthProvider } from "./authProviders/AbstractAuthProvider"
+import { AcceptAuthProvider } from "./authProviders/AcceptAuthProvider"
+import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
+import { AbstractTextureProvider } from "./textureProviders/AbstractTextureProvider"
+
+type ProviderMap<P> = Map<string, P>
 
 export class AuthManager {
-    providers: Map<string, AbstractProvider> = new Map()
+    authProviders: ProviderMap<AbstractAuthProvider> = new Map()
+    textureProviders: ProviderMap<AbstractTextureProvider> = new Map()
 
     constructor() {
-        this.registerHandlers()
-        this.registerHwidHandlers()
-        this.registerProviders()
+        this.registerAuthProviders()
         this.registerTextureProviders()
     }
 
-    registerHandlers(): void {
-        return
-    }
-
-    registerHwidHandlers(): void {
-        return
-    }
-
-    registerProviders(): void {
-        this.registerProvider(new AcceptAuthProvider())
-        this.registerProvider(new RejectAuthProvider())
-        return
-    }
-
-    registerProvider(provider: AbstractProvider): void {
-        this.providers.set(provider.getType(), provider)
+    registerAuthProviders(): void {
+        this.registerAuthProvider(new AcceptAuthProvider())
+        this.registerAuthProvider(new RejectAuthProvider())
     }
 
     registerTextureProviders(): void {
         return
+    }
+
+    registerAuthProvider(provider: AbstractAuthProvider): void {
+        this.registerProvider(this.authProviders, provider)
+    }
+
+    registerTextureProvider(provider: AbstractTextureProvider): void {
+        this.registerProvider(this.textureProviders, provider)
+    }
+
+    registerProvider(providerMap: ProviderMap<AbstractProvider>, provider: AbstractProvider): void {
+        providerMap.set(provider.getType(), provider)
     }
 }
