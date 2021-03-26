@@ -17,13 +17,9 @@
  */
 
 export abstract class AbstractProvider {
-    private type: string
+    protected static type: string
 
-    constructor(type: string) {
-        this.type = type
-    }
-
-    public getType(): string {
+    public static getType(): string {
         return this.type
     }
 

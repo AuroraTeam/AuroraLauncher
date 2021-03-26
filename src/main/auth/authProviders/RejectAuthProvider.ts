@@ -21,11 +21,8 @@ import { wsErrorResponseWithoutUUID } from "../../requests/types/AbstractRequest
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 
 export class RejectAuthProvider extends AbstractAuthProvider {
+    static type = "reject"
     config = new RejectAuthProviderConfig()
-
-    constructor() {
-        super("reject")
-    }
 
     emit(): wsErrorResponseWithoutUUID {
         return {

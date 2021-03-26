@@ -25,8 +25,8 @@ import { AbstractTextureProvider } from "./textureProviders/AbstractTextureProvi
 type ProviderMap<P> = Map<string, P>
 
 export class AuthManager {
-    authProviders: ProviderMap<AbstractAuthProvider> = new Map()
-    textureProviders: ProviderMap<AbstractTextureProvider> = new Map()
+    authProviders: ProviderMap<typeof AbstractAuthProvider> = new Map()
+    textureProviders: ProviderMap<typeof AbstractTextureProvider> = new Map()
 
     constructor() {
         this.registerAuthProviders()
@@ -34,23 +34,23 @@ export class AuthManager {
     }
 
     registerAuthProviders(): void {
-        this.registerAuthProvider(new AcceptAuthProvider())
-        this.registerAuthProvider(new RejectAuthProvider())
+        this.registerAuthProvider(AcceptAuthProvider)
+        this.registerAuthProvider(RejectAuthProvider)
     }
 
     registerTextureProviders(): void {
         return
     }
 
-    registerAuthProvider(provider: AbstractAuthProvider): void {
+    registerAuthProvider(provider: typeof AbstractAuthProvider): void {
         this.registerProvider(this.authProviders, provider)
     }
 
-    registerTextureProvider(provider: AbstractTextureProvider): void {
+    registerTextureProvider(provider: typeof AbstractTextureProvider): void {
         this.registerProvider(this.textureProviders, provider)
     }
 
-    registerProvider(providerMap: ProviderMap<AbstractProvider>, provider: AbstractProvider): void {
+    registerProvider(providerMap: ProviderMap<typeof AbstractProvider>, provider: typeof AbstractProvider): void {
         providerMap.set(provider.getType(), provider)
     }
 }

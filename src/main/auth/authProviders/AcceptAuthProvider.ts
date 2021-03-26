@@ -22,13 +22,7 @@
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
-    constructor() {
-        super("accept")
-    }
-
-    static getType(): string {
-        return "accept"
-    }
+    static type = "accept"
 
     // sessionsDB = new Map()
 

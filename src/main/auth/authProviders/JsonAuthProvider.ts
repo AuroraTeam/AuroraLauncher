@@ -18,9 +18,8 @@
 
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 export class JsonAuthProvider extends AbstractAuthProvider {
-    constructor() {
-        super("json")
-    }
+    static type = "json"
+
     // config: Config
 
     // emit(login: string, password: string, ip: string): any {
