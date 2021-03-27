@@ -26,7 +26,7 @@ export class AuthRequest extends AbstractRequest {
     type = "auth"
 
     invoke({ data }: wsAuthRequest): wsResponseWithoutUUID | wsErrorResponseWithoutUUID {
-        const provider = App.AuthManager.authProviders.get(App.ConfigManager.getProperty("auth.authProvider.type"))
+        const provider = App.AuthManager.getAuthProvider()
         if (provider === undefined) {
             LogHelper.error("authProvider is undefined")
             return {

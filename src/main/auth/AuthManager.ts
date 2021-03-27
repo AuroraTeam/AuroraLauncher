@@ -16,21 +16,46 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { App } from "../LauncherServer"
 import { AbstractProvider } from "./AbstractProvider"
 import { AbstractAuthProvider } from "./authProviders/AbstractAuthProvider"
 import { AcceptAuthProvider } from "./authProviders/AcceptAuthProvider"
 import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 import { AbstractTextureProvider } from "./textureProviders/AbstractTextureProvider"
+import { VoidTextureProvider } from "./textureProviders/VoidTextureProvider"
 
 type ProviderMap<P> = Map<string, P>
 
+// Ох уж эти приколы с типами
+// Другие решения получалсь не красивыми
+// Если есть идеи как сделать лучше - пишите))
+type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider
+type AnyTextureProvider = typeof VoidTextureProvider
+
 export class AuthManager {
+    private authProvider: AbstractAuthProvider
+    private textureProvider: AbstractTextureProvider
     authProviders: ProviderMap<typeof AbstractAuthProvider> = new Map()
     textureProviders: ProviderMap<typeof AbstractTextureProvider> = new Map()
 
     constructor() {
         this.registerAuthProviders()
         this.registerTextureProviders()
+
+        this.authProvider = new (this.authProviders.get(
+            App.ConfigManager.getProperty("auth.authProvider.type")
+        ) as AnyAuthProvider)()
+        this.textureProvider = new (this.textureProviders.get(
+            App.ConfigManager.getProperty("auth.textureProvider.type")
+        ) as AnyTextureProvider)()
+    }
+
+    getAuthProvider(): AbstractAuthProvider {
+        return this.authProvider
+    }
+
+    getTextureProvider(): AbstractTextureProvider {
+        return this.textureProvider
     }
 
     registerAuthProviders(): void {
@@ -39,7 +64,7 @@ export class AuthManager {
     }
 
     registerTextureProviders(): void {
-        return
+        this.registerTextureProvider(VoidTextureProvider)
     }
 
     registerAuthProvider(provider: typeof AbstractAuthProvider): void {
