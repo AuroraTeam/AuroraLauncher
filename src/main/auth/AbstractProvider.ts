@@ -22,14 +22,4 @@ export abstract class AbstractProvider {
     public static getType(): string {
         return this.type
     }
-
-    public static getDefaultConfig(): AbstractProviderConfig {
-        return {
-            type: "none",
-        }
-    }
-}
-
-export interface AbstractProviderConfig {
-    type: string
 }

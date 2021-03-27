@@ -16,9 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractProviderConfig } from "../auth/AbstractProvider"
-import { AbstractAuthProvider } from "../auth/authProviders/AbstractAuthProvider"
-import { AbstractTextureProvider } from "../auth/textureProviders/AbstractTextureProvider"
+import { AbstractAuthProvider, AbstractAuthProviderConfig } from "../auth/authProviders/AbstractAuthProvider"
+import {
+    AbstractTextureProvider,
+    AbstractTextureProviderConfig,
+} from "../auth/textureProviders/AbstractTextureProvider"
 
 export class WebSocketConfig {
     address: string
@@ -49,8 +51,8 @@ export class WebSocketConfig {
 }
 
 export class AuthConfig {
-    authProvider: AbstractProviderConfig
-    textureProvider: AbstractProviderConfig
+    authProvider: AbstractAuthProviderConfig
+    textureProvider: AbstractTextureProviderConfig
 
     static getDefaults(): AuthConfig {
         const defaults = new AuthConfig()

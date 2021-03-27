@@ -17,14 +17,18 @@
  */
 
 import { wsErrorResponseWithoutUUID, wsResponseWithoutUUID } from "../../requests/types/AbstractRequest"
-import { AbstractProvider, AbstractProviderConfig } from "../AbstractProvider"
+import { AbstractProvider } from "../AbstractProvider"
 import { AcceptAuthProvider } from "./AcceptAuthProvider"
 export abstract class AbstractAuthProvider extends AbstractProvider {
     abstract emit(...args: any[]): wsResponseWithoutUUID | wsErrorResponseWithoutUUID // TODO Переделать
 
-    public static getDefaultConfig(): AbstractProviderConfig {
+    public static getDefaultConfig(): AbstractAuthProviderConfig {
         return {
             type: AcceptAuthProvider.getType(),
         }
     }
+}
+
+export interface AbstractAuthProviderConfig {
+    type: string
 }
