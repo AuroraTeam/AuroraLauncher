@@ -31,7 +31,7 @@
     "devDependencies": {
         "@types/adm-zip": "^0.4.33",
         "@types/cli-progress": "^3.9.1",
-        "@types/node": "^12.20.6",
+        "@types/node": "^14.14.37",
         "@types/progress-stream": "^2.0.1",
         "@types/rimraf": "^3.0.0",
         "@types/semver": "^7.3.4",
@@ -43,12 +43,12 @@
         "eslint": "^7.23.0",
         "import-sort-style-module": "^6.0.0",
         "prettier": "^2.2.1",
-        "prettier-plugin-import-sort": "0.0.4",
+        "prettier-plugin-import-sort": "0.0.6",
         "rimraf": "^3.0.2",
         "ts-loader": "^8.0.18",
-        "typescript": "^3.9.9",
-        "webpack": "^4.46.0",
-        "webpack-cli": "^3.3.12"
+        "typescript": "^4.2.3",
+        "webpack": "^5.28.0",
+        "webpack-cli": "^4.5.0"
     },
     "dependencies": {
         "adm-zip": "^0.5.4",
