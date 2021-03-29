@@ -20,6 +20,7 @@ import { App } from "../LauncherServer"
 import { AbstractProvider } from "./AbstractProvider"
 import { AbstractAuthProvider } from "./authProviders/AbstractAuthProvider"
 import { AcceptAuthProvider } from "./authProviders/AcceptAuthProvider"
+import { MojangAuthProvider } from "./authProviders/MojangAuthProvider"
 import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 import { AbstractTextureProvider } from "./textureProviders/AbstractTextureProvider"
 import { VoidTextureProvider } from "./textureProviders/VoidTextureProvider"
@@ -61,6 +62,7 @@ export class AuthManager {
     registerAuthProviders(): void {
         this.registerAuthProvider(AcceptAuthProvider)
         this.registerAuthProvider(RejectAuthProvider)
+        this.registerAuthProvider(MojangAuthProvider)
     }
 
     registerTextureProviders(): void {

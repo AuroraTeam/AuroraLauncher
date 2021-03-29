@@ -40,13 +40,13 @@ export class RequestsManager {
         this.requests.set(x.getType(), x)
     }
 
-    getRequest(data: wsRequest): wsResponse | wsErrorResponse {
+    async getRequest(data: wsRequest): Promise<wsResponse | wsErrorResponse> {
         let res
         if (this.requests.has(data.type)) {
             // TODO invoke(data) => data.data
-            res = this.requests.get(data.type).invoke(data)
+            res = await this.requests.get(data.type).invoke(data)
         } else {
-            res = this.requests.get("unknown").invoke(data)
+            res = await this.requests.get("unknown").invoke(data)
         }
         return {
             ...res,

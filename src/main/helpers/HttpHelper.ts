@@ -32,6 +32,33 @@ import { StorageHelper } from "./StorageHelper"
 
 export class HttpHelper {
     /**
+     * makeRequest
+     */
+    public static makePostRequest(url: URL, options: Record<string, any>, data: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const handler = url.protocol === "https:" ? https : http
+
+            let resDate = ""
+
+            const req = handler.request(url, options, (res) => {
+                res.on("data", (chunk) => {
+                    resDate += chunk
+                })
+                res.on("end", () => {
+                    resolve(JSON.parse(resDate))
+                })
+            })
+
+            req.on("error", (e) => {
+                reject(e.message)
+            })
+
+            req.write(data)
+            req.end()
+        })
+    }
+
+    /**
      * Проверка наличия файла
      * @param url - объект Url, содержащий ссылку на файл
      * @returns Promise, который вернёт `true`, в случае существования файла или `false` при его отсутствии или ошибке

@@ -25,7 +25,7 @@ import { AbstractRequest, wsErrorResponseWithoutUUID, wsRequest, wsResponseWitho
 export class AuthRequest extends AbstractRequest {
     type = "auth"
 
-    invoke({ data }: wsAuthRequest): wsResponseWithoutUUID | wsErrorResponseWithoutUUID {
+    async invoke({ data }: wsAuthRequest): Promise<wsResponseWithoutUUID | wsErrorResponseWithoutUUID> {
         const provider = App.AuthManager.getAuthProvider()
         if (provider === undefined) {
             LogHelper.error("authProvider is undefined")
@@ -35,7 +35,7 @@ export class AuthRequest extends AbstractRequest {
             }
         }
 
-        return provider.emit(data.login, data.password, data.ip)
+        return await provider.emit(data.login, data.password, data.ip)
     }
 }
 

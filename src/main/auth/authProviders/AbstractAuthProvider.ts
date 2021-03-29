@@ -20,7 +20,7 @@ import { wsErrorResponseWithoutUUID, wsResponseWithoutUUID } from "../../request
 import { AbstractProvider } from "../AbstractProvider"
 import { AcceptAuthProvider } from "./AcceptAuthProvider"
 export abstract class AbstractAuthProvider extends AbstractProvider {
-    abstract emit(...args: any[]): wsResponseWithoutUUID | wsErrorResponseWithoutUUID // TODO Переделать
+    abstract emit(...args: any[]): Promise<wsResponseWithoutUUID | wsErrorResponseWithoutUUID> // TODO Переделать
 
     public static getDefaultConfig(): AbstractAuthProviderConfig {
         return {

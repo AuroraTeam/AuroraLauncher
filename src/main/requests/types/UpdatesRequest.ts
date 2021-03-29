@@ -22,7 +22,7 @@ import { AbstractRequest, wsRequest, wsResponseWithoutUUID } from "./AbstractReq
 export class UpdatesRequest extends AbstractRequest {
     type = "updates"
 
-    invoke({ data }: wsRequest & { data: { dir: string } }): wsResponseWithoutUUID {
+    async invoke({ data }: wsRequest & { data: { dir: string } }): Promise<wsResponseWithoutUUID> {
         return {
             data: {
                 hashes: App.UpdatesManager.hDirs.get(data.dir),

@@ -22,7 +22,7 @@ import { AbstractRequest, wsResponseWithoutUUID } from "./AbstractRequest"
 export class ServersRequest extends AbstractRequest {
     type = "servers"
 
-    invoke(): wsResponseWithoutUUID {
+    async invoke(): Promise<wsResponseWithoutUUID> {
         const servers: any[] = []
         App.ProfilesManager.profiles
             .sort((a, b) => a.sortIndex - b.sortIndex)

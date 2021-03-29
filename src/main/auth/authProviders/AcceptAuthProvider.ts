@@ -26,7 +26,7 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
 
     // sessionsDB = new Map()
 
-    emit(login: string): { data: { login: string } } {
+    async emit(login: string): Promise<{ data: { login: string } }> {
         return {
             data: {
                 login,

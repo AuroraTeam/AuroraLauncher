@@ -23,7 +23,7 @@ export abstract class AbstractRequest {
         return this.type
     }
 
-    abstract invoke(data: wsRequest): wsResponseWithoutUUID | wsErrorResponseWithoutUUID
+    abstract invoke(data: wsRequest): Promise<wsResponseWithoutUUID | wsErrorResponseWithoutUUID>
 }
 
 export interface wsRequest {

@@ -26,7 +26,7 @@ export class JsonAuthProvider extends AbstractAuthProvider {
     //     return
     // }
 
-    emit(login: string): { data: { login: string } } {
+    async emit(login: string): Promise<{ data: { login: string } }> {
         return {
             data: {
                 login,

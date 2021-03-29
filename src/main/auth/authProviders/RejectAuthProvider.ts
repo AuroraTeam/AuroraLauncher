@@ -24,7 +24,7 @@ export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"
     config = new RejectAuthProviderConfig()
 
-    emit(): wsErrorResponseWithoutUUID {
+    async emit(): Promise<wsErrorResponseWithoutUUID> {
         return {
             code: 200,
             message: this.config.message,

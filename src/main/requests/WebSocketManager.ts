@@ -36,7 +36,7 @@ export class WebSocketManager {
     }
 
     requestListener(ws: ws, req: http.IncomingMessage): void {
-        ws.on("message", (message: string) => {
+        ws.on("message", async (message: string) => {
             LogHelper.dev(`New WebSocket request ${message}`)
             let data: wsRequest & {
                 data: {
@@ -72,7 +72,7 @@ export class WebSocketManager {
             if (data.data === undefined) data.data = { ip: req.socket.remoteAddress }
             else data.data.ip = req.socket.remoteAddress
 
-            this.wsSend(ws, this.requestsManager.getRequest(data))
+            this.wsSend(ws, await this.requestsManager.getRequest(data))
         })
     }
 

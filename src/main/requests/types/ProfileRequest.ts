@@ -22,7 +22,7 @@ import { AbstractRequest, wsRequest, wsResponseWithoutUUID } from "./AbstractReq
 export class ProfileRequest extends AbstractRequest {
     type = "profile"
 
-    invoke({ data }: wsRequest): wsResponseWithoutUUID {
+    async invoke({ data }: wsRequest): Promise<wsResponseWithoutUUID> {
         return {
             data: {
                 profile: App.ProfilesManager.profiles.find((p) => p.uuid == (data as { uuid: string }).uuid),
