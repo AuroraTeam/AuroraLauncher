@@ -19,7 +19,7 @@
 import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
-import { AuthConfig, Envirovement, LauncherServerConfig, WebSocketConfig } from "./LauncherServerConfig"
+import { LauncherServerConfig } from "./LauncherServerConfig"
 import fs = require("fs")
 
 export class ConfigManager {
@@ -31,7 +31,7 @@ export class ConfigManager {
             this.load()
         } else {
             LogHelper.info("Configuration not found! Create default config")
-            this.config = this.getDefaults()
+            this.config = LauncherServerConfig.getDefaults()
             this.save()
         }
     }
@@ -40,18 +40,7 @@ export class ConfigManager {
         return this.config
     }
 
-    getDefaults(): LauncherServerConfig {
-        const config = new LauncherServerConfig()
-        config.configVersion = "0"
-        config.lang = "ru"
-        config.env = Envirovement.DEV
-        config.updatesUrl = ["https://mirror.aurora-launcher.ru/"]
-        config.auth = AuthConfig.getDefaults()
-        config.ws = WebSocketConfig.getDefaults()
-        return config
-    }
-
-    load(): void {
+    private load(): void {
         const config = fs.readFileSync(StorageHelper.configFile)
         try {
             this.config = JsonHelper.toJSON(config.toString())
@@ -63,7 +52,7 @@ export class ConfigManager {
         }
     }
 
-    save(): void {
+    private save(): void {
         fs.writeFileSync(StorageHelper.configFile, JsonHelper.toString(this.config, true))
     }
 }

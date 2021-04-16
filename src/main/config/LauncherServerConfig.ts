@@ -79,4 +79,15 @@ export class LauncherServerConfig {
     auth: AuthConfig
 
     ws: WebSocketConfig
+
+    static getDefaults(): LauncherServerConfig {
+        const config = new LauncherServerConfig()
+        config.configVersion = "0"
+        config.lang = "ru"
+        config.env = Envirovement.DEV
+        config.updatesUrl = ["https://mirror.aurora-launcher.ru/"]
+        config.auth = AuthConfig.getDefaults()
+        config.ws = WebSocketConfig.getDefaults()
+        return config
+    }
 }

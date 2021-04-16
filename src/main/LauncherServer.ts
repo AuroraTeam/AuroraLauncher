@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require("source-map-support").install()
+import 'source-map-support/register';
 
 const version = require("../../package").version
 
