@@ -17,7 +17,7 @@
  */
 
 import { App } from "../../LauncherServer"
-import { ErrorResponse } from "../../requests/types/ErrorResponse"
+import { ErrorResponse } from "../../api/types/ErrorResponse"
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 
 export class RejectAuthProvider extends AbstractAuthProvider {

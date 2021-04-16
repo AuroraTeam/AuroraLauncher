@@ -16,19 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { App } from "../../LauncherServer"
-import { AbstractRequest } from "./AbstractRequest"
-import { Request } from "./Request"
-import { Response } from "./Response"
+import { ErrorResponse } from "../types/ErrorResponse"
+import { Request } from "../types/Request"
+import { Response } from "../types/Response"
 
-export class ProfileRequest extends AbstractRequest {
-    type = "profile"
+export abstract class AbstractRequest {
+    protected type: string
 
-    invoke({ data }: Request): Response {
-        return {
-            data: {
-                profile: App.ProfilesManager.profiles.find((p) => p.uuid == (data as { uuid: string }).uuid),
-            },
-        }
+    getType(): string {
+        return this.type
     }
+
+    abstract invoke(data: Request): PromiseOr<Response | ErrorResponse>
 }

@@ -32,7 +32,7 @@ import { StorageHelper } from "./helpers/StorageHelper"
 import { LangManager } from "./langs/LangManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
-import { SocketManager } from "./requests/SocketManager"
+import { SocketManager } from "./api/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
 
 export class LauncherServer extends EventEmitter {

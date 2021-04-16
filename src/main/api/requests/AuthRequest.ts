@@ -21,9 +21,9 @@
 // import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
 import { AbstractRequest } from "./AbstractRequest"
-import { ErrorResponse } from "./ErrorResponse"
-import { Request } from "./Request"
-import { Response } from "./Response"
+import { ErrorResponse } from "../types/ErrorResponse"
+import { Request } from "../types/Request"
+import { Response } from "../types/Response"
 
 export class AuthRequest extends AbstractRequest {
     type = "auth"

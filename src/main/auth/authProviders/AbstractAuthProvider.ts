@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ErrorResponse } from "../../requests/types/ErrorResponse"
-import { Response } from "../../requests/types/Response"
+import { ErrorResponse } from "../../api/types/ErrorResponse"
+import { Response } from "../../api/types/Response"
 import { AbstractProvider } from "../AbstractProvider"
 import { AcceptAuthProvider } from "./AcceptAuthProvider"
 export abstract class AbstractAuthProvider extends AbstractProvider {

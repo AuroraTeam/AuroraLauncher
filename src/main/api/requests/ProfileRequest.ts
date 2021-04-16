@@ -18,21 +18,17 @@
 
 import { App } from "../../LauncherServer"
 import { AbstractRequest } from "./AbstractRequest"
-import { Request } from "./Request"
-import { Response } from "./Response"
+import { Request } from "../types/Request"
+import { Response } from "../types/Response"
 
-export class UpdatesRequest extends AbstractRequest {
-    type = "updates"
+export class ProfileRequest extends AbstractRequest {
+    type = "profile"
 
-    invoke({ data }: IUpdatesRequest): Response {
+    invoke({ data }: Request): Response {
         return {
             data: {
-                hashes: App.UpdatesManager.hDirs.get(data.dir),
+                profile: App.ProfilesManager.profiles.find((p) => p.uuid == (data as { uuid: string }).uuid),
             },
         }
     }
-}
-
-interface IUpdatesRequest extends Request {
-    data: { dir: string }
 }

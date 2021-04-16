@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractRequest } from "./types/AbstractRequest"
-import { AuthRequest } from "./types/AuthRequest"
+import { AbstractRequest } from "./requests/AbstractRequest"
+import { AuthRequest } from "./requests/AuthRequest"
 import { ErrorResponse } from "./types/ErrorResponse"
-import { PingRequest } from "./types/PingRequest"
-import { ProfileRequest } from "./types/ProfileRequest"
+import { PingRequest } from "./requests/PingRequest"
+import { ProfileRequest } from "./requests/ProfileRequest"
 import { Request } from "./types/Request"
 import { Response } from "./types/Response"
-import { ServersRequest } from "./types/ServersRequest"
-import { UnknownRequest } from "./types/UnknownRequest"
-import { UpdatesRequest } from "./types/UpdatesRequest"
+import { ServersRequest } from "./requests/ServersRequest"
+import { UnknownRequest } from "./requests/UnknownRequest"
+import { UpdatesRequest } from "./requests/UpdatesRequest"
 
 export class RequestsManager {
     requests: Map<string, AbstractRequest> = new Map()

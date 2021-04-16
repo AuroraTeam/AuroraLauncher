@@ -16,31 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { App } from "../../LauncherServer"
 import { AbstractRequest } from "./AbstractRequest"
-import { Response } from "./Response"
+import { Response } from "../types/Response"
 
-export class ServersRequest extends AbstractRequest {
-    type = "servers"
+export class PingRequest extends AbstractRequest {
+    type = "ping"
 
     invoke(): Response {
-        const servers: any[] = []
-        App.ProfilesManager.profiles
-            .sort((a, b) => a.sortIndex - b.sortIndex)
-            .forEach((p) => {
-                p.servers.forEach((s) => {
-                    servers.push({
-                        ip: s.ip,
-                        port: s.port,
-                        title: s.title,
-                        profileUUID: p.uuid,
-                    })
-                })
-            })
-
         return {
             data: {
-                servers,
+                result: "pong",
             },
         }
     }

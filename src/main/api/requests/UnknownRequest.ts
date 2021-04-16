@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ErrorResponse } from "./ErrorResponse"
-import { Request } from "./Request"
-import { Response } from "./Response"
+import { AbstractRequest } from "./AbstractRequest"
+import { ErrorResponse } from "../types/ErrorResponse"
 
-export abstract class AbstractRequest {
-    protected type: string
+export class UnknownRequest extends AbstractRequest {
+    type = "unknown"
 
-    getType(): string {
-        return this.type
+    invoke(): ErrorResponse {
+        return {
+            code: 102,
+            message: "Unknown request type",
+        }
     }
-
-    abstract invoke(data: Request): PromiseOr<Response | ErrorResponse>
 }

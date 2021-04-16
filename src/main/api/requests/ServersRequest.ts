@@ -16,16 +16,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { App } from "../../LauncherServer"
 import { AbstractRequest } from "./AbstractRequest"
-import { ErrorResponse } from "./ErrorResponse"
+import { Response } from "../types/Response"
 
-export class UnknownRequest extends AbstractRequest {
-    type = "unknown"
+export class ServersRequest extends AbstractRequest {
+    type = "servers"
 
-    invoke(): ErrorResponse {
+    invoke(): Response {
+        const servers: any[] = []
+        App.ProfilesManager.profiles
+            .sort((a, b) => a.sortIndex - b.sortIndex)
+            .forEach((p) => {
+                p.servers.forEach((s) => {
+                    servers.push({
+                        ip: s.ip,
+                        port: s.port,
+                        title: s.title,
+                        profileUUID: p.uuid,
+                    })
+                })
+            })
+
         return {
-            code: 102,
-            message: "Unknown request type",
+            data: {
+                servers,
+            },
         }
     }
 }

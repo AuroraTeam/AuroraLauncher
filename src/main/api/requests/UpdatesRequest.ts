@@ -16,17 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { App } from "../../LauncherServer"
 import { AbstractRequest } from "./AbstractRequest"
-import { Response } from "./Response"
+import { Request } from "../types/Request"
+import { Response } from "../types/Response"
 
-export class PingRequest extends AbstractRequest {
-    type = "ping"
+export class UpdatesRequest extends AbstractRequest {
+    type = "updates"
 
-    invoke(): Response {
+    invoke({ data }: IUpdatesRequest): Response {
         return {
             data: {
-                result: "pong",
+                hashes: App.UpdatesManager.hDirs.get(data.dir),
             },
         }
     }
+}
+
+interface IUpdatesRequest extends Request {
+    data: { dir: string }
 }

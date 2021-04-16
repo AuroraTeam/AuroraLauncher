@@ -18,7 +18,7 @@
 
 import { v4, v5 } from "uuid"
 
-import { Response } from "../../requests/types/Response"
+import { Response } from "../../api/types/Response"
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
