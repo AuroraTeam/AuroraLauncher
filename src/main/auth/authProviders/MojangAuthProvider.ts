@@ -19,15 +19,12 @@
 import { URL } from "url"
 
 import { HttpHelper } from "../../helpers/HttpHelper"
-import { AbstractAuthProvider } from "./AbstractAuthProvider"
+import { AbstractAuthProvider, AuthResponseData } from "./AbstractAuthProvider"
 
 export class MojangAuthProvider extends AbstractAuthProvider {
     static type = "mojang"
 
-    async emit(
-        login: string,
-        password: string
-    ): Promise<{ data: { username: string; userUUID: string; accessToken: string } }> {
+    async emit(login: string, password: string): Promise<AuthResponseData> {
         const data = JSON.stringify({
             agent: {
                 name: "Minecraft",
@@ -50,11 +47,9 @@ export class MojangAuthProvider extends AbstractAuthProvider {
         )
 
         return {
-            data: {
-                username: result.selectedProfile.name,
-                userUUID: result.selectedProfile.id,
-                accessToken: result.accessToken,
-            },
+            username: result.selectedProfile.name,
+            userUUID: result.selectedProfile.id,
+            accessToken: result.accessToken,
         }
     }
 }

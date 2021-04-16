@@ -1,6 +1,8 @@
+export type RequestData = object
+
 export interface Request {
     type: string
-    data: object
+    data: RequestData
 }
 
 export interface wsRequest extends Request {

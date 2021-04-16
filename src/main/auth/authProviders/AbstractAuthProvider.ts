@@ -16,12 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ErrorResponse } from "../../api/types/ErrorResponse"
-import { Response } from "../../api/types/Response"
+import { ResponseData } from "../../api/types/Response"
 import { AbstractProvider } from "../AbstractProvider"
 import { AcceptAuthProvider } from "./AcceptAuthProvider"
 export abstract class AbstractAuthProvider extends AbstractProvider {
-    abstract emit(...args: any[]): PromiseOr<Response | ErrorResponse>
+    abstract emit(...args: any[]): PromiseOr<ResponseData>
 
     public static getDefaultConfig(): AbstractAuthProviderConfig {
         return {
@@ -32,4 +31,10 @@ export abstract class AbstractAuthProvider extends AbstractProvider {
 
 export interface AbstractAuthProviderConfig {
     type: string
+}
+
+export interface AuthResponseData extends ResponseData {
+    username: string
+    userUUID: string
+    accessToken: string
 }

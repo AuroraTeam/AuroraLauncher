@@ -24,6 +24,7 @@ import { EventEmitter } from "events"
 
 import * as colors from "colors/safe"
 
+import { SocketManager } from "./api/SocketManager"
 import { AuthManager } from "./auth/AuthManager"
 import { CommandsManager } from "./commands/CommandsManager"
 import { ConfigManager } from "./config/ConfigManager"
@@ -32,7 +33,6 @@ import { StorageHelper } from "./helpers/StorageHelper"
 import { LangManager } from "./langs/LangManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
-import { SocketManager } from "./api/SocketManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
 
 export class LauncherServer extends EventEmitter {

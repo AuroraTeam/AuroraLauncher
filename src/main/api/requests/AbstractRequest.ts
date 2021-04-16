@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ErrorResponse } from "../types/ErrorResponse"
-import { Request } from "../types/Request"
-import { Response } from "../types/Response"
+import { RequestData } from "../types/Request"
+import { ResponseData } from "../types/Response"
 
 export abstract class AbstractRequest {
     protected type: string
@@ -27,5 +26,5 @@ export abstract class AbstractRequest {
         return this.type
     }
 
-    abstract invoke(data: Request): PromiseOr<Response | ErrorResponse>
+    abstract invoke(data: RequestData): PromiseOr<ResponseData>
 }

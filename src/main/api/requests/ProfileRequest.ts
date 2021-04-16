@@ -17,18 +17,16 @@
  */
 
 import { App } from "../../LauncherServer"
+import { RequestData } from "../types/Request"
+import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
-import { Request } from "../types/Request"
-import { Response } from "../types/Response"
 
 export class ProfileRequest extends AbstractRequest {
     type = "profile"
 
-    invoke({ data }: Request): Response {
+    invoke(data: RequestData): ResponseData {
         return {
-            data: {
-                profile: App.ProfilesManager.profiles.find((p) => p.uuid == (data as { uuid: string }).uuid),
-            },
+            profile: App.ProfilesManager.profiles.find((p) => p.uuid == (data as { uuid: string }).uuid),
         }
     }
 }

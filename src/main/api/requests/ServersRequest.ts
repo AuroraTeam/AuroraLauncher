@@ -17,13 +17,13 @@
  */
 
 import { App } from "../../LauncherServer"
+import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
-import { Response } from "../types/Response"
 
 export class ServersRequest extends AbstractRequest {
     type = "servers"
 
-    invoke(): Response {
+    invoke(): ResponseData {
         const servers: any[] = []
         App.ProfilesManager.profiles
             .sort((a, b) => a.sortIndex - b.sortIndex)
@@ -39,9 +39,7 @@ export class ServersRequest extends AbstractRequest {
             })
 
         return {
-            data: {
-                servers,
-            },
+            servers,
         }
     }
 }

@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractAuthProvider } from "./AbstractAuthProvider"
-export class JsonAuthProvider extends AbstractAuthProvider {
-    static type = "json"
+// import { AbstractAuthProvider } from "./AbstractAuthProvider"
+// export class JsonAuthProvider extends AbstractAuthProvider {
+    // static type = "json"
 
     // config: Config
 
@@ -26,14 +26,12 @@ export class JsonAuthProvider extends AbstractAuthProvider {
     //     return
     // }
 
-    emit(login: string): { data: { login: string } } {
-        return {
-            data: {
-                login,
-            },
-        }
-    }
-}
+    // emit(username: string): AuthResponseData {
+    //     return {
+    //         username,
+    //     }
+    // }
+// }
 
 // export interface Config {
 //     url?: string

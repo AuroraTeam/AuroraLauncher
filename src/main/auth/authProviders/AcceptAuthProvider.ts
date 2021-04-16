@@ -18,7 +18,7 @@
 
 import { v4, v5 } from "uuid"
 
-import { Response } from "../../api/types/Response"
+import { ResponseData } from "../../api/types/Response"
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
@@ -26,18 +26,18 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
 
     sessionsDB = new Map()
 
-    emit(login: string): Response {
+    emit(username: string): ResponseData {
         const data = {
-            login,
-            userUUID: v5(login, "814f98b5-f66d-4456-87dc-f4eed8f6ca73"),
+            username,
+            userUUID: v5(username, "814f98b5-f66d-4456-87dc-f4eed8f6ca73"),
             accessToken: v4(),
         }
 
-        this.sessionsDB.set(data.login, {
+        this.sessionsDB.set(data.username, {
             ...data,
             serverID: undefined,
         })
 
-        return { data }
+        return data
     }
 }

@@ -17,22 +17,20 @@
  */
 
 import { App } from "../../LauncherServer"
+import { RequestData } from "../types/Request"
+import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
-import { Request } from "../types/Request"
-import { Response } from "../types/Response"
 
 export class UpdatesRequest extends AbstractRequest {
     type = "updates"
 
-    invoke({ data }: IUpdatesRequest): Response {
+    invoke(data: UpdatesRequestData): ResponseData {
         return {
-            data: {
-                hashes: App.UpdatesManager.hDirs.get(data.dir),
-            },
+            hashes: App.UpdatesManager.hDirs.get(data.dir),
         }
     }
 }
 
-interface IUpdatesRequest extends Request {
-    data: { dir: string }
+interface UpdatesRequestData extends RequestData {
+    dir: string
 }

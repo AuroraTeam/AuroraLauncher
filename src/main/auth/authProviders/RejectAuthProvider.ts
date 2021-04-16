@@ -17,15 +17,14 @@
  */
 
 import { App } from "../../LauncherServer"
-import { ErrorResponse } from "../../api/types/ErrorResponse"
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 
 export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"
     config = new RejectAuthProviderConfig()
 
-    emit(): ErrorResponse {
-        return {
+    emit(): any {
+        throw {
             code: 200,
             message: this.config.message,
         }

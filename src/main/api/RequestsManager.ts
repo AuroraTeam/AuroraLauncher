@@ -18,20 +18,18 @@
 
 import { AbstractRequest } from "./requests/AbstractRequest"
 import { AuthRequest } from "./requests/AuthRequest"
-import { ErrorResponse } from "./types/ErrorResponse"
 import { PingRequest } from "./requests/PingRequest"
 import { ProfileRequest } from "./requests/ProfileRequest"
-import { Request } from "./types/Request"
-import { Response } from "./types/Response"
 import { ServersRequest } from "./requests/ServersRequest"
-import { UnknownRequest } from "./requests/UnknownRequest"
 import { UpdatesRequest } from "./requests/UpdatesRequest"
+import { ErrorResponse } from "./types/ErrorResponse"
+import { wsRequest } from "./types/Request"
+import { Response } from "./types/Response"
 
 export class RequestsManager {
     requests: Map<string, AbstractRequest> = new Map()
 
     constructor() {
-        this.registerRequest(new UnknownRequest())
         this.registerRequest(new PingRequest())
         this.registerRequest(new AuthRequest())
         this.registerRequest(new ServersRequest())
@@ -43,14 +41,18 @@ export class RequestsManager {
         this.requests.set(x.getType(), x)
     }
 
-    async getRequest(data: Request): Promise<Response | ErrorResponse> {
-        let res
-        if (this.requests.has(data.type)) {
-            // TODO invoke(data) => data.data (+ try/catch с отловом ошибок и выкивынием в ErrorResponse)
-            res = await this.requests.get(data.type).invoke(data)
-        } else {
-            res = await this.requests.get("unknown").invoke(null)
+    async getRequest(data: wsRequest): Promise<Response | ErrorResponse> {
+        if (!this.requests.has(data.type))
+            return {
+                code: 102,
+                message: "Unknown request type",
+            }
+
+        try {
+            return { data: await this.requests.get(data.type).invoke(data.data) }
+        } catch (error) {
+            // TODO продумать
+            return error
         }
-        return res
     }
 }

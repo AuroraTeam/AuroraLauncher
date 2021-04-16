@@ -16,17 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
-import { Response } from "../types/Response"
 
 export class PingRequest extends AbstractRequest {
     type = "ping"
 
-    invoke(): Response {
+    invoke(): ResponseData {
         return {
-            data: {
-                result: "pong",
-            },
+            result: "pong",
         }
     }
 }

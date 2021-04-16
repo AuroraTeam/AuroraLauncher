@@ -18,17 +18,15 @@
 
 // TODO Только одна авторизация на клиента
 
-// import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
+import { RequestData } from "../types/Request"
+import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
-import { ErrorResponse } from "../types/ErrorResponse"
-import { Request } from "../types/Request"
-import { Response } from "../types/Response"
 
 export class AuthRequest extends AbstractRequest {
     type = "auth"
 
-    async invoke({ data }: IAuthRequest): Promise<Response | ErrorResponse> {
+    async invoke(data: AuthRequestData): Promise<ResponseData> {
         const provider = App.AuthManager.getAuthProvider()
         // TODO перенести проверку в AuthManager
         // if (provider === undefined) {
@@ -39,14 +37,11 @@ export class AuthRequest extends AbstractRequest {
         //     }
         // }
 
-        return await provider.emit(data.login, data.password /*, data.ip*/)
+        return await provider.emit(data.login, data.password)
     }
 }
 
-interface IAuthRequest extends Request {
-    data: {
-        login: string
-        password: string
-        // ip: string
-    }
+interface AuthRequestData extends RequestData {
+    login: string
+    password: string
 }

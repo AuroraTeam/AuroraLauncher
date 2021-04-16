@@ -1,5 +1,7 @@
+export type ResponseData = object
+
 export interface Response {
-    data: object
+    data: ResponseData
 }
 
 export interface wsResponse extends Response {
