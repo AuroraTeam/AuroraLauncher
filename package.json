@@ -23,7 +23,7 @@
         "build:dev": "cross-env NODE_ENV=development webpack",
         "build:prod": "cross-env NODE_ENV=production webpack",
         "clean": "rimraf dist",
-        "prettier": "prettier --config .prettierrc.json --write \"src/**/*.*\"",
+        "prettier": "prettier --config .prettierrc.json --write src",
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
         "start": "node dist/LauncherServer.js"

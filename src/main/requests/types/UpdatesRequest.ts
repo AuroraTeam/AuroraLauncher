@@ -17,16 +17,22 @@
  */
 
 import { App } from "../../LauncherServer"
-import { AbstractRequest, wsRequest, wsResponseWithoutUUID } from "./AbstractRequest"
+import { AbstractRequest } from "./AbstractRequest"
+import { Request } from "./Request"
+import { Response } from "./Response"
 
 export class UpdatesRequest extends AbstractRequest {
     type = "updates"
 
-    async invoke({ data }: wsRequest & { data: { dir: string } }): Promise<wsResponseWithoutUUID> {
+    invoke({ data }: IUpdatesRequest): Response {
         return {
             data: {
                 hashes: App.UpdatesManager.hDirs.get(data.dir),
             },
         }
     }
+}
+
+interface IUpdatesRequest extends Request {
+    data: { dir: string }
 }

@@ -16,6 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { ErrorResponse } from "./ErrorResponse"
+import { Request } from "./Request"
+import { Response } from "./Response"
+
 export abstract class AbstractRequest {
     protected type: string
 
@@ -23,30 +27,5 @@ export abstract class AbstractRequest {
         return this.type
     }
 
-    abstract invoke(data: wsRequest): Promise<wsResponseWithoutUUID | wsErrorResponseWithoutUUID>
+    abstract invoke(data: Request): PromiseOr<Response | ErrorResponse>
 }
-
-export interface wsRequest {
-    type: string
-    uuid: uuidv4
-    data: object
-}
-
-export interface wsResponse {
-    uuid: uuidv4
-    data: object
-}
-
-export interface wsErrorResponse {
-    uuid: uuidv4
-    code: number
-    message: string
-}
-
-export type wsResponseWithoutUUID = Omit<wsResponse, "uuid">
-export type wsErrorResponseWithoutUUID = Omit<wsErrorResponse, "uuid">
-
-/**
- * Строка являющаяся валидным uuidv4 токеном
- */
-type uuidv4 = string

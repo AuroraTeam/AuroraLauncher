@@ -16,11 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { wsErrorResponseWithoutUUID, wsResponseWithoutUUID } from "../../requests/types/AbstractRequest"
+import { ErrorResponse } from "../../requests/types/ErrorResponse"
+import { Response } from "../../requests/types/Response"
 import { AbstractProvider } from "../AbstractProvider"
 import { AcceptAuthProvider } from "./AcceptAuthProvider"
 export abstract class AbstractAuthProvider extends AbstractProvider {
-    abstract emit(...args: any[]): Promise<wsResponseWithoutUUID | wsErrorResponseWithoutUUID> // TODO Переделать
+    abstract emit(...args: any[]): PromiseOr<Response | ErrorResponse>
 
     public static getDefaultConfig(): AbstractAuthProviderConfig {
         return {

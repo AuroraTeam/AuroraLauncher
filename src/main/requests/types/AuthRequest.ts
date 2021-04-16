@@ -18,31 +18,35 @@
 
 // TODO Только одна авторизация на клиента
 
-import { LogHelper } from "../../helpers/LogHelper"
+// import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
-import { AbstractRequest, wsErrorResponseWithoutUUID, wsRequest, wsResponseWithoutUUID } from "./AbstractRequest"
+import { AbstractRequest } from "./AbstractRequest"
+import { ErrorResponse } from "./ErrorResponse"
+import { Request } from "./Request"
+import { Response } from "./Response"
 
 export class AuthRequest extends AbstractRequest {
     type = "auth"
 
-    async invoke({ data }: wsAuthRequest): Promise<wsResponseWithoutUUID | wsErrorResponseWithoutUUID> {
+    async invoke({ data }: IAuthRequest): Promise<Response | ErrorResponse> {
         const provider = App.AuthManager.getAuthProvider()
-        if (provider === undefined) {
-            LogHelper.error("authProvider is undefined")
-            return {
-                code: 103,
-                message: "authProvider is undefined",
-            }
-        }
+        // TODO перенести проверку в AuthManager
+        // if (provider === undefined) {
+        //     LogHelper.error("authProvider is undefined")
+        //     return {
+        //         code: 103,
+        //         message: "authProvider is undefined",
+        //     }
+        // }
 
-        return await provider.emit(data.login, data.password, data.ip)
+        return await provider.emit(data.login, data.password /*, data.ip*/)
     }
 }
 
-interface wsAuthRequest extends wsRequest {
+interface IAuthRequest extends Request {
     data: {
         login: string
         password: string
-        ip: string
+        // ip: string
     }
 }

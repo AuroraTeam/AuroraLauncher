@@ -17,12 +17,14 @@
  */
 
 import { App } from "../../LauncherServer"
-import { AbstractRequest, wsRequest, wsResponseWithoutUUID } from "./AbstractRequest"
+import { AbstractRequest } from "./AbstractRequest"
+import { Request } from "./Request"
+import { Response } from "./Response"
 
 export class ProfileRequest extends AbstractRequest {
     type = "profile"
 
-    async invoke({ data }: wsRequest): Promise<wsResponseWithoutUUID> {
+    invoke({ data }: Request): Response {
         return {
             data: {
                 profile: App.ProfilesManager.profiles.find((p) => p.uuid == (data as { uuid: string }).uuid),

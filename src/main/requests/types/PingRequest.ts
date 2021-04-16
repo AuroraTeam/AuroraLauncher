@@ -16,12 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractRequest, wsResponseWithoutUUID } from "./AbstractRequest"
+import { AbstractRequest } from "./AbstractRequest"
+import { Response } from "./Response"
 
 export class PingRequest extends AbstractRequest {
     type = "ping"
 
-    async invoke(): Promise<wsResponseWithoutUUID> {
+    invoke(): Response {
         return {
             data: {
                 result: "pong",

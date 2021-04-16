@@ -43,6 +43,7 @@ export class AuthManager {
         this.registerAuthProviders()
         this.registerTextureProviders()
 
+        // TODO Проверить getProperty на undefined и не валидные значеия
         this.authProvider = new (this.authProviders.get(
             App.ConfigManager.getProperty("auth.authProvider.type")
         ) as AnyAuthProvider)()

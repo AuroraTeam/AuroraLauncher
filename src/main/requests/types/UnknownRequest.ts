@@ -16,12 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractRequest, wsErrorResponseWithoutUUID } from "./AbstractRequest"
+import { AbstractRequest } from "./AbstractRequest"
+import { ErrorResponse } from "./ErrorResponse"
 
 export class UnknownRequest extends AbstractRequest {
     type = "unknown"
 
-    async invoke(): Promise<wsErrorResponseWithoutUUID> {
+    invoke(): ErrorResponse {
         return {
             code: 102,
             message: "Unknown request type",

@@ -16,10 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { AbstractRequest, wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
+import { AbstractRequest } from "./types/AbstractRequest"
 import { AuthRequest } from "./types/AuthRequest"
+import { ErrorResponse } from "./types/ErrorResponse"
 import { PingRequest } from "./types/PingRequest"
 import { ProfileRequest } from "./types/ProfileRequest"
+import { Request } from "./types/Request"
+import { Response } from "./types/Response"
 import { ServersRequest } from "./types/ServersRequest"
 import { UnknownRequest } from "./types/UnknownRequest"
 import { UpdatesRequest } from "./types/UpdatesRequest"
@@ -40,17 +43,14 @@ export class RequestsManager {
         this.requests.set(x.getType(), x)
     }
 
-    async getRequest(data: wsRequest): Promise<wsResponse | wsErrorResponse> {
+    async getRequest(data: Request): Promise<Response | ErrorResponse> {
         let res
         if (this.requests.has(data.type)) {
-            // TODO invoke(data) => data.data
+            // TODO invoke(data) => data.data (+ try/catch с отловом ошибок и выкивынием в ErrorResponse)
             res = await this.requests.get(data.type).invoke(data)
         } else {
-            res = await this.requests.get("unknown").invoke(data)
+            res = await this.requests.get("unknown").invoke(null)
         }
-        return {
-            ...res,
-            uuid: data.uuid,
-        }
+        return res
     }
 }

@@ -24,7 +24,10 @@ import { AbstractAuthProvider } from "./AbstractAuthProvider"
 export class MojangAuthProvider extends AbstractAuthProvider {
     static type = "mojang"
 
-    async emit(login: string, password: string): Promise<{ data: { login: string; userUUID: string; accessToken: string } }> {
+    async emit(
+        login: string,
+        password: string
+    ): Promise<{ data: { username: string; userUUID: string; accessToken: string } }> {
         const data = JSON.stringify({
             agent: {
                 name: "Minecraft",
@@ -48,7 +51,7 @@ export class MojangAuthProvider extends AbstractAuthProvider {
 
         return {
             data: {
-                login: result.selectedProfile.name,
+                username: result.selectedProfile.name,
                 userUUID: result.selectedProfile.id,
                 accessToken: result.accessToken,
             },

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import * as http from "http"
+// import * as http from "http"
 
 import { NIL as NIL_UUID } from "uuid"
 import * as ws from "ws"
@@ -24,7 +24,9 @@ import * as ws from "ws"
 import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { RequestsManager } from "./RequestsManager"
-import { wsErrorResponse, wsRequest, wsResponse } from "./types/AbstractRequest"
+import { wsErrorResponse } from "./types/ErrorResponse"
+import { wsRequest } from "./types/Request"
+import { wsResponse } from "./types/Response"
 
 export class WebSocketManager {
     webSocketServer: ws.Server
@@ -32,20 +34,25 @@ export class WebSocketManager {
 
     webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)
-        this.webSocketServer.on("connection", (ws: ws, req: http.IncomingMessage) => this.requestListener(ws, req))
+        this.webSocketServer.on("connection", (ws: ws /*, req: http.IncomingMessage*/) =>
+            this.requestListener(ws /*, req*/)
+        )
     }
 
-    requestListener(ws: ws, req: http.IncomingMessage): void {
+    requestListener(ws: ws /*, req: http.IncomingMessage*/): void {
+        // TODO работа с ping
+
         ws.on("message", async (message: string) => {
             LogHelper.dev(`New WebSocket request ${message}`)
-            let data: wsRequest & {
-                data: {
-                    ip: string
-                }
-            }
+            let parsedMessage: wsRequest
+            // let parsedMessage: wsRequest & {
+            //     data: {
+            //         ip: string
+            //     }
+            // }
 
             try {
-                data = JsonHelper.toJSON(message)
+                parsedMessage = JsonHelper.toJSON(message)
             } catch (error) {
                 return this.wsSend(ws, {
                     uuid: NIL_UUID,
@@ -54,25 +61,29 @@ export class WebSocketManager {
                 })
             }
 
-            if (data.uuid === undefined) {
+            if (parsedMessage.uuid === undefined) {
                 return this.wsSend(ws, {
                     uuid: NIL_UUID,
                     code: 101,
                     message: "Request UUID is undefined",
                 })
             }
-            if (data.type === undefined) {
+            if (parsedMessage.type === undefined) {
                 return this.wsSend(ws, {
-                    uuid: data.uuid,
+                    uuid: parsedMessage.uuid,
                     code: 101,
                     message: "Request type is undefined",
                 })
             }
 
-            if (data.data === undefined) data.data = { ip: req.socket.remoteAddress }
-            else data.data.ip = req.socket.remoteAddress
+            // if (parsedMessage.data === undefined) parsedMessage.data = { ip: req.socket.remoteAddress }
+            // else parsedMessage.data.ip = req.socket.remoteAddress
 
-            this.wsSend(ws, await this.requestsManager.getRequest(data))
+            const response = await this.requestsManager.getRequest(parsedMessage)
+            this.wsSend(ws, {
+                ...response,
+                uuid: parsedMessage.uuid,
+            })
         })
     }
 

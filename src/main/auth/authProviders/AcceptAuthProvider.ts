@@ -16,36 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// import { v4, v5 } from "uuid"
+import { v4, v5 } from "uuid"
 
-// import { wsResponseWithoutUUID } from "../../requests/types/AbstractRequest"
+import { Response } from "../../requests/types/Response"
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
     static type = "accept"
 
-    // sessionsDB = new Map()
+    sessionsDB = new Map()
 
-    async emit(login: string): Promise<{ data: { login: string } }> {
-        return {
-            data: {
-                login,
-            },
+    emit(login: string): Response {
+        const data = {
+            login,
+            userUUID: v5(login, "814f98b5-f66d-4456-87dc-f4eed8f6ca73"),
+            accessToken: v4(),
         }
+
+        this.sessionsDB.set(data.login, {
+            ...data,
+            serverID: undefined,
+        })
+
+        return { data }
     }
-
-    // emit(login: string): wsResponseWithoutUUID {
-    //     const data = {
-    //         login,
-    //         userUUID: v5(login, "814f98b5-f66d-4456-87dc-f4eed8f6ca73"),
-    //         accessToken: v4(),
-    //     }
-
-    //     this.sessionsDB.set(data.login, {
-    //         ...data,
-    //         serverID: undefined,
-    //     })
-
-    //     return { data }
-    // }
 }

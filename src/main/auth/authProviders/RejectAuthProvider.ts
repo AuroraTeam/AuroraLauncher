@@ -17,14 +17,14 @@
  */
 
 import { App } from "../../LauncherServer"
-import { wsErrorResponseWithoutUUID } from "../../requests/types/AbstractRequest"
+import { ErrorResponse } from "../../requests/types/ErrorResponse"
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 
 export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"
     config = new RejectAuthProviderConfig()
 
-    async emit(): Promise<wsErrorResponseWithoutUUID> {
+    emit(): ErrorResponse {
         return {
             code: 200,
             message: this.config.message,
