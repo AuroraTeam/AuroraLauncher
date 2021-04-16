@@ -17,11 +17,15 @@
  */
 
 import { App } from "../../LauncherServer"
-import { AbstractAuthProvider } from "./AbstractAuthProvider"
+import { AbstractAuthProvider, AbstractAuthProviderConfig } from "./AbstractAuthProvider"
 
 export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"
-    config = new RejectAuthProviderConfig()
+    config: RejectAuthProviderConfig = {
+        type: "reject",
+        message:
+            (App.ConfigManager.getConfig().auth.authProvider as RejectAuthProviderConfig).message || "Auth rejected",
+    }
 
     emit(): any {
         throw {
@@ -31,6 +35,6 @@ export class RejectAuthProvider extends AbstractAuthProvider {
     }
 }
 
-export class RejectAuthProviderConfig {
-    message: string = App.ConfigManager.getProperty("auth.authProvider.message", true) || "Auth rejected"
+interface RejectAuthProviderConfig extends AbstractAuthProviderConfig {
+    message: string
 }

@@ -43,13 +43,11 @@ export class AuthManager {
         this.registerAuthProviders()
         this.registerTextureProviders()
 
+        const config = App.ConfigManager.getConfig().auth
+
         // TODO Проверить getProperty на undefined и не валидные значеия
-        this.authProvider = new (this.authProviders.get(
-            App.ConfigManager.getProperty("auth.authProvider.type")
-        ) as AnyAuthProvider)()
-        this.textureProvider = new (this.textureProviders.get(
-            App.ConfigManager.getProperty("auth.textureProvider.type")
-        ) as AnyTextureProvider)()
+        this.authProvider = new (this.authProviders.get(config.authProvider.type) as AnyAuthProvider)()
+        this.textureProvider = new (this.textureProviders.get(config.textureProvider.type) as AnyTextureProvider)()
     }
 
     getAuthProvider(): AbstractAuthProvider {

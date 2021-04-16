@@ -24,7 +24,7 @@ import { App } from "../LauncherServer"
 
 export class LangManager {
     langList: Map<string, Object> = new Map()
-    currentLang: string = App.ConfigManager.getProperty("lang", true) || "en"
+    currentLang: string = App.ConfigManager.getConfig().lang || "en"
 
     constructor() {
         this.langList.set("ru", require("./ru.json"))

@@ -19,7 +19,6 @@
 import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
-import { App } from "../LauncherServer"
 import { AuthConfig, Envirovement, LauncherServerConfig, WebSocketConfig } from "./LauncherServerConfig"
 import fs = require("fs")
 
@@ -37,17 +36,8 @@ export class ConfigManager {
         }
     }
 
-    getProperty(property: string, raw = false): any {
-        const path = property.split(".")
-        let prop: any = this.config
-        path.forEach((el) => {
-            prop = prop[el]
-            if (prop === undefined) {
-                if (!raw) LogHelper.fatal(App.LangManager.getTranslate("ConfigManager.propNotFound"), property)
-                return prop
-            }
-        })
-        return prop
+    getConfig(): LauncherServerConfig {
+        return this.config
     }
 
     getDefaults(): LauncherServerConfig {

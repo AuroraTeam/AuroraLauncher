@@ -26,10 +26,10 @@ export class SocketManager {
 
     constructor() {
         const serverConfig = {
-            host: App.ConfigManager.getProperty("ws.ip"),
-            port: App.ConfigManager.getProperty("ws.port"),
+            host: App.ConfigManager.getConfig().ws.ip,
+            port: App.ConfigManager.getConfig().ws.port,
         }
-        if (App.ConfigManager.getProperty("ws.enableListing")) {
+        if (App.ConfigManager.getConfig().ws.enableListing) {
             this.webServerManager.webServerInit()
             this.webSocketManager.webSocketServerInit({ server: this.webServerManager.webServer })
             this.webServerManager.webServer.listen(serverConfig)

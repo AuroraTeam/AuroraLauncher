@@ -37,7 +37,7 @@ export class MirrorManager {
      * @param dirName - Название конечной папки
      */
     async downloadClient(clientName: string, dirName: string): Promise<void> {
-        const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
+        const mirrors: string[] = App.ConfigManager.getConfig().updatesUrl
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
         if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
 
@@ -94,7 +94,7 @@ export class MirrorManager {
      * @param dirName - Название конечной папки
      */
     async downloadAssets(assetsName: string, dirName: string): Promise<void> {
-        const mirrors: string[] = App.ConfigManager.getProperty("updatesUrl")
+        const mirrors: string[] = App.ConfigManager.getConfig().updatesUrl
         const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
         if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
 

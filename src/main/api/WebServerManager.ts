@@ -28,12 +28,12 @@ export class WebServerManager {
     webServer: http.Server | https.Server
 
     webServerInit(): void {
-        if (App.ConfigManager.getProperty("ws.useSSL")) {
+        if (App.ConfigManager.getConfig().ws.useSSL) {
             // TODO Проверка на отсутствие файлов
             this.webServer = https.createServer(
                 {
-                    cert: path.resolve(StorageHelper.storageDir, App.ConfigManager.getProperty("ws.ssl.cert")),
-                    key: path.resolve(StorageHelper.storageDir, App.ConfigManager.getProperty("ws.ssl.key")),
+                    cert: path.resolve(StorageHelper.storageDir, App.ConfigManager.getConfig().ws.ssl.cert),
+                    key: path.resolve(StorageHelper.storageDir, App.ConfigManager.getConfig().ws.ssl.key),
                 },
                 this.requestListener
             )
@@ -47,7 +47,7 @@ export class WebServerManager {
 
         if (!fs.existsSync(urlPath)) {
             res.writeHead(404)
-            if (App.ConfigManager.getProperty("ws.hideListing")) {
+            if (App.ConfigManager.getConfig().ws.hideListing) {
                 res.end()
             } else {
                 res.end("Not found!")
@@ -56,7 +56,7 @@ export class WebServerManager {
         }
 
         const stats = fs.statSync(urlPath)
-        if (App.ConfigManager.getProperty("ws.hideListing")) {
+        if (App.ConfigManager.getConfig().ws.hideListing) {
             if (!stats.isFile()) {
                 res.writeHead(404)
                 res.end()
