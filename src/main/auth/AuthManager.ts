@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { LogHelper } from "../helpers/LogHelper"
 import { App } from "../LauncherServer"
 import { AbstractProvider } from "./AbstractProvider"
 import { AbstractAuthProvider } from "./authProviders/AbstractAuthProvider"
@@ -27,10 +28,11 @@ import { VoidTextureProvider } from "./textureProviders/VoidTextureProvider"
 
 type ProviderMap<P> = Map<string, P>
 
+// TODO
 // Ох уж эти приколы с типами
 // Другие решения получалсь не красивыми
 // Если есть идеи как сделать лучше - пишите))
-type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider
+type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider | typeof MojangAuthProvider
 type AnyTextureProvider = typeof VoidTextureProvider
 
 export class AuthManager {
@@ -45,9 +47,11 @@ export class AuthManager {
 
         const config = App.ConfigManager.getConfig().auth
 
-        // TODO Проверить getProperty на undefined и не валидные значеия
-        this.authProvider = new (this.authProviders.get(config.authProvider.type) as AnyAuthProvider)()
-        this.textureProvider = new (this.textureProviders.get(config.textureProvider.type) as AnyTextureProvider)()
+        this.authProvider = new (this.getProvider("authProvider", config.authProvider.type) as AnyAuthProvider)()
+        this.textureProvider = new (this.getProvider(
+            "textureProvider",
+            config.textureProvider.type
+        ) as AnyTextureProvider)()
     }
 
     getAuthProvider(): AbstractAuthProvider {
@@ -58,25 +62,26 @@ export class AuthManager {
         return this.textureProvider
     }
 
-    registerAuthProviders(): void {
-        this.registerAuthProvider(AcceptAuthProvider)
-        this.registerAuthProvider(RejectAuthProvider)
-        this.registerAuthProvider(MojangAuthProvider)
+    private getProvider(providerType: "authProvider" | "textureProvider", type: string): AbstractProvider {
+        const providersMap = providerType === "authProvider" ? this.authProviders : this.textureProviders
+        if (!providersMap.has(type)) LogHelper.fatal(`Invalid provider "${type}" in ${providerType} config`) //TODO перевод
+        return providersMap.get(type)
     }
 
-    registerTextureProviders(): void {
-        this.registerTextureProvider(VoidTextureProvider)
+    private registerAuthProviders(): void {
+        this.registerProvider(this.authProviders, AcceptAuthProvider)
+        this.registerProvider(this.authProviders, RejectAuthProvider)
+        this.registerProvider(this.authProviders, MojangAuthProvider)
     }
 
-    registerAuthProvider(provider: typeof AbstractAuthProvider): void {
-        this.registerProvider(this.authProviders, provider)
+    private registerTextureProviders(): void {
+        this.registerProvider(this.textureProviders, VoidTextureProvider)
     }
 
-    registerTextureProvider(provider: typeof AbstractTextureProvider): void {
-        this.registerProvider(this.textureProviders, provider)
-    }
-
-    registerProvider(providerMap: ProviderMap<typeof AbstractProvider>, provider: typeof AbstractProvider): void {
+    private registerProvider(
+        providerMap: ProviderMap<typeof AbstractProvider>,
+        provider: typeof AbstractProvider
+    ): void {
         providerMap.set(provider.getType(), provider)
     }
 }
