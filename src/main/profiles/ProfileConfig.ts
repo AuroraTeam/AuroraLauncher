@@ -86,7 +86,7 @@ export class ClientProfile implements ClientProfileConfig {
     }
 
     public toString(): string {
-        return JsonHelper.toString(this, true)
+        return JsonHelper.toJSON(this, true)
     }
 }
 

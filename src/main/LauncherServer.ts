@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'source-map-support/register';
-
-const version = require("../../package").version
+import "source-map-support/register"
+import "reflect-metadata"
 
 import { EventEmitter } from "events"
 
@@ -34,6 +33,8 @@ import { LangManager } from "./langs/LangManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
+
+const version = require("../../package").version
 
 export class LauncherServer extends EventEmitter {
     private _ConfigManager: ConfigManager

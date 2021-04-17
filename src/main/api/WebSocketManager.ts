@@ -52,7 +52,7 @@ export class WebSocketManager {
             // }
 
             try {
-                parsedMessage = JsonHelper.toJSON(message)
+                parsedMessage = JsonHelper.fromJSON(message)
             } catch (error) {
                 return this.wsSend(ws, {
                     uuid: NIL_UUID,
@@ -88,6 +88,6 @@ export class WebSocketManager {
     }
 
     private wsSend(ws: ws, data: wsResponse | wsErrorResponse): void {
-        ws.send(JsonHelper.toString(data))
+        ws.send(JsonHelper.toJSON(data))
     }
 }

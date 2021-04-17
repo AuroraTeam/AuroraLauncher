@@ -74,7 +74,7 @@ export class FabricManager extends MojangManager {
 
         let loaders: any[]
         try {
-            loaders = JsonHelper.toJSON(loadersData)
+            loaders = JsonHelper.fromJSON(loadersData)
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error("Error parsing JSON data")
@@ -99,7 +99,7 @@ export class FabricManager extends MojangManager {
         }
 
         try {
-            return JsonHelper.toJSON(versionData)
+            return JsonHelper.fromJSON(versionData)
         } catch (error) {
             LogHelper.debug(error)
             return

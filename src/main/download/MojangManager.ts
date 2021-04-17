@@ -105,7 +105,7 @@ export class MojangManager {
         fs.mkdirSync(path.resolve(assetsDir, "indexes"))
         fs.writeFileSync(path.resolve(assetsDir, `indexes/${version.assets}.json`), assetsFile)
 
-        const assetsData = JsonHelper.toJSON(assetsFile).objects
+        const assetsData = JsonHelper.fromJSON(assetsFile).objects
         const assetsHashes: Set<string> = new Set()
         for (const key in assetsData) {
             const hash = assetsData[key].hash
@@ -186,7 +186,7 @@ export class MojangManager {
 
         let versions
         try {
-            versions = JsonHelper.toJSON(versionsData).versions
+            versions = JsonHelper.fromJSON(versionsData).versions
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error("Error parsing versions data")
@@ -209,7 +209,7 @@ export class MojangManager {
         }
 
         try {
-            return JsonHelper.toJSON(clientData)
+            return JsonHelper.fromJSON(clientData)
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error("Error parsing client data")

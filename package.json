@@ -52,10 +52,12 @@
     },
     "dependencies": {
         "adm-zip": "^0.5.4",
+        "class-transformer": "^0.4.0",
         "cli-progress": "^3.9.0",
         "colors": "^1.4.0",
         "p-map": "^4.0.0",
         "progress-stream": "^2.0.0",
+        "reflect-metadata": "^0.1.13",
         "semver": "^7.3.5",
         "source-map-support": "^0.5.19",
         "uuid": "^8.3.2",

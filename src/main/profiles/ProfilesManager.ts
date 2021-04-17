@@ -45,7 +45,7 @@ export class ProfilesManager {
             if (!file.endsWith(".json")) return
 
             try {
-                const data = JsonHelper.toJSON(
+                const data = JsonHelper.fromJSON(
                     fs.readFileSync(path.resolve(StorageHelper.profilesDir, file)).toString()
                 )
                 this.profiles.push(new ClientProfile(data))

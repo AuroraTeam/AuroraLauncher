@@ -16,11 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export interface ErrorResponse {
-    code: number
-    message: string
-}
+import { AbstractAuthProvider, AbstractAuthProviderConfig } from "../../auth/authProviders/AbstractAuthProvider"
+import {
+    AbstractTextureProvider,
+    AbstractTextureProviderConfig,
+} from "../../auth/textureProviders/AbstractTextureProvider"
 
-export interface wsErrorResponse extends ErrorResponse {
-    uuid: string
+export class AuthConfig {
+    authProvider: AbstractAuthProviderConfig
+    textureProvider: AbstractTextureProviderConfig
+
+    static getDefaults(): AuthConfig {
+        const defaults = new AuthConfig()
+        defaults.authProvider = AbstractAuthProvider.getDefaultConfig()
+        defaults.textureProvider = AbstractTextureProvider.getDefaultConfig()
+        return defaults
+    }
 }

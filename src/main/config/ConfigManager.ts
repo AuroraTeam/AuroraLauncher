@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { JsonHelper } from "../helpers/JsonHelper"
+import * as fs from "fs"
+
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
-import { LauncherServerConfig } from "./LauncherServerConfig"
-import fs = require("fs")
+import { LauncherServerConfig } from "./types/LauncherServerConfig"
 
 export class ConfigManager {
     private config: LauncherServerConfig
@@ -41,18 +41,19 @@ export class ConfigManager {
     }
 
     private load(): void {
-        const config = fs.readFileSync(StorageHelper.configFile)
+        const config = fs.readFileSync(StorageHelper.configFile).toString()
         try {
-            this.config = JsonHelper.toJSON(config.toString())
+            this.config = LauncherServerConfig.fromJSON(config)
         } catch (e) {
             if (e instanceof SyntaxError) {
                 LogHelper.error(e)
                 LogHelper.fatal("Json syntax broken. Try fix or delete LauncherServerConfig.json")
             }
+            LogHelper.fatal(e)
         }
     }
 
     private save(): void {
-        fs.writeFileSync(StorageHelper.configFile, JsonHelper.toString(this.config, true))
+        fs.writeFileSync(StorageHelper.configFile, this.config.toJSON())
     }
 }

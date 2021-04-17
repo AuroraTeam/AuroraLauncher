@@ -4,8 +4,9 @@
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "commonjs",
-        "target": "es5",
-        "jsx": "react",
-        "allowJs": true
+        "target": "ES2017",
+        "allowJs": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
     }
 }

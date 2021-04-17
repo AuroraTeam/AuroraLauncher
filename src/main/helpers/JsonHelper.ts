@@ -17,11 +17,22 @@
  */
 
 export class JsonHelper {
-    static toJSON(string: string): any {
+    /**
+     * Преобразовать JSON строку в объект
+     * @param string JSON строка
+     * @returns `Object | Array`
+     */
+    static fromJSON(string: string): any {
         return JSON.parse(string)
     }
 
-    static toString(data: object, pretty = false): string {
-        return pretty ? JSON.stringify(data, null, 4) : JSON.stringify(data)
+    /**
+     * Преобразовать объект в JSON строку
+     * @param obj Пробразуемый объект
+     * @param pretty Форматировать вывод отступами или вывести в одну строку (по умолчанию `false`)
+     * @returns JSON сторка
+     */
+    static toJSON(obj: Record<string, any>, pretty = false): string {
+        return pretty ? JSON.stringify(obj, null, 4) : JSON.stringify(obj)
     }
 }
