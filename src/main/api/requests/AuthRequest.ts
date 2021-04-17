@@ -28,15 +28,6 @@ export class AuthRequest extends AbstractRequest {
 
     async invoke(data: AuthRequestData): Promise<ResponseData> {
         const provider = App.AuthManager.getAuthProvider()
-        // TODO перенести проверку в AuthManager
-        // if (provider === undefined) {
-        //     LogHelper.error("authProvider is undefined")
-        //     return {
-        //         code: 103,
-        //         message: "authProvider is undefined",
-        //     }
-        // }
-
         return await provider.emit(data.login, data.password)
     }
 }

@@ -71,7 +71,7 @@ export class ProfilesManager {
     }
 
     editProfile(uuid: string, parametrs: ProfileConfig): void {
-        const profile = this.profiles.find((p) => (p.uuid === uuid))
+        const profile = this.profiles.find((p) => p.uuid === uuid)
         Object.assign(profile, parametrs)
         fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`), profile.toJSON())
     }

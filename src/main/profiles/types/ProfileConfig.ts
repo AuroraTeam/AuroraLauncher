@@ -1,5 +1,6 @@
 import { classToPlain, deserialize } from "class-transformer"
 import { v4 } from "uuid"
+
 import { JsonHelper } from "../../helpers/JsonHelper"
 import { ProfileServerConfig } from "./ProfileServerConfig"
 
@@ -41,6 +42,7 @@ export class ProfileConfig {
             configVersion: 0,
             uuid: v4(),
             servers: [
+                // TODO _.merge для переопределения названия
                 {
                     ip: "127.0.0.1",
                     port: "25565",

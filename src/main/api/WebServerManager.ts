@@ -21,33 +21,46 @@ import * as http from "http"
 import * as https from "https"
 import * as path from "path"
 
+import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
 
 export class WebServerManager {
-    webServer: http.Server | https.Server
+    public webServer: http.Server | https.Server
+    private readonly config = App.ConfigManager.getConfig().ws
 
-    webServerInit(): void {
-        if (App.ConfigManager.getConfig().ws.useSSL) {
-            // TODO Проверка на отсутствие файлов
-            this.webServer = https.createServer(
-                {
-                    cert: path.resolve(StorageHelper.storageDir, App.ConfigManager.getConfig().ws.ssl.cert),
-                    key: path.resolve(StorageHelper.storageDir, App.ConfigManager.getConfig().ws.ssl.key),
-                },
-                this.requestListener
-            )
-        } else {
+    public webServerInit(): void {
+        if (!this.config.useSSL) {
             this.webServer = http.createServer(this.requestListener)
+            return
         }
+
+        const certPath = path.resolve(StorageHelper.storageDir, this.config.ssl.cert)
+        const keyPath = path.resolve(StorageHelper.storageDir, this.config.ssl.key)
+
+        // TODO Translate
+        if (!fs.existsSync(certPath)) {
+            LogHelper.fatal("cert file nf")
+        }
+        if (!fs.existsSync(keyPath)) {
+            LogHelper.fatal("key file nf")
+        }
+
+        this.webServer = https.createServer(
+            {
+                cert: certPath,
+                key: keyPath,
+            },
+            this.requestListener
+        )
     }
 
-    requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
+    private requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
         const urlPath = path.resolve(StorageHelper.updatesDir, req.url.slice(1))
 
         if (!fs.existsSync(urlPath)) {
             res.writeHead(404)
-            if (App.ConfigManager.getConfig().ws.hideListing) {
+            if (this.config.hideListing) {
                 res.end()
             } else {
                 res.end("Not found!")
@@ -56,7 +69,7 @@ export class WebServerManager {
         }
 
         const stats = fs.statSync(urlPath)
-        if (App.ConfigManager.getConfig().ws.hideListing) {
+        if (this.config.hideListing) {
             if (!stats.isFile()) {
                 res.writeHead(404)
                 res.end()
