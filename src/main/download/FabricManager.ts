@@ -27,7 +27,7 @@ import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
-import { ClientProfileConfig } from "../profiles/ProfileConfig"
+import { ProfileConfig } from "../profiles/types/ProfileConfig"
 import { MojangManager } from "./MojangManager"
 
 export class FabricManager extends MojangManager {
@@ -58,7 +58,7 @@ export class FabricManager extends MojangManager {
         //Profiles
         App.ProfilesManager.editProfile(profileUUID, {
             mainClass: fabricVersion.mainClass,
-        } as ClientProfileConfig)
+        } as ProfileConfig)
         LogHelper.info("Done")
     }
 

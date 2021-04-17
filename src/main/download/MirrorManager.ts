@@ -28,7 +28,7 @@ import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
-import { ClientProfileConfig } from "../profiles/ProfileConfig"
+import { ProfileConfig } from "../profiles/types/ProfileConfig"
 
 export class MirrorManager {
     /**
@@ -84,7 +84,7 @@ export class MirrorManager {
         App.ProfilesManager.createProfile({
             ...JsonHelper.fromJSON(profile),
             clientDir: dirName,
-        } as ClientProfileConfig)
+        } as ProfileConfig)
         LogHelper.info(App.LangManager.getTranslate("MirrorManager.client.success"))
     }
 

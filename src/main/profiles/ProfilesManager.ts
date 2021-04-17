@@ -19,14 +19,13 @@
 import * as fs from "fs"
 import * as path from "path"
 
-import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
-import { ClientProfile, ClientProfileConfig } from "./ProfileConfig"
+import { ProfileConfig } from "./types/ProfileConfig"
 
 export class ProfilesManager {
-    profiles: ClientProfile[] = []
+    profiles: ProfileConfig[] = []
 
     constructor() {
         this.loadProfiles()
@@ -44,11 +43,9 @@ export class ProfilesManager {
         files.forEach((file) => {
             if (!file.endsWith(".json")) return
 
+            const data = fs.readFileSync(path.resolve(StorageHelper.profilesDir, file)).toString()
             try {
-                const data = JsonHelper.fromJSON(
-                    fs.readFileSync(path.resolve(StorageHelper.profilesDir, file)).toString()
-                )
-                this.profiles.push(new ClientProfile(data))
+                this.profiles.push(ProfileConfig.fromJSON(data))
             } catch (e) {
                 if (e instanceof SyntaxError)
                     LogHelper.error(App.LangManager.getTranslate("ProfilesManager.loadingErr"), file)
@@ -66,16 +63,16 @@ export class ProfilesManager {
         this.loadProfiles()
     }
 
-    createProfile(parametrs: ClientProfileConfig): string {
-        const profile = new ClientProfile(parametrs)
+    createProfile(parametrs: ProfileConfig): string {
+        const profile = new ProfileConfig(parametrs)
         this.profiles.push(profile)
-        fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${parametrs.clientDir}.json`), profile.toString())
+        fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`), profile.toJSON())
         return profile.uuid
     }
 
-    editProfile(uuid: string, parametrs: ClientProfileConfig): void {
+    editProfile(uuid: string, parametrs: ProfileConfig): void {
         const profile = this.profiles.find((p) => (p.uuid = uuid))
         Object.assign(profile, parametrs)
-        fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`), profile.toString())
+        fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`), profile.toJSON())
     }
 }

@@ -31,7 +31,7 @@ import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
-import { ClientProfileConfig } from "../profiles/ProfileConfig"
+import { ProfileConfig } from "../profiles/types/ProfileConfig"
 
 export class MojangManager {
     clientsLink = "https://libraries.minecraft.net/"
@@ -85,7 +85,7 @@ export class MojangManager {
             clientDir: dirName,
             assetsDir: `assets${version.assets}`,
             assetsIndex: version.assets,
-        } as ClientProfileConfig)
+        } as ProfileConfig)
     }
 
     /**
