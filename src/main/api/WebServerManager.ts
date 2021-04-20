@@ -31,7 +31,7 @@ export class WebServerManager {
 
     public webServerInit(): void {
         if (!this.config.useSSL) {
-            this.webServer = http.createServer(this.requestListener)
+            this.webServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => this.requestListener(req, res))
             return
         }
 
@@ -51,7 +51,7 @@ export class WebServerManager {
                 cert: certPath,
                 key: keyPath,
             },
-            this.requestListener
+            (req: http.IncomingMessage, res: http.ServerResponse) => this.requestListener(req, res)
         )
     }
 

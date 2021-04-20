@@ -24,6 +24,7 @@ export class StorageHelper {
     static updatesDir: string = path.resolve(StorageHelper.storageDir, "updates")
     static profilesDir: string = path.resolve(StorageHelper.storageDir, "profiles")
     static modulesDir: string = path.resolve(StorageHelper.storageDir, "modules")
+    static runtimeDir: string = path.resolve(StorageHelper.storageDir, "runtime") // TODO auto download
     static logsDir: string = path.resolve(StorageHelper.storageDir, "logs")
     static tempDir: string = path.resolve(StorageHelper.storageDir, "temp")
     static configFile: string = path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json")
