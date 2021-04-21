@@ -17,6 +17,7 @@
  */
 
 import { classToPlain, deserialize } from "class-transformer"
+import { v4 } from "uuid"
 
 import { JsonHelper } from "../../helpers/JsonHelper"
 import { AuthConfig } from "./AuthConfig"
@@ -26,6 +27,7 @@ import { WebSocketConfig } from "./WebSocketConfig"
 // https://github.com/typestack/class-transformer/tree/v0.4.0#using-versioning-to-control-exposed-and-excluded-properties
 export class LauncherServerConfig {
     configVersion: number
+    projectID: string
     lang: "ru" | "en"
     env: Envirovement
     mirrors: string[]
@@ -35,6 +37,7 @@ export class LauncherServerConfig {
     static getDefaults(): LauncherServerConfig {
         const config = new LauncherServerConfig()
         config.configVersion = 0
+        config.projectID = v4()
         config.lang = "ru"
         config.env = Envirovement.DEV
         config.mirrors = ["https://mirror.aurora-launcher.ru/"]
