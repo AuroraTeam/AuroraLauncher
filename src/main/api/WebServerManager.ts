@@ -50,8 +50,8 @@ export class WebServerManager {
 
         this.webServer = https.createServer(
             {
-                cert: certPath,
-                key: keyPath,
+                cert: fs.readFileSync(certPath),
+                key: fs.readFileSync(keyPath),
             },
             (req: http.IncomingMessage, res: http.ServerResponse) => this.requestListener(req, res)
         )
