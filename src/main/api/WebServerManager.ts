@@ -31,7 +31,9 @@ export class WebServerManager {
 
     public webServerInit(): void {
         if (!this.config.useSSL) {
-            this.webServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => this.requestListener(req, res))
+            this.webServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) =>
+                this.requestListener(req, res)
+            )
             return
         }
 
@@ -56,9 +58,19 @@ export class WebServerManager {
     }
 
     private requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
-        const urlPath = path.resolve(StorageHelper.updatesDir, req.url.slice(1))
+        const url = this.parseURLPath(req.url)
 
-        if (!fs.existsSync(urlPath)) {
+        if (url.path.startsWith("/authlib")) {
+            this.authlibListener(url, res)
+        } else {
+            this.fileListing(url, res)
+        }
+    }
+
+    private fileListing(url: ParsedPath, res: http.ServerResponse): void {
+        const filePath = path.join(StorageHelper.updatesDir, url.path)
+
+        if (!fs.existsSync(filePath)) {
             res.writeHead(404)
             if (this.config.hideListing) {
                 res.end()
@@ -68,24 +80,46 @@ export class WebServerManager {
             return
         }
 
-        const stats = fs.statSync(urlPath)
-        if (this.config.hideListing) {
-            if (!stats.isFile()) {
+        const stats = fs.statSync(filePath)
+        res.writeHead(200)
+        if (stats.isDirectory()) {
+            if (this.config.hideListing) {
                 res.writeHead(404)
                 res.end()
                 return
             }
-        }
 
-        res.writeHead(200)
-        if (stats.isDirectory()) {
-            const list = fs.readdirSync(urlPath)
-            const parent = req.url.slice(-1) == "/" ? req.url.slice(0, -1) : req.url
+            const list = fs.readdirSync(filePath)
+            const parent = url.path.slice(-1) == "/" ? url.path.slice(0, -1) : url.path
             res.write("<style>*{font-family:monospace; font-size:14px}</style>")
             if (parent.length !== 0) list.unshift("..")
             res.end(list.map((el) => `<a href="${parent}/${el}">${el}</a>`).join("<br>"))
         } else {
-            res.end(fs.readFileSync(urlPath))
+            // TODO Стримы, нужны ли?)
+            res.end(fs.readFileSync(filePath))
         }
     }
+
+    private authlibListener(url: ParsedPath, res: http.ServerResponse) {
+        res.end() // TODO
+    }
+
+    private parseURLPath(url: string): ParsedPath {
+        if (!url.includes("?")) {
+            return {
+                path: url,
+            }
+        }
+        const _url = url.split("?")
+
+        return {
+            path: _url[0],
+            query: new URLSearchParams(_url[1]),
+        }
+    }
+}
+
+interface ParsedPath {
+    path: string
+    query?: URLSearchParams
 }
