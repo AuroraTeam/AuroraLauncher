@@ -16,29 +16,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Я горел и пытался как-то реализовать нормально, но безуспешно, так что пока оставил как есть
-// Пошло оно в очко, пускай остаётся так
-
 import { LogHelper } from "../helpers/LogHelper"
 import { App } from "../LauncherServer"
 
 export class LangManager {
-    langList: Map<string, Object> = new Map()
-    currentLang: string = App.ConfigManager.getConfig().lang || "en"
+    private langList: Map<Lang, Translate> = new Map()
+    private currentLang: Translate
 
     constructor() {
-        this.langList.set("ru", require("./ru.json"))
-        this.langList.set("en", require("./en.json"))
+        this.setLangs()
+        const selectedLang = App.ConfigManager.getConfig().lang || "en"
+
+        if (!this.langList.has(selectedLang)) LogHelper.fatal("Invalid lang settings! Language %s not found.", selectedLang)
+        this.currentLang = this.langList.get(selectedLang)
+
         LogHelper.dev("LangManager init, selected language: %s", this.currentLang)
     }
 
-    getTranslate(langString: string): string {
-        const path = langString.split(".")
-        let dictionary: any = this.langList.get(this.currentLang)
-        path.forEach((el) => {
-            dictionary = dictionary[el]
-            if (dictionary === undefined) LogHelper.fatal(this.getTranslate("LangManager.strNotFound"), langString)
-        })
-        return dictionary
+    private setLangs(): void {
+        this.langList.set("ru", require("./ru.json"))
+        this.langList.set("en", require("./en.json"))
     }
+
+    // Сука всё класcно, кроме того, что приходится костылить (as Translate)
+    getTranslate(): Translate {
+        return this.currentLang
+    }
+}
+
+export type Lang = "ru" | "en"
+
+export interface Translate {
+    [x: string]: string | Translate;
 }

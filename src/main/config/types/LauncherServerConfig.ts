@@ -20,6 +20,7 @@ import { classToPlain, deserialize } from "class-transformer"
 import { v4 } from "uuid"
 
 import { JsonHelper } from "../../helpers/JsonHelper"
+import { Lang } from "../../langs/LangManager"
 import { AuthConfig } from "./AuthConfig"
 import { WebSocketConfig } from "./WebSocketConfig"
 
@@ -28,7 +29,7 @@ import { WebSocketConfig } from "./WebSocketConfig"
 export class LauncherServerConfig {
     configVersion: number
     projectID: string
-    lang: "ru" | "en"
+    lang: Lang
     env: Envirovement
     mirrors: string[]
     auth: AuthConfig
