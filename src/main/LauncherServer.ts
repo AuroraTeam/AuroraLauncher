@@ -29,7 +29,7 @@ import { CommandsManager } from "./commands/CommandsManager"
 import { ConfigManager } from "./config/ConfigManager"
 import { LogHelper } from "./helpers/LogHelper"
 import { StorageHelper } from "./helpers/StorageHelper"
-import { LangManager, Translate } from "./langs/LangManager"
+import { LangManager } from "./langs/LangManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
@@ -77,7 +77,7 @@ export class LauncherServer extends EventEmitter {
         this._UpdatesManager = new UpdatesManager()
         this._ProfilesManager = new ProfilesManager()
         this.emit("postInit")
-        LogHelper.info((this.LangManager.getTranslate().LauncherServer as Translate).initEnd)
+        LogHelper.info(this.LangManager.getTranslate().LauncherServer.initEnd)
         this.inited = true
     }
 

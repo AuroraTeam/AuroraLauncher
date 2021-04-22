@@ -18,9 +18,12 @@
 
 import { LogHelper } from "../helpers/LogHelper"
 import { App } from "../LauncherServer"
+import { Translate } from "./Translate"
+
+export type Lang = "ru" | "en"
 
 export class LangManager {
-    private langList: Map<Lang, Translate> = new Map()
+    private langList: Map<Lang, Translate> = new Map() // TODO Бесполезно?
     private currentLang: Translate
 
     constructor() {
@@ -38,14 +41,7 @@ export class LangManager {
         this.langList.set("en", require("./en.json"))
     }
 
-    // Сука всё класcно, кроме того, что приходится костылить (as Translate)
     getTranslate(): Translate {
         return this.currentLang
     }
-}
-
-export type Lang = "ru" | "en"
-
-export interface Translate {
-    [x: string]: string | Translate;
 }
