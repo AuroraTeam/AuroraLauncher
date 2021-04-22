@@ -20,7 +20,6 @@ import * as fs from "fs"
 
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
-import { Lang } from "../langs/LangManager"
 import { LauncherServerConfig } from "./types/LauncherServerConfig"
 
 export class ConfigManager {
@@ -41,10 +40,28 @@ export class ConfigManager {
         return this.config
     }
 
-    // Похоже для кастомизации параметров конфига придётся нарезать вот такие вот функции, либо...
-    setLang(lang: Lang): void {
-        this.config.lang = lang
+    // Современные проблемы требуют современных решений
+    setProp(prop: string, value: string | number | boolean): boolean {
+        const propPath = prop.split(".")
+        try {
+            this.config = this._setProp(propPath, value, this.config)
+        } catch (error) {
+            LogHelper.error(error)
+            return false
+        }
         this.save()
+        return true
+    }
+
+    // Ооо великая рекурсия
+    private _setProp(propPath: string[], value: string | number | boolean, config: any): any {
+        const chunk = propPath.shift()
+        if (config[chunk] === undefined) throw "Prop nf" // TODO Translate
+        if (propPath.length === 0) {
+            config[chunk] = value
+            return config
+        }
+        this._setProp(propPath, value, config[chunk])
     }
 
     private load(): void {

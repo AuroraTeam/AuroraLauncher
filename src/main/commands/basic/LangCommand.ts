@@ -28,7 +28,6 @@ export class LangCommand extends AbstractCommand {
 
     invoke(...[lang]: [lang: Lang]): void {
         if (!lang) return LogHelper.error("Укажите язык!")
-        if (!App.LangManager.changeLang(lang)) LogHelper.error("Language %s not found!", lang)
-        else LogHelper.info("Language changed")
+        App.LangManager.changeLang(lang)
     }
 }
