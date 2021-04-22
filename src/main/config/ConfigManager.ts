@@ -40,6 +40,12 @@ export class ConfigManager {
         return this.config
     }
 
+    // По моему это дичайший костыль XD XD XD
+    editConfigProperty(func:(config: LauncherServerConfig) => void): void {
+        func(this.config)
+        this.save()
+    }
+
     private load(): void {
         const config = fs.readFileSync(StorageHelper.configFile).toString()
         try {
