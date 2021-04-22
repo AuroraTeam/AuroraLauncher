@@ -23,7 +23,7 @@ import { Translate } from "./Translate"
 export type Lang = "ru" | "en"
 
 export class LangManager {
-    private langList: Map<Lang, Translate> = new Map() // TODO Бесполезно?
+    private langList: Map<Lang, Translate> = new Map() // Или нет?)
     private currentLang: Translate
 
     constructor() {

@@ -69,8 +69,8 @@ export class CommandsManager {
             const args = line.trim().split(/ +/)
             const cmd = args.shift().toLowerCase()
             if (!this.commands.has(cmd))
-                return LogHelper.error(App.LangManager.getTranslate("CommandsManager.cmdNotFound"), cmd)
-            LogHelper.dev(App.LangManager.getTranslate("CommandsManager.invokeCmd"), cmd)
+                return LogHelper.error(App.LangManager.getTranslate().CommandsManager.cmdNotFound, cmd)
+            LogHelper.dev(App.LangManager.getTranslate().CommandsManager.invokeCmd, cmd)
             this.commands.get(cmd).invoke(...args)
         })
     }

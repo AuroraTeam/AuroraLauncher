@@ -26,7 +26,7 @@ export class ProgressHelper {
     static barsize = 20
 
     public static getLoadingProgressBar(): SingleBar {
-        return this.getProgress(App.LangManager.getTranslate("ProgressHelper.loading"), this.barsize * 2)
+        return this.getProgress(App.LangManager.getTranslate().ProgressHelper.loading, this.barsize * 2)
     }
 
     public static getDownloadProgressBar(): SingleBar {
@@ -69,7 +69,7 @@ export class ProgressHelper {
         payload.total_formatted = ProgressHelper.bytesToSize(params.total)
 
         return Format.Formatter(
-            { ...options, format: App.LangManager.getTranslate("ProgressHelper.download") },
+            { ...options, format: App.LangManager.getTranslate().ProgressHelper.download },
             params,
             payload
         )

@@ -34,19 +34,19 @@ export class UpdatesManager {
     hashUpdatesDir(): void {
         const folders = fs.readdirSync(StorageHelper.updatesDir)
         if (folders.length !== 0) {
-            LogHelper.info(App.LangManager.getTranslate("UpdatesManager.sync"))
+            LogHelper.info(App.LangManager.getTranslate().UpdatesManager.sync)
             folders.forEach((el) => {
                 const startTime = new Date().getTime()
                 this.hDirs.set(el, this.hashDir(path.resolve(StorageHelper.updatesDir, el)))
                 LogHelper.info(
-                    App.LangManager.getTranslate("UpdatesManager.syncTime"),
+                    App.LangManager.getTranslate().UpdatesManager.syncTime,
                     el,
                     new Date().getTime() - startTime
                 )
             })
-            LogHelper.info(App.LangManager.getTranslate("UpdatesManager.syncEnd"))
+            LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncEnd)
         } else {
-            LogHelper.info(App.LangManager.getTranslate("UpdatesManager.syncSkip"))
+            LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncSkip)
         }
     }
 

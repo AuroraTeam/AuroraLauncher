@@ -37,8 +37,8 @@ export class ProfilesManager {
     loadProfiles(): void {
         const files = fs.readdirSync(StorageHelper.profilesDir)
 
-        if (files.length === 0) return LogHelper.info(App.LangManager.getTranslate("ProfilesManager.syncSkip"))
-        else LogHelper.info(App.LangManager.getTranslate("ProfilesManager.sync"))
+        if (files.length === 0) return LogHelper.info(App.LangManager.getTranslate().ProfilesManager.syncSkip)
+        else LogHelper.info(App.LangManager.getTranslate().ProfilesManager.sync)
 
         files.forEach((file) => {
             if (!file.endsWith(".json")) return
@@ -48,11 +48,11 @@ export class ProfilesManager {
                 this.profiles.push(ProfileConfig.fromJSON(data))
             } catch (e) {
                 if (e instanceof SyntaxError)
-                    LogHelper.error(App.LangManager.getTranslate("ProfilesManager.loadingErr"), file)
+                    LogHelper.error(App.LangManager.getTranslate().ProfilesManager.loadingErr, file)
                 else LogHelper.error(e)
             }
         })
-        LogHelper.info(App.LangManager.getTranslate("ProfilesManager.syncEnd"))
+        LogHelper.info(App.LangManager.getTranslate().ProfilesManager.syncEnd)
     }
 
     /**

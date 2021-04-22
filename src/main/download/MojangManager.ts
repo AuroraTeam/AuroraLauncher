@@ -52,7 +52,7 @@ export class MojangManager {
 
         // Client
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
-        if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
+        if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate().MirrorManager.dirExist)
         fs.mkdirSync(clientDir)
 
         await HttpHelper.downloadFile(new URL(client.url), path.resolve(clientDir, "minecraft.jar"))
@@ -98,7 +98,7 @@ export class MojangManager {
         if (version === undefined) return
 
         const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
-        if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate("MirrorManager.dirExist"))
+        if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate().MirrorManager.dirExist)
         fs.mkdirSync(assetsDir)
 
         const assetsFile = await HttpHelper.readFile(new URL(version.assetIndex.url))
