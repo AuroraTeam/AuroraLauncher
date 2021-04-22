@@ -23,7 +23,7 @@ import { Translate } from "./Translate"
 export type Lang = "ru" | "en"
 
 export class LangManager {
-    private langList: Map<Lang, Translate> = new Map() // Или нет?)
+    private langList: Map<Lang, Translate> = new Map()
     private currentLang: Translate
 
     constructor() {
@@ -43,5 +43,11 @@ export class LangManager {
 
     getTranslate(): Translate {
         return this.currentLang
+    }
+
+    changeLang(lang: Lang): boolean {
+        if (!this.langList.has(lang)) return false
+        this.currentLang = this.langList.get(lang)
+        return true
     }
 }
