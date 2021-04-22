@@ -33,7 +33,7 @@ export class LangManager {
         if (!this.langList.has(selectedLang)) LogHelper.fatal("Invalid lang settings! Language %s not found.", selectedLang)
         this.currentLang = this.langList.get(selectedLang)
 
-        LogHelper.dev("LangManager init, selected language: %s", this.currentLang)
+        LogHelper.dev("LangManager init, selected language: %s", selectedLang)
     }
 
     private setLangs(): void {
