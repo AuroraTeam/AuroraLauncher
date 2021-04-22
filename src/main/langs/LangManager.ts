@@ -48,9 +48,7 @@ export class LangManager {
     changeLang(lang: Lang): boolean {
         if (!this.langList.has(lang)) return false
         this.currentLang = this.langList.get(lang)
-        App.ConfigManager.editConfigProperty((cfg) => {
-            cfg.lang = lang
-        })
+        App.ConfigManager.setLang(lang)
         return true
     }
 }
