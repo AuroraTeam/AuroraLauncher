@@ -20,6 +20,7 @@ import * as colors from "colors/safe"
 
 import { LogHelper } from "../../helpers/LogHelper"
 import { AbstractCommand, Category } from "../AbstractCommand"
+// import { version } from "@root/package"
 
 export class AboutCommand extends AbstractCommand {
     constructor() {
@@ -32,7 +33,7 @@ export class AboutCommand extends AbstractCommand {
                 colors.cyan("AuroraLauncher ") +
                     colors.green("LauncherServer ") +
                     "v" +
-                    colors.yellow(require("../../../../package").version + " ")
+                    colors.yellow(require("../../../package").version + " ")
             )
         )
 

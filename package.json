@@ -18,7 +18,7 @@
         "LoomeL (https://github.com/LoomeL)",
         "FIXxp (https://github.com/FIXxp)"
     ],
-    "main": "LauncherServer.js",
+    "main": "dist/LauncherServer.js",
     "scripts": {
         "build:dev": "cross-env NODE_ENV=development webpack",
         "build:prod": "cross-env NODE_ENV=production webpack",
@@ -26,7 +26,7 @@
         "prettier": "prettier --config .prettierrc.json --write src",
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
-        "start": "node dist/LauncherServer.js"
+        "start": "node ."
     },
     "devDependencies": {
         "@types/adm-zip": "^0.4.33",

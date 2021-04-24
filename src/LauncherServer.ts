@@ -34,7 +34,7 @@ import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
 
-const version = require("../../package").version
+const version = require("../package").version
 
 export class LauncherServer extends EventEmitter {
     private _ConfigManager: ConfigManager

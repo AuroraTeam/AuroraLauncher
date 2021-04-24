@@ -1,7 +1,7 @@
 var path = require("path")
 
 module.exports = {
-    entry: "./src/main/LauncherServer.ts",
+    entry: "./src/LauncherServer.ts",
     node: {
         global: true,
         __filename: true,
