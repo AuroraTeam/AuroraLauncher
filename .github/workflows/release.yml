@@ -23,23 +23,19 @@ jobs:
         run: npm ci
 
       - name: Build LauncherServer
-        run: npm run build:prod
-
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.PACKAGE_VERSION }}
-          release_name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
+        run: |
+          npm run build:prod
+          npm run build:bin
 
       - name: Upload release
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.PACKAGE_VERSION }}
+          name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
+          files: |
+            dist/LauncherServer.js
+            dist/LauncherServer_win64.exe
+            dist/LauncherServer_linux64
+            dist/LauncherServer_mac64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/LauncherServer.js
-          asset_name: LauncherServer.js
-          asset_content_type: application/javascript

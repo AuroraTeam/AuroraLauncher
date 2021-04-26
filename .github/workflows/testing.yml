@@ -20,7 +20,9 @@ jobs:
         run: npm ci
 
       - name: Build LauncherServer
-        run: npm run build:dev
+        run: |
+          npm run build:dev
+          npm run build:bin
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.0

@@ -22,6 +22,7 @@
     "scripts": {
         "build:dev": "cross-env NODE_ENV=development webpack",
         "build:prod": "cross-env NODE_ENV=production webpack",
+        "build:bin": "node build.js",
         "clean": "rimraf dist",
         "prettier": "prettier --config .prettierrc.json --write src",
         "lint": "eslint . --ext .ts",
@@ -42,6 +43,7 @@
         "cross-env": "^7.0.3",
         "eslint": "^7.23.0",
         "import-sort-style-module": "^6.0.0",
+        "nexe": "^4.0.0-beta.18",
         "prettier": "^2.2.1",
         "prettier-plugin-import-sort": "0.0.6",
         "rimraf": "^3.0.2",
