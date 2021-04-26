@@ -19,8 +19,9 @@
 import { ResponseData } from "../../api/types/Response"
 import { AbstractProvider } from "../AbstractProvider"
 import { AcceptAuthProvider } from "./AcceptAuthProvider"
+
 export abstract class AbstractAuthProvider extends AbstractProvider {
-    abstract emit(...args: any[]): PromiseOr<ResponseData>
+    abstract auth(login: string, password: string): PromiseOr<AuthResponseData>
 
     public static getDefaultConfig(): AbstractAuthProviderConfig {
         return {
@@ -38,3 +39,6 @@ export interface AuthResponseData extends ResponseData {
     userUUID: string
     accessToken: string
 }
+
+// TODO Указание доп.параметров для запуска клиента при использовании различных провайдеров
+// Для работы Authlib

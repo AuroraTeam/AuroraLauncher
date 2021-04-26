@@ -28,7 +28,7 @@ export class AuthRequest extends AbstractRequest {
 
     async invoke(data: AuthRequestData): Promise<ResponseData> {
         const provider = App.AuthManager.getAuthProvider()
-        return await provider.emit(data.login, data.password)
+        return await provider.auth(data.login, data.password)
     }
 }
 

@@ -18,15 +18,14 @@
 
 import { v4, v5 } from "uuid"
 
-import { ResponseData } from "../../api/types/Response"
-import { AbstractAuthProvider } from "./AbstractAuthProvider"
+import { AbstractAuthProvider, AuthResponseData } from "./AbstractAuthProvider"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
     static type = "accept"
 
     sessionsDB = new Map()
 
-    emit(username: string): ResponseData {
+    auth(username: string): AuthResponseData {
         const data = {
             username,
             userUUID: v5(username, "814f98b5-f66d-4456-87dc-f4eed8f6ca73"),

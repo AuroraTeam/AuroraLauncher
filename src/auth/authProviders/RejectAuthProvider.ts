@@ -17,7 +17,7 @@
  */
 
 import { App } from "../../LauncherServer"
-import { AbstractAuthProvider, AbstractAuthProviderConfig } from "./AbstractAuthProvider"
+import { AbstractAuthProvider, AbstractAuthProviderConfig, AuthResponseData } from "./AbstractAuthProvider"
 
 export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"
@@ -27,7 +27,7 @@ export class RejectAuthProvider extends AbstractAuthProvider {
             (App.ConfigManager.getConfig().auth.authProvider as RejectAuthProviderConfig).message || "Auth rejected",
     }
 
-    emit(): any {
+    auth(): AuthResponseData {
         throw {
             code: 200,
             message: this.config.message,

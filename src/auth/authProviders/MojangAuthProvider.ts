@@ -24,7 +24,7 @@ import { AbstractAuthProvider, AuthResponseData } from "./AbstractAuthProvider"
 export class MojangAuthProvider extends AbstractAuthProvider {
     static type = "mojang"
 
-    async emit(login: string, password: string): Promise<AuthResponseData> {
+    async auth(login: string, password: string): Promise<AuthResponseData> {
         const data = JSON.stringify({
             agent: {
                 name: "Minecraft",
