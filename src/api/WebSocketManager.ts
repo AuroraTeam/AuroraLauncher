@@ -24,7 +24,7 @@ import * as ws from "ws"
 import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { RequestsManager } from "./RequestsManager"
-import { wsErrorResponse } from "./types/ErrorResponse"
+import { ResponseError, wsErrorResponse } from "./types/ErrorResponse"
 import { wsRequest } from "./types/Request"
 import { wsResponse } from "./types/Response"
 

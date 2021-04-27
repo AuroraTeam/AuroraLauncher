@@ -20,7 +20,6 @@ import * as colors from "colors/safe"
 
 import { LogHelper } from "../../helpers/LogHelper"
 import { AbstractCommand, Category } from "../AbstractCommand"
-// import { version } from "@root/package"
 
 export class AboutCommand extends AbstractCommand {
     constructor() {

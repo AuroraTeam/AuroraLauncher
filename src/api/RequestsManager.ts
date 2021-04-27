@@ -22,7 +22,7 @@ import { PingRequest } from "./requests/PingRequest"
 import { ProfileRequest } from "./requests/ProfileRequest"
 import { ServersRequest } from "./requests/ServersRequest"
 import { UpdatesRequest } from "./requests/UpdatesRequest"
-import { ErrorResponse } from "./types/ErrorResponse"
+import { ErrorResponse, ResponseError } from "./types/ErrorResponse"
 import { wsRequest } from "./types/Request"
 import { Response } from "./types/Response"
 
@@ -37,22 +37,18 @@ export class RequestsManager {
         this.registerRequest(new UpdatesRequest())
     }
 
-    registerRequest(x: AbstractRequest): void {
-        this.requests.set(x.getType(), x)
+    registerRequest(request: AbstractRequest): void {
+        this.requests.set(request.getType(), request)
     }
 
     async getRequest(data: wsRequest): Promise<Response | ErrorResponse> {
-        if (!this.requests.has(data.type))
-            return {
-                code: 102,
-                message: "Unknown request type",
-            }
+        if (!this.requests.has(data.type)) return new ResponseError(102, "Unknown request type").toJSON()
 
         try {
             return { data: await this.requests.get(data.type).invoke(data.data) }
         } catch (error) {
-            // TODO продумать
-            return error
+            if (error instanceof ResponseError) return error.toJSON()
+            throw error // TODO
         }
     }
 }

@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { ResponseError } from "../../api/types/ErrorResponse"
 import { App } from "../../LauncherServer"
 import { AbstractAuthProvider, AbstractAuthProviderConfig, AuthResponseData } from "./AbstractAuthProvider"
 
@@ -28,10 +29,7 @@ export class RejectAuthProvider extends AbstractAuthProvider {
     }
 
     auth(): AuthResponseData {
-        throw {
-            code: 200,
-            message: this.config.message,
-        }
+        throw new ResponseError(200, this.config.message)
     }
 }
 
