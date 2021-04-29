@@ -23,10 +23,10 @@ import * as ws from "ws"
 
 import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
-import { RequestsManager } from "./RequestsManager"
-import { ResponseError, wsErrorResponse } from "./types/ErrorResponse"
-import { wsRequest } from "./types/Request"
-import { wsResponse } from "./types/Response"
+import { RequestsManager } from "./websocket/RequestsManager"
+import { wsErrorResponse } from "./websocket/types/ErrorResponse"
+import { wsRequest } from "./websocket/types/Request"
+import { wsResponse } from "./websocket/types/Response"
 
 export class WebSocketManager {
     webSocketServer: ws.Server

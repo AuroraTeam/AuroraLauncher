@@ -27,7 +27,7 @@ import { wsRequest } from "./types/Request"
 import { Response } from "./types/Response"
 
 export class RequestsManager {
-    requests: Map<string, AbstractRequest> = new Map()
+    private requests: Map<string, AbstractRequest> = new Map()
 
     constructor() {
         this.registerRequest(new PingRequest())

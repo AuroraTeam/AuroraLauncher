@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ResponseError } from "../../api/types/ErrorResponse"
+import { ResponseError } from "../../api/websocket/types/ErrorResponse"
 import { App } from "../../LauncherServer"
 import { AbstractAuthProvider, AbstractAuthProviderConfig, AuthResponseData } from "./AbstractAuthProvider"
 

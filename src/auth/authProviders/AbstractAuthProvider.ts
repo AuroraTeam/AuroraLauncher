@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ResponseData } from "../../api/types/Response"
+import { ResponseData } from "../../api/websocket/types/Response"
 import { AbstractProvider } from "../AbstractProvider"
 import { AcceptAuthProvider } from "./AcceptAuthProvider"
 

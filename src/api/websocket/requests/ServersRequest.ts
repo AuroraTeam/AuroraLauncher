@@ -16,17 +16,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { App } from "../../LauncherServer"
-import { RequestData } from "../types/Request"
+import { App } from "../../../LauncherServer"
 import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
 
-export class ProfileRequest extends AbstractRequest {
-    type = "profile"
+export class ServersRequest extends AbstractRequest {
+    type = "servers"
 
-    invoke(data: RequestData): ResponseData {
+    invoke(): ResponseData {
+        const servers: any[] = []
+        App.ProfilesManager.profiles
+            .sort((a, b) => a.sortIndex - b.sortIndex)
+            .forEach((p) => {
+                p.servers.forEach((s) => {
+                    servers.push({
+                        ip: s.ip,
+                        port: s.port,
+                        title: s.title,
+                        profileUUID: p.uuid,
+                    })
+                })
+            })
+
         return {
-            profile: App.ProfilesManager.profiles.find((p) => p.uuid == (data as { uuid: string }).uuid),
+            servers,
         }
     }
 }

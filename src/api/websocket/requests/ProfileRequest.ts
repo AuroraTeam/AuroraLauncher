@@ -16,21 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { App } from "../../LauncherServer"
+import { App } from "../../../LauncherServer"
 import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
 
-export class UpdatesRequest extends AbstractRequest {
-    type = "updates"
+export class ProfileRequest extends AbstractRequest {
+    type = "profile"
 
-    invoke(data: UpdatesRequestData): ResponseData {
+    invoke(data: RequestData): ResponseData {
         return {
-            hashes: App.UpdatesManager.hDirs.get(data.dir),
+            profile: App.ProfilesManager.profiles.find((p) => p.uuid == (data as { uuid: string }).uuid),
         }
     }
-}
-
-interface UpdatesRequestData extends RequestData {
-    dir: string
 }
