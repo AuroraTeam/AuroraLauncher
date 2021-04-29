@@ -52,4 +52,16 @@ export class MojangAuthProvider extends AbstractAuthProvider {
             accessToken: result.accessToken,
         }
     }
+
+    join(): void {
+        return // TODO
+    }
+
+    hasJoined(): any {
+        return // TODO
+    }
+
+    profile(): any {
+        return // TODO
+    }
 }

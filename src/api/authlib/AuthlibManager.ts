@@ -16,10 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// TODO говнокод, здесь и во всех остальных файлах связанных с authlib, пофиксить!
+
 import * as http from "http"
 import { AuthlibRequest } from "./AuthlibRequest"
 import { HasJoinedRequest } from "./sessionServer/HasJoinedRequest"
 import { JoinRequest } from "./sessionServer/JoinRequest"
+import { ProfileRequest } from "./sessionServer/ProfileRequest"
 
 export class AuthlibManager {
     private requests: RequestMeta[] = []
@@ -27,6 +30,7 @@ export class AuthlibManager {
     constructor() {
         this.registerRequest(new JoinRequest())
         this.registerRequest(new HasJoinedRequest())
+        this.registerRequest(new ProfileRequest())
     }
 
     private registerRequest(request: AuthlibRequest): void {
@@ -43,8 +47,7 @@ export class AuthlibManager {
                 RegExp(e.url).test(req.url.substring(8))
             )
         if (request === undefined) {
-            res.writeHead(404)
-            res.end("Not found!")
+            res.writeHead(404).end("Not found!")
             return
         }
         request.handler.emit(req, res)

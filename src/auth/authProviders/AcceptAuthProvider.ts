@@ -23,7 +23,7 @@ import { AbstractAuthProvider, AuthResponseData } from "./AbstractAuthProvider"
 export class AcceptAuthProvider extends AbstractAuthProvider {
     static type = "accept"
 
-    sessionsDB = new Map()
+    sessionsDB: Map<string, UserData> = new Map()
 
     auth(username: string): AuthResponseData {
         const data = {
@@ -39,4 +39,33 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
 
         return data
     }
+
+    join(accessToken: string, userUUID: string, serverID: string): void {
+        const user = Array.from(this.sessionsDB.values()).find(e => e.accessToken === accessToken && e.userUUID === userUUID)
+        if (user === undefined) throw Error("user nf")
+
+        user.serverID = serverID
+        this.sessionsDB.set(user.username, user)
+    }
+
+    hasJoined(username: string, serverID: string): { userUUID: string } {
+        if (!this.sessionsDB.has(username)) throw Error("user nf")
+        const user = this.sessionsDB.get(username)
+
+        if (user.serverID !== serverID) throw Error("invalid serverID")
+        return user
+    }
+
+    profile(userUUID: string): any {
+        const user = Array.from(this.sessionsDB.values()).find(e => e.userUUID === userUUID)
+        if (user === undefined) throw Error("user nf")
+        return user
+    }
+}
+
+interface UserData {
+    username: string
+    userUUID: string
+    accessToken: string
+    serverID: string
 }

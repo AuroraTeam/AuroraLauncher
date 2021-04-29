@@ -23,6 +23,12 @@ import { AcceptAuthProvider } from "./AcceptAuthProvider"
 export abstract class AbstractAuthProvider extends AbstractProvider {
     abstract auth(login: string, password: string): PromiseOr<AuthResponseData>
 
+    abstract join(accessToken: string, userUUID: string, serverId: string): void
+
+    abstract hasJoined(username: string, serverId: string): { userUUID: string }
+
+    abstract profile(userUUID: string): { username: string }
+
     public static getDefaultConfig(): AbstractAuthProviderConfig {
         return {
             type: AcceptAuthProvider.getType(),

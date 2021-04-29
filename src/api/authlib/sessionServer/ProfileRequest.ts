@@ -1,50 +1,35 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 import { JsonHelper } from "../../../helpers/JsonHelper";
+import UUIDHelper from "../../../helpers/UUIDHelper";
 import { App } from "../../../LauncherServer";
+
 import { AuthlibRequest } from "../AuthlibRequest";
 
-export class HasJoinedRequest extends AuthlibRequest {
+export class ProfileRequest extends AuthlibRequest {
     method = "GET"
-    url = "^/session/minecraft/hasJoined"
+    url = "^/session/minecraft/profile/(?<uuid>\\w{32})(\\?unsigned=(true|false))?$"
 
     emit(req: IncomingMessage, res: ServerResponse): void {
-        const data = new URLSearchParams(req.url.split('?')[1]);
-        if (data.toString().length === 0) res.writeHead(400).end()
+        const uuid = req.url.substring(8).match(this.url).groups.uuid
 
-        const username = data.get("username")
-        const serverId = data.get("serverId")
-
-        if (
-            "string" !== typeof username || username.length === 0 ||
-            "string" !== typeof serverId || serverId.length === 0
-        )
-            return res.writeHead(400).end();
-
-        // TODO
-        // Если IP указан
-        const ip = data.get("ip")
-        if (ip !== null && ("string" !== typeof ip || ip.length === 0)) {
-            return res.writeHead(400).end();
-        }
-
-        let user
+        let user: any
         try {
-            user = App.AuthManager.getAuthProvider().hasJoined(username, serverId)
+            user = App.AuthManager.getAuthProvider().profile(UUIDHelper.getWithDashes(uuid))
         } catch (error) {
             return res.writeHead(400).end();
         }
 
         res.write(JsonHelper.toJSON({
-            id: user.userUUID,
-            name: username,
+            id: uuid,
+            name: user.username,
             properties: [
                 {
                     name: "textures",
                     value: Buffer.from(
                         JSON.stringify({
                             timestamp: Date.now(),
-                            profileId: user.userUUID,
-                            profileName: username,
+                            profileId: uuid,
+                            profileName: user.username,
                             textures: {
                                 SKIN: {
                                     url:
@@ -55,7 +40,7 @@ export class HasJoinedRequest extends AuthlibRequest {
                     ).toString("base64"),
                 },
             ],
-        }))
+        }));
         res.end()
     }
 }

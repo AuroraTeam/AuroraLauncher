@@ -18,7 +18,7 @@
 
 import { ResponseError } from "../../api/websocket/types/ErrorResponse"
 import { App } from "../../LauncherServer"
-import { AbstractAuthProvider, AbstractAuthProviderConfig, AuthResponseData } from "./AbstractAuthProvider"
+import { AbstractAuthProvider, AbstractAuthProviderConfig, } from "./AbstractAuthProvider"
 
 export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"
@@ -28,7 +28,19 @@ export class RejectAuthProvider extends AbstractAuthProvider {
             (App.ConfigManager.getConfig().auth.authProvider as RejectAuthProviderConfig).message || "Auth rejected",
     }
 
-    auth(): AuthResponseData {
+    auth(): any {
+        throw new ResponseError(200, this.config.message)
+    }
+
+    join(): any {
+        throw new ResponseError(200, this.config.message)
+    }
+
+    hasJoined(): any {
+        throw new ResponseError(200, this.config.message)
+    }
+
+    profile(): any {
         throw new ResponseError(200, this.config.message)
     }
 }
