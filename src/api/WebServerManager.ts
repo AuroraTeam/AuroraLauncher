@@ -24,9 +24,11 @@ import * as path from "path"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
+import { AuthlibManager } from "./authlib/AuthlibManager"
 
 export class WebServerManager {
     public webServer: http.Server | https.Server
+    private authlib: AuthlibManager = new AuthlibManager()
     private readonly config = App.ConfigManager.getConfig().ws
 
     public webServerInit(): void {
@@ -58,17 +60,17 @@ export class WebServerManager {
     }
 
     private requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
-        const url = this.parseURLPath(req.url)
-
-        if (url.path.startsWith("/authlib")) {
-            this.authlibListener(url, res)
+        if (req.url.startsWith("/authlib")) {
+            this.authlib.getRequest(req, res)
         } else {
-            this.fileListing(url, res)
+            this.fileListing(req.url, res)
         }
     }
 
-    private fileListing(url: ParsedPath, res: http.ServerResponse): void {
-        const filePath = path.join(StorageHelper.updatesDir, url.path)
+    private fileListing(url: string, res: http.ServerResponse): void {
+        if (url.includes("?")) url = url.split("?")[0]
+
+        const filePath = path.join(StorageHelper.updatesDir, url)
 
         if (!fs.existsSync(filePath)) {
             res.writeHead(404)
@@ -90,7 +92,7 @@ export class WebServerManager {
             }
 
             const list = fs.readdirSync(filePath)
-            const parent = url.path.slice(-1) == "/" ? url.path.slice(0, -1) : url.path
+            const parent = url.slice(-1) == "/" ? url.slice(0, -1) : url
             res.write("<style>*{font-family:monospace; font-size:14px}</style>")
             if (parent.length !== 0) list.unshift("..")
             res.end(list.map((el) => `<a href="${parent}/${el}">${el}</a>`).join("<br>"))
@@ -99,27 +101,4 @@ export class WebServerManager {
             res.end(fs.readFileSync(filePath))
         }
     }
-
-    private authlibListener(url: ParsedPath, res: http.ServerResponse) {
-        res.end() // TODO
-    }
-
-    private parseURLPath(url: string): ParsedPath {
-        if (!url.includes("?")) {
-            return {
-                path: url,
-            }
-        }
-        const _url = url.split("?")
-
-        return {
-            path: _url[0],
-            query: new URLSearchParams(_url[1]),
-        }
-    }
-}
-
-interface ParsedPath {
-    path: string
-    query?: URLSearchParams
 }
