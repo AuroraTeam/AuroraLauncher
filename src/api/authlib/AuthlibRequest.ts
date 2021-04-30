@@ -1,16 +1,18 @@
 import { IncomingMessage, ServerResponse } from "node:http"
+
 import { RequestMeta } from "./AuthlibManager"
 
 export abstract class AuthlibRequest {
-    protected abstract url: string
+    protected abstract url: RegExp
     protected abstract method: string
 
     abstract emit(req: IncomingMessage, res: ServerResponse): void
 
-    getMeta(): Omit<RequestMeta, "handler"> {
+    public getMeta(): RequestMeta {
         return {
             url: this.url,
-            method: this.method
+            method: this.method,
+            handler: this,
         }
     }
 }

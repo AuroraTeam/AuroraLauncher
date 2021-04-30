@@ -18,7 +18,7 @@
 
 import { ResponseError } from "../../api/websocket/types/ErrorResponse"
 import { App } from "../../LauncherServer"
-import { AbstractAuthProvider, AbstractAuthProviderConfig, } from "./AbstractAuthProvider"
+import { AbstractAuthProvider, AbstractAuthProviderConfig } from "./AbstractAuthProvider"
 
 export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"

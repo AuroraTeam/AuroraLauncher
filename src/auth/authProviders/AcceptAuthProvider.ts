@@ -41,7 +41,9 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     }
 
     join(accessToken: string, userUUID: string, serverID: string): void {
-        const user = Array.from(this.sessionsDB.values()).find(e => e.accessToken === accessToken && e.userUUID === userUUID)
+        const user = Array.from(this.sessionsDB.values()).find(
+            (e) => e.accessToken === accessToken && e.userUUID === userUUID
+        )
         if (user === undefined) throw Error("user nf")
 
         user.serverID = serverID
@@ -57,7 +59,7 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     }
 
     profile(userUUID: string): any {
-        const user = Array.from(this.sessionsDB.values()).find(e => e.userUUID === userUUID)
+        const user = Array.from(this.sessionsDB.values()).find((e) => e.userUUID === userUUID)
         if (user === undefined) throw Error("user nf")
         return user
     }

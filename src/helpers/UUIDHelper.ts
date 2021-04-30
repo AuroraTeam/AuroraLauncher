@@ -4,7 +4,7 @@ export default class UUIDHelper {
      * @returns UUID without dashes
      */
     static getWithoutDashes(uuid: string): string {
-        return uuid.replace(/-/g, "");
+        return uuid.replace(/-/g, "")
     }
 
     /**
@@ -12,9 +12,6 @@ export default class UUIDHelper {
      * @returns UUID with dashes
      */
     static getWithDashes(uuid: string): string {
-        return uuid.replace(
-            /(.{8})(.{4})(.{4})(.{4})(.{12})/,
-            "$1-$2-$3-$4-$5"
-        );
+        return uuid.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, "$1-$2-$3-$4-$5")
     }
 }

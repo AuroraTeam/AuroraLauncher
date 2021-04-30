@@ -19,6 +19,7 @@
 // TODO говнокод, здесь и во всех остальных файлах связанных с authlib, пофиксить!
 
 import * as http from "http"
+
 import { AuthlibRequest } from "./AuthlibRequest"
 import { HasJoinedRequest } from "./sessionServer/HasJoinedRequest"
 import { JoinRequest } from "./sessionServer/JoinRequest"
@@ -34,18 +35,11 @@ export class AuthlibManager {
     }
 
     private registerRequest(request: AuthlibRequest): void {
-        this.requests.push({
-            ...request.getMeta(),
-            handler: request
-        })
+        this.requests.push(request.getMeta())
     }
 
     getRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
-        const request = this.requests
-            .find(
-                e => e.method === req.method &&
-                RegExp(e.url).test(req.url.substring(8))
-            )
+        const request = this.requests.find((e) => e.method === req.method && e.url.test(req.url.substring(8)))
         if (request === undefined) {
             res.writeHead(404).end("Not found!")
             return
@@ -55,7 +49,7 @@ export class AuthlibManager {
 }
 
 export interface RequestMeta {
-    url: string;
-    method: string;
-    handler: AuthlibRequest;
+    url: RegExp
+    method: string
+    handler: AuthlibRequest
 }
