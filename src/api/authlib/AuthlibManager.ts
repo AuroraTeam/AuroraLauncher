@@ -26,7 +26,7 @@ import { JoinRequest } from "./sessionServer/JoinRequest"
 import { ProfileRequest } from "./sessionServer/ProfileRequest"
 
 export class AuthlibManager {
-    private requests: RequestMeta[] = []
+    private requests: AuthlibRequest[] = []
 
     constructor() {
         this.registerRequest(new JoinRequest())
@@ -35,7 +35,7 @@ export class AuthlibManager {
     }
 
     private registerRequest(request: AuthlibRequest): void {
-        this.requests.push(request.getMeta())
+        this.requests.push(request)
     }
 
     getRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
@@ -44,12 +44,6 @@ export class AuthlibManager {
             res.writeHead(404).end("Not found!")
             return
         }
-        request.handler.emit(req, res)
+        request.emit(req, res)
     }
-}
-
-export interface RequestMeta {
-    url: RegExp
-    method: string
-    handler: AuthlibRequest
 }
