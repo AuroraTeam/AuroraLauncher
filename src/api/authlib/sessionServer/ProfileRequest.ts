@@ -9,8 +9,8 @@ export class ProfileRequest extends AuthlibRequest {
     method = "GET"
     url = /^\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
 
-    emit(req: IncomingMessage, res: ServerResponse): void {
-        const uuid = req.url.substring(8).match(this.url).groups.uuid
+    emit(_req: IncomingMessage, res: ServerResponse, url: string): void {
+        const uuid = url.match(this.url).groups.uuid
 
         let user: any
         try {

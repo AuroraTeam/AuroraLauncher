@@ -8,8 +8,8 @@ export class HasJoinedRequest extends AuthlibRequest {
     method = "GET"
     url = /^\/session\/minecraft\/hasJoined/
 
-    emit(req: IncomingMessage, res: ServerResponse): void {
-        const data = new URLSearchParams(req.url.split("?")[1])
+    emit(_req: IncomingMessage, res: ServerResponse, url: string): void {
+        const data = new URLSearchParams(url.split("?")[1])
         if (data.toString().length === 0) res.writeHead(400).end()
 
         const username = data.get("username")

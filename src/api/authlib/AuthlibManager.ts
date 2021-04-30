@@ -39,11 +39,12 @@ export class AuthlibManager {
     }
 
     getRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
-        const request = this.requests.find((e) => e.method === req.method && e.url.test(req.url.substring(8)))
+        const url = req.url.substring(8) // trim "/authlib"
+        const request = this.requests.find((e) => e.method === req.method && e.url.test(url))
         if (request === undefined) {
             res.writeHead(404).end("Not found!")
             return
         }
-        request.emit(req, res)
+        request.emit(req, res, url)
     }
 }
