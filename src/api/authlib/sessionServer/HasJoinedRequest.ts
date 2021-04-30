@@ -1,16 +1,17 @@
-import { IncomingMessage, ServerResponse } from "node:http"
+import { IncomingMessage } from "http"
 
 import { JsonHelper } from "../../../helpers/JsonHelper"
 import { App } from "../../../LauncherServer"
+import { CustomServerResponse } from "../AuthlibManager"
 import { AuthlibRequest } from "../AuthlibRequest"
 
 export class HasJoinedRequest extends AuthlibRequest {
     method = "GET"
     url = /^\/session\/minecraft\/hasJoined/
 
-    emit(_req: IncomingMessage, res: ServerResponse, url: string): void {
-        const data = new URLSearchParams(url.split("?")[1])
-        if (data.toString().length === 0) res.writeHead(400).end()
+    emit(_req: IncomingMessage, res: CustomServerResponse, url: string): void {
+        const data = this.parseQuery(url)
+        if (this.isEmptyQuery(data)) res.writeStatus(400)
 
         const username = data.get("username")
         const serverId = data.get("serverId")
@@ -21,20 +22,20 @@ export class HasJoinedRequest extends AuthlibRequest {
             "string" !== typeof serverId ||
             serverId.length === 0
         )
-            return res.writeHead(400).end()
+            return res.writeStatus(400)
 
         // TODO
         // Если IP указан
         const ip = data.get("ip")
         if (ip !== null && ("string" !== typeof ip || ip.length === 0)) {
-            return res.writeHead(400).end()
+            return res.writeStatus(400)
         }
 
         let user
         try {
             user = App.AuthManager.getAuthProvider().hasJoined(username, serverId)
         } catch (error) {
-            return res.writeHead(400).end()
+            return res.writeStatus(400)
         }
 
         res.write(

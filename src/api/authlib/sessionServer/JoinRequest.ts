@@ -1,15 +1,16 @@
-import { IncomingMessage, ServerResponse } from "node:http"
+import { IncomingMessage } from "http"
 
 import { JsonHelper } from "../../../helpers/JsonHelper"
 import UUIDHelper from "../../../helpers/UUIDHelper"
 import { App } from "../../../LauncherServer"
+import { CustomServerResponse } from "../AuthlibManager"
 import { AuthlibRequest } from "../AuthlibRequest"
 
 export class JoinRequest extends AuthlibRequest {
     method = "POST"
     url = /^\/session\/minecraft\/join$/
 
-    emit(req: IncomingMessage, res: ServerResponse): void {
+    emit(req: IncomingMessage, res: CustomServerResponse): void {
         let data: any
         req.on("data", (chunk) => {
             data += chunk
@@ -25,7 +26,7 @@ export class JoinRequest extends AuthlibRequest {
                 "string" !== typeof data.serverId ||
                 data.serverId.length === 0
             )
-                return res.writeHead(400).end()
+                return res.writeStatus(400)
 
             try {
                 App.AuthManager.getAuthProvider().join(
@@ -34,10 +35,10 @@ export class JoinRequest extends AuthlibRequest {
                     data.serverId
                 )
             } catch (error) {
-                return res.writeHead(400).end()
+                return res.writeStatus(400)
             }
 
-            res.writeHead(204).end()
+            res.writeStatus(204)
         })
     }
 }

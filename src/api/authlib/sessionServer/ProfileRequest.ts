@@ -1,22 +1,23 @@
-import { IncomingMessage, ServerResponse } from "node:http"
+import { IncomingMessage } from "http"
 
 import { JsonHelper } from "../../../helpers/JsonHelper"
 import UUIDHelper from "../../../helpers/UUIDHelper"
 import { App } from "../../../LauncherServer"
+import { CustomServerResponse } from "../AuthlibManager"
 import { AuthlibRequest } from "../AuthlibRequest"
 
 export class ProfileRequest extends AuthlibRequest {
     method = "GET"
     url = /^\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
 
-    emit(_req: IncomingMessage, res: ServerResponse, url: string): void {
+    emit(_req: IncomingMessage, res: CustomServerResponse, url: string): void {
         const uuid = url.match(this.url).groups.uuid
 
         let user: any
         try {
             user = App.AuthManager.getAuthProvider().profile(UUIDHelper.getWithDashes(uuid))
         } catch (error) {
-            return res.writeHead(400).end()
+            return res.writeStatus(400)
         }
 
         res.write(

@@ -18,7 +18,7 @@
 
 // TODO говнокод, здесь и во всех остальных файлах связанных с authlib, пофиксить!
 
-import * as http from "http"
+import { IncomingMessage, ServerResponse } from "http"
 
 import { AuthlibRequest } from "./AuthlibRequest"
 import { HasJoinedRequest } from "./sessionServer/HasJoinedRequest"
@@ -38,13 +38,23 @@ export class AuthlibManager {
         this.requests.push(request)
     }
 
-    getRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
+    getRequest(req: IncomingMessage, res: CustomServerResponse): void {
         const url = req.url.substring(8) // trim "/authlib"
         const request = this.requests.find((e) => e.method === req.method && e.url.test(url))
         if (request === undefined) {
             res.writeHead(404).end("Not found!")
             return
         }
+
+        // Не ну ачё
+        res.writeStatus = function (code: number) {
+            this.writeHead(code).end()
+        }
+
         request.emit(req, res, url)
     }
+}
+
+export interface CustomServerResponse extends ServerResponse {
+    writeStatus?: (code: number) => void
 }
