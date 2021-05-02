@@ -10,40 +10,52 @@ export class ProfileRequest extends AuthlibRequest {
     method = "GET"
     url = /^\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
 
-    emit(_req: IncomingMessage, res: CustomServerResponse, url: string): void {
+    async emit(_req: IncomingMessage, res: CustomServerResponse, url: string): Promise<void> {
         const uuid = url.match(this.url).groups.uuid
 
-        let user: any
+        let user
         try {
-            user = App.AuthManager.getAuthProvider().profile(UUIDHelper.getWithDashes(uuid))
+            user = await App.AuthManager.getAuthProvider().profile(UUIDHelper.getWithDashes(uuid))
         } catch (error) {
             return res.writeStatus(400)
         }
 
-        res.write(
-            JsonHelper.toJSON({
-                id: uuid,
-                name: user.username,
-                properties: [
-                    {
-                        name: "textures",
-                        value: Buffer.from(
-                            JSON.stringify({
-                                timestamp: Date.now(),
-                                profileId: uuid,
-                                profileName: user.username,
-                                textures: {
-                                    SKIN: {
-                                        url:
-                                            "http://textures.minecraft.net/texture/7bc6395501fe9296091d995317d1f0578db073ce0e384b52ecd851c6e955aecf",
-                                    },
-                                },
-                            })
-                        ).toString("base64"),
-                    },
-                ],
-            })
-        )
+        const textures: any = {}
+        if (user.skinUrl.length > 0) {
+            textures.SKIN = {
+                url: user.skinUrl,
+            }
+        }
+        if (user.capeUrl.length > 0) {
+            textures.CAPE = {
+                url: user.capeUrl,
+            }
+        }
+
+        let texturesValue: any = {
+            timestamp: Date.now(),
+            profileId: uuid,
+            profileName: user.username,
+            textures,
+        }
+
+        const data: any = {
+            id: uuid,
+            name: user.username,
+            properties: [
+                {
+                    name: "textures",
+                    value: "",
+                },
+            ],
+        }
+
+        // const signed = request.query.unsigned === "false"; // TODO
+        // if (signed) texturesValue.signatureRequired = true;
+        texturesValue = Buffer.from(JSON.stringify(texturesValue))
+        data.properties[0].value = texturesValue.toString("base64")
+        // if (signed) data.properties[0].signature = getSignature(texturesValue);
+        res.write(JsonHelper.toJSON(data))
         res.end()
     }
 }

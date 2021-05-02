@@ -22,7 +22,7 @@ import { AbstractAuthProvider, AbstractAuthProviderConfig } from "./AbstractAuth
 
 export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"
-    config: RejectAuthProviderConfig = {
+    private config: RejectAuthProviderConfig = {
         type: "reject",
         message:
             (App.ConfigManager.getConfig().auth.authProvider as RejectAuthProviderConfig).message || "Auth rejected",

@@ -23,11 +23,11 @@ import { AcceptAuthProvider } from "./AcceptAuthProvider"
 export abstract class AbstractAuthProvider extends AbstractProvider {
     abstract auth(login: string, password: string): PromiseOr<AuthResponseData>
 
-    abstract join(accessToken: string, userUUID: string, serverId: string): void
+    abstract join(accessToken: string, userUUID: string, serverId: string): PromiseOr<void>
 
-    abstract hasJoined(username: string, serverId: string): { userUUID: string }
+    abstract hasJoined(username: string, serverId: string): PromiseOr<HasJoinedResponseData>
 
-    abstract profile(userUUID: string): { username: string }
+    abstract profile(userUUID: string): PromiseOr<ProfileResponseData>
 
     public static getDefaultConfig(): AbstractAuthProviderConfig {
         return {
@@ -46,5 +46,14 @@ export interface AuthResponseData extends ResponseData {
     accessToken: string
 }
 
-// TODO Указание доп.параметров для запуска клиента при использовании различных провайдеров
-// Для работы Authlib
+export interface HasJoinedResponseData extends ResponseData {
+    userUUID: string
+    skinUrl?: string
+    capeUrl?: string
+}
+
+export interface ProfileResponseData extends ResponseData {
+    username: string
+    skinUrl?: string
+    capeUrl?: string
+}

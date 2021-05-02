@@ -15,21 +15,18 @@ export class JoinRequest extends AuthlibRequest {
         req.on("data", (chunk) => {
             data += chunk
         })
-        req.on("end", () => {
+        req.on("end", async () => {
             data = JsonHelper.fromJSON(data)
 
             if (
-                "string" !== typeof data.accessToken ||
-                data.accessToken.length === 0 ||
-                "string" !== typeof data.selectedProfile ||
-                data.selectedProfile.length === 0 ||
-                "string" !== typeof data.serverId ||
-                data.serverId.length === 0
+                this.isInvalidValue(data.accessToken) ||
+                this.isInvalidValue(data.selectedProfile) ||
+                this.isInvalidValue(data.serverId)
             )
                 return res.writeStatus(400)
 
             try {
-                App.AuthManager.getAuthProvider().join(
+                await App.AuthManager.getAuthProvider().join(
                     data.accessToken,
                     UUIDHelper.getWithDashes(data.selectedProfile),
                     data.serverId

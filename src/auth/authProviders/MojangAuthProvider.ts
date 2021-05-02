@@ -16,52 +16,45 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { URL } from "url"
-
-import { HttpHelper } from "../../helpers/HttpHelper"
-import { AbstractAuthProvider, AuthResponseData } from "./AbstractAuthProvider"
+import { App } from "../../LauncherServer"
+import { AbstractAuthProvider, AbstractAuthProviderConfig } from "./AbstractAuthProvider"
 
 export class MojangAuthProvider extends AbstractAuthProvider {
     static type = "mojang"
+    private config: MojangAuthProviderConfig
 
-    async auth(login: string, password: string): Promise<AuthResponseData> {
-        const data = JSON.stringify({
-            agent: {
-                name: "Minecraft",
-                version: 1,
-            },
-            username: login,
-            password,
-        })
-
-        const result = await HttpHelper.makePostRequest(
-            new URL("authenticate", "https://authserver.mojang.com"),
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Content-Length": Buffer.byteLength(data),
-                },
-            },
-            data
-        )
-
-        return {
-            username: result.selectedProfile.name,
-            userUUID: result.selectedProfile.id,
-            accessToken: result.accessToken,
+    constructor() {
+        super()
+        const config = App.ConfigManager.getConfig().auth.authProvider as MojangAuthProviderConfig
+        this.config = {
+            type: "mojang",
+            authHost: config.authHost || "https://authserver.mojang.com",
+            accountHost: config.accountHost || "https://api.mojang.com",
+            sessionHost: config.sessionHost || "https://sessionserver.mojang.com",
+            servicesHost: config.servicesHost || "https://api.minecraftservices.com",
         }
     }
 
-    join(): void {
-        return // TODO
+    auth(): any {
+        return // Doesn't need implementation
+    }
+
+    join(): any {
+        return // Doesn't need implementation
     }
 
     hasJoined(): any {
-        return // TODO
+        return // Doesn't need implementation
     }
 
     profile(): any {
-        return // TODO
+        return // Doesn't need implementation
     }
+}
+
+interface MojangAuthProviderConfig extends AbstractAuthProviderConfig {
+    authHost: string
+    accountHost: string
+    sessionHost: string
+    servicesHost: string
 }

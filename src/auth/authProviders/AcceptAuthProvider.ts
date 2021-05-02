@@ -34,31 +34,31 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
 
         this.sessionsDB.set(data.username, {
             ...data,
-            serverID: undefined,
+            serverId: undefined,
         })
 
         return data
     }
 
-    join(accessToken: string, userUUID: string, serverID: string): void {
+    join(accessToken: string, userUUID: string, serverId: string): void {
         const user = Array.from(this.sessionsDB.values()).find(
             (e) => e.accessToken === accessToken && e.userUUID === userUUID
         )
         if (user === undefined) throw Error("user nf")
 
-        user.serverID = serverID
+        user.serverId = serverId
         this.sessionsDB.set(user.username, user)
     }
 
-    hasJoined(username: string, serverID: string): { userUUID: string } {
+    hasJoined(username: string, serverId: string): UserData {
         if (!this.sessionsDB.has(username)) throw Error("user nf")
         const user = this.sessionsDB.get(username)
 
-        if (user.serverID !== serverID) throw Error("invalid serverID")
+        if (user.serverId !== serverId) throw Error("invalid serverId")
         return user
     }
 
-    profile(userUUID: string): any {
+    profile(userUUID: string): UserData {
         const user = Array.from(this.sessionsDB.values()).find((e) => e.userUUID === userUUID)
         if (user === undefined) throw Error("user nf")
         return user
@@ -69,5 +69,5 @@ interface UserData {
     username: string
     userUUID: string
     accessToken: string
-    serverID: string
+    serverId: string
 }

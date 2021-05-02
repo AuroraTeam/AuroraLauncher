@@ -34,20 +34,30 @@ export class HttpHelper {
     /**
      * makeRequest
      */
-    public static makePostRequest(url: URL, options: Record<string, any>, data: string): Promise<any> {
+    public static makePostRequest(url: URL, data: string): Promise<any> {
         return new Promise((resolve, reject) => {
             const handler = url.protocol === "https:" ? https : http
 
             let resDate = ""
 
-            const req = handler.request(url, options, (res) => {
-                res.on("data", (chunk) => {
-                    resDate += chunk
-                })
-                res.on("end", () => {
-                    resolve(JSON.parse(resDate))
-                })
-            })
+            const req = handler.request(
+                url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Content-Length": Buffer.byteLength(data),
+                    },
+                },
+                (res) => {
+                    res.on("data", (chunk) => {
+                        resDate += chunk
+                    })
+                    res.on("end", () => {
+                        resolve(JSON.parse(resDate))
+                    })
+                }
+            )
 
             req.on("error", (e) => {
                 reject(e.message)

@@ -21,6 +21,9 @@ import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
 
+// TODO Указание доп.параметров для запуска клиента при использовании различных провайдеров
+// Для работы Authlib
+
 export class ProfileRequest extends AbstractRequest {
     type = "profile"
 

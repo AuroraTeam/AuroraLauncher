@@ -1,16 +1,23 @@
-import { IncomingMessage, ServerResponse } from "node:http"
+import { IncomingMessage } from "http"
+
+import { CustomServerResponse } from "./AuthlibManager"
 
 export abstract class AuthlibRequest {
     abstract readonly url: RegExp
     abstract readonly method: string
 
-    abstract emit(req: IncomingMessage, res: ServerResponse, url: string): void
+    abstract emit(req: IncomingMessage, res: CustomServerResponse, url: string): PromiseOr<void>
 
-    parseQuery(url: string): URLSearchParams {
+    protected parseQuery(url: string): URLSearchParams {
         return new URLSearchParams(url.split("?")[1])
     }
 
-    isEmptyQuery(query: URLSearchParams): boolean {
+    protected isEmptyQuery(query: URLSearchParams): boolean {
         return query.toString().length === 0
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    protected isInvalidValue(param: any): boolean {
+        return typeof param !== "string" || param.trim().length === 0
     }
 }
