@@ -16,8 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { HttpHelper } from "../../helpers/HttpHelper"
 import { App } from "../../LauncherServer"
-import { AbstractAuthProvider, AbstractAuthProviderConfig } from "./AbstractAuthProvider"
+import { AbstractAuthProvider, AbstractAuthProviderConfig, AuthResponseData } from "./AbstractAuthProvider"
 
 export class MojangAuthProvider extends AbstractAuthProvider {
     static type = "mojang"
@@ -35,8 +36,23 @@ export class MojangAuthProvider extends AbstractAuthProvider {
         }
     }
 
-    auth(): any {
-        return // Doesn't need implementation
+    async auth(username: string, password: string): Promise<AuthResponseData> {
+        const data = JSON.stringify({
+            agent: {
+                name: "Minecraft",
+                version: 1,
+            },
+            username,
+            password,
+        })
+
+        const result = await HttpHelper.makePostRequest(new URL("authenticate", this.config.authHost), data)
+
+        return {
+            username: result.selectedProfile.name,
+            userUUID: result.selectedProfile.id,
+            accessToken: result.accessToken,
+        }
     }
 
     join(): any {
