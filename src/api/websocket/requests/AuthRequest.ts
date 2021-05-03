@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// TODO Только одна авторизация на клиента
-
 import { App } from "../../../LauncherServer"
+import { wsAuth } from "../RequestsManager"
 import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
@@ -26,9 +25,11 @@ import { AbstractRequest } from "./AbstractRequest"
 export class AuthRequest extends AbstractRequest {
     type = "auth"
 
-    async invoke(data: AuthRequestData): Promise<ResponseData> {
+    async invoke(data: AuthRequestData, ws: wsAuth): Promise<ResponseData> {
         const provider = App.AuthManager.getAuthProvider()
-        return await provider.auth(data.login, data.password)
+        const res = await provider.auth(data.login, data.password)
+        ws.authData = res // Пускай пока будет так, мб ещё пригодится
+        return res
     }
 }
 

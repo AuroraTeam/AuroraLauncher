@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import * as ws from "ws"
+
 import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"
 
@@ -26,5 +28,5 @@ export abstract class AbstractRequest {
         return this.type
     }
 
-    abstract invoke(data: RequestData): PromiseOr<ResponseData>
+    abstract invoke(data: RequestData, ws: ws): PromiseOr<ResponseData>
 }

@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import * as ws from "ws"
+
 import { AbstractRequest } from "./requests/AbstractRequest"
 import { AuthRequest } from "./requests/AuthRequest"
 import { PingRequest } from "./requests/PingRequest"
@@ -41,14 +43,25 @@ export class RequestsManager {
         this.requests.set(request.getType(), request)
     }
 
-    async getRequest(data: wsRequest): Promise<Response | ErrorResponse> {
+    async getRequest(data: wsRequest, ws: wsAuth): Promise<Response | ErrorResponse> {
         if (!this.requests.has(data.type)) return new ResponseError(102, "Unknown request type").toJSON()
 
         try {
-            return { data: await this.requests.get(data.type).invoke(data.data) }
+            // Проверка авторизации пользователя
+            // Если пользователь не авторизован, дропать, если запрос не с авторизацией
+            if (!ws.authData && data.type !== "auth") throw new ResponseError(201, "Aвторизуйтесь")
+            // Если пользователь авторизован дропать если он пытается повторно авторизоваться иначе скип
+            if (ws.authData && data.type === "auth") throw new ResponseError(202, "Вы уже авторизованы")
+            // TODO Одно подключение на IP
+
+            return { data: await this.requests.get(data.type).invoke(data.data, ws) }
         } catch (error) {
             if (error instanceof ResponseError) return error.toJSON()
             throw error // TODO
         }
     }
+}
+
+export interface wsAuth extends ws {
+    authData?: {}
 }

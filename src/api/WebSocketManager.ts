@@ -79,7 +79,8 @@ export class WebSocketManager {
             // if (parsedMessage.data === undefined) parsedMessage.data = { ip: req.socket.remoteAddress }
             // else parsedMessage.data.ip = req.socket.remoteAddress
 
-            const response = await this.requestsManager.getRequest(parsedMessage)
+            const response = await this.requestsManager.getRequest(parsedMessage, ws)
+            LogHelper.dev(`WebSocket response ${JSON.stringify(response)}`)
             this.wsSend(ws, {
                 ...response,
                 uuid: parsedMessage.uuid,
