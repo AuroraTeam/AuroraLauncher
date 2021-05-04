@@ -16,14 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// import * as http from "http"
+import * as http from "http"
 
 import { NIL as NIL_UUID } from "uuid"
 import * as ws from "ws"
 
 import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
-import { RequestsManager } from "./websocket/RequestsManager"
+import { RequestsManager, wsClient } from "./websocket/RequestsManager"
 import { wsErrorResponse } from "./websocket/types/ErrorResponse"
 import { wsRequest } from "./websocket/types/Request"
 import { wsResponse } from "./websocket/types/Response"
@@ -34,13 +34,27 @@ export class WebSocketManager {
 
     webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)
-        this.webSocketServer.on("connection", (ws: ws /*, req: http.IncomingMessage*/) =>
-            this.requestListener(ws /*, req*/)
-        )
+        this.webSocketServer.on("connection", (ws: ws, req: http.IncomingMessage) => this.connectHandler(ws, req))
     }
 
-    requestListener(ws: ws /*, req: http.IncomingMessage*/): void {
-        // TODO работа с ping
+    connectHandler(ws: wsClient, req: http.IncomingMessage): void {
+        // ws.on("ping", ws.pong) // На случай всяких внешних проверок, аля чекалки статуса
+        // ws.on("pong", () => this.ping(ws))
+        // this.ping(ws)
+
+        const clientIP = req.socket.remoteAddress
+        if (Array.from(this.webSocketServer.clients).some((c: wsClient) => c.clientData?.ip === clientIP)) {
+            this.wsSend(ws, {
+                uuid: NIL_UUID,
+                code: 99,
+                message: "Only one connection allowed per IP",
+            })
+            return ws.close()
+        }
+        ws.clientData = {
+            ip: clientIP,
+            isAuthed: false,
+        }
 
         ws.on("message", async (message: string) => {
             LogHelper.dev(`New WebSocket request ${message}`)
@@ -87,6 +101,13 @@ export class WebSocketManager {
             })
         })
     }
+
+    // private ping(ws: wsClient): void {
+    //     setTimeout(() => {
+    //         ws.ping()
+    //     }, 5000)
+    //     console.log(ws.authData);
+    // }
 
     private wsSend(ws: ws, data: wsResponse | wsErrorResponse): void {
         ws.send(JsonHelper.toJSON(data))

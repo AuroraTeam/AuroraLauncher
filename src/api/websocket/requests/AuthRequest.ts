@@ -17,7 +17,7 @@
  */
 
 import { App } from "../../../LauncherServer"
-import { wsAuth } from "../RequestsManager"
+import { wsClient } from "../RequestsManager"
 import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
@@ -25,10 +25,10 @@ import { AbstractRequest } from "./AbstractRequest"
 export class AuthRequest extends AbstractRequest {
     type = "auth"
 
-    async invoke(data: AuthRequestData, ws: wsAuth): Promise<ResponseData> {
+    async invoke(data: AuthRequestData, ws: wsClient): Promise<ResponseData> {
         const provider = App.AuthManager.getAuthProvider()
         const res = await provider.auth(data.login, data.password)
-        ws.authData = res // Пускай пока будет так, мб ещё пригодится
+        ws.clientData.isAuthed = true
         return res
     }
 }

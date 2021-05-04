@@ -43,16 +43,15 @@ export class RequestsManager {
         this.requests.set(request.getType(), request)
     }
 
-    async getRequest(data: wsRequest, ws: wsAuth): Promise<Response | ErrorResponse> {
+    async getRequest(data: wsRequest, ws: wsClient): Promise<Response | ErrorResponse> {
         if (!this.requests.has(data.type)) return new ResponseError(102, "Unknown request type").toJSON()
 
         try {
             // Проверка авторизации пользователя
             // Если пользователь не авторизован, дропать, если запрос не с авторизацией
-            if (!ws.authData && data.type !== "auth") throw new ResponseError(201, "Aвторизуйтесь")
+            if (!ws.clientData.isAuthed && data.type !== "auth") throw new ResponseError(201, "Aвторизуйтесь")
             // Если пользователь авторизован дропать если он пытается повторно авторизоваться иначе скип
-            if (ws.authData && data.type === "auth") throw new ResponseError(202, "Вы уже авторизованы")
-            // TODO Одно подключение на IP
+            if (ws.clientData.isAuthed && data.type === "auth") throw new ResponseError(202, "Вы уже авторизованы")
 
             return { data: await this.requests.get(data.type).invoke(data.data, ws) }
         } catch (error) {
@@ -62,6 +61,9 @@ export class RequestsManager {
     }
 }
 
-export interface wsAuth extends ws {
-    authData?: {}
+export interface wsClient extends ws {
+    clientData?: {
+        isAuthed: boolean
+        ip: string
+    }
 }
