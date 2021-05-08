@@ -38,21 +38,21 @@ export class WebSocketManager {
 
         const interval = setInterval(() => {
             this.webSocketServer.clients.forEach((ws: wsClient) => {
-                if (ws.clientData.isAlive === false) return ws.terminate();
+                if (ws.clientData.isAlive === false) return ws.terminate()
 
-                ws.clientData.isAlive = false;
-                ws.ping();
-            });
-        }, 10000);
+                ws.clientData.isAlive = false
+                ws.ping()
+            })
+        }, 10000)
 
-        this.webSocketServer.on('close', () => {
-            clearInterval(interval);
-        });
+        this.webSocketServer.on("close", () => {
+            clearInterval(interval)
+        })
     }
 
     connectHandler(ws: wsClient, req: http.IncomingMessage): void {
         ws.on("ping", ws.pong) // На случай всяких внешних проверок, аля чекалки статуса
-        ws.on("pong", () => ws.clientData.isAlive = true)
+        ws.on("pong", () => (ws.clientData.isAlive = true))
 
         const clientIP = req.socket.remoteAddress
         if (Array.from(this.webSocketServer.clients).some((c: wsClient) => c.clientData?.ip === clientIP)) {
@@ -70,13 +70,8 @@ export class WebSocketManager {
         }
 
         ws.on("message", async (message: string) => {
-            LogHelper.dev(`New WebSocket request ${message}`)
+            LogHelper.dev(`WebSocket request: ${message}`)
             let parsedMessage: wsRequest
-            // let parsedMessage: wsRequest & {
-            //     data: {
-            //         ip: string
-            //     }
-            // }
 
             try {
                 parsedMessage = JsonHelper.fromJSON(message)
@@ -103,19 +98,12 @@ export class WebSocketManager {
                 })
             }
 
-            // if (parsedMessage.data === undefined) parsedMessage.data = { ip: req.socket.remoteAddress }
-            // else parsedMessage.data.ip = req.socket.remoteAddress
-
             const response = await this.requestsManager.getRequest(parsedMessage, ws)
-            LogHelper.dev(`WebSocket response ${JSON.stringify(response)}`)
+            LogHelper.dev(`WebSocket response: ${JsonHelper.toJSON(response)}`)
             this.wsSend(ws, {
                 ...response,
                 uuid: parsedMessage.uuid,
             })
-        })
-
-        ws.on('close', () => {
-            // Деавторизация
         })
     }
 
