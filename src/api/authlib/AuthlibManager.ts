@@ -20,6 +20,7 @@
 
 import { IncomingMessage, ServerResponse } from "http"
 
+import { AuthlibKeysGenerator } from "./AuthlibKeysGenerator"
 import { AuthlibRequest } from "./AuthlibRequest"
 import { HasJoinedRequest } from "./sessionServer/HasJoinedRequest"
 import { JoinRequest } from "./sessionServer/JoinRequest"
@@ -29,6 +30,7 @@ export class AuthlibManager {
     private requests: AuthlibRequest[] = []
 
     constructor() {
+        new AuthlibKeysGenerator()
         this.registerRequest(new JoinRequest())
         this.registerRequest(new HasJoinedRequest())
         this.registerRequest(new ProfileRequest())

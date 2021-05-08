@@ -61,7 +61,7 @@ export class WebSocketManager {
                 code: 99,
                 message: "Only one connection allowed per IP",
             })
-            return ws.close()
+            return ws.terminate()
         }
         ws.clientData = {
             isAlive: true,
