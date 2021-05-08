@@ -21,12 +21,12 @@ export class ProfileRequest extends AuthlibRequest {
         }
 
         const textures: any = {}
-        if (user.skinUrl.length > 0) {
+        if (user.skinUrl?.length > 0) {
             textures.SKIN = {
                 url: user.skinUrl,
             }
         }
-        if (user.capeUrl.length > 0) {
+        if (user.capeUrl?.length > 0) {
             textures.CAPE = {
                 url: user.capeUrl,
             }

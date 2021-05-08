@@ -11,7 +11,7 @@ export class JoinRequest extends AuthlibRequest {
     url = /^\/session\/minecraft\/join$/
 
     emit(req: IncomingMessage, res: CustomServerResponse): void {
-        let data: any
+        let data: any = ""
         req.on("data", (chunk) => {
             data += chunk
         })
