@@ -63,6 +63,7 @@ export class RequestsManager {
 
 export interface wsClient extends ws {
     clientData?: {
+        isAlive: boolean
         isAuthed: boolean
         ip: string
     }

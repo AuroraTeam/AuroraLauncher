@@ -35,12 +35,24 @@ export class WebSocketManager {
     webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)
         this.webSocketServer.on("connection", (ws: ws, req: http.IncomingMessage) => this.connectHandler(ws, req))
+
+        const interval = setInterval(() => {
+            this.webSocketServer.clients.forEach((ws: wsClient) => {
+                if (ws.clientData.isAlive === false) return ws.terminate();
+
+                ws.clientData.isAlive = false;
+                ws.ping();
+            });
+        }, 10000);
+
+        this.webSocketServer.on('close', () => {
+            clearInterval(interval);
+        });
     }
 
     connectHandler(ws: wsClient, req: http.IncomingMessage): void {
-        // ws.on("ping", ws.pong) // На случай всяких внешних проверок, аля чекалки статуса
-        // ws.on("pong", () => this.ping(ws))
-        // this.ping(ws)
+        ws.on("ping", ws.pong) // На случай всяких внешних проверок, аля чекалки статуса
+        ws.on("pong", () => ws.clientData.isAlive = true)
 
         const clientIP = req.socket.remoteAddress
         if (Array.from(this.webSocketServer.clients).some((c: wsClient) => c.clientData?.ip === clientIP)) {
@@ -52,6 +64,7 @@ export class WebSocketManager {
             return ws.close()
         }
         ws.clientData = {
+            isAlive: true,
             ip: clientIP,
             isAuthed: false,
         }
@@ -100,14 +113,11 @@ export class WebSocketManager {
                 uuid: parsedMessage.uuid,
             })
         })
-    }
 
-    // private ping(ws: wsClient): void {
-    //     setTimeout(() => {
-    //         ws.ping()
-    //     }, 5000)
-    //     console.log(ws.authData);
-    // }
+        ws.on('close', () => {
+            // Деавторизация
+        })
+    }
 
     private wsSend(ws: ws, data: wsResponse | wsErrorResponse): void {
         ws.send(JsonHelper.toJSON(data))
