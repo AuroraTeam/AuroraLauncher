@@ -63,7 +63,7 @@
         "semver": "^7.3.5",
         "source-map-support": "^0.5.19",
         "uuid": "^8.3.2",
-        "ws": "^7.4.4"
+        "ws": "^7.4.6"
     },
     "optionalDependencies": {
         "bufferutil": "^4.0.3",
