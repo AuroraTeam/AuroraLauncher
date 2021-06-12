@@ -20,7 +20,7 @@ import * as fs from "fs"
 import * as path from "path"
 import { URL } from "url"
 
-import * as rimraf from "rimraf"
+import rimraf from "rimraf"
 
 import { HttpHelper } from "../helpers/HttpHelper"
 import { JsonHelper } from "../helpers/JsonHelper"

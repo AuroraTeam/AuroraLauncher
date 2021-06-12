@@ -7,7 +7,7 @@
             "request": "launch",
             "cwd": "${workspaceRoot}",
             "program": "${workspaceRoot}/dist/LauncherServer.js",
-            "preLaunchTask": "npm: build:dev",
+            "preLaunchTask": "npm: build",
             "console": "integratedTerminal",
             "args": ["--dev"],
             "sourceMaps": true

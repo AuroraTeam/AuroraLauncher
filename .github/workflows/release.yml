@@ -2,7 +2,7 @@ name: Release Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Build LauncherServer
         run: |
-          npm run build:prod
+          npm run build
           npm run build:bin
 
       - name: Upload release
