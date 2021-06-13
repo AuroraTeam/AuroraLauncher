@@ -21,7 +21,7 @@ jobs:
 
       - name: Build LauncherServer
         run: |
-          npm run build
+          npm run build:dev
           npm run build:bin
 
       - name: Upload a Build Artifact

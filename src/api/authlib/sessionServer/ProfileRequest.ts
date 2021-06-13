@@ -11,7 +11,9 @@ export class ProfileRequest extends AuthlibRequest {
     url = /^\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
 
     async emit(_req: IncomingMessage, res: CustomServerResponse, url: string): Promise<void> {
-        const uuid = url.match(this.url).groups.uuid
+        const matches = url.match(this.url)
+        const uuid = matches.groups.uuid
+        const signed = matches[3] === "false"
 
         let user
         try {
@@ -50,11 +52,12 @@ export class ProfileRequest extends AuthlibRequest {
             ],
         }
 
-        // const signed = request.query.unsigned === "false"; // TODO
-        // if (signed) texturesValue.signatureRequired = true;
+        if (signed) texturesValue.signatureRequired = true
         texturesValue = Buffer.from(JSON.stringify(texturesValue))
         data.properties[0].value = texturesValue.toString("base64")
-        // if (signed) data.properties[0].signature = getSignature(texturesValue);
+        if (signed)
+            data.properties[0].signature =
+                App.SocketManager.webServerManager.authlib.keyManager.getSignature(texturesValue)
         res.write(JsonHelper.toJSON(data))
         res.end()
     }

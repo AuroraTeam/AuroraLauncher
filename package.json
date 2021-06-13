@@ -20,7 +20,8 @@
     ],
     "main": "dist/LauncherServer.js",
     "scripts": {
-        "build": "esbuild src/LauncherServer.ts --platform=node --target=node12 --bundle --outdir=dist --sourcemap=inline --minify",
+        "build:dev": "esbuild src/LauncherServer.ts --platform=node --target=node12 --bundle --outdir=dist --sourcemap",
+        "build:prod": "esbuild src/LauncherServer.ts --platform=node --target=node12 --bundle --outdir=dist --sourcemap=inline --minify",
         "build:bin": "node build.js",
         "clean": "rimraf dist",
         "prettier": "prettier --config .prettierrc.json --write src",

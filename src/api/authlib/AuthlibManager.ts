@@ -28,9 +28,9 @@ import { ProfileRequest } from "./sessionServer/ProfileRequest"
 
 export class AuthlibManager {
     private requests: AuthlibRequest[] = []
+    public keyManager = new AuthlibKeysGenerator()
 
     constructor() {
-        new AuthlibKeysGenerator()
         this.registerRequest(new JoinRequest())
         this.registerRequest(new HasJoinedRequest())
         this.registerRequest(new ProfileRequest())

@@ -28,7 +28,7 @@ import { AuthlibManager } from "./authlib/AuthlibManager"
 
 export class WebServerManager {
     public webServer: http.Server | https.Server
-    private authlib: AuthlibManager = new AuthlibManager()
+    public authlib: AuthlibManager = new AuthlibManager()
     private readonly config = App.ConfigManager.getConfig().ws
 
     public webServerInit(): void {

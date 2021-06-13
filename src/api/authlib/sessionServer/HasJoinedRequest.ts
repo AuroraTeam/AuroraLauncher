@@ -52,10 +52,10 @@ export class HasJoinedRequest extends AuthlibRequest {
                 timestamp: Date.now(),
                 profileId: userUUID,
                 profileName: username,
-                // signatureRequired: true,
+                signatureRequired: true,
                 textures,
             })
-        )
+        ).toString("base64")
 
         res.write(
             JsonHelper.toJSON({
@@ -64,8 +64,8 @@ export class HasJoinedRequest extends AuthlibRequest {
                 properties: [
                     {
                         name: "textures",
-                        value: texturesValue.toString("base64"),
-                        // signature: getSignature(texturesValue), // TODO
+                        value: texturesValue,
+                        signature: App.SocketManager.webServerManager.authlib.keyManager.getSignature(texturesValue), // Ох как же тебя жмыхнуло
                     },
                 ],
             })

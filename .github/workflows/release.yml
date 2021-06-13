@@ -24,7 +24,7 @@ jobs:
 
       - name: Build LauncherServer
         run: |
-          npm run build
+          npm run build:prod
           npm run build:bin
 
       - name: Upload release
