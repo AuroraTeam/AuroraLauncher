@@ -4,7 +4,7 @@
 На данный момент лаунчер-сервер как и сам лаунчер находится в разработке, но вы можете помочь мне с кодом или ведением задач. Или например предлагать свои идеи в раздел [Issues](https://github.com/AuroraTeam/LauncherServer/issues).
 А также вы можете поддержать меня материально:
 
--   [Через QIWI](https://qiwi.com/p/JOCAT)
+-   [Через QIWI](https://qiwi.com/n/JOCAT)
 -   [Через Donation Alerts](https://www.donationalerts.com/r/jocat)
 
 ## Мы в Discord
