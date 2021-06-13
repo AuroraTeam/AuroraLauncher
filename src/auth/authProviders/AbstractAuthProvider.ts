@@ -29,6 +29,10 @@ export abstract class AbstractAuthProvider extends AbstractProvider {
 
     abstract profile(userUUID: string): PromiseOr<ProfileResponseData>
 
+    abstract privileges(accessToken: string): PromiseOr<PrivilegesResponseData>
+
+    abstract profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[]>
+
     public static getDefaultConfig(): AbstractAuthProviderConfig {
         return {
             type: AcceptAuthProvider.getType(),
@@ -56,4 +60,16 @@ export interface ProfileResponseData extends ResponseData {
     username: string
     skinUrl?: string
     capeUrl?: string
+}
+
+export interface PrivilegesResponseData extends ResponseData {
+    onlineChat: boolean
+    multiplayerServer: boolean
+    multiplayerRealms: boolean
+    telemetry: boolean
+}
+
+export interface ProfilesResponseData extends ResponseData {
+    id: string
+    name: string
 }

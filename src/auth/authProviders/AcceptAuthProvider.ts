@@ -18,7 +18,7 @@
 
 import { v4, v5 } from "uuid"
 
-import { AbstractAuthProvider, AuthResponseData } from "./AbstractAuthProvider"
+import { AbstractAuthProvider, AuthResponseData, PrivilegesResponseData } from "./AbstractAuthProvider"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
     static type = "accept"
@@ -62,6 +62,19 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
         const user = Array.from(this.sessionsDB.values()).find((e) => e.userUUID === userUUID)
         if (user === undefined) throw Error("user nf")
         return user
+    }
+
+    privileges(): PrivilegesResponseData {
+        return {
+            onlineChat: true,
+            multiplayerServer: true,
+            multiplayerRealms: true,
+            telemetry: true,
+        }
+    }
+
+    profiles(userUUIDs: string[]): any {
+        return Array.from(this.sessionsDB.values()).filter((e) => userUUIDs.includes(e.userUUID))
     }
 }
 

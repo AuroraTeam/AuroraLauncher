@@ -19,16 +19,15 @@
 import { IncomingMessage, ServerResponse } from "http"
 
 import { JsonHelper } from "@root/helpers/JsonHelper"
-import UUIDHelper from "@root/helpers/UUIDHelper"
 import { App } from "@root/LauncherServer"
 
 import { AbstractRequest } from "../../AbstractRequest"
 
-export class JoinRequest extends AbstractRequest {
+export class ProfilesRequest extends AbstractRequest {
     method = "POST"
-    url = /^\/authlib\/session\/minecraft\/join$/
+    url = /^\/authlib\/profiles\/minecraft$/
 
-    emit(req: IncomingMessage, res: ServerResponse): void {
+    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         let data: any = ""
         req.on("data", (chunk) => {
             data += chunk
@@ -37,32 +36,26 @@ export class JoinRequest extends AbstractRequest {
             data = JsonHelper.fromJSON(data)
             res.statusCode = 400
 
-            if (
-                this.isInvalidValue(data.accessToken) ||
-                this.isInvalidValue(data.selectedProfile) ||
-                this.isInvalidValue(data.serverId)
-            ) {
-                res.write(this.returnError("Bad Request"))
+            if ("object" !== typeof data || !Array.isArray(data) || data.length === 0) {
                 return res.end()
             }
 
-            try {
-                await App.AuthManager.getAuthProvider().join(
-                    data.accessToken,
-                    UUIDHelper.getWithDashes(data.selectedProfile),
-                    data.serverId
-                )
-            } catch (error) {
+            if (data.length >= 10) {
                 res.write(
-                    this.returnError(
-                        "ForbiddenOperationException",
-                        "Invalid credentials. Invalid username or password."
-                    )
+                    this.returnError("IllegalArgumentException", "Not more that 10 profile name per call is allowed.")
                 )
                 return res.end()
             }
 
-            res.statusCode = 204
+            let users
+            try {
+                users = await App.AuthManager.getAuthProvider().profiles(data)
+            } catch (error) {
+                return res.end()
+            }
+
+            res.statusCode = 200
+            res.write(JsonHelper.toJSON(users))
             res.end()
         })
     }

@@ -16,19 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { IncomingMessage } from "http"
+import { IncomingMessage, ServerResponse } from "http"
 
-import { JsonHelper } from "../../../../../helpers/JsonHelper"
-import UUIDHelper from "../../../../../helpers/UUIDHelper"
-import { App } from "../../../../../LauncherServer"
-import { CustomServerResponse } from "../../../WebRequestManager"
+import { JsonHelper } from "@root/helpers/JsonHelper"
+import UUIDHelper from "@root/helpers/UUIDHelper"
+import { App } from "@root/LauncherServer"
+
 import { AbstractRequest } from "../../AbstractRequest"
 
 export class ProfileRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
 
-    async emit(req: IncomingMessage, res: CustomServerResponse): Promise<void> {
+    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         const matches = req.url.match(this.url)
         const uuid = matches.groups.uuid
         const signed = matches[3] === "false"
@@ -37,7 +37,8 @@ export class ProfileRequest extends AbstractRequest {
         try {
             user = await App.AuthManager.getAuthProvider().profile(UUIDHelper.getWithDashes(uuid))
         } catch (error) {
-            return res.writeStatus(400)
+            res.statusCode = 204
+            return res.end()
         }
 
         const textures: any = {}

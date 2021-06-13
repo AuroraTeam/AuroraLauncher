@@ -66,6 +66,14 @@ export class MojangAuthProvider extends AbstractAuthProvider {
     profile(): any {
         return // Doesn't need implementation
     }
+
+    privileges(): any {
+        return // Doesn't need implementation
+    }
+
+    profiles(): any {
+        return // Doesn't need implementation
+    }
 }
 
 interface MojangAuthProviderConfig extends AbstractAuthProviderConfig {

@@ -16,39 +16,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { IncomingMessage } from "http"
+import { IncomingMessage, ServerResponse } from "http"
 
-import { JsonHelper } from "../../../../../helpers/JsonHelper"
-import UUIDHelper from "../../../../../helpers/UUIDHelper"
-import { App } from "../../../../../LauncherServer"
-import { CustomServerResponse } from "../../../WebRequestManager"
+import { JsonHelper } from "@root/helpers/JsonHelper"
+import UUIDHelper from "@root/helpers/UUIDHelper"
+import { App } from "@root/LauncherServer"
+
 import { AbstractRequest } from "../../AbstractRequest"
 
 export class HasJoinedRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib\/session\/minecraft\/hasJoined/
 
-    async emit(req: IncomingMessage, res: CustomServerResponse): Promise<void> {
+    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
+        res.statusCode = 400
         const data = this.parseQuery(req.url)
-        if (this.isEmptyQuery(data)) res.writeStatus(400)
+        if (this.isEmptyQuery(data)) res.end()
 
         const username = data.get("username")
         const serverId = data.get("serverId")
 
-        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return res.writeStatus(400)
+        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return res.end()
 
         // TODO
         // Если IP указан
         const ip = data.get("ip")
         if (ip && this.isInvalidValue(ip)) {
-            return res.writeStatus(400)
+            return res.end()
         }
 
         let user
         try {
             user = await App.AuthManager.getAuthProvider().hasJoined(username, serverId)
         } catch (error) {
-            return res.writeStatus(400)
+            return res.end()
         }
 
         const userUUID = UUIDHelper.getWithoutDashes(user.userUUID)
@@ -83,11 +84,12 @@ export class HasJoinedRequest extends AbstractRequest {
                     {
                         name: "textures",
                         value: texturesValue,
-                        signature: App.AuthlibManager.getSignature(texturesValue), // Ох как же тебя жмыхнуло
+                        signature: App.AuthlibManager.getSignature(texturesValue),
                     },
                 ],
             })
         )
+        res.statusCode = 200
         res.end()
     }
 }

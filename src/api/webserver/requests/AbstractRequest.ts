@@ -16,15 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { IncomingMessage } from "http"
+import { IncomingMessage, ServerResponse } from "http"
 
-import { CustomServerResponse } from "../WebRequestManager"
+import { JsonHelper } from "../../../helpers/JsonHelper"
 
 export abstract class AbstractRequest {
     abstract readonly url: RegExp
     abstract readonly method: string
 
-    abstract emit(req: IncomingMessage, res: CustomServerResponse): PromiseOr<void>
+    abstract emit(req: IncomingMessage, res: ServerResponse): PromiseOr<void>
 
     protected parseQuery(url: string): URLSearchParams {
         return new URLSearchParams(url.split("?")[1])
@@ -32,6 +32,10 @@ export abstract class AbstractRequest {
 
     protected isEmptyQuery(query: URLSearchParams): boolean {
         return query.toString().length === 0
+    }
+
+    protected returnError(error: string, errorMessage?: string): string {
+        return JsonHelper.toJSON({ error, errorMessage })
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

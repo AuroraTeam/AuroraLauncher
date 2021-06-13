@@ -33,15 +33,23 @@ export class RejectAuthProvider extends AbstractAuthProvider {
     }
 
     join(): any {
-        throw new ResponseError(200, this.config.message)
+        return // Doesn't need implementation
     }
 
     hasJoined(): any {
-        throw new ResponseError(200, this.config.message)
+        return // Doesn't need implementation
     }
 
     profile(): any {
-        throw new ResponseError(200, this.config.message)
+        return // Doesn't need implementation
+    }
+
+    privileges(): any {
+        return // Doesn't need implementation
+    }
+
+    profiles(): any {
+        return // Doesn't need implementation
     }
 }
 
