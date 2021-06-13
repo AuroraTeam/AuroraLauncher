@@ -60,14 +60,14 @@ export class WebServerManager {
     }
 
     private requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
-        if (req.url.startsWith("/files")) return this.fileListing(req.url, res) // TODO CHECK
+        if (req.url.startsWith("/files")) return this.fileListing(req.url, res)
         this.requestsManager.getRequest(req, res)
     }
 
     private fileListing(url: string, res: http.ServerResponse): void {
         if (url.includes("?")) url = url.split("?")[0]
 
-        const filePath = path.join(StorageHelper.updatesDir, url)
+        const filePath = path.join(StorageHelper.updatesDir, url.slice(6))
 
         if (!fs.existsSync(filePath)) {
             res.writeHead(404)
