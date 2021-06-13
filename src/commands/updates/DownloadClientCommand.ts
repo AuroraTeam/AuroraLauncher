@@ -25,12 +25,11 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class DownloadClientCommand extends AbstractCommand {
     constructor() {
-        super("downloadclient", "Загрузить клиент", Category.UPDATES, "<source type> <version> <folder name>")
+        super("downloadclient", "Загрузить клиент", Category.UPDATES, "<version> <folder name> <?source type>")
     }
 
     async invoke(...args: string[]): Promise<void> {
-        const [sourceType, clientName, dirName] = args
-        if (!sourceType) return LogHelper.error("Укажите тип источника!")
+        const [clientName, dirName, sourceType = "mojang"] = args
         if (!clientName) return LogHelper.error("Укажите название/версию клиента!")
         if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
 
