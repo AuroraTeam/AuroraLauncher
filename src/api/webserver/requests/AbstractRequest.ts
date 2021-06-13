@@ -16,24 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { App } from "../../../LauncherServer"
-import { RequestData } from "../types/Request"
-import { ResponseData } from "../types/Response"
-import { wsClient } from "../WsRequestsManager"
-import { AbstractRequest } from "./AbstractRequest"
+import { IncomingMessage } from "http"
 
-export class AuthRequest extends AbstractRequest {
-    type = "auth"
+import { CustomServerResponse } from "../WebRequestManager"
 
-    async invoke(data: AuthRequestData, ws: wsClient): Promise<ResponseData> {
-        const provider = App.AuthManager.getAuthProvider()
-        const res = await provider.auth(data.login, data.password)
-        ws.clientData.isAuthed = true
-        return res
+export abstract class AbstractRequest {
+    abstract readonly url: RegExp
+    abstract readonly method: string
+
+    abstract emit(req: IncomingMessage, res: CustomServerResponse): PromiseOr<void>
+
+    protected parseQuery(url: string): URLSearchParams {
+        return new URLSearchParams(url.split("?")[1])
     }
-}
 
-interface AuthRequestData extends RequestData {
-    login: string
-    password: string
+    protected isEmptyQuery(query: URLSearchParams): boolean {
+        return query.toString().length === 0
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    protected isInvalidValue(param: any): boolean {
+        return typeof param !== "string" || param.trim().length === 0
+    }
 }

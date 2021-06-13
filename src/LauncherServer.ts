@@ -25,6 +25,7 @@ import * as colors from "colors/safe"
 
 import { SocketManager } from "./api/SocketManager"
 import { AuthManager } from "./auth/AuthManager"
+import { AuthlibManager } from "./authlib/AuthlibManager"
 import { CommandsManager } from "./commands/CommandsManager"
 import { ConfigManager } from "./config/ConfigManager"
 import { LogHelper } from "./helpers/LogHelper"
@@ -45,7 +46,7 @@ export class LauncherServer extends EventEmitter {
     private _SocketManager: SocketManager
     private _UpdatesManager: UpdatesManager
     private _ProfilesManager: ProfilesManager
-
+    private _AuthlibManager: AuthlibManager
     private inited = false
 
     main(): void {
@@ -76,6 +77,7 @@ export class LauncherServer extends EventEmitter {
         this._SocketManager = new SocketManager()
         this._UpdatesManager = new UpdatesManager()
         this._ProfilesManager = new ProfilesManager()
+        this._AuthlibManager = new AuthlibManager()
         this.emit("postInit")
         LogHelper.info(this.LangManager.getTranslate().LauncherServer.initEnd)
         this.inited = true
@@ -111,6 +113,10 @@ export class LauncherServer extends EventEmitter {
 
     get ProfilesManager(): ProfilesManager {
         return this._ProfilesManager
+    }
+
+    get AuthlibManager(): AuthlibManager {
+        return this._AuthlibManager
     }
 }
 

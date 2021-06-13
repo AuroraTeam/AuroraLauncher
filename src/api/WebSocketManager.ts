@@ -23,14 +23,14 @@ import * as ws from "ws"
 
 import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
-import { RequestsManager, wsClient } from "./websocket/RequestsManager"
 import { wsErrorResponse } from "./websocket/types/ErrorResponse"
 import { wsRequest } from "./websocket/types/Request"
 import { wsResponse } from "./websocket/types/Response"
+import { WsRequestsManager, wsClient } from "./websocket/WsRequestsManager"
 
 export class WebSocketManager {
     webSocketServer: ws.Server
-    requestsManager: RequestsManager = new RequestsManager()
+    requestsManager: WsRequestsManager = new WsRequestsManager()
 
     webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)

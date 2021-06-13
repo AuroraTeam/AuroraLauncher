@@ -16,19 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// TODO говнокод, здесь и во всех остальных файлах связанных с authlib, пофиксить!
-
 import { IncomingMessage, ServerResponse } from "http"
 
-import { AuthlibKeysGenerator } from "./AuthlibKeysGenerator"
-import { AuthlibRequest } from "./AuthlibRequest"
-import { HasJoinedRequest } from "./sessionServer/HasJoinedRequest"
-import { JoinRequest } from "./sessionServer/JoinRequest"
-import { ProfileRequest } from "./sessionServer/ProfileRequest"
+import { AbstractRequest } from "./requests/AbstractRequest"
+import { HasJoinedRequest } from "./requests/authlib/sessionServer/HasJoinedRequest"
+import { JoinRequest } from "./requests/authlib/sessionServer/JoinRequest"
+import { ProfileRequest } from "./requests/authlib/sessionServer/ProfileRequest"
 
-export class AuthlibManager {
-    private requests: AuthlibRequest[] = []
-    public keyManager = new AuthlibKeysGenerator()
+export class WebRequestManager {
+    private requests: AbstractRequest[] = []
 
     constructor() {
         this.registerRequest(new JoinRequest())
@@ -36,13 +32,14 @@ export class AuthlibManager {
         this.registerRequest(new ProfileRequest())
     }
 
-    private registerRequest(request: AuthlibRequest): void {
+    registerRequest(request: AbstractRequest): void {
         this.requests.push(request)
     }
 
     getRequest(req: IncomingMessage, res: CustomServerResponse): void {
-        const url = req.url.substring(8) // trim "/authlib"
-        const request = this.requests.find((e) => e.method === req.method && e.url.test(url))
+        res.setHeader("Content-Type", "application/json; charset=utf-8")
+
+        const request = this.requests.find((e) => e.method === req.method && e.url.test(req.url))
         if (request === undefined) {
             res.writeHead(404).end("Not found!")
             return
@@ -53,7 +50,7 @@ export class AuthlibManager {
             this.writeHead(code).end()
         }
 
-        request.emit(req, res, url)
+        request.emit(req, res)
     }
 }
 

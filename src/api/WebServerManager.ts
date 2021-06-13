@@ -24,11 +24,11 @@ import * as path from "path"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
-import { AuthlibManager } from "./authlib/AuthlibManager"
+import { WebRequestManager } from "./webserver/WebRequestManager"
 
 export class WebServerManager {
     public webServer: http.Server | https.Server
-    public authlib: AuthlibManager = new AuthlibManager()
+    requestsManager: WebRequestManager = new WebRequestManager()
     private readonly config = App.ConfigManager.getConfig().ws
 
     public webServerInit(): void {
@@ -60,11 +60,8 @@ export class WebServerManager {
     }
 
     private requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
-        if (req.url.startsWith("/authlib")) {
-            this.authlib.getRequest(req, res)
-        } else {
-            this.fileListing(req.url, res)
-        }
+        if (req.url.startsWith("/files")) return this.fileListing(req.url, res) // TODO CHECK
+        this.requestsManager.getRequest(req, res)
     }
 
     private fileListing(url: string, res: http.ServerResponse): void {

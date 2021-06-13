@@ -1,17 +1,35 @@
+/**
+ * AuroraLauncher LauncherServer - Server for AuroraLauncher
+ * Copyright (C) 2020 - 2021 AuroraTeam
+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { IncomingMessage } from "http"
 
-import { JsonHelper } from "../../../helpers/JsonHelper"
-import UUIDHelper from "../../../helpers/UUIDHelper"
-import { App } from "../../../LauncherServer"
-import { CustomServerResponse } from "../AuthlibManager"
-import { AuthlibRequest } from "../AuthlibRequest"
+import { JsonHelper } from "../../../../../helpers/JsonHelper"
+import UUIDHelper from "../../../../../helpers/UUIDHelper"
+import { App } from "../../../../../LauncherServer"
+import { CustomServerResponse } from "../../../WebRequestManager"
+import { AbstractRequest } from "../../AbstractRequest"
 
-export class HasJoinedRequest extends AuthlibRequest {
+export class HasJoinedRequest extends AbstractRequest {
     method = "GET"
-    url = /^\/session\/minecraft\/hasJoined/
+    url = /^\/authlib\/session\/minecraft\/hasJoined/
 
-    async emit(_req: IncomingMessage, res: CustomServerResponse, url: string): Promise<void> {
-        const data = this.parseQuery(url)
+    async emit(req: IncomingMessage, res: CustomServerResponse): Promise<void> {
+        const data = this.parseQuery(req.url)
         if (this.isEmptyQuery(data)) res.writeStatus(400)
 
         const username = data.get("username")
@@ -65,7 +83,7 @@ export class HasJoinedRequest extends AuthlibRequest {
                     {
                         name: "textures",
                         value: texturesValue,
-                        signature: App.SocketManager.webServerManager.authlib.keyManager.getSignature(texturesValue), // Ох как же тебя жмыхнуло
+                        signature: App.AuthlibManager.getSignature(texturesValue), // Ох как же тебя жмыхнуло
                     },
                 ],
             })

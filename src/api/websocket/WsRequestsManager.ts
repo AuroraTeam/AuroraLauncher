@@ -28,7 +28,7 @@ import { ErrorResponse, ResponseError } from "./types/ErrorResponse"
 import { wsRequest } from "./types/Request"
 import { Response } from "./types/Response"
 
-export class RequestsManager {
+export class WsRequestsManager {
     private requests: Map<string, AbstractRequest> = new Map()
 
     constructor() {
