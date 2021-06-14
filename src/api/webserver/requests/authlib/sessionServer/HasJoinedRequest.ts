@@ -26,7 +26,7 @@ import { AbstractRequest } from "../../AbstractRequest"
 
 export class HasJoinedRequest extends AbstractRequest {
     method = "GET"
-    url = /^\/authlib\/session\/minecraft\/hasJoined/
+    url = /^\/authlib\/session\/minecraft\/hasJoined$/
 
     async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         res.statusCode = 400

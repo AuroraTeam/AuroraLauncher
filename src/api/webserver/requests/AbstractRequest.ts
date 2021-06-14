@@ -42,4 +42,19 @@ export abstract class AbstractRequest {
     protected isInvalidValue(param: any): boolean {
         return typeof param !== "string" || param.trim().length === 0
     }
+
+    protected getPostData(req: IncomingMessage): Promise<string> {
+        return new Promise((resolve, reject) => {
+            let data = ""
+            req.on("data", (chunk) => {
+                data += chunk
+            })
+            req.on("end", () => {
+                resolve(data)
+            })
+            req.on("error", (error) => {
+                reject(error)
+            })
+        })
+    }
 }

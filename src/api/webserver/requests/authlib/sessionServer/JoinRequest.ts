@@ -28,42 +28,40 @@ export class JoinRequest extends AbstractRequest {
     method = "POST"
     url = /^\/authlib\/session\/minecraft\/join$/
 
-    emit(req: IncomingMessage, res: ServerResponse): void {
-        let data: any = ""
-        req.on("data", (chunk) => {
-            data += chunk
-        })
-        req.on("end", async () => {
-            data = JsonHelper.fromJSON(data)
-            res.statusCode = 400
+    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
+        let data: any = await this.getPostData(req)
+        res.statusCode = 400
 
-            if (
-                this.isInvalidValue(data.accessToken) ||
-                this.isInvalidValue(data.selectedProfile) ||
-                this.isInvalidValue(data.serverId)
-            ) {
-                res.write(this.returnError("Bad Request"))
-                return res.end()
-            }
+        if (data.length === 0) {
+            res.write(this.returnError("Bad Request"))
+            return res.end()
+        }
 
-            try {
-                await App.AuthManager.getAuthProvider().join(
-                    data.accessToken,
-                    UUIDHelper.getWithDashes(data.selectedProfile),
-                    data.serverId
-                )
-            } catch (error) {
-                res.write(
-                    this.returnError(
-                        "ForbiddenOperationException",
-                        "Invalid credentials. Invalid username or password."
-                    )
-                )
-                return res.end()
-            }
+        data = JsonHelper.fromJSON(data)
 
-            res.statusCode = 204
-            res.end()
-        })
+        if (
+            this.isInvalidValue(data.accessToken) ||
+            this.isInvalidValue(data.selectedProfile) ||
+            this.isInvalidValue(data.serverId)
+        ) {
+            res.write(this.returnError("Bad Request"))
+            return res.end()
+        }
+
+        try {
+            await App.AuthManager.getAuthProvider().join(
+                data.accessToken,
+                UUIDHelper.getWithDashes(data.selectedProfile),
+                data.serverId
+            )
+        } catch (error) {
+            res.write(
+                this.returnError("ForbiddenOperationException", "Invalid credentials. Invalid username or password.")
+            )
+            return res.end()
+        }
+
+        res.statusCode = 204
+        res.end()
     }
 }
