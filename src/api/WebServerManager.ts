@@ -68,6 +68,10 @@ export class WebServerManager {
         if (url.includes("?")) url = url.split("?")[0]
 
         const filePath = path.join(StorageHelper.updatesDir, url.slice(6))
+        if (!filePath.startsWith(StorageHelper.updatesDir)) {
+            res.writeHead(400)
+            return res.end("4Q")
+        }
 
         if (!fs.existsSync(filePath)) {
             res.writeHead(404)
