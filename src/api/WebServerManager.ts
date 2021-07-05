@@ -28,7 +28,7 @@ import { WebRequestManager } from "./webserver/WebRequestManager"
 
 export class WebServerManager {
     public webServer: http.Server | https.Server
-    requestsManager: WebRequestManager = new WebRequestManager()
+    requestsManager = new WebRequestManager()
     private readonly config = App.ConfigManager.getConfig().ws
 
     public webServerInit(): void {
@@ -64,6 +64,7 @@ export class WebServerManager {
         this.requestsManager.getRequest(req, res)
     }
 
+    // TODO Сделать что-то получше?
     private fileListing(url: string, res: http.ServerResponse): void {
         if (url.includes("?")) url = url.split("?")[0]
 
@@ -98,8 +99,7 @@ export class WebServerManager {
             if (parent.length !== 0) list.unshift("..")
             res.end(list.map((el) => `<a href="${parent}/${el}">${el}</a>`).join("<br>"))
         } else {
-            // TODO Стримы, нужны ли?)
-            res.end(fs.readFileSync(filePath))
+            fs.createReadStream(filePath).pipe(res)
         }
     }
 }

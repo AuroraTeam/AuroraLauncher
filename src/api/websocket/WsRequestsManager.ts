@@ -24,9 +24,9 @@ import { PingRequest } from "./requests/PingRequest"
 import { ProfileRequest } from "./requests/ProfileRequest"
 import { ServersRequest } from "./requests/ServersRequest"
 import { UpdatesRequest } from "./requests/UpdatesRequest"
-import { ErrorResponse, ResponseError } from "./types/ErrorResponse"
+import { ErrorResponse, ResponseError, wsErrorResponse } from "./types/ErrorResponse"
 import { wsRequest } from "./types/Request"
-import { Response } from "./types/Response"
+import { Response, wsResponse } from "./types/Response"
 
 export class WsRequestsManager {
     private requests: Map<string, AbstractRequest> = new Map()
@@ -48,9 +48,9 @@ export class WsRequestsManager {
 
         try {
             // Проверка авторизации пользователя
-            // Если пользователь не авторизован, дропать, если запрос не с авторизацией
+            // Если пользователь не авторизован - дропать, если запрос не с авторизацией
             if (!ws.clientData.isAuthed && data.type !== "auth") throw new ResponseError(201, "Aвторизуйтесь")
-            // Если пользователь авторизован дропать если он пытается повторно авторизоваться иначе скип
+            // Если пользователь авторизован - дропать, если он пытается повторно авторизоваться, иначе скип
             if (ws.clientData.isAuthed && data.type === "auth") throw new ResponseError(202, "Вы уже авторизованы")
 
             return { data: await this.requests.get(data.type).invoke(data.data, ws) }
@@ -62,9 +62,10 @@ export class WsRequestsManager {
 }
 
 export interface wsClient extends ws {
-    clientData?: {
+    clientData: {
         isAlive: boolean
         isAuthed: boolean
         ip: string
     }
+    sendResponse: (data: wsResponse | wsErrorResponse) => void
 }

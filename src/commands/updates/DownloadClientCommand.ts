@@ -42,8 +42,10 @@ export class DownloadClientCommand extends AbstractCommand {
                 await new FabricManager().downloadClient(clientName, dirName)
                 break
             case "mojang":
-            default:
                 await new MojangManager().downloadClient(clientName, dirName)
+                break
+            default:
+                LogHelper.error(`Неизвестный тип источника: ${sourceType}`)
                 break
         }
         App.CommandsManager.console.resume()

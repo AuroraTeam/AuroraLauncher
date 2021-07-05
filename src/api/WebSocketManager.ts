@@ -30,11 +30,11 @@ import { WsRequestsManager, wsClient } from "./websocket/WsRequestsManager"
 
 export class WebSocketManager {
     webSocketServer: ws.Server
-    requestsManager: WsRequestsManager = new WsRequestsManager()
+    requestsManager = new WsRequestsManager()
 
     webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)
-        this.webSocketServer.on("connection", (ws: ws, req: http.IncomingMessage) => this.connectHandler(ws, req))
+        this.webSocketServer.on("connection", (ws: wsClient, req: http.IncomingMessage) => this.connectHandler(ws, req))
 
         const interval = setInterval(() => {
             this.webSocketServer.clients.forEach((ws: wsClient) => {
@@ -54,21 +54,27 @@ export class WebSocketManager {
         ws.on("ping", ws.pong) // На случай всяких внешних проверок, аля чекалки статуса
         ws.on("pong", () => (ws.clientData.isAlive = true))
 
+        // Получаем IP юзера
         const clientIP = req.socket.remoteAddress
+        // Разрешаем только один коннект на один IP
         if (Array.from(this.webSocketServer.clients).some((c: wsClient) => c.clientData?.ip === clientIP)) {
-            this.wsSend(ws, {
+            ws.sendResponse({
                 uuid: NIL_UUID,
                 code: 99,
                 message: "Only one connection allowed per IP",
             })
             return ws.terminate()
         }
+        // Записываем данные юзера
         ws.clientData = {
             isAlive: true,
             ip: clientIP,
             isAuthed: false,
         }
+        // Добавляем хелпер
+        ws.sendResponse = (data: wsResponse | wsErrorResponse) => ws.send(JsonHelper.toJSON(data))
 
+        // Обработка приходящих сообщений
         ws.on("message", async (message: string) => {
             LogHelper.dev(`WebSocket request: ${message}`)
             let parsedMessage: wsRequest
@@ -76,7 +82,7 @@ export class WebSocketManager {
             try {
                 parsedMessage = JsonHelper.fromJSON(message)
             } catch (error) {
-                return this.wsSend(ws, {
+                return ws.sendResponse({
                     uuid: NIL_UUID,
                     code: 100,
                     message: error.message,
@@ -84,14 +90,14 @@ export class WebSocketManager {
             }
 
             if (parsedMessage.uuid === undefined) {
-                return this.wsSend(ws, {
+                return ws.sendResponse({
                     uuid: NIL_UUID,
                     code: 101,
                     message: "Request UUID is undefined",
                 })
             }
             if (parsedMessage.type === undefined) {
-                return this.wsSend(ws, {
+                return ws.sendResponse({
                     uuid: parsedMessage.uuid,
                     code: 101,
                     message: "Request type is undefined",
@@ -100,14 +106,10 @@ export class WebSocketManager {
 
             const response = await this.requestsManager.getRequest(parsedMessage, ws)
             LogHelper.dev(`WebSocket response: ${JsonHelper.toJSON(response)}`)
-            this.wsSend(ws, {
+            ws.sendResponse({
                 ...response,
                 uuid: parsedMessage.uuid,
             })
         })
-    }
-
-    private wsSend(ws: ws, data: wsResponse | wsErrorResponse): void {
-        ws.send(JsonHelper.toJSON(data))
     }
 }
