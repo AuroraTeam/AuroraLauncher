@@ -69,37 +69,34 @@ export class WebServerManager {
         if (url.includes("?")) url = url.split("?")[0]
 
         const filePath = path.join(StorageHelper.updatesDir, url.slice(6))
+        // Защита от выхода из директории
         if (!filePath.startsWith(StorageHelper.updatesDir)) {
-            res.writeHead(400)
-            return res.end("4Q")
+            return res.writeHead(400).end()
         }
 
         if (!fs.existsSync(filePath)) {
-            res.writeHead(404)
-            if (this.config.hideListing) {
-                res.end()
-            } else {
-                res.end("Not found!")
-            }
-            return
+            return res.writeHead(404).end("Not found!")
         }
 
         const stats = fs.statSync(filePath)
-        res.writeHead(200)
-        if (stats.isDirectory()) {
-            if (this.config.hideListing) {
-                res.writeHead(404)
-                res.end()
-                return
+
+        if (stats.isFile()) {
+            fs.createReadStream(filePath).pipe(res)
+            return
+        }
+
+        if (this.config.hideListing) return res.writeHead(404).end()
+
+        fs.readdir(filePath, (err, files) => {
+            if (err) {
+                LogHelper.warn(err)
+                return res.writeHead(500).end()
             }
 
-            const list = fs.readdirSync(filePath)
             const parent = url.slice(-1) == "/" ? url.slice(0, -1) : url
             res.write("<style>*{font-family:monospace; font-size:14px}</style>")
-            if (parent.length !== 0) list.unshift("..")
-            res.end(list.map((el) => `<a href="${parent}/${el}">${el}</a>`).join("<br>"))
-        } else {
-            fs.createReadStream(filePath).pipe(res)
-        }
+            if (parent.length !== 0) files.unshift("..")
+            res.end(files.map((el) => `<a href="${parent}/${el}">${el}</a>`).join("<br>"))
+        })
     }
 }
