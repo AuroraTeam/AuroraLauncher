@@ -68,7 +68,8 @@ export class CommandsManager {
             prompt: "",
         })
         this.console.on("line", (line) => {
-            const args = line.match(/"[^"]*"|[^\s"]+/g).map((s) => s.trim().replace(/"/g, ""))
+            const args = line.match(/"[^"]*"|[^\s"]+/g)?.map((s) => s.trim().replace(/"/g, ""))
+            if (!args) return
             const cmd = args.shift().toLowerCase()
             if (!this.commands.has(cmd))
                 return LogHelper.error(App.LangManager.getTranslate().CommandsManager.cmdNotFound, cmd)
