@@ -18,6 +18,8 @@
 
 import * as fs from "fs"
 
+import { set } from "lodash"
+
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { LauncherServerConfig } from "./types/LauncherServerConfig"
@@ -40,28 +42,10 @@ export class ConfigManager {
         return this.config
     }
 
-    // Современные проблемы требуют современных решений
-    setProp(prop: string, value: string | number | boolean): boolean {
-        const propPath = prop.split(".")
-        try {
-            this.config = this._setProp(propPath, value, this.config)
-        } catch (error) {
-            LogHelper.error(error)
-            return false
-        }
+    // Аеее cас
+    setProp(prop: string, value: string | number | boolean): void {
+        set(this.config, prop, value)
         this.save()
-        return true
-    }
-
-    // Ооо великая рекурсия
-    private _setProp(propPath: string[], value: string | number | boolean, config: any): any {
-        const chunk = propPath.shift()
-        if (config[chunk] === undefined) throw "Prop nf" // TODO Translate
-        if (propPath.length === 0) {
-            config[chunk] = value
-            return config
-        }
-        this._setProp(propPath, value, config[chunk])
     }
 
     private load(): void {

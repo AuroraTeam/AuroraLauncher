@@ -49,6 +49,7 @@ export class LangManager {
     changeLang(lang: Lang): any {
         if (!this.langList.has(lang)) return LogHelper.error("Language %s not found!", lang)
         this.currentLang = this.langList.get(lang)
-        if (App.ConfigManager.setProp("lang", lang)) LogHelper.info("Language changed")
+        App.ConfigManager.setProp("lang", lang)
+        LogHelper.info("Language changed")
     }
 }
