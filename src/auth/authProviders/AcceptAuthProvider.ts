@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { App } from "@root/LauncherServer"
 import { v4, v5 } from "uuid"
 
 import { AbstractAuthProvider, AuthResponseData, PrivilegesResponseData } from "./AbstractAuthProvider"
@@ -28,7 +29,7 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     auth(username: string): AuthResponseData {
         const data = {
             username,
-            userUUID: v5(username, "814f98b5-f66d-4456-87dc-f4eed8f6ca73"),
+            userUUID: v5(username, App.ConfigManager.getConfig().projectID),
             accessToken: v4(),
         }
 
