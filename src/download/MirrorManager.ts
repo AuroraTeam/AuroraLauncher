@@ -84,6 +84,11 @@ export class MirrorManager {
         App.ProfilesManager.createProfile({
             ...JsonHelper.fromJSON(profile),
             clientDir: dirName,
+            servers: [
+                {
+                    title: dirName,
+                },
+            ],
         } as ProfileConfig)
         LogHelper.info(App.LangManager.getTranslate().MirrorManager.client.success)
     }

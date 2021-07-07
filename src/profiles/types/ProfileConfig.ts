@@ -1,4 +1,5 @@
 import { classToPlain, deserialize } from "class-transformer"
+import { merge } from "lodash"
 import { v4 } from "uuid"
 
 import { JsonHelper } from "../../helpers/JsonHelper"
@@ -34,7 +35,7 @@ export class ProfileConfig {
     clientArgs: string[]
 
     constructor(config: ProfileConfig) {
-        Object.assign(this, this.defaults, config)
+        merge(this, this.defaults, config)
     }
 
     private get defaults() {
@@ -42,7 +43,6 @@ export class ProfileConfig {
             configVersion: 0,
             uuid: v4(),
             servers: [
-                // TODO _.merge для переопределения названия
                 {
                     ip: "127.0.0.1",
                     port: "25565",

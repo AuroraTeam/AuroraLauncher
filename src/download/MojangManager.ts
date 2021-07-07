@@ -85,6 +85,11 @@ export class MojangManager {
             clientDir: dirName,
             assetsDir: `assets${version.assets}`,
             assetsIndex: version.assets,
+            servers: [
+                {
+                    title: dirName,
+                },
+            ],
         } as ProfileConfig)
     }
 
