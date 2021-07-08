@@ -46,11 +46,13 @@ export class WebServerManager {
         this.requestsManager.getRequest(req, res)
     }
 
-    // TODO Сделать что-то получше?
     private fileListing(url: string, res: http.ServerResponse): void {
         if (url.includes("?")) url = url.split("?")[0]
+        url = url.replace(/\/{2,}/g, "/").slice(6)
+        if (url.endsWith("/")) url = url.slice(0, -1)
 
-        const filePath = path.join(StorageHelper.updatesDir, url.slice(6))
+        const filePath = path.join(StorageHelper.updatesDir, url)
+
         // Защита от выхода из директории
         if (!filePath.startsWith(StorageHelper.updatesDir)) {
             return res.writeHead(400).end()
@@ -61,7 +63,6 @@ export class WebServerManager {
         }
 
         const stats = fs.statSync(filePath)
-
         if (stats.isFile()) {
             fs.createReadStream(filePath).pipe(res)
             return
@@ -75,10 +76,9 @@ export class WebServerManager {
                 return res.writeHead(500).end()
             }
 
-            const parent = url.slice(-1) == "/" ? url.slice(0, -1) : url
+            if (url.length !== 0) files.unshift("..")
             res.write("<style>*{font-family:monospace; font-size:14px}</style>")
-            if (parent.length !== 0) files.unshift("..")
-            res.end(files.map((el) => `<a href="${parent}/${el}">${el}</a>`).join("<br>"))
+            res.end(files.map((el) => `<a href="/files${url}/${el}">${el}</a>`).join("<br>"))
         })
     }
 }
