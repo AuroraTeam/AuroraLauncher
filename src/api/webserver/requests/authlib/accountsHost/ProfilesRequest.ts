@@ -13,23 +13,18 @@ export class ProfilesRequest extends AbstractRequest {
         let data: any = await this.getPostData(req)
         res.statusCode = 400
 
-        if (data.length === 0) {
-            res.write(this.returnError("Bad Request"))
-            return res.end()
+        try {
+            data = JsonHelper.fromJSON(data)
+        } catch (error) {
+            return res.end(this.returnError("BadRequestException"))
         }
 
-        data = JsonHelper.fromJSON(data)
+        if (!Array.isArray(data) || data.length === 0) return res.end(this.returnError("BadRequestException"))
 
-        if ("object" !== typeof data || !Array.isArray(data) || data.length === 0) {
-            return res.end()
-        }
-
-        if (data.length >= 10) {
-            res.write(
+        if (data.length > 10)
+            return res.end(
                 this.returnError("IllegalArgumentException", "Not more that 10 profile name per call is allowed.")
             )
-            return res.end()
-        }
 
         let users
         try {
@@ -39,7 +34,6 @@ export class ProfilesRequest extends AbstractRequest {
         }
 
         res.statusCode = 200
-        res.write(JsonHelper.toJSON(users))
-        res.end()
+        res.end(JsonHelper.toJSON(users))
     }
 }

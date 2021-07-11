@@ -11,9 +11,9 @@ export class PrivelegesRequest extends AbstractRequest {
 
     async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         const accessToken = req.headers.authorization
+        res.statusCode = 400
 
         if ("string" !== typeof accessToken || accessToken.length === 0) {
-            res.statusCode = 400
             return res.end()
         }
 
@@ -21,11 +21,11 @@ export class PrivelegesRequest extends AbstractRequest {
         try {
             user = await App.AuthManager.getAuthProvider().privileges(accessToken.slice(7))
         } catch (error) {
-            res.statusCode = 400
             return res.end()
         }
 
-        res.write(
+        res.statusCode = 200
+        res.end(
             JsonHelper.toJSON({
                 privileges: {
                     onlineChat: {
@@ -43,6 +43,5 @@ export class PrivelegesRequest extends AbstractRequest {
                 },
             })
         )
-        res.end()
     }
 }

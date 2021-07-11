@@ -52,7 +52,7 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
             onlineChat: true,
             multiplayerServer: true,
             multiplayerRealms: true,
-            telemetry: true,
+            telemetry: false,
         }
     }
 

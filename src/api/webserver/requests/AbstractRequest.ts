@@ -16,7 +16,11 @@ export abstract class AbstractRequest {
         return query.toString().length === 0
     }
 
-    protected returnError(error: string, errorMessage?: string): string {
+    public returnError(error: string, errorMessage?: string): string {
+        return JsonHelper.toJSON({ error, errorMessage })
+    }
+    // КХЪ Похоже что нужно рефакторить некоторе говно
+    public static returnError(error: string, errorMessage?: string): string {
         return JsonHelper.toJSON({ error, errorMessage })
     }
 

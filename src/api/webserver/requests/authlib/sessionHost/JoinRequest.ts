@@ -14,10 +14,7 @@ export class JoinRequest extends AbstractRequest {
         let data: any = await this.getPostData(req)
         res.statusCode = 400
 
-        if (data.length === 0) {
-            res.write(this.returnError("Bad Request"))
-            return res.end()
-        }
+        if (data.length === 0) return res.end(this.returnError("Bad Request"))
 
         data = JsonHelper.fromJSON(data)
 
@@ -26,8 +23,7 @@ export class JoinRequest extends AbstractRequest {
             this.isInvalidValue(data.selectedProfile) ||
             this.isInvalidValue(data.serverId)
         ) {
-            res.write(this.returnError("Bad Request"))
-            return res.end()
+            return res.end(this.returnError("Bad Request"))
         }
 
         try {
@@ -37,10 +33,9 @@ export class JoinRequest extends AbstractRequest {
                 data.serverId
             )
         } catch (error) {
-            res.write(
+            return res.end(
                 this.returnError("ForbiddenOperationException", "Invalid credentials. Invalid username or password.")
             )
-            return res.end()
         }
 
         res.statusCode = 204
