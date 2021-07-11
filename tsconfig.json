@@ -4,8 +4,13 @@
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "commonjs",
-        "target": "es5",
-        "jsx": "react",
-        "allowJs": true
+        "target": "ES2017",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "baseUrl": "src",
+        "paths": {
+            "@root/*": ["./*"]
+        }
     }
 }
