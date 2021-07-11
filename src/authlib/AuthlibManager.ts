@@ -63,11 +63,12 @@ export class AuthlibManager {
             })
         }
 
-        // TODO поменять на файл
-        if (!fs.existsSync(path.join(libDir, "build/libs"))) {
+        const authlibJarPath = path.join(StorageHelper.authlibDir, "authlib.jar")
+        if (!fs.existsSync(authlibJarPath)) {
             LogHelper.info("Build Authlib...")
             fs.copyFileSync(this.publicKeyPath, path.join(libDir, "src/main/resources/yggdrasil_session_pubkey.der"))
             execSync("gradlew build", { cwd: libDir })
+            fs.copyFileSync(path.join(libDir, "build/libs/authlib.jar"), authlibJarPath)
         }
     }
 }
