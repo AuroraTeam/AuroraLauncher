@@ -5,7 +5,7 @@ import { AcceptAuthProvider } from "./AcceptAuthProvider"
 export abstract class AbstractAuthProvider extends AbstractProvider {
     abstract auth(username: string, password: string): PromiseOr<AuthResponseData>
 
-    abstract join(accessToken: string, userUUID: string, serverId: string): PromiseOr<void>
+    abstract join(accessToken: string, userUUID: string, serverId: string): PromiseOr<boolean>
 
     abstract hasJoined(username: string, serverId: string): PromiseOr<HasJoinedResponseData>
 
