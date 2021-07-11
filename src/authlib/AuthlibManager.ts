@@ -21,18 +21,18 @@ export class AuthlibManager {
         this.privateKey = fs.readFileSync(this.privateKeyPath)
     }
 
-    public regenerateKeys(): void {
-        this.generateKeys()
-        this.privateKey = fs.readFileSync(this.privateKeyPath)
-        fs.unlinkSync(path.join(StorageHelper.authlibDir, "lib/build/libs"))
-        this.build()
-    }
+    // public regenerateKeys(): void {
+    //     this.generateKeys()
+    //     this.privateKey = fs.readFileSync(this.privateKeyPath)
+    //     fs.unlinkSync(path.join(StorageHelper.authlibDir, "authlib.jar"))
+    //     this.build()
+    // }
 
     private generateKeys(): void {
         const keys = crypto.generateKeyPairSync("rsa", {
             modulusLength: 4096,
             publicKeyEncoding: {
-                type: "pkcs1",
+                type: "spki",
                 format: "der",
             },
             privateKeyEncoding: {
