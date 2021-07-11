@@ -35,6 +35,8 @@ export class WebSocketManager {
     connectHandler(ws: wsClient, req: http.IncomingMessage): void {
         ws.on("ping", ws.pong) // На случай всяких внешних проверок, аля чекалки статуса
         ws.on("pong", () => (ws.clientData.isAlive = true))
+        // Добавляем хелпер
+        ws.sendResponse = (data: wsResponse | wsErrorResponse) => ws.send(JsonHelper.toJSON(data))
 
         // Получаем IP юзера
         const clientIP = req.socket.remoteAddress
@@ -53,8 +55,6 @@ export class WebSocketManager {
             ip: clientIP,
             isAuthed: false,
         }
-        // Добавляем хелпер
-        ws.sendResponse = (data: wsResponse | wsErrorResponse) => ws.send(JsonHelper.toJSON(data))
 
         // Обработка приходящих сообщений
         ws.on("message", async (message: string) => {
