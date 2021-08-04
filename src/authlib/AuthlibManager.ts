@@ -15,7 +15,7 @@ export class AuthlibManager {
         if (fs.existsSync(this.privateKeyPath) && fs.existsSync(this.publicKeyPath))
             LogHelper.info("Keys exists, skip generate")
         else this.generateKeys()
-        this.build()
+        // this.build()
 
         // init private key
         this.privateKey = fs.readFileSync(this.privateKeyPath)
