@@ -15,36 +15,39 @@ export class UpdatesManager {
     }
 
     hashUpdatesDir(): void {
-        const folders = fs.readdirSync(StorageHelper.updatesDir)
-        if (folders.length === 0) return LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncSkip)
+        // TODO Проверка ошибок с readdirSync и прочими методами с fs ниже по стеку?
+        const folders = fs
+            .readdirSync(StorageHelper.updatesDir, { withFileTypes: true })
+            .filter((folder) => folder.isDirectory())
 
+        if (folders.length === 0) return LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncSkip)
         LogHelper.info(App.LangManager.getTranslate().UpdatesManager.sync)
-        folders.forEach((el) => {
-            const startTime = new Date().getTime()
-            this.hDirs.set(el, this.hashDir(path.resolve(StorageHelper.updatesDir, el)))
-            LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncTime, el, new Date().getTime() - startTime)
+
+        folders.forEach(({ name }) => {
+            const startTime = Date.now()
+            this.hDirs.set(name, this.hashDir(path.join(StorageHelper.updatesDir, name)))
+            LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncTime, name, Date.now() - startTime)
         })
+
         LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncEnd)
     }
 
     hashDir(dir: string, arrayOfFiles: HashedFile[] = []): HashedFile[] {
-        const entries = fs.readdirSync(dir, { withFileTypes: true })
-        for (const entry of entries) {
-            const file = path.resolve(dir, entry.name)
+        fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
+            const file = path.join(dir, entry.name)
             if (entry.isDirectory()) {
                 arrayOfFiles.concat(this.hashDir(file, arrayOfFiles))
             } else {
                 arrayOfFiles.push(this.hashFile(file))
             }
-        }
+        })
         return arrayOfFiles
     }
 
     hashFile(path: string): HashedFile {
-        const dir = fs.statSync(path)
         return {
             path: path.replace(StorageHelper.updatesDir, ""),
-            size: dir.size,
+            size: fs.statSync(path).size,
             hashsum: fs.createReadStream(path).pipe(crypto.createHash("sha1")).digest("hex"),
         }
     }
