@@ -1,8 +1,18 @@
-import { ResponseData } from "../../api/websocket/types/Response"
-import { AbstractProvider } from "../AbstractProvider"
-import { AcceptAuthProvider } from "./AcceptAuthProvider"
+import { ResponseData } from "../api/websocket/types/Response"
 
-export abstract class AbstractAuthProvider extends AbstractProvider {
+export abstract class AbstractAuthProvider {
+    protected static type: string
+
+    public static getType(): string {
+        return this.type
+    }
+
+    public static getDefaultConfig(): AbstractAuthProviderConfig {
+        return {
+            type: "accept",
+        }
+    }
+
     abstract auth(username: string, password: string): PromiseOr<AuthResponseData>
 
     abstract join(accessToken: string, userUUID: string, serverId: string): PromiseOr<boolean>
@@ -14,12 +24,6 @@ export abstract class AbstractAuthProvider extends AbstractProvider {
     abstract privileges(accessToken: string): PromiseOr<PrivilegesResponseData>
 
     abstract profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[]>
-
-    public static getDefaultConfig(): AbstractAuthProviderConfig {
-        return {
-            type: AcceptAuthProvider.getType(),
-        }
-    }
 }
 
 export interface AbstractAuthProviderConfig {

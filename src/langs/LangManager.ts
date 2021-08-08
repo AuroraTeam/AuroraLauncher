@@ -10,13 +10,13 @@ export class LangManager {
 
     constructor() {
         this.setLangs()
-        const selectedLang = App.ConfigManager.getConfig().lang || "en"
+        const selectedLang = App.ConfigManager.getConfig().lang
 
         if (!this.langList.has(selectedLang))
-            LogHelper.fatal("Invalid lang settings! Language %s not found.", selectedLang)
+            LogHelper.fatal(`Invalid lang settings! Language "${selectedLang}" not found.`)
         this.currentLang = this.langList.get(selectedLang)
 
-        LogHelper.dev("LangManager init, selected language: %s", selectedLang)
+        LogHelper.dev(`LangManager init, selected language: ${selectedLang}`)
     }
 
     private setLangs(): void {
@@ -24,11 +24,11 @@ export class LangManager {
         this.langList.set("en", require("./en.json"))
     }
 
-    getTranslate(): Translate {
+    public getTranslate(): Translate {
         return this.currentLang
     }
 
-    changeLang(lang: Lang): any {
+    public changeLang(lang: Lang): any {
         if (!this.langList.has(lang)) return LogHelper.error("Language %s not found!", lang)
         this.currentLang = this.langList.get(lang)
         App.ConfigManager.setProp("lang", lang)

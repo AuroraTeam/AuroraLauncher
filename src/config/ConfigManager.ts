@@ -20,20 +20,18 @@ export class ConfigManager {
         }
     }
 
-    getConfig(): LauncherServerConfig {
+    public getConfig(): LauncherServerConfig {
         return this.config
     }
 
-    // Аеее cас
-    setProp(prop: string, value: string | number | boolean): void {
+    public setProp(prop: string, value: string | number | boolean): void {
         set(this.config, prop, value)
         this.save()
     }
 
     private load(): void {
-        const config = fs.readFileSync(StorageHelper.configFile).toString()
         try {
-            this.config = LauncherServerConfig.fromJSON(config)
+            this.config = LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString())
         } catch (e) {
             if (e instanceof SyntaxError) {
                 LogHelper.error(e)

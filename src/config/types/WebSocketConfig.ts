@@ -10,18 +10,18 @@ export class WebSocketConfig {
         key: string
     }
 
-    static getDefaults(): WebSocketConfig {
-        const defaults = new WebSocketConfig()
-        defaults.address = "ws://localhost:1370/"
-        defaults.ip = "0.0.0.0"
-        defaults.port = 1370
-        defaults.enableListing = true
-        defaults.hideListing = false
-        defaults.useSSL = false
-        defaults.ssl = {
-            cert: "/path/to/cert.pem",
-            key: "/path/to/key.pem",
+    static getDefaultConfig(): WebSocketConfig {
+        return {
+            address: "ws://localhost:1370/ws",
+            ip: "0.0.0.0",
+            port: 1370,
+            enableListing: true,
+            hideListing: false,
+            useSSL: false,
+            ssl: {
+                cert: "/path/to/cert.pem",
+                key: "/path/to/key.pem",
+            },
         }
-        return defaults
     }
 }

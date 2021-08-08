@@ -1,9 +1,9 @@
+import { AbstractAuthProvider, AbstractAuthProviderConfig } from "@root/auth/AbstractAuthProvider"
 import { classToPlain, deserialize } from "class-transformer"
 import { v4 } from "uuid"
 
 import { JsonHelper } from "../../helpers/JsonHelper"
 import { Lang } from "../../langs/LangManager"
-import { AuthConfig } from "./AuthConfig"
 import { WebSocketConfig } from "./WebSocketConfig"
 
 // TODO Инфа на будущее, пригодится при версионировании конфигов
@@ -14,7 +14,7 @@ export class LauncherServerConfig {
     lang: Lang
     env: Envirovement
     mirrors: string[]
-    auth: AuthConfig
+    auth: AbstractAuthProviderConfig
     ws: WebSocketConfig
 
     static getDefaults(): LauncherServerConfig {
@@ -23,9 +23,9 @@ export class LauncherServerConfig {
         config.projectID = v4()
         config.lang = "ru"
         config.env = Envirovement.DEV
-        config.mirrors = ["https://mirror.aurora-launcher.ru/"]
-        config.auth = AuthConfig.getDefaults()
-        config.ws = WebSocketConfig.getDefaults()
+        config.mirrors = []
+        config.auth = AbstractAuthProvider.getDefaultConfig()
+        config.ws = WebSocketConfig.getDefaultConfig()
         return config
     }
 
