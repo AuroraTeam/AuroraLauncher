@@ -7,7 +7,9 @@ import { URL } from "url"
 
 import { SingleBar } from "cli-progress"
 import pMap from "p-map"
+import getRawBody from "raw-body"
 
+import { JsonHelper } from "./JsonHelper"
 import { LogHelper } from "./LogHelper"
 import { ProgressHelper } from "./ProgressHelper"
 import { StorageHelper } from "./StorageHelper"
@@ -184,5 +186,31 @@ export class HttpHelper {
                     reject(err)
                 })
         })
+    }
+
+    // TODO Проработать этот момент
+    public static parseQuery(url: string): URLSearchParams {
+        return new URLSearchParams(url.split("?")[1])
+    }
+
+    public static sendError(res: http.ServerResponse, code = 400, error?: string, errorMessage?: string): void {
+        res.statusCode = code
+        this.sendJson(res, { error, errorMessage })
+    }
+
+    public static sendJson(res: http.ServerResponse, data: object): void {
+        res.setHeader("Content-Type", "application/json; charset=utf-8")
+        res.end(JsonHelper.toJSON(data))
+    }
+
+    public static async parsePostData(req: http.IncomingMessage, res: http.ServerResponse): Promise<string> {
+        if (!req.headers["content-type"] || !req.headers["content-type"].includes("application/json"))
+            this.sendError(res, 400, "Invalid content-type header")
+
+        try {
+            return await getRawBody(req, { limit: "500kb", encoding: "utf-8" })
+        } catch (error) {
+            this.sendError(res, error.status || 400, error.message)
+        }
     }
 }
