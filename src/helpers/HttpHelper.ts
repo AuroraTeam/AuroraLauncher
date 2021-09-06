@@ -189,6 +189,10 @@ export class HttpHelper {
     }
 
     // TODO Проработать этот момент
+    public static isEmptyQuery(query: URLSearchParams): boolean {
+        return query.toString().length === 0
+    }
+
     public static parseQuery(url: string): URLSearchParams {
         return new URLSearchParams(url.split("?")[1])
     }
@@ -203,14 +207,15 @@ export class HttpHelper {
         res.end(JsonHelper.toJSON(data))
     }
 
-    public static async parsePostData(req: http.IncomingMessage, res: http.ServerResponse): Promise<string> {
-        if (!req.headers["content-type"] || !req.headers["content-type"].includes("application/json"))
-            this.sendError(res, 400, "Invalid content-type header")
+    public static isJsonPostData(req: http.IncomingMessage): boolean {
+        return !!req.headers["content-type"] || req.headers["content-type"].includes("application/json")
+    }
 
-        try {
-            return await getRawBody(req, { limit: "500kb", encoding: "utf-8" })
-        } catch (error) {
-            this.sendError(res, error.status || 400, error.message)
-        }
+    /**
+     * @returns Объект в случае успеха, иначе ошибку парсинга функции getRawBody
+     * @throws Выбрасывает объект ошибки в случае ошибки парсинга
+     */
+    public static async parsePostData(req: http.IncomingMessage): Promise<string> {
+        return await getRawBody(req, { limit: "500kb", encoding: "utf-8" })
     }
 }

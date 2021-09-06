@@ -1,4 +1,7 @@
-import { ExtendedIncomingMessage, ExtendedServerResponse } from "@root/api/webserver/WebRequestManager"
+import { IncomingMessage, ServerResponse } from "http"
+
+import { HttpHelper } from "@root/helpers/HttpHelper"
+import { JsonHelper } from "@root/helpers/JsonHelper"
 import { App } from "@root/LauncherServer"
 
 import { AbstractRequest } from "../../AbstractRequest"
@@ -7,20 +10,20 @@ export class HasJoinedRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib\/session\/minecraft\/hasJoined/
 
-    async emit(req: ExtendedIncomingMessage, res: ExtendedServerResponse): Promise<void> {
-        const data = req.query
-        if (this.isEmptyQuery(data)) res.error()
+    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
+        const data = HttpHelper.parseQuery(req.url)
+        if (HttpHelper.isEmptyQuery(data)) return HttpHelper.sendError(res)
 
         const username = data.get("username")
         const serverId = data.get("serverId")
 
-        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return res.error()
+        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return HttpHelper.sendError(res)
 
         let user
         try {
             user = await App.AuthManager.getAuthProvider().hasJoined(username, serverId)
         } catch (error) {
-            return res.error(400, error.message)
+            return HttpHelper.sendError(res, 400, error.message)
         }
 
         const textures: any = {}
@@ -36,7 +39,7 @@ export class HasJoinedRequest extends AbstractRequest {
         }
 
         const texturesValue = Buffer.from(
-            JSON.stringify({
+            JsonHelper.toJSON({
                 timestamp: Date.now(),
                 profileId: user.userUUID,
                 profileName: username,
@@ -45,7 +48,7 @@ export class HasJoinedRequest extends AbstractRequest {
             })
         ).toString("base64")
 
-        res.json({
+        HttpHelper.sendJson(res, {
             id: user.userUUID,
             name: username,
             properties: [

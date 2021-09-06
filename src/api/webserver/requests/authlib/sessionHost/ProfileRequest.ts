@@ -1,4 +1,6 @@
-import { ExtendedIncomingMessage, ExtendedServerResponse } from "@root/api/webserver/WebRequestManager"
+import { IncomingMessage, ServerResponse } from "http"
+
+import { HttpHelper } from "@root/helpers/HttpHelper"
 import { App } from "@root/LauncherServer"
 
 import { AbstractRequest } from "../../AbstractRequest"
@@ -7,7 +9,7 @@ export class ProfileRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
 
-    async emit(req: ExtendedIncomingMessage, res: ExtendedServerResponse): Promise<void> {
+    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         const matches = req.url.match(this.url)
         const uuid = matches.groups.uuid
         const signed = matches[3] === "false"
@@ -54,6 +56,6 @@ export class ProfileRequest extends AbstractRequest {
         texturesValue = Buffer.from(JSON.stringify(texturesValue))
         data.properties[0].value = texturesValue.toString("base64")
         if (signed) data.properties[0].signature = App.AuthlibManager.getSignature(texturesValue)
-        res.json(data)
+        HttpHelper.sendJson(res, data)
     }
 }

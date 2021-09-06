@@ -6,7 +6,7 @@ import * as path from "path"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
-import { ExtendedIncomingMessage, ExtendedServerResponse, WebRequestManager } from "./webserver/WebRequestManager"
+import { WebRequestManager } from "./webserver/WebRequestManager"
 
 export class WebServerManager {
     public webServer: http.Server | https.Server
@@ -43,7 +43,7 @@ export class WebServerManager {
 
     private requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
         if (req.url.startsWith("/files")) return this.fileListing(req.url, res)
-        this.requestsManager.getRequest(req as ExtendedIncomingMessage, res as ExtendedServerResponse)
+        this.requestsManager.getRequest(req, res)
     }
 
     private fileListing(url: string, res: http.ServerResponse): void {
