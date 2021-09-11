@@ -11,10 +11,10 @@ import { wsResponse } from "./websocket/types/Response"
 import { WsRequestsManager, wsClient } from "./websocket/WsRequestsManager"
 
 export class WebSocketManager {
-    webSocketServer: ws.Server
-    requestsManager = new WsRequestsManager()
+    private webSocketServer: ws.Server
+    private requestsManager = new WsRequestsManager()
 
-    webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
+    public createWebSocket(wsServerOptions: ws.ServerOptions): void {
         this.webSocketServer = new ws.Server(wsServerOptions)
         this.webSocketServer.on("connection", (ws: wsClient, req: http.IncomingMessage) => this.connectHandler(ws, req))
 
@@ -32,7 +32,7 @@ export class WebSocketManager {
         })
     }
 
-    connectHandler(ws: wsClient, req: http.IncomingMessage): void {
+    private connectHandler(ws: wsClient, req: http.IncomingMessage): void {
         ws.on("ping", ws.pong) // На случай всяких внешних проверок, аля чекалки статуса
         ws.on("pong", () => (ws.clientData.isAlive = true))
         // Добавляем хелпер

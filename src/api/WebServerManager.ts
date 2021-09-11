@@ -9,17 +9,19 @@ import { App } from "../LauncherServer"
 import { WebRequestManager } from "./webserver/WebRequestManager"
 
 export class WebServerManager {
-    public webServer: http.Server | https.Server
-    requestsManager = new WebRequestManager()
+    private webServer: http.Server | https.Server
+    private requestsManager = new WebRequestManager()
 
-    public webServerInit(): void {
+    public createWebServer(): http.Server | https.Server {
+        if (this.webServer) throw new Error("The web server has already been created")
+
         const { ssl, useSSL } = App.ConfigManager.getConfig().ws
 
         if (!useSSL) {
             this.webServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) =>
                 this.requestListener(req, res)
             )
-            return
+            return this.webServer
         }
 
         const certPath = path.resolve(StorageHelper.storageDir, ssl.cert)
@@ -40,6 +42,7 @@ export class WebServerManager {
             },
             (req: http.IncomingMessage, res: http.ServerResponse) => this.requestListener(req, res)
         )
+        return this.webServer
     }
 
     private requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {

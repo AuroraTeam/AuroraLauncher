@@ -5,7 +5,7 @@ import { EventEmitter } from "events"
 
 import * as colors from "colors/safe"
 
-import { SocketManager } from "./api/SocketManager"
+import { WebManager } from "./api/WebManager"
 import { AuthManager } from "./auth/AuthManager"
 import { AuthlibManager } from "./authlib/AuthlibManager"
 import { CommandsManager } from "./commands/CommandsManager"
@@ -25,7 +25,7 @@ export class LauncherServer extends EventEmitter {
     private _AuthManager: AuthManager
     private _CommandsManager: CommandsManager
     private _ModulesManager: ModulesManager
-    private _SocketManager: SocketManager
+    private _WebManager: WebManager
     private _UpdatesManager: UpdatesManager
     private _ProfilesManager: ProfilesManager
     private _AuthlibManager: AuthlibManager
@@ -56,7 +56,7 @@ export class LauncherServer extends EventEmitter {
         this._AuthManager = new AuthManager()
         this._AuthlibManager = new AuthlibManager()
         this._CommandsManager = new CommandsManager()
-        this._SocketManager = new SocketManager()
+        this._WebManager = new WebManager()
         this._UpdatesManager = new UpdatesManager()
         this._ProfilesManager = new ProfilesManager()
         this._ModulesManager = new ModulesManager()
@@ -85,8 +85,8 @@ export class LauncherServer extends EventEmitter {
         return this._ModulesManager
     }
 
-    get SocketManager(): SocketManager {
-        return this._SocketManager
+    get WebManager(): WebManager {
+        return this._WebManager
     }
 
     get UpdatesManager(): UpdatesManager {
