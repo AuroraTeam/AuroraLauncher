@@ -11,18 +11,19 @@ import { WebRequestManager } from "./webserver/WebRequestManager"
 export class WebServerManager {
     public webServer: http.Server | https.Server
     requestsManager = new WebRequestManager()
-    private readonly config = App.ConfigManager.getConfig().ws
 
     public webServerInit(): void {
-        if (!this.config.useSSL) {
+        const { ssl, useSSL } = App.ConfigManager.getConfig().ws
+
+        if (!useSSL) {
             this.webServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) =>
                 this.requestListener(req, res)
             )
             return
         }
 
-        const certPath = path.resolve(StorageHelper.storageDir, this.config.ssl.cert)
-        const keyPath = path.resolve(StorageHelper.storageDir, this.config.ssl.key)
+        const certPath = path.resolve(StorageHelper.storageDir, ssl.cert)
+        const keyPath = path.resolve(StorageHelper.storageDir, ssl.key)
 
         // TODO Translate
         if (!fs.existsSync(certPath)) {
@@ -47,6 +48,9 @@ export class WebServerManager {
     }
 
     private fileListing(url: string, res: http.ServerResponse): void {
+        const { disableListing, hideListing } = App.ConfigManager.getConfig().ws
+        if (disableListing) return res.writeHead(404).end("Not found!")
+
         if (url.includes("?")) url = url.split("?")[0]
         url = url.replace(/\/{2,}/g, "/").slice(6)
         if (url.endsWith("/")) url = url.slice(0, -1)
@@ -68,7 +72,7 @@ export class WebServerManager {
             return
         }
 
-        if (this.config.hideListing) return res.writeHead(404).end()
+        if (hideListing) return res.writeHead(404).end()
 
         fs.readdir(filePath, (err, files) => {
             if (err) {

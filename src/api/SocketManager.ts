@@ -7,17 +7,12 @@ export class SocketManager {
     webSocketManager: WebSocketManager = new WebSocketManager()
 
     constructor() {
-        const config = App.ConfigManager.getConfig().ws
-        const serverConfig = {
-            host: config.ip,
-            port: config.port,
-        }
-        if (config.enableListing) {
-            this.webServerManager.webServerInit()
-            this.webSocketManager.webSocketServerInit({ server: this.webServerManager.webServer })
-            this.webServerManager.webServer.listen(serverConfig)
-        } else {
-            this.webSocketManager.webSocketServerInit(serverConfig)
-        }
+        const { ip, port } = App.ConfigManager.getConfig().ws
+        this.webServerManager.webServerInit()
+        this.webSocketManager.webSocketServerInit({ server: this.webServerManager.webServer })
+        this.webServerManager.webServer.listen({
+            host: ip,
+            port,
+        })
     }
 }

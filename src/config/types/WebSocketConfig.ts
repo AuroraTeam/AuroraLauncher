@@ -2,7 +2,7 @@ export class WebSocketConfig {
     address: string
     ip: string
     port: number
-    enableListing: boolean
+    disableListing: boolean
     hideListing: boolean
     useSSL: boolean
     ssl: {
@@ -15,7 +15,7 @@ export class WebSocketConfig {
             address: "ws://localhost:1370/ws",
             ip: "0.0.0.0",
             port: 1370,
-            enableListing: true,
+            disableListing: true,
             hideListing: false,
             useSSL: false,
             ssl: {
