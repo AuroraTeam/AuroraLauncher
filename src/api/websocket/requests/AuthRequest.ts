@@ -1,7 +1,7 @@
 import { App } from "../../../LauncherServer"
+import { wsClient } from "../../WebSocketManager"
 import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"
-import { wsClient } from "../WsRequestsManager"
 import { AbstractRequest } from "./AbstractRequest"
 
 export class AuthRequest extends AbstractRequest {

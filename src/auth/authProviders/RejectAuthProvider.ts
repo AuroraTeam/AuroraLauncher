@@ -1,4 +1,5 @@
-import { ResponseError } from "../../api/websocket/types/ErrorResponse"
+import { ResponseError } from "@root/api/websocket/ResponseError"
+
 import { App } from "../../LauncherServer"
 import { AbstractAuthProvider, AbstractAuthProviderConfig } from "../AbstractAuthProvider"
 

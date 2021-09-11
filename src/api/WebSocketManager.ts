@@ -8,7 +8,7 @@ import { LogHelper } from "../helpers/LogHelper"
 import { wsErrorResponse } from "./websocket/types/ErrorResponse"
 import { wsRequest } from "./websocket/types/Request"
 import { wsResponse } from "./websocket/types/Response"
-import { WsRequestsManager, wsClient } from "./websocket/WsRequestsManager"
+import { WsRequestsManager } from "./websocket/WsRequestsManager"
 
 export class WebSocketManager {
     private webSocketServer: ws.Server
@@ -41,6 +41,7 @@ export class WebSocketManager {
         // Получаем IP юзера
         const clientIP = req.socket.remoteAddress
         // Разрешаем только один коннект на один IP
+        // TODO Привет ребятам за NAT, сделать опционально (напишу, а то ещё опять забуду)
         if (Array.from(this.webSocketServer.clients).some((c: wsClient) => c.clientData?.ip === clientIP)) {
             ws.sendResponse({
                 uuid: NIL_UUID,
@@ -94,4 +95,13 @@ export class WebSocketManager {
             })
         })
     }
+}
+
+export interface wsClient extends ws {
+    clientData: {
+        isAlive: boolean
+        isAuthed: boolean
+        ip: string
+    }
+    sendResponse: (data: wsResponse | wsErrorResponse) => void
 }
