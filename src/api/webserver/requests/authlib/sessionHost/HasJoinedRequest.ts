@@ -8,7 +8,7 @@ import { AbstractRequest } from "../../AbstractRequest"
 
 export class HasJoinedRequest extends AbstractRequest {
     method = "GET"
-    url = /^\/authlib\/session\/minecraft\/hasJoined/
+    url = /^\/authlib\/sessionserver\/session\/minecraft\/hasJoined/
 
     async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         const data = HttpHelper.parseQuery(req.url)

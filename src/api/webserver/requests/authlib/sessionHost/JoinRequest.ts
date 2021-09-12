@@ -8,8 +8,7 @@ import { AbstractRequest } from "../../AbstractRequest"
 
 export class JoinRequest extends AbstractRequest {
     method = "POST"
-    url = /^\/authlib\/session\/minecraft\/join$/
-
+    url = /^\/authlib\/sessionserver\/session\/minecraft\/join$/
     async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         let data
 

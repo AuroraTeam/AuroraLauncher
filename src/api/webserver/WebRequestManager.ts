@@ -8,6 +8,7 @@ import { PrivelegesRequest } from "./requests/authlib/servicesHost/PrivelegesReq
 import { HasJoinedRequest } from "./requests/authlib/sessionHost/HasJoinedRequest"
 import { JoinRequest } from "./requests/authlib/sessionHost/JoinRequest"
 import { ProfileRequest } from "./requests/authlib/sessionHost/ProfileRequest"
+import { InjectorRequest } from "./requests/InjectorRequest"
 
 export class WebRequestManager {
     private requests: AbstractRequest[] = []
@@ -18,6 +19,7 @@ export class WebRequestManager {
         this.registerRequest(new ProfileRequest())
         this.registerRequest(new PrivelegesRequest())
         this.registerRequest(new ProfilesRequest())
+        this.registerRequest(new InjectorRequest())
     }
 
     registerRequest(request: AbstractRequest): void {
@@ -25,6 +27,7 @@ export class WebRequestManager {
     }
 
     async getRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
+        res.setHeader("X-Authlib-Injector-API-Location", "/authlib")
         const request = this.requests.find((r) => r.url.test(req.url))
         // Нижние 2 обработчика корректны для api.mojang.com и authserver.mojang.com
         if (request === undefined)

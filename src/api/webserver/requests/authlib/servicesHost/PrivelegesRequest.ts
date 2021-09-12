@@ -7,7 +7,7 @@ import { AbstractRequest } from "../../AbstractRequest"
 
 export class PrivelegesRequest extends AbstractRequest {
     method = "GET"
-    url = /^\/authlib\/privileges$/
+    url = /^\/authlib\/minecraftservices\/privileges$/
 
     async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         const accessToken = req.headers.authorization

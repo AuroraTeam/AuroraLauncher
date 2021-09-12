@@ -7,7 +7,7 @@ import { AbstractRequest } from "../../AbstractRequest"
 
 export class ProfileRequest extends AbstractRequest {
     method = "GET"
-    url = /^\/authlib\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
+    url = /^\/authlib\/sessionserver\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
 
     async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         const matches = req.url.match(this.url)

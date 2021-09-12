@@ -8,7 +8,7 @@ import { AbstractRequest } from "../../AbstractRequest"
 
 export class ProfilesRequest extends AbstractRequest {
     method = "POST"
-    url = /^\/authlib\/profiles\/minecraft$/
+    url = /^\/authlib\/api\/profiles\/minecraft$/
 
     async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         let data: string[]

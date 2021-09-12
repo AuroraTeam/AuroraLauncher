@@ -15,7 +15,7 @@ export class WebSocketConfig {
             address: "ws://localhost:1370/ws",
             ip: "0.0.0.0",
             port: 1370,
-            disableListing: true,
+            disableListing: false,
             hideListing: false,
             useSSL: false,
             ssl: {
