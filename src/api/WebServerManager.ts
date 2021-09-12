@@ -15,7 +15,7 @@ export class WebServerManager {
     public createWebServer(): http.Server | https.Server {
         if (this.webServer) throw new Error("The web server has already been created")
 
-        const { ssl, useSSL } = App.ConfigManager.getConfig().ws
+        const { ssl, useSSL } = App.ConfigManager.getConfig().api
 
         if (!useSSL) {
             this.webServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) =>
@@ -51,7 +51,7 @@ export class WebServerManager {
     }
 
     private fileListing(url: string, res: http.ServerResponse): void {
-        const { disableListing, hideListing } = App.ConfigManager.getConfig().ws
+        const { disableListing, hideListing } = App.ConfigManager.getConfig().api
         if (disableListing) return res.writeHead(404).end("Not found!")
 
         if (url.includes("?")) url = url.split("?")[0]

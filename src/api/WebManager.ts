@@ -7,12 +7,9 @@ export class WebManager {
     private webSocketManager: WebSocketManager = new WebSocketManager()
 
     constructor() {
-        const { ip, port } = App.ConfigManager.getConfig().ws
+        const { host, port } = App.ConfigManager.getConfig().api
         const webServer = this.webServerManager.createWebServer()
         this.webSocketManager.createWebSocket({ server: webServer })
-        webServer.listen({
-            host: ip,
-            port,
-        })
+        webServer.listen({ host, port })
     }
 }

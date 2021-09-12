@@ -12,13 +12,13 @@ export class InjectorRequest extends AbstractRequest {
     async emit(_: IncomingMessage, res: ServerResponse): Promise<void> {
         HttpHelper.sendJson(res, {
             meta: {
-                serverName: "Aurora Launcher",
+                serverName: App.ConfigManager.getConfig().projectName || "Aurora Launcher",
                 implementationName: "aurora-launchserver",
                 implementationVersion: "0.0.1",
                 "feature.no_mojang_namespace": true,
                 "feature.privileges_api": true,
             },
-            // skinDomains: ["example.com", ".example.com"], // TODO config
+            skinDomains: App.ConfigManager.getConfig().api.injector.skinDomains,
             signaturePublickey: App.AuthlibManager.getPublicKey(),
         })
     }
