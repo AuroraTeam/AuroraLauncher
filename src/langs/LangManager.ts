@@ -1,8 +1,10 @@
 import { LogHelper } from "../helpers/LogHelper"
 import { App } from "../LauncherServer"
-import { Translate } from "./Translate"
+import enTranslate from "./en.json"
+import ruTranslate from "./ru.json"
 
 export type Lang = "ru" | "en"
+export type Translate = typeof ruTranslate
 
 export class LangManager {
     private langList: Map<Lang, Translate> = new Map()
@@ -20,8 +22,8 @@ export class LangManager {
     }
 
     private setLangs(): void {
-        this.langList.set("ru", require("./ru.json"))
-        this.langList.set("en", require("./en.json"))
+        this.langList.set("ru", enTranslate)
+        this.langList.set("en", ruTranslate)
     }
 
     public getTranslate(): Translate {

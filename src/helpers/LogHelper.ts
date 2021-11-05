@@ -44,16 +44,14 @@ export class LogHelper {
     private static log(level: LogLevel, msg: any, ...args: any[]) {
         if (level === LogLevel.RAW) return this.rawLog(msg, ...args)
 
-        const date = new Date()
-            .toLocaleString("ru", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-            })
-            .replace(/-/g, ".")
+        const date = new Date().toLocaleString("ru", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        })
 
         let coloredStr: string = colors.gray(date)
         switch (level) {
@@ -75,11 +73,6 @@ export class LogHelper {
         this.rawLog(coloredStr, ...args)
     }
 
-    /*
-     * Заменил console.log на это
-     * https://nodejs.org/api/util.html#util_util_format_format_args
-     * Оно даже обратно совместимо с console.log (те же подстановочные символы)
-     */
     private static rawLog(msg: any, ...args: any[]) {
         const message = format(msg, ...args) + "\n"
         process.stdout.write(message)

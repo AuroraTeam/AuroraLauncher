@@ -5,6 +5,7 @@ import { EventEmitter } from "events"
 
 import * as colors from "colors/safe"
 
+import { version } from "../package.json"
 import { WebManager } from "./api/WebManager"
 import { AuthManager } from "./auth/AuthManager"
 import { AuthlibManager } from "./authlib/AuthlibManager"
@@ -16,8 +17,6 @@ import { LangManager } from "./langs/LangManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
-
-const version = require("../package").version
 
 export class LauncherServer extends EventEmitter {
     private _ConfigManager: ConfigManager

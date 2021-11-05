@@ -62,7 +62,7 @@ export class HttpHelper {
             const handler = url.protocol === "https:" ? https : http
             handler
                 .request(url, { method: "HEAD" }, (res) => {
-                    new RegExp(/2[\d]{2}/).test(res.statusCode.toString()) ? resolve(true) : resolve(false)
+                    res.statusCode === 200 ? resolve(true) : resolve(false)
                 })
                 .on("error", (err) => {
                     LogHelper.error(err)
