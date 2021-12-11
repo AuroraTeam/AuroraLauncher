@@ -22,8 +22,8 @@ export class LangManager {
     }
 
     private setLangs(): void {
-        this.langList.set("ru", enTranslate)
-        this.langList.set("en", ruTranslate)
+        this.langList.set("ru", ruTranslate)
+        this.langList.set("en", enTranslate)
     }
 
     public getTranslate(): Translate {
