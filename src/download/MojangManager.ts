@@ -65,6 +65,7 @@ export class MojangManager {
         return App.ProfilesManager.createProfile({
             version: clientVer,
             clientDir: dirName,
+            mainClass: version.mainClass,
             assetsDir: `assets${version.assets}`,
             assetsIndex: version.assets,
             servers: [
@@ -104,6 +105,7 @@ export class MojangManager {
         LogHelper.info("Done")
     }
 
+    // TODO Отрефакторить этот прикол
     /**
      * Получить список библиотек и нативных файлов для скачивания
      * @param libraries Объект со списком библиотек и нативных файлов
@@ -135,10 +137,7 @@ export class MojangManager {
 
             // Natives
             if (lib.natives !== undefined) {
-                const natives = []
-                for (const key in lib.natives) {
-                    natives.push(lib.natives[key])
-                }
+                const natives = <any[]>Object.values(lib.natives)
 
                 // Ещё один костыль для lwjgl
                 if ((lib.name as string).includes("lwjgl") && rules.allow.includes("osx")) {
