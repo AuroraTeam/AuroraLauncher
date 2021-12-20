@@ -10,7 +10,7 @@ export class ProfileRequest extends AbstractRequest {
     type = "profile"
 
     invoke(data: ProfileRequestData): ResponseData {
-        const config = App.ConfigManager.getConfig().auth.authProvider as any
+        const config = App.ConfigManager.getConfig().auth as any
 
         const profile = App.ProfilesManager.profiles.find((p) => p.uuid == data.uuid)
         profile.jvmArgs = profile.jvmArgs.concat([

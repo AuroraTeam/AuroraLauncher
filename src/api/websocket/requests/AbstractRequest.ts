@@ -1,4 +1,4 @@
-import * as ws from "ws"
+import { wsClient } from "@root/api/WebSocketManager"
 
 import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"
@@ -10,5 +10,5 @@ export abstract class AbstractRequest {
         return this.type
     }
 
-    abstract invoke(data: RequestData, ws: ws): PromiseOr<ResponseData>
+    abstract invoke(data: RequestData, ws: wsClient): PromiseOr<ResponseData>
 }

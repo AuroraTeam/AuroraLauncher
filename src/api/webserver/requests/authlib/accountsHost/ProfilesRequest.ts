@@ -1,4 +1,6 @@
-import { ExtendedIncomingMessage, ExtendedServerResponse } from "@root/api/webserver/WebRequestManager"
+import { IncomingMessage, ServerResponse } from "http"
+
+import { HttpHelper } from "@root/helpers/HttpHelper"
 import { JsonHelper } from "@root/helpers/JsonHelper"
 import { App } from "@root/LauncherServer"
 
@@ -6,22 +8,29 @@ import { AbstractRequest } from "../../AbstractRequest"
 
 export class ProfilesRequest extends AbstractRequest {
     method = "POST"
-    url = /^\/authlib\/profiles\/minecraft$/
+    url = /^\/authlib\/api\/profiles\/minecraft$/
 
-    async emit(req: ExtendedIncomingMessage, res: ExtendedServerResponse): Promise<void> {
+    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         let data: string[]
 
+        if (!HttpHelper.isJsonPostData(req)) return HttpHelper.sendError(res, 400, "BadRequestException")
+
         try {
-            data = JsonHelper.fromJSON(req.body)
+            data = JsonHelper.fromJSON(await HttpHelper.parsePostData(req))
         } catch (error) {
-            return res.error(400, "BadRequestException")
+            return HttpHelper.sendError(res, 400, "BadRequestException")
         }
 
-        if (!Array.isArray(data) || data.length === 0) return res.error(400, "BadRequestException")
+        if (!Array.isArray(data) || data.length === 0) return HttpHelper.sendError(res, 400, "BadRequestException")
 
         if (data.length > 10)
-            return res.error(400, "IllegalArgumentException", "Not more that 10 profile name per call is allowed.")
+            return HttpHelper.sendError(
+                res,
+                400,
+                "IllegalArgumentException",
+                "Not more that 10 profile name per call is allowed."
+            )
 
-        res.json(await App.AuthManager.getAuthProvider().profiles(data))
+        HttpHelper.sendJson(res, await App.AuthManager.getAuthProvider().profiles(data)) // ??
     }
 }
