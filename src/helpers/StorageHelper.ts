@@ -1,7 +1,9 @@
 import * as fs from "fs"
 import * as path from "path"
 
-export class StorageHelper {
+import { StorageHelper as CoreStorageHelper } from "@auroralauncher/core"
+
+export class StorageHelper extends CoreStorageHelper {
     static readonly storageDir: string = __dirname
     static readonly updatesDir: string = path.resolve(StorageHelper.storageDir, "updates")
     static readonly profilesDir: string = path.resolve(StorageHelper.storageDir, "profiles")
