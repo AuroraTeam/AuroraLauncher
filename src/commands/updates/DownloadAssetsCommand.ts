@@ -18,7 +18,7 @@ export class DownloadAssetsCommand extends AbstractCommand {
         if (!DownloadManager) return
 
         App.CommandsManager.console.pause()
-        new DownloadManager().downloadAssets(assetsName, dirName)
+        await new DownloadManager().downloadAssets(assetsName, dirName)
         App.CommandsManager.console.resume()
     }
 

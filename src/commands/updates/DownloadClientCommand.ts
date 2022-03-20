@@ -19,7 +19,7 @@ export class DownloadClientCommand extends AbstractCommand {
         if (!DownloadManager) return
 
         App.CommandsManager.console.pause()
-        new DownloadManager().downloadClient(clientName, dirName)
+        await new DownloadManager().downloadClient(clientName, dirName)
         App.CommandsManager.console.resume()
     }
 
