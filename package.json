@@ -52,15 +52,16 @@
     "dependencies": {
         "@auroralauncher/core": "^0.3.0",
         "adm-zip": "^0.5.6",
+        "chalk": "^5.0.1",
         "class-transformer": "^0.5.1",
         "cli-progress": "^3.9.1",
-        "colors": "^1.4.0",
         "lodash": "^4.17.21",
         "p-map": "^5.1.0",
         "raw-body": "^2.4.1",
         "reflect-metadata": "^0.1.13",
         "semver": "^7.3.5",
         "source-map-support": "^0.5.20",
+        "strip-ansi": "^7.0.1",
         "uuid": "^8.3.2",
         "ws": "^8.5.0"
     },
