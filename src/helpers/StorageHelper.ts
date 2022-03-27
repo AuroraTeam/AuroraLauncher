@@ -4,7 +4,7 @@ import * as path from "path"
 import { StorageHelper as CoreStorageHelper } from "@auroralauncher/core"
 
 export class StorageHelper extends CoreStorageHelper {
-    static readonly storageDir: string = __dirname
+    static readonly storageDir: string = process.pkg ? path.dirname(process.execPath) : __dirname
     static readonly updatesDir: string = path.resolve(StorageHelper.storageDir, "updates")
     static readonly profilesDir: string = path.resolve(StorageHelper.storageDir, "profiles")
     static readonly modulesDir: string = path.resolve(StorageHelper.storageDir, "modules")
