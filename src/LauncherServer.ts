@@ -39,14 +39,11 @@ export class LauncherServer extends EventEmitter {
                     chalk.green("LauncherServer ") +
                     "v" +
                     chalk.yellow(version) +
-                    chalk.green("\nCopyright (C) 2020 - 2021 ") +
+                    chalk.green("\nCopyright (C) 2020 - 2022 ") +
                     chalk.blue("AuroraTeam (https://github.com/AuroraTeam)") +
-                    chalk.green(
-                        "\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `license w'." +
-                            "\nThis is free software, and you are welcome to redistribute it under certain conditions; type `license c' for details."
-                    ) +
-                    chalk.green("\nDocumentation page ") +
-                    chalk.blue("https://aurora-launcher.ru/wiki")
+                    chalk.green("\nLicensed under the MIT License") +
+                    chalk.green("\nDocumentation page: ") +
+                    chalk.blue("https://docs.aurora-launcher.ru/")
             )
         )
         LogHelper.info("Initialization start")
