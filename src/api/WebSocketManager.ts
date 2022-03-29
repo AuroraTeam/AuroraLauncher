@@ -11,11 +11,11 @@ import { wsResponse } from "./websocket/types/Response"
 import { WsRequestsManager } from "./websocket/WsRequestsManager"
 
 export class WebSocketManager {
-    private webSocketServer: ws.Server
+    private webSocketServer: ws.WebSocketServer
     private requestsManager = new WsRequestsManager()
 
     public createWebSocket(wsServerOptions: ws.ServerOptions): void {
-        this.webSocketServer = new ws.Server(wsServerOptions)
+        this.webSocketServer = new ws.WebSocketServer(wsServerOptions)
         this.webSocketServer.on("connection", (ws: wsClient, req: http.IncomingMessage) => this.connectHandler(ws, req))
 
         const interval = setInterval(() => {

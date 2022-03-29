@@ -1,4 +1,4 @@
-import * as colors from "colors/safe"
+import chalk from "chalk"
 
 import { LogHelper } from "../../helpers/LogHelper"
 import { App } from "../../LauncherServer"
@@ -20,8 +20,8 @@ export class HelpCommand extends AbstractCommand {
             LogHelper.info(`=== [ %s ] ===`, category_name.toUpperCase())
             category.forEach((command) => {
                 LogHelper.info(
-                    `${colors.bold(command.getName())}${
-                        command.getUsage() == undefined ? "" : colors.red(" " + command.getUsage())
+                    `${chalk.bold(command.getName())}${
+                        command.getUsage() == undefined ? "" : chalk.red(" " + command.getUsage())
                     } - ${command.getDescription()}`
                 )
             })

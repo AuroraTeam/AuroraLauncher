@@ -1,4 +1,4 @@
-import { blue, bold, cyan, green, yellow } from "colors/safe"
+import chalk from "chalk"
 
 import { version } from "../../../package.json"
 import { LogHelper } from "../../helpers/LogHelper"
@@ -10,10 +10,12 @@ export class AboutCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        LogHelper.info(bold(cyan("AuroraLauncher ") + green("LauncherServer ") + "v" + yellow(version)))
+        LogHelper.info(
+            chalk.bold(chalk.cyan("AuroraLauncher ") + chalk.green("LauncherServer ") + "v" + chalk.yellow(version))
+        )
 
-        LogHelper.info("Source code: " + blue("https://github.com/AuroraTeam/LauncherServer"))
-        LogHelper.info("Documentation: " + blue("https://docs.aurora-launcher.ru"))
-        LogHelper.info("Discord channel: " + blue("https://discord.aurora-launcher.ru"))
+        LogHelper.info("Source code: " + chalk.blue("https://github.com/AuroraTeam/LauncherServer"))
+        LogHelper.info("Documentation: " + chalk.blue("https://docs.aurora-launcher.ru"))
+        LogHelper.info("Discord channel: " + chalk.blue("https://discord.aurora-launcher.ru"))
     }
 }

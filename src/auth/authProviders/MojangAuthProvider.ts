@@ -19,16 +19,17 @@ export class MojangAuthProvider extends AbstractAuthProvider {
     }
 
     async auth(username: string, password: string): Promise<AuthResponseData> {
-        const data = JSON.stringify({
-            agent: {
-                name: "Minecraft",
-                version: 1,
-            },
-            username,
-            password,
-        })
-
-        const result = await HttpHelper.makePostRequest(new URL("authenticate", this.config.authHost), data)
+        const result = await HttpHelper.makePostRequest<AuthenticateResponse>(
+            new URL("authenticate", this.config.authHost),
+            {
+                agent: {
+                    name: "Minecraft",
+                    version: 1,
+                },
+                username,
+                password,
+            }
+        )
 
         return {
             username: result.selectedProfile.name,
@@ -63,4 +64,27 @@ interface MojangAuthProviderConfig extends AbstractAuthProviderConfig {
     accountHost: string
     sessionHost: string
     servicesHost: string
+}
+
+interface AuthenticateResponse {
+    user: {
+        username: string
+        properties: {
+            name: string
+            value: string
+        }[]
+        id: string
+    }
+    clientToken: string
+    accessToken: string
+    availableProfiles: [
+        {
+            name: string
+            id: string
+        }
+    ]
+    selectedProfile: {
+        name: string
+        id: string
+    }
 }

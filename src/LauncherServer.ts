@@ -1,9 +1,8 @@
-import "source-map-support/register"
 import "reflect-metadata"
 
 import { EventEmitter } from "events"
 
-import * as colors from "colors/safe"
+import chalk from "chalk"
 
 import { version } from "../package.json"
 import { WebManager } from "./api/WebManager"
@@ -34,19 +33,16 @@ export class LauncherServer extends EventEmitter {
         if (this.inited) return
         StorageHelper.createMissing()
         LogHelper.raw(
-            colors.bold(
-                colors.cyan("AuroraLauncher ") +
-                    colors.green("LauncherServer ") +
+            chalk.bold(
+                chalk.cyan("AuroraLauncher ") +
+                    chalk.green("LauncherServer ") +
                     "v" +
-                    colors.yellow(version) +
-                    colors.green("\nCopyright (C) 2020 - 2021 ") +
-                    colors.blue("AuroraTeam (https://github.com/AuroraTeam)") +
-                    colors.green(
-                        "\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `license w'." +
-                            "\nThis is free software, and you are welcome to redistribute it under certain conditions; type `license c' for details."
-                    ) +
-                    colors.green("\nDocumentation page ") +
-                    colors.blue("https://aurora-launcher.ru/wiki")
+                    chalk.yellow(version) +
+                    chalk.green("\nCopyright (C) 2020 - 2022 ") +
+                    chalk.blue("AuroraTeam (https://github.com/AuroraTeam)") +
+                    chalk.green("\nLicensed under the MIT License") +
+                    chalk.green("\nDocumentation page: ") +
+                    chalk.blue("https://docs.aurora-launcher.ru/")
             )
         )
         LogHelper.info("Initialization start")

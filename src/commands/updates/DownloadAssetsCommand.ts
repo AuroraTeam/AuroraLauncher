@@ -14,18 +14,23 @@ export class DownloadAssetsCommand extends AbstractCommand {
         if (!assetsName) return LogHelper.error("Укажите название/версию ассетов!")
         if (!dirName) return LogHelper.error("Укажите название папки для ассетов!")
 
+        const DownloadManager = this.getDownloadManager(sourceType)
+        if (!DownloadManager) return
+
         App.CommandsManager.console.pause()
+        await new DownloadManager().downloadAssets(assetsName, dirName)
+        App.CommandsManager.console.resume()
+    }
+
+    private getDownloadManager(sourceType: string) {
         switch (sourceType) {
             case "mirror":
-                await new MirrorManager().downloadAssets(assetsName, dirName)
-                break
+                return MirrorManager
             case "mojang":
-                await new MojangManager().downloadAssets(assetsName, dirName)
-                break
+                return MojangManager
             default:
                 LogHelper.error(`Неизвестный тип источника: ${sourceType}`)
-                break
+                return
         }
-        App.CommandsManager.console.resume()
     }
 }

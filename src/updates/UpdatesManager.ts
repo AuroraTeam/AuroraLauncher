@@ -48,7 +48,7 @@ export class UpdatesManager {
         return {
             path: path.replace(StorageHelper.updatesDir, ""),
             size: fs.statSync(path).size,
-            hashsum: fs.createReadStream(path).pipe(crypto.createHash("sha1")).digest("hex"),
+            hashsum: crypto.createHash("sha1").update(fs.readFileSync(path)).digest("hex"),
         }
     }
 }
