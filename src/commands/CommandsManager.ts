@@ -11,6 +11,7 @@ import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
 import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
+import { SyncUpCommand } from "@root/commands/updates/SyncUpCommand";
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
@@ -29,6 +30,7 @@ export class CommandsManager {
         this.registerCommand(new DownloadAssetsCommand())
         this.registerCommand(new SyncUpdatesCommand())
         this.registerCommand(new SyncProfilesCommand())
+        this.registerCommand(new SyncUpCommand())
         this.registerCommand(new LangCommand())
     }
 

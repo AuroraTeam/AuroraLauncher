@@ -1,7 +1,7 @@
 import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
-export class SyncUpdatesCommand extends AbstractCommand {
+export class SyncUpCommand extends AbstractCommand {
     constructor() {
         super("syncup", "Синхронизировать папки updates & profiles", Category.UPDATES)
     }
