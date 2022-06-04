@@ -8,18 +8,18 @@ import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 // TODO Ох уж эти приколы с типами
 // Другие решения получалсь не красивыми
 // Если есть идеи как сделать лучше - пишите))
-type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider | typeof MojangAuthProvider
+type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider | typeof MojangAuthProvider //Думал над решением этой херни больше чем живу
 
 export class AuthManager {
-    private authProvider: AbstractAuthProvider
-    authProviders: Map<string, AnyAuthProvider> = new Map()
+    private readonly authProvider: AbstractAuthProvider
+    private authProviders: Map<string, AnyAuthProvider> = new Map()
 
     constructor() {
         this.registerAuthProviders()
 
         const providerType = App.ConfigManager.getConfig().auth.type
 
-        if (!this.authProviders.has(providerType)) LogHelper.fatal(`Invalid provider "${providerType}" in auth config`) //TODO перевод
+        if (!this.authProviders.has(providerType)) LogHelper.fatal(App.LangManager.getTranslate().AuthManager.invalidProvider)
         this.authProvider = new (this.authProviders.get(providerType))()
     }
 

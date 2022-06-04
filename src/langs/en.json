@@ -43,5 +43,8 @@
         "syncEnd": "Syncing profiles dir end",
         "syncSkip": "Profiles dir empty. Skip sync",
         "loadingErr": "Json syntax broken. Try fix or delete file profiles/%s"
+    },
+    "AuthManager": {
+        "invalidProvider": "Invalid provider %s in the auth config"
     }
 }

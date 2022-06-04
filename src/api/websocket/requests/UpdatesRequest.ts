@@ -1,4 +1,4 @@
-import { App } from "../../../LauncherServer"
+import { App } from "@root/LauncherServer"
 import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
@@ -8,7 +8,7 @@ export class UpdatesRequest extends AbstractRequest {
 
     invoke(data: UpdatesRequestData): ResponseData {
         return {
-            hashes: App.UpdatesManager.hDirs.get(data.dir),
+            hashes: App.UpdatesManager.hashDirs.get(data.dir),
         }
     }
 }

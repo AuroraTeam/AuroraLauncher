@@ -8,7 +8,7 @@ import { App } from "../LauncherServer"
 
 // Я чёт подумал и решил оставить тут синхронный код, так надо)
 export class UpdatesManager {
-    hDirs: Map<string, HashedFile[]> = new Map()
+    hashDirs: Map<string, HashedFile[]> = new Map()
 
     constructor() {
         this.hashUpdatesDir()
@@ -25,7 +25,7 @@ export class UpdatesManager {
 
         folders.forEach(({ name }) => {
             const startTime = Date.now()
-            this.hDirs.set(name, this.hashDir(path.join(StorageHelper.updatesDir, name)))
+            this.hashDirs.set(name, this.hashDir(path.join(StorageHelper.updatesDir, name)))
             LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncTime, name, Date.now() - startTime)
         })
 

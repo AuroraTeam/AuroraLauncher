@@ -5,7 +5,7 @@ import { URL } from "url"
 import rimraf from "rimraf"
 
 import { HttpHelper } from "../helpers/HttpHelper"
-import { JsonHelper } from "../helpers/JsonHelper"
+import { JsonHelper } from "@auroralauncher/core"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"

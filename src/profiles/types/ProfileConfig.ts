@@ -1,8 +1,8 @@
-import { classToPlain, deserialize } from "class-transformer"
+import { instanceToPlain, plainToInstance } from "class-transformer"
 import { merge } from "lodash"
 import { v4 } from "uuid"
 
-import { JsonHelper } from "../../helpers/JsonHelper"
+import { JsonHelper } from "@auroralauncher/core"
 import { ProfileServerConfig } from "./ProfileServerConfig"
 
 export class ProfileConfig {
@@ -66,10 +66,10 @@ export class ProfileConfig {
     }
 
     public toJSON(): string {
-        return JsonHelper.toJSON(classToPlain(this), true)
+        return JsonHelper.toJSON(instanceToPlain(this), true)
     }
 
     public static fromJSON(json: string): ProfileConfig {
-        return deserialize(ProfileConfig, json)
+        return plainToInstance(ProfileConfig, JSON.parse(json));
     }
 }
