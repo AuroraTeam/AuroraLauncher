@@ -7,7 +7,7 @@ export class SyncUpCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        App.UpdatesManager.hashUpdatesDir()
         App.ProfilesManager.reloadProfiles()
+        App.UpdatesManager.hashUpdatesDir()
     }
 }

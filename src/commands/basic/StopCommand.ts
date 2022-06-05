@@ -6,6 +6,6 @@ export class StopCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        process.exit(-1)
+        process.exit(0)
     }
 }

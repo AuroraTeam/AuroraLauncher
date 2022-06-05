@@ -3,7 +3,7 @@ import * as http from "http"
 import { NIL as NIL_UUID } from "uuid"
 import * as ws from "ws"
 
-import { JsonHelper } from "../helpers/JsonHelper"
+import { JsonHelper } from "@auroralauncher/core"
 import { LogHelper } from "../helpers/LogHelper"
 import { wsErrorResponse } from "./websocket/types/ErrorResponse"
 import { wsRequest } from "./websocket/types/Request"

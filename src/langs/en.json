@@ -9,23 +9,68 @@
         "cmdNotFound": "Command \"%s\" not found!",
         "invokeCmd": "Invoke %s command"
     },
-    "MirrorManager": {
+    "DownloadManager": {
         "dirExist": "A folder with this name already exists!",
-        "client": {
-            "notFound": "Client not found!",
-            "download": "Client found, downloading ...",
-            "downloadErr": "Error downloading client!",
-            "unpacking": "Client loaded, unpacking ...",
-            "unpackingErr": "Error unpacking client!",
-            "success": "Client loaded successfully!"
+        "MojangManager": {
+            "client": {
+                "download": "Client downloading, please wait...",
+                "downloadErr": "Error downloading the client!",
+                "success": "Client successfully downloaded!"
+            },
+            "libraries": {
+                "download": "Libraries downloading, please wait...",
+                "downloadErr": "Error downloading the libraries!",
+                "success": "Libraries successfully downloaded!"
+            },
+            "natives": {
+                "download": "Natives downloading, please wait...",
+                "downloadErr": "Error downloading the natives!",
+                "success": "Natives successfully downloaded!"
+            },
+            "assets": {
+                "download": "Assets downloading, please wait...",
+                "downloadErr": "Assets downloading the client!",
+                "success": "Assets successfully downloaded!"
+            },
+            "info": {
+                "unavailableSite": "MojangMC website is temporarily unavailable!",
+                "errVerParsing": "Error in parsing version data",
+                "verNotFound": "Version %s not found",
+                "clientDataNotFound": "Client data not found",
+                "errClientParsing": "Error in parsing client data"
+            }
         },
-        "assets": {
-            "notFound": "No assets found!",
-            "download": "Assets found, loading ...",
-            "downloadErr": "Error downloading assets!",
-            "unpacking": "Assets loaded, unpacking ...",
-            "unpackingErr": "Error unpacking assets!",
-            "success": "Assets loaded successfully!"
+        "FabricManager": {
+            "client": {
+                "download": "Downloading Fabric libraries, please wait...",
+                "downloadErr": "Error downloaded Fabric libraries!",
+                "success": "Libraries downloaded successfully!"
+            },
+            "info": {
+                "unavailableSite": "FabricMC website is temporarily unavailable!",
+                "errJsonParsing": "Error in parsing Json data",
+                "verNotFound": "Fabric version %s not found",
+                "clientDataNotFound": "Client data not found",
+                "errClientParsing": "Error in parsing client data"
+            }
+        },
+        "MirrorManager": {
+            "client": {
+                "notFound": "Client not found!",
+                "download": "Client found, downloading ...",
+                "downloadErr": "Error downloading client!",
+                "unpacking": "Client loaded, unpacking ...",
+                "unpackingErr": "Error unpacking client!",
+                "success": "Client loaded successfully!"
+            },
+            "assets": {
+                "notFound": "No assets found!",
+                "download": "Assets found, loading ...",
+                "downloadErr": "Error downloading assets!",
+                "unpacking": "Assets loaded, unpacking ...",
+                "unpackingErr": "Error unpacking assets!",
+                "success": "Assets loaded successfully!"
+            }
         }
     },
     "UpdatesManager": {
@@ -46,5 +91,9 @@
     },
     "AuthManager": {
         "invalidProvider": "Invalid provider %s in the auth config"
+    },
+    "WebSocketManager": {
+        "certNotFound": "Certificate file not found",
+        "keyNotFound": "Key file not found"
     }
 }

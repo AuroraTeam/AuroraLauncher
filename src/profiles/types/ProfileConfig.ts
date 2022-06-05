@@ -35,10 +35,10 @@ export class ProfileConfig {
     clientArgs: string[]
 
     constructor(config: ProfileConfig) {
-        merge(this, this.defaults, config)
+        merge(this, ProfileConfig.defaults, config)
     }
 
-    private get defaults() {
+    private static get defaults() {
         return {
             configVersion: 0,
             uuid: v4(),

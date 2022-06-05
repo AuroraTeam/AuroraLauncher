@@ -11,7 +11,7 @@ import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
 import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
-import { SyncUpCommand } from "@root/commands/updates/SyncUpCommand";
+import { SyncUpCommand } from "./updates/SyncUpCommand";
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()

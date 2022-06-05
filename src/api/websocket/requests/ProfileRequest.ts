@@ -20,7 +20,7 @@ export class ProfileRequest extends AbstractRequest {
             `-Dminecraft.api.services.host=${config.servicesHost || "http://127.0.0.1:1370/authlib"}`,
         ])
 
-        return profile
+        return { profile }
     }
 }
 

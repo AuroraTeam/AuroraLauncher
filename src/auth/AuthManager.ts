@@ -8,7 +8,7 @@ import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 // TODO Ох уж эти приколы с типами
 // Другие решения получалсь не красивыми
 // Если есть идеи как сделать лучше - пишите))
-type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider | typeof MojangAuthProvider //Думал над решением этой херни больше чем живу
+type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider | typeof MojangAuthProvider
 
 export class AuthManager {
     private readonly authProvider: AbstractAuthProvider
