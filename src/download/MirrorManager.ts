@@ -2,10 +2,10 @@ import * as fs from "fs"
 import * as path from "path"
 import { URL } from "url"
 
+import { JsonHelper } from "@auroralauncher/core"
 import rimraf from "rimraf"
 
 import { HttpHelper } from "../helpers/HttpHelper"
-import { JsonHelper } from "@auroralauncher/core"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
@@ -30,7 +30,8 @@ export class MirrorManager {
             )
                 return true
         })
-        if (mirror === undefined) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.client.notFound)
+        if (mirror === undefined)
+            return LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.client.notFound)
 
         let profile: string
         let client: string
@@ -88,7 +89,8 @@ export class MirrorManager {
         const mirror = mirrors.find(async (mirror) => {
             if (await HttpHelper.existFile(new URL(`/assets/${assetsName}.zip`, mirror))) return true
         })
-        if (mirror === undefined) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.assets.notFound)
+        if (mirror === undefined)
+            return LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.assets.notFound)
 
         let assets: string
 

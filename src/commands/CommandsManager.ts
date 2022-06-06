@@ -10,8 +10,8 @@ import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
 import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
+import { SyncUpCommand } from "./updates/SyncUpCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
-import { SyncUpCommand } from "./updates/SyncUpCommand";
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()

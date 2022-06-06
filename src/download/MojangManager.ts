@@ -4,10 +4,10 @@ import * as fs from "fs"
 import * as path from "path"
 import { URL } from "url"
 
+import { JsonHelper } from "@auroralauncher/core"
 import rimraf from "rimraf"
 
 import { HttpHelper } from "../helpers/HttpHelper"
-import { JsonHelper } from "@auroralauncher/core"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
@@ -39,7 +39,7 @@ export class MojangManager {
         try {
             LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.client.download)
             await HttpHelper.downloadFile(new URL(client.url), path.resolve(clientDir, "minecraft.jar"))
-        } catch(error) {
+        } catch (error) {
             LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.client.downloadErr)
             LogHelper.debug(error)
             return
@@ -52,9 +52,9 @@ export class MojangManager {
         LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.libraries.download)
         const librariesList = this.librariesParse(libraries)
 
-        try{
+        try {
             await HttpHelper.downloadFiles(librariesList.libraries, this.clientsLink, librariesDir)
-        } catch(error) {
+        } catch (error) {
             LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.libraries.downloadErr)
             LogHelper.debug(error)
             return
@@ -65,9 +65,14 @@ export class MojangManager {
         fs.mkdirSync(nativesDir)
         try {
             LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.natives.download)
-            await HttpHelper.downloadFiles(librariesList.natives, this.clientsLink, StorageHelper.tempDir, (filePath) => {
-                ZipHelper.unzipArchive(filePath, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
-            })
+            await HttpHelper.downloadFiles(
+                librariesList.natives,
+                this.clientsLink,
+                StorageHelper.tempDir,
+                (filePath) => {
+                    ZipHelper.unzipArchive(filePath, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
+                }
+            )
         } catch (error) {
             LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.natives.downloadErr)
             LogHelper.debug(error)
@@ -111,7 +116,7 @@ export class MojangManager {
         fs.mkdirSync(path.resolve(assetsDir, "indexes"))
         fs.writeFileSync(path.resolve(assetsDir, `indexes/${version.assets}.json`), assetsFile)
 
-        const {objects: assetsData} = JsonHelper.fromJSON(assetsFile)
+        const { objects: assetsData } = JsonHelper.fromJSON(assetsFile)
         const assetsHashes: Set<string> = new Set()
         for (const key in assetsData) {
             const hash = assetsData[key].hash
@@ -119,7 +124,7 @@ export class MojangManager {
         }
 
         LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.assets.download)
-        try{
+        try {
             await HttpHelper.downloadFiles(assetsHashes, this.assetsLink, path.resolve(assetsDir, "objects"))
         } catch (error) {
             LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.assets.downloadErr)
@@ -196,7 +201,7 @@ export class MojangManager {
 
         let versions: any[]
         try {
-            ({versions} = JsonHelper.fromJSON(versionsData));
+            ;({ versions } = JsonHelper.fromJSON(versionsData))
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.info.errVerParsing)
