@@ -1,8 +1,5 @@
 import { ErrorResponse } from "./types/ErrorResponse"
 
-/**
- * ResponseError
- */
 export class ResponseError extends Error {
     private readonly code: number
 

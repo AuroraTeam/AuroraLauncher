@@ -13,13 +13,15 @@ export class ConfigManager {
         if (fs.existsSync(StorageHelper.configFile)) {
             LogHelper.info("Loading configuration")
             this.load()
-            LogHelper.info("Configuration file uploaded successfully.")
+            LogHelper.info("Configuration file loaded successfully.")
         } else {
             LogHelper.info("Configuration not found! Create default config")
             this.config = LauncherServerConfig.getDefaults()
             this.save()
-            LogHelper.info("The configuration file has been successfully created. Configure it and run LaunchServer again.")
-            process.exit(-1)
+            LogHelper.info(
+                "The configuration file has been successfully created. Configure it and run LaunchServer again."
+            )
+            process.exit(0)
         }
     }
 

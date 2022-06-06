@@ -14,7 +14,7 @@ export abstract class AbstractCommand {
         this.usage = usage
     }
 
-    abstract invoke(...args: Array<string>): void
+    public abstract invoke(...args: string[]): void
 
     public getName(): string {
         return this.name
