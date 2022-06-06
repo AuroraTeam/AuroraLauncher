@@ -4,7 +4,7 @@ import enTranslate from "./en.json"
 import ruTranslate from "./ru.json"
 
 export type Lang = "ru" | "en"
-export type Translate = typeof ruTranslate
+export type Translate = typeof ruTranslate | typeof enTranslate
 
 export class LangManager {
     private langList: Map<Lang, Translate> = new Map()

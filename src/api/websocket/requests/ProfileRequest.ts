@@ -1,4 +1,5 @@
-import { App } from "../../../LauncherServer"
+import { App } from "@root/LauncherServer"
+
 import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
@@ -20,9 +21,7 @@ export class ProfileRequest extends AbstractRequest {
             `-Dminecraft.api.services.host=${config.servicesHost || "http://127.0.0.1:1370/authlib"}`,
         ])
 
-        return {
-            profile,
-        }
+        return { profile }
     }
 }
 

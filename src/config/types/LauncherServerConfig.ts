@@ -1,8 +1,8 @@
+import { JsonHelper } from "@auroralauncher/core"
 import { AbstractAuthProvider, AbstractAuthProviderConfig } from "@root/auth/AbstractAuthProvider"
-import { classToPlain, deserialize } from "class-transformer"
+import { instanceToPlain, plainToInstance } from "class-transformer"
 import { v4 } from "uuid"
 
-import { JsonHelper } from "../../helpers/JsonHelper"
 import { Lang } from "../../langs/LangManager"
 import { ApiConfig } from "./ApiConfig"
 
@@ -32,11 +32,11 @@ export class LauncherServerConfig {
     }
 
     public toJSON(): string {
-        return JsonHelper.toJSON(classToPlain(this), true)
+        return JsonHelper.toJSON(instanceToPlain(this), true)
     }
 
     public static fromJSON(json: string): LauncherServerConfig {
-        return deserialize(LauncherServerConfig, json)
+        return plainToInstance(LauncherServerConfig, JSON.parse(json))
     }
 }
 

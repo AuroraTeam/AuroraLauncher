@@ -27,12 +27,11 @@ export class WebServerManager {
         const certPath = path.resolve(StorageHelper.storageDir, ssl.cert)
         const keyPath = path.resolve(StorageHelper.storageDir, ssl.key)
 
-        // TODO Translate
         if (!fs.existsSync(certPath)) {
-            LogHelper.fatal("cert file nf")
+            LogHelper.fatal(App.LangManager.getTranslate().WebSocketManager.certNotFound)
         }
         if (!fs.existsSync(keyPath)) {
-            LogHelper.fatal("key file nf")
+            LogHelper.fatal(App.LangManager.getTranslate().WebSocketManager.keyNotFound)
         }
 
         this.webServer = https.createServer(
@@ -45,12 +44,12 @@ export class WebServerManager {
         return this.webServer
     }
 
-    private requestListener(req: http.IncomingMessage, res: http.ServerResponse): void {
+    private requestListener(req: http.IncomingMessage, res: http.ServerResponse): http.ServerResponse {
         if (req.url.startsWith("/files")) return this.fileListing(req.url, res)
         this.requestsManager.getRequest(req, res)
     }
 
-    private fileListing(url: string, res: http.ServerResponse): void {
+    private fileListing(url: string, res: http.ServerResponse): http.ServerResponse {
         const { disableListing, hideListing } = App.ConfigManager.getConfig().api
         if (disableListing) return res.writeHead(404).end("Not found!")
 

@@ -1,10 +1,7 @@
 import { ErrorResponse } from "./types/ErrorResponse"
 
-/**
- * ResponseError
- */
 export class ResponseError extends Error {
-    private code: number
+    private readonly code: number
 
     constructor(code?: number, message?: string) {
         super(message || "Unknown response error")

@@ -7,14 +7,14 @@ export abstract class AbstractCommand {
     // <arg> - опциональный аргумент
     // [arg] - обязательный аргумент
 
-    constructor(name: string, description: string, category: Category, usage?: string) {
+    protected constructor(name: string, description: string, category: Category, usage?: string) {
         this.name = name.toLowerCase()
         this.description = description
         this.category = category
         this.usage = usage
     }
 
-    abstract invoke(...args: Array<string>): void
+    public abstract invoke(...args: string[]): void
 
     public getName(): string {
         return this.name

@@ -1,14 +1,13 @@
 // TODO Ещё больше try/catch для отлова возможных ошибок
-// TODO Перевод
 
 import * as fs from "fs"
 import * as path from "path"
 import { URL } from "url"
 
+import { JsonHelper } from "@auroralauncher/core"
 import rimraf from "rimraf"
 
 import { HttpHelper } from "../helpers/HttpHelper"
-import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { ZipHelper } from "../helpers/ZipHelper"
@@ -24,6 +23,7 @@ export class MojangManager {
      * Скачивание клиента с зеркала Mojang
      * @param clientVer - Версия клиента
      * @param dirName - Название конечной папки
+     * @param modloader
      */
     async downloadClient(clientVer: string, dirName: string, modloader = false): Promise<any> {
         const version: any = await this.getVersionInfo(clientVer)
@@ -34,32 +34,55 @@ export class MojangManager {
 
         // Client
         const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
-        if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate().MirrorManager.dirExist)
+        if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.dirExist)
         fs.mkdirSync(clientDir)
-
-        await HttpHelper.downloadFile(new URL(client.url), path.resolve(clientDir, "minecraft.jar"))
+        try {
+            LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.client.download)
+            await HttpHelper.downloadFile(new URL(client.url), path.resolve(clientDir, "minecraft.jar"))
+        } catch (error) {
+            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.client.downloadErr)
+            LogHelper.debug(error)
+            return
+        }
 
         // Libraries
         const librariesDir = path.resolve(clientDir, "libraries")
         fs.mkdirSync(librariesDir)
 
-        LogHelper.info("Download libraries and natives, please wait...")
+        LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.libraries.download)
         const librariesList = this.librariesParse(libraries)
 
-        await HttpHelper.downloadFiles(librariesList.libraries, this.clientsLink, librariesDir)
+        try {
+            await HttpHelper.downloadFiles(librariesList.libraries, this.clientsLink, librariesDir)
+        } catch (error) {
+            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.libraries.downloadErr)
+            LogHelper.debug(error)
+            return
+        }
 
         // Natives
         const nativesDir = path.resolve(clientDir, "natives")
         fs.mkdirSync(nativesDir)
-
-        await HttpHelper.downloadFiles(librariesList.natives, this.clientsLink, StorageHelper.tempDir, (filePath) => {
-            ZipHelper.unzipArchive(filePath, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
-        })
+        try {
+            LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.natives.download)
+            await HttpHelper.downloadFiles(
+                librariesList.natives,
+                this.clientsLink,
+                StorageHelper.tempDir,
+                (filePath) => {
+                    ZipHelper.unzipArchive(filePath, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
+                }
+            )
+        } catch (error) {
+            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.natives.downloadErr)
+            LogHelper.debug(error)
+            return
+        }
         rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
             if (e !== null) LogHelper.warn(e)
         })
 
-        if (!modloader) LogHelper.info("Done")
+        if (!modloader) LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.client.success)
 
         //Profiles
         return App.ProfilesManager.createProfile({
@@ -86,23 +109,29 @@ export class MojangManager {
         if (version === undefined) return
 
         const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
-        if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate().MirrorManager.dirExist)
+        if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.dirExist)
         fs.mkdirSync(assetsDir)
 
         const assetsFile = await HttpHelper.readFile(new URL(version.assetIndex.url))
         fs.mkdirSync(path.resolve(assetsDir, "indexes"))
         fs.writeFileSync(path.resolve(assetsDir, `indexes/${version.assets}.json`), assetsFile)
 
-        const assetsData = JsonHelper.fromJSON(assetsFile).objects
+        const { objects: assetsData } = JsonHelper.fromJSON(assetsFile)
         const assetsHashes: Set<string> = new Set()
         for (const key in assetsData) {
             const hash = assetsData[key].hash
             assetsHashes.add(`${hash.slice(0, 2)}/${hash}`)
         }
 
-        LogHelper.info("Download assets, please wait...")
-        await HttpHelper.downloadFiles(assetsHashes, this.assetsLink, path.resolve(assetsDir, "objects"))
-        LogHelper.info("Done")
+        LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.assets.download)
+        try {
+            await HttpHelper.downloadFiles(assetsHashes, this.assetsLink, path.resolve(assetsDir, "objects"))
+        } catch (error) {
+            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.assets.downloadErr)
+            LogHelper.debug(error)
+            return
+        }
+        LogHelper.info(App.LangManager.getTranslate().DownloadManager.MojangManager.assets.success)
     }
 
     // TODO Отрефакторить этот прикол
@@ -166,22 +195,22 @@ export class MojangManager {
             versionsData = await HttpHelper.readFile(new URL(this.versionManifestLink))
         } catch (error) {
             LogHelper.debug(error)
-            LogHelper.error("Mojang site unavailable")
+            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.info.unavailableSite)
             return
         }
 
-        let versions
+        let versions: any[]
         try {
-            versions = JsonHelper.fromJSON(versionsData).versions
+            ;({ versions } = JsonHelper.fromJSON(versionsData))
         } catch (error) {
             LogHelper.debug(error)
-            LogHelper.error("Error parsing versions data")
+            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.info.errVerParsing)
             return
         }
 
         const _version = versions.find((v: any) => v.id === version)
         if (_version === undefined) {
-            LogHelper.error("Version %s not found", version)
+            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.info.verNotFound, version)
             return
         }
 
@@ -190,7 +219,7 @@ export class MojangManager {
             clientData = await HttpHelper.readFile(new URL(_version.url))
         } catch (error) {
             LogHelper.debug(error)
-            LogHelper.error("Client data not found")
+            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.info.clientDataNotFound)
             return
         }
 
@@ -198,7 +227,7 @@ export class MojangManager {
             return JsonHelper.fromJSON(clientData)
         } catch (error) {
             LogHelper.debug(error)
-            LogHelper.error("Error parsing client data")
+            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.info.errClientParsing)
             return
         }
     }

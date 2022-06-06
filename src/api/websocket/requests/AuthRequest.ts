@@ -1,4 +1,5 @@
-import { App } from "../../../LauncherServer"
+import { App } from "@root/LauncherServer"
+
 import { wsClient } from "../../WebSocketManager"
 import { RequestData } from "../types/Request"
 import { ResponseData } from "../types/Response"

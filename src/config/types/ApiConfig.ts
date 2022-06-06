@@ -1,5 +1,5 @@
 export class ApiConfig {
-    addreses: {
+    addresses: {
         web: string
         websocket: string
     }
@@ -18,7 +18,7 @@ export class ApiConfig {
 
     static getDefaultConfig(): ApiConfig {
         return {
-            addreses: {
+            addresses: {
                 web: "http://localhost:1370/",
                 websocket: "ws://localhost:1370/ws",
             },
