@@ -9,8 +9,8 @@ import { LangCommand } from "./basic/LangCommand"
 import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
+import { SyncAllCommand } from "./updates/SyncAllCommand"
 import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
-import { SyncUpCommand } from "./updates/SyncUpCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
 
 export class CommandsManager {
@@ -30,12 +30,12 @@ export class CommandsManager {
         this.registerCommand(new DownloadAssetsCommand())
         this.registerCommand(new SyncUpdatesCommand())
         this.registerCommand(new SyncProfilesCommand())
-        this.registerCommand(new SyncUpCommand())
+        this.registerCommand(new SyncAllCommand())
         this.registerCommand(new LangCommand())
     }
 
     registerCommand(command: AbstractCommand): void {
-        this.commands.set(command.getName(), command)
+        this.commands.set(command.conf.name, command)
     }
 
     private consoleInit(): void {

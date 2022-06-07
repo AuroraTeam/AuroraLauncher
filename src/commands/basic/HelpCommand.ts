@@ -6,13 +6,17 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class HelpCommand extends AbstractCommand {
     constructor() {
-        super("help", "Выводит список команд", Category.BASIC)
+        super({
+            name: "help",
+            description: App.LangManager.getTranslate().CommandsManager.commands.basic.HelpCommand,
+            category: Category.BASIC,
+        })
     }
 
     invoke(): void {
         const commandsList: Map<Category, AbstractCommand[]> = new Map(Object.values(Category).map((c) => [c, []]))
         Array.from(App.CommandsManager.commands.values()).forEach((command) => {
-            commandsList.get(command.getCategory()).push(command)
+            commandsList.get(command.conf.category).push(command)
         })
 
         commandsList.forEach((category, category_name) => {
@@ -20,9 +24,9 @@ export class HelpCommand extends AbstractCommand {
             LogHelper.info(`=== [ %s ] ===`, category_name.toUpperCase())
             category.forEach((command) => {
                 LogHelper.info(
-                    `${chalk.bold(command.getName())}${
-                        command.getUsage() == undefined ? "" : chalk.red(" " + command.getUsage())
-                    } - ${command.getDescription()}`
+                    `${chalk.bold(command.conf.name)}${
+                        command.conf.usage.length === 0 ? command.conf.usage : chalk.red(" " + command.conf.usage)
+                    } - ${command.conf.description}`
                 )
             })
         })

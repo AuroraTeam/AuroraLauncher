@@ -6,7 +6,6 @@ import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
 
-// Я чёт подумал и решил оставить тут синхронный код, так надо)
 export class UpdatesManager {
     hashDirs: Map<string, HashedFile[]> = new Map()
 
@@ -15,7 +14,6 @@ export class UpdatesManager {
     }
 
     hashUpdatesDir(): void {
-        // TODO Проверка ошибок с readdirSync и прочими методами с fs ниже по стеку?
         const folders = fs
             .readdirSync(StorageHelper.updatesDir, { withFileTypes: true })
             .filter((folder) => folder.isDirectory())

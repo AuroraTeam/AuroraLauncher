@@ -7,7 +7,23 @@
     },
     "CommandsManager": {
         "cmdNotFound": "Команда \"%s\" не найдена!",
-        "invokeCmd": "Вызвана команда %s"
+        "invokeCmd": "Вызвана команда %s",
+        "commands": {
+            "basic": {
+                "AboutCommand": "Выводит информацию о продукте",
+                "HelpCommand": "Выводит список команд",
+                "LangCommand": "Переключает используемый язык",
+                "StatusCommand": "Выводит статус сервера",
+                "StopCommand": "Завершает работу Лаунчер-сервера"
+            },
+            "updates": {
+                "DownloadAssetsCommand": "Загрузить ассеты",
+                "DownloadClientCommand": "Загрузить клиент",
+                "SyncAllCommand": "Синхронизировать папки updates & profiles",
+                "SyncProfilesCommand": "Синхронизировать папку profiles",
+                "SyncUpdatesCommand": "Синхронизировать папку updates"
+            }
+        }
     },
     "DownloadManager": {
         "dirExist": "Папка с таким названием уже существует!",

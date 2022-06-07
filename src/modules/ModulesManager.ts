@@ -6,21 +6,11 @@ import * as path from "path"
 import { LogHelper } from "@root/helpers/LogHelper"
 import { StorageHelper } from "@root/helpers/StorageHelper"
 
-import { BaseModule } from "./BaseModule"
-
 export class ModulesManager {
-    private static modulesList: BaseModule[] = []
+    private static modulesList: any[] = []
 
     constructor() {
         this.loadModules()
-    }
-
-    public async initModules() {
-        LogHelper.info("Modules initialization has started")
-
-        await this.runTasks(ModulesManager.modulesList, "init")
-
-        LogHelper.info("Modules successfully initializated")
     }
 
     async loadModules() {
@@ -40,8 +30,8 @@ export class ModulesManager {
             const startTime = Date.now()
 
             await Promise.all(
-                moduleList.map((plugin: string) => {
-                    ModulesManager.loadModule(plugin)
+                moduleList.map(async (plugin: string) => {
+                    await ModulesManager.loadModule(plugin)
                 })
             )
 
@@ -53,20 +43,20 @@ export class ModulesManager {
 
     private static async loadModule(moduleName: string) {
         try {
-            const modulesPath = path.resolve(StorageHelper.modulesDir, moduleName)
-            const packageJson = JSON.parse(fs.readFileSync(path.resolve(modulesPath, "package.json")).toString())
+            const modulePath = path.resolve(StorageHelper.modulesDir, moduleName)
+            const packageJson = JSON.parse(fs.readFileSync(path.resolve(modulePath, "package.json")).toString())
 
             /* Проверяем, все ли депенденсы установлены */
             /* Лишнее, думаю имеет смысл просто паковать зависимости с модулем и сохранять модуль как один файл */
             if (
                 packageJson.dependencies &&
                 !(await fsProm
-                    .access(`${path.resolve(modulesPath, `node_modules`)}`)
+                    .access(`${path.resolve(modulePath, `node_modules`)}`)
                     .then(() => true)
                     .catch(() => false))
             ) {
-                LogHelper.warn(`Not all dependences are installed for the ${moduleName} module, installing...`)
-                execSync(`cd ${modulesPath} && npm install`, { stdio: "inherit" })
+                LogHelper.warn(`Not all dependencies are installed for the ${moduleName} module, installing...`)
+                execSync(`cd ${modulePath} && npm install`, { stdio: "inherit" })
             }
 
             /* Проверяем, собранный ли модуль нам вкинули */
@@ -74,18 +64,17 @@ export class ModulesManager {
                 packageJson.scripts &&
                 packageJson.scripts.build &&
                 !(await fsProm
-                    .access(`${path.resolve(modulesPath, `lib`)}`)
+                    .access(`${path.resolve(modulePath, `lib`)}`)
                     .then(() => true)
                     .catch(() => false))
             ) {
                 LogHelper.warn(`${moduleName} module not builded, building...`)
-                //Если скрипта нету, то пиздец.
-                execSync(`cd ${modulesPath} && npm run build`, { stdio: "inherit" })
+                execSync(`cd ${modulePath} && npm run build`, { stdio: "inherit" })
             }
 
-            const { default: rawModuleClass } = await import(`file:///${modulesPath}/${packageJson.main}`)
+            const { default: rawModuleClass } = await import(`file:///${modulePath}/${packageJson.main}`)
 
-            const ModuleClass = this.classСheck(rawModuleClass) ? rawModuleClass : rawModuleClass.default
+            const ModuleClass = this.classCheck(rawModuleClass) ? rawModuleClass : rawModuleClass.default
 
             const moduleInfo = {
                 name: moduleName,
@@ -98,7 +87,7 @@ export class ModulesManager {
         }
     }
 
-    private static classСheck(object: any) {
+    private static classCheck(object: any) {
         const isConstructorClass = object.constructor && object.constructor.toString().substring(0, 5) === "class"
 
         if (object.prototype === undefined) return isConstructorClass
@@ -109,20 +98,5 @@ export class ModulesManager {
             object.prototype.constructor.toString().substring(0, 5) === "class"
 
         return isConstructorClass || isPrototypeConstructorClass
-    }
-
-    private async issueTask(moduleInfo: any, task: string) {
-        const startTime = Date.now()
-
-        await moduleInfo.instance[task]
-
-        moduleInfo.tasks = moduleInfo.tasks || {}
-        moduleInfo.tasks[task] = Date.now() - startTime
-    }
-
-    private async runTasks(list: any[], task: string) {
-        return Promise.all(
-            list.filter((module: any) => module.instance[task]).map((el: any) => this.issueTask(el, task))
-        )
     }
 }

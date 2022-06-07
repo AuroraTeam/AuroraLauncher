@@ -1,16 +1,17 @@
 import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
-export class SyncUpdatesCommand extends AbstractCommand {
+export class SyncAllCommand extends AbstractCommand {
     constructor() {
         super({
-            name: "syncupdates",
-            description: App.LangManager.getTranslate().CommandsManager.commands.updates.SyncUpdatesCommand,
+            name: "syncall",
+            description: App.LangManager.getTranslate().CommandsManager.commands.updates.SyncAllCommand,
             category: Category.UPDATES,
         })
     }
 
     invoke(): void {
+        App.ProfilesManager.reloadProfiles()
         App.UpdatesManager.hashUpdatesDir()
     }
 }

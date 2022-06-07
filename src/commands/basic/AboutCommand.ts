@@ -1,3 +1,4 @@
+import { App } from "@root/LauncherServer"
 import chalk from "chalk"
 
 import { version } from "../../../package.json"
@@ -6,7 +7,11 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class AboutCommand extends AbstractCommand {
     constructor() {
-        super("about", "Выводит информацию о продукте", Category.BASIC)
+        super({
+            name: "about",
+            description: App.LangManager.getTranslate().CommandsManager.commands.basic.AboutCommand,
+            category: Category.BASIC,
+        })
     }
 
     invoke(): void {

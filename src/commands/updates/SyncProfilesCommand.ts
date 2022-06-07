@@ -3,7 +3,11 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class SyncProfilesCommand extends AbstractCommand {
     constructor() {
-        super("syncprofiles", "Синхронизировать папку profiles", Category.UPDATES)
+        super({
+            name: "syncprofiles",
+            description: App.LangManager.getTranslate().CommandsManager.commands.updates.SyncProfilesCommand,
+            category: Category.UPDATES,
+        })
     }
 
     invoke(): void {

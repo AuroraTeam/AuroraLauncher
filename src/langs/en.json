@@ -7,7 +7,23 @@
     },
     "CommandsManager": {
         "cmdNotFound": "Command \"%s\" not found!",
-        "invokeCmd": "Invoke %s command"
+        "invokeCmd": "Invoke %s command",
+        "commands": {
+            "basic": {
+                "AboutCommand": "Displays product information",
+                "HelpCommand": "Displays a list of commands",
+                "LangCommand": "Switches the language in use",
+                "StatusCommand": "Displays server status",
+                "StopCommand": "Turns off the LauncherServer"
+            },
+            "updates": {
+                "DownloadAssetsCommand": "Download Assets",
+                "DownloadClientCommand": "Download client",
+                "SyncAllCommand": "Synchronise updates & profiles folders",
+                "SyncProfilesCommand": "Synchronise profiles folder",
+                "SyncUpdatesCommand": "Synchronise updates folder"
+            }
+        }
     },
     "DownloadManager": {
         "dirExist": "A folder with this name already exists!",
