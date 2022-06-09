@@ -7,7 +7,12 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class DownloadClientCommand extends AbstractCommand {
     constructor() {
-        super("downloadclient", App.LangManager.getTranslate().CommandsManager.commands.updates.DownloadClientCommand, Category.UPDATES, "<version> <folder name> <?source type>")
+        super(
+            "downloadclient",
+            App.LangManager.getTranslate().CommandsManager.commands.updates.DownloadClientCommand,
+            Category.UPDATES,
+            "<version> <folder name> <?source type>"
+        )
     }
 
     async invoke(...args: string[]): Promise<void> {

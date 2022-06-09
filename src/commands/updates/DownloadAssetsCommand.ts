@@ -6,7 +6,12 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class DownloadAssetsCommand extends AbstractCommand {
     constructor() {
-        super("downloadassets", App.LangManager.getTranslate().CommandsManager.commands.updates.DownloadAssetsCommand, Category.UPDATES, "<version> <folder name> <?source type>")
+        super(
+            "downloadassets",
+            App.LangManager.getTranslate().CommandsManager.commands.updates.DownloadAssetsCommand,
+            Category.UPDATES,
+            "<version> <folder name> <?source type>"
+        )
     }
 
     async invoke(...args: string[]): Promise<void> {

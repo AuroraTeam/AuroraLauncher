@@ -20,9 +20,9 @@ export class HelpCommand extends AbstractCommand {
             LogHelper.info(`=== [ %s ] ===`, category_name.toUpperCase())
             category.forEach((command) => {
                 LogHelper.info(
-                    `${chalk.bold(command.name)}${
-                        command.usage == undefined ? "" : chalk.red(" " + command.usage)
-                    } - ${command.description}`
+                    `${chalk.bold(command.name)}${command.usage == undefined ? "" : chalk.red(" " + command.usage)} - ${
+                        command.description
+                    }`
                 )
             })
         })

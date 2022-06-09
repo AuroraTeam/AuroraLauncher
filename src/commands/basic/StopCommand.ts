@@ -1,5 +1,6 @@
+import { App } from "@root/LauncherServer"
+
 import { AbstractCommand, Category } from "../AbstractCommand"
-import { App } from "@root/LauncherServer";
 
 export class StopCommand extends AbstractCommand {
     constructor() {

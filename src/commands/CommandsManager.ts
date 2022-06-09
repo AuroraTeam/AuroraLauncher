@@ -9,8 +9,8 @@ import { LangCommand } from "./basic/LangCommand"
 import { StopCommand } from "./basic/StopCommand"
 import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
-import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
 import { SyncAllCommand } from "./updates/SyncAllCommand"
+import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
 
 export class CommandsManager {

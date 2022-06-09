@@ -5,7 +5,7 @@ import * as path from "path"
 
 import { LogHelper } from "@root/helpers/LogHelper"
 import { StorageHelper } from "@root/helpers/StorageHelper"
-import { App } from "@root/LauncherServer";
+import { App } from "@root/LauncherServer"
 
 export class ModulesManager {
     private static modulesList: any[] = []

@@ -1,9 +1,9 @@
+import { App } from "@root/LauncherServer"
 import chalk from "chalk"
 
 import { version } from "../../../package.json"
 import { LogHelper } from "../../helpers/LogHelper"
 import { AbstractCommand, Category } from "../AbstractCommand"
-import { App } from "@root/LauncherServer";
 
 export class AboutCommand extends AbstractCommand {
     constructor() {
