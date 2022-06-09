@@ -5,6 +5,7 @@ import * as path from "path"
 
 import { LogHelper } from "@root/helpers/LogHelper"
 import { StorageHelper } from "@root/helpers/StorageHelper"
+import { App } from "@root/LauncherServer";
 
 export class ModulesManager {
     private static modulesList: any[] = []
@@ -15,14 +16,14 @@ export class ModulesManager {
 
     async loadModules() {
         try {
-            LogHelper.info("Modules loading start...")
+            LogHelper.info(App.LangManager.getTranslate().ModulesManager.loadingStart)
 
             const folders = fs
                 .readdirSync(StorageHelper.modulesDir, { withFileTypes: true })
                 .filter((folder) => folder.isDirectory())
 
             if (!fs.existsSync(path.resolve(StorageHelper.modulesDir, "plugins.json")) || folders.length === 0)
-                return LogHelper.info("Modules dir empty. Skip loading")
+                return LogHelper.info(App.LangManager.getTranslate().ModulesManager.loadingSkip)
 
             const moduleList = JSON.parse(
                 fs.readFileSync(path.resolve(StorageHelper.modulesDir, "plugins.json")).toString()
@@ -35,9 +36,11 @@ export class ModulesManager {
                 })
             )
 
-            LogHelper.info(`Modules loading ended. Total time: ${Date.now() - startTime} ms.`)
+            LogHelper.info(App.LangManager.getTranslate().ModulesManager.loadingEnd, Date.now() - startTime)
         } catch (error) {
-            LogHelper.error(`${error.message}`)
+            LogHelper.debug(error.message)
+            LogHelper.error(`${App.LangManager.getTranslate().ModulesManager.loadingErr}`)
+            return
         }
     }
 
@@ -55,7 +58,7 @@ export class ModulesManager {
                     .then(() => true)
                     .catch(() => false))
             ) {
-                LogHelper.warn(`Not all dependencies are installed for the ${moduleName} module, installing...`)
+                LogHelper.warn(App.LangManager.getTranslate().ModulesManager.downloadModuleDependencies, moduleName)
                 execSync(`cd ${modulePath} && npm install`, { stdio: "inherit" })
             }
 
@@ -68,7 +71,7 @@ export class ModulesManager {
                     .then(() => true)
                     .catch(() => false))
             ) {
-                LogHelper.warn(`${moduleName} module not builded, building...`)
+                LogHelper.warn(App.LangManager.getTranslate().ModulesManager.buildModule, moduleName)
                 execSync(`cd ${modulePath} && npm run build`, { stdio: "inherit" })
             }
 
@@ -83,7 +86,9 @@ export class ModulesManager {
 
             this.modulesList.push(moduleInfo)
         } catch (error) {
-            LogHelper.fatal(`An error occurred when trying to load the ${moduleName} module: ${error.stack}`)
+            LogHelper.debug(error.message)
+            LogHelper.fatal(App.LangManager.getTranslate().ModulesManager.moduleLoadingErr, moduleName)
+            return
         }
     }
 

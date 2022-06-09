@@ -7,12 +7,7 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class DownloadClientCommand extends AbstractCommand {
     constructor() {
-        super({
-            name: "downloadclient",
-            description: App.LangManager.getTranslate().CommandsManager.commands.updates.DownloadClientCommand,
-            category: Category.UPDATES,
-            usage: "<version> <folder name> <?source type>",
-        })
+        super("downloadclient", App.LangManager.getTranslate().CommandsManager.commands.updates.DownloadClientCommand, Category.UPDATES, "<version> <folder name> <?source type>")
     }
 
     async invoke(...args: string[]): Promise<void> {
@@ -20,7 +15,7 @@ export class DownloadClientCommand extends AbstractCommand {
         if (!clientName) return LogHelper.error("Укажите название/версию клиента!")
         if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
 
-        const DownloadManager = DownloadClientCommand.getDownloadManager(sourceType)
+        const DownloadManager = this.getDownloadManager(sourceType)
         if (!DownloadManager) return
 
         App.CommandsManager.console.pause()
@@ -28,7 +23,7 @@ export class DownloadClientCommand extends AbstractCommand {
         App.CommandsManager.console.resume()
     }
 
-    private static getDownloadManager(sourceType: string) {
+    private getDownloadManager(sourceType: string) {
         switch (sourceType) {
             case "mirror":
                 return MirrorManager

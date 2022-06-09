@@ -1,16 +1,17 @@
 export abstract class AbstractCommand {
-    public conf: commandOptions
+    public readonly name: string
+    public readonly description: string
+    public readonly category: Category
+    public readonly usage: string
 
     // <arg> - опциональный аргумент
     // [arg] - обязательный аргумент
 
-    protected constructor(options: commandOptions) {
-        this.conf = {
-            name: options.name,
-            category: options.category,
-            description: options.description || "Информация не указана.",
-            usage: options.usage || "",
-        }
+    protected constructor(name: string, description: string, category: Category, usage?: string) {
+        this.name = name.toLowerCase()
+        this.description = description
+        this.category = category
+        this.usage = usage
     }
 
     public abstract invoke(...args: string[]): void
@@ -21,11 +22,4 @@ export enum Category {
     BASIC = "basic",
     UPDATES = "updates",
     COMMON = "common",
-}
-
-interface commandOptions {
-    name: string
-    category: Category
-    description?: string
-    usage?: string
 }

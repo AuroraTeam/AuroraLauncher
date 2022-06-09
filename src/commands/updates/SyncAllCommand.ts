@@ -3,11 +3,7 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class SyncAllCommand extends AbstractCommand {
     constructor() {
-        super({
-            name: "syncall",
-            description: App.LangManager.getTranslate().CommandsManager.commands.updates.SyncAllCommand,
-            category: Category.UPDATES,
-        })
+        super("syncall", App.LangManager.getTranslate().CommandsManager.commands.updates.SyncAllCommand, Category.UPDATES)
     }
 
     invoke(): void {
