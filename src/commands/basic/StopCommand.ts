@@ -1,8 +1,10 @@
+import { App } from "@root/LauncherServer"
+
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class StopCommand extends AbstractCommand {
     constructor() {
-        super("stop", "Завершает работу сервера", Category.BASIC)
+        super("stop", App.LangManager.getTranslate().CommandsManager.commands.basic.StopCommand, Category.BASIC)
     }
 
     invoke(): void {

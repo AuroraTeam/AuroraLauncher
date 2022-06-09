@@ -5,7 +5,12 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class LangCommand extends AbstractCommand {
     constructor() {
-        super("lang", "Переключает используемый язык", Category.BASIC, "<lang> (ru|en)")
+        super(
+            "lang",
+            App.LangManager.getTranslate().CommandsManager.commands.basic.LangCommand,
+            Category.BASIC,
+            "<lang> (ru|en)"
+        )
     }
 
     invoke(...[lang]: [lang: Lang]): void {

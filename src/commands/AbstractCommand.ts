@@ -1,8 +1,8 @@
 export abstract class AbstractCommand {
-    private readonly name: string
-    private readonly description: string
-    private readonly category: Category
-    private readonly usage: string
+    public readonly name: string
+    public readonly description: string
+    public readonly category: Category
+    public readonly usage: string
 
     // <arg> - опциональный аргумент
     // [arg] - обязательный аргумент
@@ -15,22 +15,6 @@ export abstract class AbstractCommand {
     }
 
     public abstract invoke(...args: string[]): void
-
-    public getName(): string {
-        return this.name
-    }
-
-    public getDescription(): string {
-        return this.description
-    }
-
-    public getCategory(): Category {
-        return this.category
-    }
-
-    public getUsage(): string {
-        return this.usage
-    }
 }
 
 export enum Category {
