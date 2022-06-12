@@ -7,12 +7,12 @@ import { AboutCommand } from "./basic/AboutCommand"
 import { HelpCommand } from "./basic/HelpCommand"
 import { LangCommand } from "./basic/LangCommand"
 import { StopCommand } from "./basic/StopCommand"
+import { UpdateCommand } from "./basic/UpdateCommand"
 import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
 import { SyncAllCommand } from "./updates/SyncAllCommand"
 import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
-import { UpdateCommand } from "./updates/UpdateCommand"
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
