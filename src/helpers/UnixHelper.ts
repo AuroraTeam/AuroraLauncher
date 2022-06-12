@@ -9,6 +9,6 @@ export default class UnixHelper {
             hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
             mins = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
 
-        return `${day}.${month}.${year} в ${hour}:${mins}`
+        return `${day}.${month}.${year}, ${hour}:${mins}`
     }
 }
