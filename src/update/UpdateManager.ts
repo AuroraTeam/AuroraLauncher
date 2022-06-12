@@ -21,8 +21,8 @@ export class UpdateManager {
 
     private async init() {
         this.api = new URL("versions.json", "https://api.aurora-launcher.ru/")
-        this.version = version.match(/([0-9]\.[0-9]\.?[0-9]?)\-?([a-z]+)?/i)[1]
-        this.branch = version.match(/([0-9]\.[0-9]\.?[0-9]?)\-?([a-z]+)?/i)[2] === undefined ? "stable" : "dev"
+        this.version = version.match(/(\d\.\d\.?\d?)-?(\w+)?/i)[1]
+        this.branch = version.match(/(\d\.\d\.?\d?)-?(\w+)?/i)[2] === undefined ? "stable" : "dev"
         this.data = JSON.parse(await HttpHelper.readFile(this.api))
     }
 
