@@ -15,6 +15,7 @@ import { StorageHelper } from "./helpers/StorageHelper"
 import { LangManager } from "./langs/LangManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
+import { UpdateManager } from "./update/UpdateManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
 
 export class LauncherServer extends EventEmitter {
@@ -25,6 +26,7 @@ export class LauncherServer extends EventEmitter {
     private _ModulesManager: ModulesManager
     private _WebManager: WebManager
     private _UpdatesManager: UpdatesManager
+    private _UpdateManager: UpdateManager
     private _ProfilesManager: ProfilesManager
     private _AuthlibManager: AuthlibManager
     private inited = false
@@ -55,6 +57,7 @@ export class LauncherServer extends EventEmitter {
         this._UpdatesManager = new UpdatesManager()
         this._ProfilesManager = new ProfilesManager()
         this._ModulesManager = new ModulesManager()
+        this._UpdateManager = new UpdateManager()
         this.emit("postInit")
         LogHelper.info(this.LangManager.getTranslate().LauncherServer.initEnd)
         this.inited = true
@@ -94,6 +97,10 @@ export class LauncherServer extends EventEmitter {
 
     get AuthlibManager(): AuthlibManager {
         return this._AuthlibManager
+    }
+
+    get UpdateManager(): UpdateManager {
+        return this._UpdateManager
     }
 }
 
