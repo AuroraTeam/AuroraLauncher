@@ -9,7 +9,8 @@ export class UpdateCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        if(!App.UpdateManager.checkUpdate()) return LogHelper.info("The latest version of LauncherServer is already installed on the server")
+        if (!App.UpdateManager.checkUpdate())
+            return LogHelper.info("The latest version of LauncherServer is already installed on the server")
 
         App.UpdateManager.installUpdate()
     }
