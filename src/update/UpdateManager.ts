@@ -1,5 +1,3 @@
-/* eslint-disable no-useless-escape */
-import * as fs from "fs"
 import * as os from "os"
 import * as path from "path"
 
@@ -69,7 +67,7 @@ export class UpdateManager {
 
         LogHelper.info("Checking for new version...")
 
-        return this.checkUpdate() === false
+        return !this.checkUpdate()
             ? LogHelper.info(
                   `No update found, latest version: ${this.versionMeta.join(
                       "-"
@@ -78,7 +76,7 @@ export class UpdateManager {
             : LogHelper.info(
                   `The latest LauncherServer version is ${
                       this.apiMeta[this.versionMeta[1]] + "-" + this.versionMeta[1]
-                  } but you have ${this.versionMeta.join("-")}. The latest version was built on ${new Date(
+                  }, but you have ${this.versionMeta.join("-")}. The latest version was built on ${new Date(
                       this.apiMeta.versions[0].date
                   ).toLocaleString()}.`
               )
