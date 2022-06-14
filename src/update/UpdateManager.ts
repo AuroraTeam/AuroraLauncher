@@ -1,88 +1,103 @@
-import * as os from "os"
-import * as path from "path"
+import path from "path"
 
-import { HttpHelper } from "@auroralauncher/core"
-import { LogHelper } from "@root/helpers/LogHelper"
-import * as semver from "semver"
+import { HttpHelper, LogHelper, StorageHelper, SystemHelper } from "@root/helpers"
+import semver from "semver"
 
-import { branch, version } from "../../package.json"
+// currentVersion для читабельности кода
+// TODO вынести выбор ветки обновлений в конфиг лаунчсервера
+import { branch, version as currentVersion } from "../../package.json"
 
 export class UpdateManager {
-    private platform: string
-    private versionMeta: string[]
-    private apiMeta: any
-    private fileType: string
+    private apiUrl = new URL("versions.json", "https://api.aurora-launcher.ru/")
+    private fileType: "js" | "binary-win" | "binary-mac" | "binary-linux"
     private execFileName: string
 
     constructor() {
-        this.checkVersion()
-    }
-    async init() {
-        this.platform = os.platform()
-        this.apiMeta = JSON.parse(
-            await HttpHelper.readFile(new URL("versions.json", "https://api.aurora-launcher.ru/"))
-        )
-        this.versionMeta = [String(semver.parse(version)), branch]
-
-        this.fileType = process.pkg
-            ? this.platform === "windows"
-                ? "binary-win"
-                : this.platform === "darwin"
-                ? "binary-mac"
-                : this.platform === "linux"
-                ? "binary-linux"
-                : "js"
-            : "js"
-
-        switch (this.fileType) {
-            case "binary-win":
-                this.execFileName = "LauncherServer_win64.exe"
-                break
-            case "binary-mac":
-                this.execFileName = "LauncherServer_mac64"
-                break
-            case "binary-linux":
-                this.execFileName = "LauncherServer_linux64"
-                break
-            default:
-                this.execFileName = "LauncherServer.js"
+        if (SystemHelper.isStandalone()) {
+            switch (SystemHelper.getPlatform()) {
+                case "win32":
+                    this.fileType = "binary-win"
+                    this.execFileName = "LauncherServer_win64.exe"
+                    break
+                case "darwin":
+                    this.fileType = "binary-mac"
+                    this.execFileName = "LauncherServer_mac64"
+                    break
+                case "linux":
+                    this.fileType = "binary-linux"
+                    this.execFileName = "LauncherServer_linux64"
+                    break
+            }
+        } else {
+            this.fileType = "js"
+            this.execFileName = "LauncherServer.js"
         }
+
+        this.checkUpdate()
     }
 
-    public async installUpdate() {
-        LogHelper.info("Updating LauncherServer...")
+    public async checkAndInstallUpdate() {
+        const latestVersion = await this.checkUpdate()
+        if (!latestVersion) return
 
+        LogHelper.info("Updating LauncherServer...")
         LogHelper.info("Downloading current version...")
         await HttpHelper.downloadFile(
-            new URL(this.apiMeta.versions[0].files[this.fileType]),
-            path.resolve(__dirname, this.execFileName)
+            new URL(latestVersion.files[this.fileType]),
+            path.resolve(StorageHelper.storageDir, this.execFileName)
         )
 
         LogHelper.info("Download complete! Please restart LauncherServer.")
         process.exit(0)
     }
 
-    private async checkVersion(): Promise<any> {
-        await this.init()
-
+    public async checkUpdate(): Promise<void | Version> {
         LogHelper.info("Checking for new version...")
 
-        return !this.checkUpdate()
-            ? LogHelper.info(
-                  `No update found, latest version: ${this.versionMeta.join(
-                      "-"
-                  )} current version: ${this.versionMeta.join("-")}`
-              )
-            : LogHelper.info(
-                  `The latest LauncherServer version is ${
-                      this.apiMeta[this.versionMeta[1]] + "-" + this.versionMeta[1]
-                  }, but you have ${this.versionMeta.join("-")}. The latest version was built on ${new Date(
-                      this.apiMeta.versions[0].date
-                  ).toLocaleString()}.`
-              )
+        const versionsData = await this.getVersionsData()
+        const latestVersion = versionsData[<"stable" | "dev">branch]
+
+        if (!this.needUpdate(latestVersion)) return LogHelper.info("No updates available")
+
+        LogHelper.info(`New version available: ${latestVersion}`)
+        const latestVersionData = versionsData.versions.find(({ version }) => version === latestVersion)
+        if (!latestVersionData) return LogHelper.error("Can't find version data")
+
+        LogHelper.info(
+            `The latest LauncherServer version is ${latestVersion}, but you have ${currentVersion}. The latest version was built on ${new Date(
+                latestVersionData.date
+            ).toLocaleString()}.`
+        )
+        return latestVersionData
     }
 
-    public checkUpdate() {
-        return semver.lt(this.versionMeta[0], this.apiMeta[this.versionMeta[1]])
+    // Две функции ниже оставил на случай использования извне (например для модулей)
+    // мб позже вырежу если не пригодятся, либо оставлю для более простой читабельности кода
+    public getVersionsData(): Promise<VersionsData> {
+        return HttpHelper.getJson<VersionsData>(this.apiUrl)
     }
+
+    public needUpdate(latestVersion: string): boolean {
+        return semver.gt(latestVersion, currentVersion)
+    }
+}
+
+export interface VersionsData {
+    stable: string
+    dev: string
+    versions: Version[]
+}
+
+export interface Version {
+    version: string
+    date: number
+    note: string
+    files: Files
+}
+
+export interface Files {
+    js: string
+    "binary-win": string
+    "binary-mac": string
+    "binary-linux": string
 }
