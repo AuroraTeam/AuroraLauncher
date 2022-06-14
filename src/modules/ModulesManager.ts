@@ -30,11 +30,9 @@ export class ModulesManager {
             )
             const startTime = Date.now()
 
-            await Promise.all(
-                moduleList.map(async (plugin: string) => {
-                    await ModulesManager.loadModule(plugin)
-                })
-            )
+            moduleList.map(async (plugin: string) => {
+                await ModulesManager.loadModule(plugin)
+            })
 
             LogHelper.info(App.LangManager.getTranslate().ModulesManager.loadingEnd, Date.now() - startTime)
         } catch (error) {

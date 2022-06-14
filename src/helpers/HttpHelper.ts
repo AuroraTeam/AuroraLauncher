@@ -36,4 +36,9 @@ export class HttpHelper extends CoreHttpHelper {
     public static async parsePostData(req: http.IncomingMessage): Promise<string> {
         return await getRawBody(req, { limit: "500kb", encoding: "utf-8" })
     }
+
+    // TODO Перенести в класс CoreHttpHelper
+    public static async getJson<T>(url: URL): Promise<T> {
+        return JsonHelper.fromJSON<T>(await this.readFile(url))
+    }
 }

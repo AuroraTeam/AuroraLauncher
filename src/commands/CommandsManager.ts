@@ -7,6 +7,7 @@ import { AboutCommand } from "./basic/AboutCommand"
 import { HelpCommand } from "./basic/HelpCommand"
 import { LangCommand } from "./basic/LangCommand"
 import { StopCommand } from "./basic/StopCommand"
+import { UpdateCommand } from "./basic/UpdateCommand"
 import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
 import { SyncAllCommand } from "./updates/SyncAllCommand"
@@ -32,6 +33,7 @@ export class CommandsManager {
         this.registerCommand(new SyncProfilesCommand())
         this.registerCommand(new SyncAllCommand())
         this.registerCommand(new LangCommand())
+        this.registerCommand(new UpdateCommand())
     }
 
     registerCommand(command: AbstractCommand): void {

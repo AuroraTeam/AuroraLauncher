@@ -201,7 +201,7 @@ export class MojangManager {
 
         let versions: any[]
         try {
-            ;({ versions } = JsonHelper.fromJSON(versionsData))
+            versions = JsonHelper.fromJSON<any>(versionsData).versions
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(App.LangManager.getTranslate().DownloadManager.MojangManager.info.errVerParsing)
