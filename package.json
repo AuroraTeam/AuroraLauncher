@@ -17,7 +17,8 @@
     "contributors": [
         "JoCat (https://github.com/JoCat)",
         "LoomeL (https://github.com/LoomeL)",
-        "FIXxp (https://github.com/FIXxp)"
+        "FIXxp (https://github.com/FIXxp)",
+        "IsTopNick (https://github.com/IsTopNick)"
     ],
     "main": "dist/LauncherServer.js",
     "scripts": {
