@@ -3,9 +3,6 @@ export class SystemHelper {
         return process.platform
     }
 
-    // Функции isX кроме isStandalone добавлены, но пока не используются в коде
-    // На будущее, если понадобится их использовать
-
     public static isWindows(): boolean {
         return process.platform === "win32"
     }
@@ -19,7 +16,7 @@ export class SystemHelper {
     }
 
     /**
-     * @returns true if this is a packaged version of the launcher
+     * @returns true если это упакованная версия лаунчера
      */
     public static isStandalone(): boolean {
         return process.pkg !== undefined

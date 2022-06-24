@@ -4,10 +4,8 @@ import * as path from "path"
 import { URL } from "url"
 
 import { JsonHelper } from "@auroralauncher/core"
+import { HttpHelper, LogHelper, StorageHelper } from "@root/helpers"
 
-import { HttpHelper } from "../helpers/HttpHelper"
-import { LogHelper } from "../helpers/LogHelper"
-import { StorageHelper } from "../helpers/StorageHelper"
 import { App } from "../LauncherServer"
 import { ProfileConfig } from "../profiles/types/ProfileConfig"
 import { MojangManager } from "./MojangManager"

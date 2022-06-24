@@ -5,12 +5,9 @@ import * as path from "path"
 import { URL } from "url"
 
 import { JsonHelper } from "@auroralauncher/core"
+import { HttpHelper, LogHelper, StorageHelper, ZipHelper } from "@root/helpers"
 import rimraf from "rimraf"
 
-import { HttpHelper } from "../helpers/HttpHelper"
-import { LogHelper } from "../helpers/LogHelper"
-import { StorageHelper } from "../helpers/StorageHelper"
-import { ZipHelper } from "../helpers/ZipHelper"
 import { App } from "../LauncherServer"
 import { ProfileConfig } from "../profiles/types/ProfileConfig"
 

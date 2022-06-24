@@ -1,6 +1,7 @@
 import * as ReadLine from "readline"
 
-import { LogHelper } from "../helpers/LogHelper"
+import { LogHelper } from "@root/helpers"
+
 import { App } from "../LauncherServer"
 import { AbstractCommand } from "./AbstractCommand"
 import { AboutCommand } from "./basic/AboutCommand"

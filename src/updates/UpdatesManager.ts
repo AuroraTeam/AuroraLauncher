@@ -2,8 +2,8 @@ import * as crypto from "crypto"
 import * as fs from "fs"
 import * as path from "path"
 
-import { LogHelper } from "../helpers/LogHelper"
-import { StorageHelper } from "../helpers/StorageHelper"
+import { LogHelper, StorageHelper } from "@root/helpers"
+
 import { App } from "../LauncherServer"
 
 export class UpdatesManager {

@@ -9,8 +9,8 @@ import { branch, version as currentVersion } from "../../package.json"
 
 export class UpdateManager {
     private apiUrl = new URL("versions.json", "https://api.aurora-launcher.ru/")
-    private fileType: "js" | "binary-win" | "binary-mac" | "binary-linux"
-    private execFileName: string
+    private readonly fileType: "js" | "binary-win" | "binary-mac" | "binary-linux"
+    private readonly execFileName: string
 
     constructor() {
         if (SystemHelper.isStandalone()) {
@@ -38,7 +38,8 @@ export class UpdateManager {
 
     public async checkAndInstallUpdate() {
         const latestVersion = await this.checkUpdate()
-        if (!latestVersion) return
+        if (!latestVersion)
+            return LogHelper.info("The latest version of the LauncherServer is already installed, no update required.")
 
         LogHelper.info("Updating LauncherServer...")
         LogHelper.info("Downloading current version...")

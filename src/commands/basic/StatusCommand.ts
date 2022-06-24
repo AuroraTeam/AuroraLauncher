@@ -1,6 +1,6 @@
+import { LogHelper } from "@root/helpers"
 import { App } from "@root/LauncherServer"
 
-import { LogHelper } from "../../helpers/LogHelper"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class AboutCommand extends AbstractCommand {

@@ -1,4 +1,5 @@
-import { App } from "../../LauncherServer"
+import { App } from "@root/LauncherServer"
+
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class UpdateCommand extends AbstractCommand {
