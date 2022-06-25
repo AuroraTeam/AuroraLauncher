@@ -6,9 +6,6 @@ export class DatabaseConfig {
     database: string
     synchronize: boolean
     logging: boolean
-    properties: {
-        tableName: string
-    }
 
     static getDefaultConfig(): DatabaseConfig {
         return {
@@ -19,9 +16,6 @@ export class DatabaseConfig {
             database: "test",
             synchronize: true,
             logging: false,
-            properties: {
-                tableName: "users",
-            },
         }
     }
 }

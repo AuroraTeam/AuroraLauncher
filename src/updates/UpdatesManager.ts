@@ -4,7 +4,7 @@ import * as path from "path"
 
 import { LogHelper, StorageHelper } from "@root/helpers"
 
-import { App } from "../LauncherServer"
+import { App } from "@root/LauncherServer"
 
 export class UpdatesManager {
     hashDirs: Map<string, HashedFile[]> = new Map()

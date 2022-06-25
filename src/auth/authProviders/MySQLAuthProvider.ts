@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import UUIDHelper from "@root/helpers/UUIDHelper"
 import { App } from "@root/LauncherServer"
 import { Column, DataSource, Entity, Generated, In, PrimaryGeneratedColumn } from "typeorm"
@@ -22,7 +20,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
     private readonly connection = new DataSource({
         type: "mysql",
         host: this.db.host,
-        port: 3306,
+        port: this.db.port,
         username: this.db.user,
         password: this.db.password,
         database: this.db.database,

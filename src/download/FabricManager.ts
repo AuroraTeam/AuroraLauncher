@@ -6,8 +6,8 @@ import { URL } from "url"
 import { JsonHelper } from "@auroralauncher/core"
 import { HttpHelper, LogHelper, StorageHelper } from "@root/helpers"
 
-import { App } from "../LauncherServer"
-import { ProfileConfig } from "../profiles/types/ProfileConfig"
+import { App } from "@root/LauncherServer"
+import { ProfileConfig } from "@root/profiles/types/ProfileConfig"
 import { MojangManager } from "./MojangManager"
 
 export class FabricManager extends MojangManager {

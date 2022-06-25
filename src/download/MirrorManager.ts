@@ -6,8 +6,8 @@ import { JsonHelper } from "@auroralauncher/core"
 import { HttpHelper, LogHelper, StorageHelper, ZipHelper } from "@root/helpers"
 import rimraf from "rimraf"
 
-import { App } from "../LauncherServer"
-import { ProfileConfig } from "../profiles/types/ProfileConfig"
+import { App } from "@root/LauncherServer"
+import { ProfileConfig } from "@root/profiles/types/ProfileConfig"
 
 export class MirrorManager {
     /**

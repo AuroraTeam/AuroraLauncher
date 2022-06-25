@@ -8,7 +8,6 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "esModuleInterop": true,
-        "strict": false,
         "resolveJsonModule": true,
         "baseUrl": "src",
         "paths": {
