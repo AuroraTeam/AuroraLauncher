@@ -6,10 +6,9 @@ import { URL } from "url"
 
 import { JsonHelper } from "@auroralauncher/core"
 import { HttpHelper, LogHelper, StorageHelper, ZipHelper } from "@root/helpers"
-import rimraf from "rimraf"
-
 import { App } from "@root/LauncherServer"
 import { ProfileConfig } from "@root/profiles/types/ProfileConfig"
+import rimraf from "rimraf"
 
 export class MojangManager {
     clientsLink = "https://libraries.minecraft.net/"

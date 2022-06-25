@@ -3,7 +3,6 @@ import * as fs from "fs"
 import * as path from "path"
 
 import { LogHelper, StorageHelper } from "@root/helpers"
-
 import { App } from "@root/LauncherServer"
 
 export class UpdatesManager {

@@ -26,10 +26,10 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
         database: this.db.database,
         entities: [User],
         synchronize: this.db.synchronize,
-        logging: this.db.logging
+        logging: this.db.logging,
     })
 
-    private userRepository;
+    private userRepository
 
     constructor() {
         super()

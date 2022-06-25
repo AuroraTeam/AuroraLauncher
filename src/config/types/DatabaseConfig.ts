@@ -22,8 +22,8 @@ export class DatabaseConfig {
             synchronize: true,
             logging: false,
             properties: {
-                tableName: "User"
-            }
+                tableName: "User",
+            },
         }
     }
 }
@@ -36,4 +36,4 @@ type AvaliableDataBaseType =
     | "oracle"
     | "mssql"
     | "mongodb"
-    | "better-sqlite3";
+    | "better-sqlite3"

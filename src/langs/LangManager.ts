@@ -1,5 +1,6 @@
 import { LogHelper } from "@root/helpers"
 import { App } from "@root/LauncherServer"
+
 import enTranslate from "./en.json"
 import ruTranslate from "./ru.json"
 

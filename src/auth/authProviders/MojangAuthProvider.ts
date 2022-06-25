@@ -1,5 +1,6 @@
 import { HttpHelper } from "@root/helpers"
 import { App } from "@root/LauncherServer"
+
 import { AbstractAuthProvider, AbstractAuthProviderConfig, AuthResponseData } from "../AbstractAuthProvider"
 
 export class MojangAuthProvider extends AbstractAuthProvider {
