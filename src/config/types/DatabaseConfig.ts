@@ -8,7 +8,7 @@ export class DatabaseConfig {
     synchronize: boolean
     logging: boolean
     properties: {
-        tableName: "User"
+        tableName: string
     }
 
     static getDefaultConfig(): DatabaseConfig {
@@ -28,12 +28,10 @@ export class DatabaseConfig {
     }
 }
 
-type AvaliableDataBaseType =
-    | "mysql"
-    | "postgres"
-    | "mariadb"
-    | "sqlite"
-    | "oracle"
-    | "mssql"
-    | "mongodb"
-    | "better-sqlite3"
+type AvaliableDataBaseType = "mysql" | "mariadb"
+// | "postgres"
+// | "sqlite"
+// | "oracle"
+// | "mssql"
+// | "mongodb"
+// | "better-sqlite3"
