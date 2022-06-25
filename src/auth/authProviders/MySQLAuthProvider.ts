@@ -18,7 +18,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
     private readonly db = App.ConfigManager.getConfig().db
 
     private readonly connection = new DataSource({
-        type: "mysql",
+        type: this.db.type,
         host: this.db.host,
         port: this.db.port,
         username: this.db.user,
@@ -128,7 +128,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
     }
 }
 
-@Entity("User")
+@Entity(App.ConfigManager.getConfig().db.properties.tableName)
 class User {
     @PrimaryGeneratedColumn()
     id: number
