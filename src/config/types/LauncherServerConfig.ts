@@ -5,6 +5,7 @@ import { v4 } from "uuid"
 
 import { Lang } from "../../langs/LangManager"
 import { ApiConfig } from "./ApiConfig"
+import { DatabaseConfig } from "./DatabaseConfig"
 
 // TODO Инфа на будущее, пригодится при версионировании конфигов
 // https://github.com/typestack/class-transformer/tree/v0.4.0#using-versioning-to-control-exposed-and-excluded-properties
@@ -17,6 +18,7 @@ export class LauncherServerConfig {
     mirrors: string[]
     auth: AbstractAuthProviderConfig
     api: ApiConfig
+    db: DatabaseConfig
 
     static getDefaults(): LauncherServerConfig {
         const config = new LauncherServerConfig()
@@ -28,6 +30,7 @@ export class LauncherServerConfig {
         config.mirrors = []
         config.auth = AbstractAuthProvider.getDefaultConfig()
         config.api = ApiConfig.getDefaultConfig()
+        config.db = DatabaseConfig.getDefaultConfig()
         return config
     }
 

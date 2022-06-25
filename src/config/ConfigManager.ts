@@ -1,9 +1,8 @@
 import * as fs from "fs"
 
+import { LogHelper, StorageHelper } from "@root/helpers"
 import { set } from "lodash"
 
-import { LogHelper } from "../helpers/LogHelper"
-import { StorageHelper } from "../helpers/StorageHelper"
 import { LauncherServerConfig } from "./types/LauncherServerConfig"
 
 export class ConfigManager {

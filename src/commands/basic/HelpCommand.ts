@@ -1,7 +1,7 @@
+import { LogHelper } from "@root/helpers"
+import { App } from "@root/LauncherServer"
 import chalk from "chalk"
 
-import { LogHelper } from "../../helpers/LogHelper"
-import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class HelpCommand extends AbstractCommand {

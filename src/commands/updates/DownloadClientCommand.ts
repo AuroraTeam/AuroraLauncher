@@ -1,8 +1,9 @@
+import { LogHelper } from "@root/helpers"
+import { App } from "@root/LauncherServer"
+
 import { FabricManager } from "../../download/FabricManager"
 import { MirrorManager } from "../../download/MirrorManager"
 import { MojangManager } from "../../download/MojangManager"
-import { LogHelper } from "../../helpers/LogHelper"
-import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class DownloadClientCommand extends AbstractCommand {

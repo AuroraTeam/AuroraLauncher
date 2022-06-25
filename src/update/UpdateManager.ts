@@ -8,9 +8,9 @@ import semver from "semver"
 import { branch, version as currentVersion } from "../../package.json"
 
 export class UpdateManager {
-    private apiUrl = new URL("versions.json", "https://api.aurora-launcher.ru/")
-    private fileType: "js" | "binary-win" | "binary-mac" | "binary-linux"
-    private execFileName: string
+    private readonly apiUrl = new URL("versions.json", "https://api.aurora-launcher.ru/")
+    private readonly fileType: "js" | "binary-win" | "binary-mac" | "binary-linux"
+    private readonly execFileName: string
 
     constructor() {
         if (SystemHelper.isStandalone()) {

@@ -1,9 +1,9 @@
 import * as fs from "fs"
 import * as path from "path"
 
-import { LogHelper } from "../helpers/LogHelper"
-import { StorageHelper } from "../helpers/StorageHelper"
-import { App } from "../LauncherServer"
+import { LogHelper, StorageHelper } from "@root/helpers"
+import { App } from "@root/LauncherServer"
+
 import { ProfileConfig } from "./types/ProfileConfig"
 
 export class ProfilesManager {
