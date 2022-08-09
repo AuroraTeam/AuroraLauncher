@@ -1,9 +1,8 @@
 import * as fs from "fs"
 
+import { LogHelper, StorageHelper } from "@root/helpers"
 import { set } from "lodash"
 
-import { LogHelper } from "../helpers/LogHelper"
-import { StorageHelper } from "../helpers/StorageHelper"
 import { LauncherServerConfig } from "./types/LauncherServerConfig"
 
 export class ConfigManager {
@@ -13,27 +12,30 @@ export class ConfigManager {
         if (fs.existsSync(StorageHelper.configFile)) {
             LogHelper.info("Loading configuration")
             this.load()
+            LogHelper.info("Configuration file loaded successfully.")
         } else {
             LogHelper.info("Configuration not found! Create default config")
             this.config = LauncherServerConfig.getDefaults()
             this.save()
+            LogHelper.info(
+                "The configuration file has been successfully created. Configure it and run LaunchServer again."
+            )
+            process.exit(0)
         }
     }
 
-    getConfig(): LauncherServerConfig {
+    public getConfig(): LauncherServerConfig {
         return this.config
     }
 
-    // Аеее cас
-    setProp(prop: string, value: string | number | boolean): void {
+    public setProp(prop: string, value: string | number | boolean): void {
         set(this.config, prop, value)
         this.save()
     }
 
     private load(): void {
-        const config = fs.readFileSync(StorageHelper.configFile).toString()
         try {
-            this.config = LauncherServerConfig.fromJSON(config)
+            this.config = LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString())
         } catch (e) {
             if (e instanceof SyntaxError) {
                 LogHelper.error(e)

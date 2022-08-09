@@ -7,25 +7,86 @@
     },
     "CommandsManager": {
         "cmdNotFound": "Command \"%s\" not found!",
-        "invokeCmd": "Invoke %s command"
+        "invokeCmd": "Invoke %s command",
+        "commands": {
+            "basic": {
+                "AboutCommand": "Displays product information",
+                "HelpCommand": "Displays a list of commands",
+                "LangCommand": "Switches the language in use",
+                "StatusCommand": "Displays server status",
+                "StopCommand": "Turns off the LauncherServer"
+            },
+            "updates": {
+                "DownloadAssetsCommand": "Download Assets",
+                "DownloadClientCommand": "Download client",
+                "SyncAllCommand": "Synchronise updates & profiles folders",
+                "SyncProfilesCommand": "Synchronise profiles folder",
+                "SyncUpdatesCommand": "Synchronise updates folder"
+            }
+        }
     },
-    "MirrorManager": {
+    "DownloadManager": {
         "dirExist": "A folder with this name already exists!",
-        "client": {
-            "notFound": "Client not found!",
-            "download": "Client found, downloading ...",
-            "downloadErr": "Error downloading client!",
-            "unpacking": "Client loaded, unpacking ...",
-            "unpackingErr": "Error unpacking client!",
-            "success": "Client loaded successfully!"
+        "MojangManager": {
+            "client": {
+                "download": "Client downloading, please wait...",
+                "downloadErr": "Error downloading the client!",
+                "success": "Client successfully downloaded!"
+            },
+            "libraries": {
+                "download": "Libraries downloading, please wait...",
+                "downloadErr": "Error downloading the libraries!",
+                "success": "Libraries successfully downloaded!"
+            },
+            "natives": {
+                "download": "Natives downloading, please wait...",
+                "downloadErr": "Error downloading the natives!",
+                "success": "Natives successfully downloaded!"
+            },
+            "assets": {
+                "download": "Assets downloading, please wait...",
+                "downloadErr": "Assets downloading the client!",
+                "success": "Assets successfully downloaded!"
+            },
+            "info": {
+                "unavailableSite": "MojangMC website is temporarily unavailable!",
+                "errVerParsing": "Error in parsing version data",
+                "verNotFound": "Version %s not found",
+                "clientDataNotFound": "Client data not found",
+                "errClientParsing": "Error in parsing client data"
+            }
         },
-        "assets": {
-            "notFound": "No assets found!",
-            "download": "Assets found, loading ...",
-            "downloadErr": "Error downloading assets!",
-            "unpacking": "Assets loaded, unpacking ...",
-            "unpackingErr": "Error unpacking assets!",
-            "success": "Assets loaded successfully!"
+        "FabricManager": {
+            "client": {
+                "download": "Downloading Fabric libraries, please wait...",
+                "downloadErr": "Error downloaded Fabric libraries!",
+                "success": "Libraries downloaded successfully!"
+            },
+            "info": {
+                "unavailableSite": "FabricMC website is temporarily unavailable!",
+                "errJsonParsing": "Error in parsing Json data",
+                "verNotFound": "Fabric version %s not found",
+                "clientDataNotFound": "Client data not found",
+                "errClientParsing": "Error in parsing client data"
+            }
+        },
+        "MirrorManager": {
+            "client": {
+                "notFound": "Client not found!",
+                "download": "Client found, downloading ...",
+                "downloadErr": "Error downloading client!",
+                "unpacking": "Client loaded, unpacking ...",
+                "unpackingErr": "Error unpacking client!",
+                "success": "Client loaded successfully!"
+            },
+            "assets": {
+                "notFound": "No assets found!",
+                "download": "Assets found, loading ...",
+                "downloadErr": "Error downloading assets!",
+                "unpacking": "Assets loaded, unpacking ...",
+                "unpackingErr": "Error unpacking assets!",
+                "success": "Assets loaded successfully!"
+            }
         }
     },
     "UpdatesManager": {
@@ -43,5 +104,21 @@
         "syncEnd": "Syncing profiles dir end",
         "syncSkip": "Profiles dir empty. Skip sync",
         "loadingErr": "Json syntax broken. Try fix or delete file profiles/%s"
+    },
+    "AuthManager": {
+        "invalidProvider": "Invalid provider %s in the auth config"
+    },
+    "WebSocketManager": {
+        "certNotFound": "Certificate file not found",
+        "keyNotFound": "Key file not found"
+    },
+    "ModulesManager": {
+        "loadingStart": "Modules loading start...",
+        "loadingEnd": "Modules loading ended. Total time: %d ms.",
+        "loadingSkip": "Modules folder empty. Skip loading",
+        "loadingErr": "An error occurred while loading modules",
+        "downloadModuleDependencies": "Not all dependencies are installed for %s module, installing...",
+        "buildModule": "%s module not builded, building...",
+        "moduleLoadingErr": "An error occurred when trying to load the %s module."
     }
 }

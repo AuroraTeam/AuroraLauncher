@@ -1,9 +1,9 @@
 import * as fs from "fs"
 import * as path from "path"
 
-import { LogHelper } from "../helpers/LogHelper"
-import { StorageHelper } from "../helpers/StorageHelper"
-import { App } from "../LauncherServer"
+import { LogHelper, StorageHelper } from "@root/helpers"
+import { App } from "@root/LauncherServer"
+
 import { ProfileConfig } from "./types/ProfileConfig"
 
 export class ProfilesManager {
@@ -45,16 +45,16 @@ export class ProfilesManager {
         this.loadProfiles()
     }
 
-    createProfile(parametrs: ProfileConfig): string {
-        const profile = new ProfileConfig(parametrs)
+    createProfile(parameters: ProfileConfig): string {
+        const profile = new ProfileConfig(parameters)
         this.profiles.push(profile)
         fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`), profile.toJSON())
         return profile.uuid
     }
 
-    editProfile(uuid: string, parametrs: ProfileConfig): void {
+    editProfile(uuid: string, parameters: ProfileConfig): void {
         const profile = this.profiles.find((p) => p.uuid === uuid)
-        Object.assign(profile, parametrs)
+        Object.assign(profile, parameters)
         fs.writeFileSync(path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`), profile.toJSON())
     }
 }

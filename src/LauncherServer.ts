@@ -3,9 +3,10 @@ import "reflect-metadata"
 
 import { EventEmitter } from "events"
 
-import * as colors from "colors/safe"
+import chalk from "chalk"
 
-import { SocketManager } from "./api/SocketManager"
+import { version } from "../package.json"
+import { WebManager } from "./api/WebManager"
 import { AuthManager } from "./auth/AuthManager"
 import { AuthlibManager } from "./authlib/AuthlibManager"
 import { CommandsManager } from "./commands/CommandsManager"
@@ -15,9 +16,8 @@ import { StorageHelper } from "./helpers/StorageHelper"
 import { LangManager } from "./langs/LangManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
+import { UpdateManager } from "./update/UpdateManager"
 import { UpdatesManager } from "./updates/UpdatesManager"
-
-const version = require("../package").version
 
 export class LauncherServer extends EventEmitter {
     private _ConfigManager: ConfigManager
@@ -25,8 +25,9 @@ export class LauncherServer extends EventEmitter {
     private _AuthManager: AuthManager
     private _CommandsManager: CommandsManager
     private _ModulesManager: ModulesManager
-    private _SocketManager: SocketManager
+    private _WebManager: WebManager
     private _UpdatesManager: UpdatesManager
+    private _UpdateManager: UpdateManager
     private _ProfilesManager: ProfilesManager
     private _AuthlibManager: AuthlibManager
     private inited = false
@@ -35,19 +36,16 @@ export class LauncherServer extends EventEmitter {
         if (this.inited) return
         StorageHelper.createMissing()
         LogHelper.raw(
-            colors.bold(
-                colors.cyan("AuroraLauncher ") +
-                    colors.green("LauncherServer ") +
+            chalk.bold(
+                chalk.cyan("AuroraLauncher ") +
+                    chalk.green("LauncherServer ") +
                     "v" +
-                    colors.yellow(version) +
-                    colors.green("\nCopyright (C) 2020 - 2021 ") +
-                    colors.blue("AuroraTeam (https://github.com/AuroraTeam)") +
-                    colors.green(
-                        "\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `license w'." +
-                            "\nThis is free software, and you are welcome to redistribute it under certain conditions; type `license c' for details."
-                    ) +
-                    colors.green("\nDocumentation page ") +
-                    colors.blue("https://aurora-launcher.ru/wiki")
+                    chalk.yellow(version) +
+                    chalk.green("\nCopyright (C) 2020 - 2022 ") +
+                    chalk.blue("AuroraTeam (https://github.com/AuroraTeam)") +
+                    chalk.green("\nLicensed under the MIT License") +
+                    chalk.green("\nDocumentation page: ") +
+                    chalk.blue("https://docs.aurora-launcher.ru/")
             )
         )
         LogHelper.info("Initialization start")
@@ -56,10 +54,11 @@ export class LauncherServer extends EventEmitter {
         this._AuthManager = new AuthManager()
         this._AuthlibManager = new AuthlibManager()
         this._CommandsManager = new CommandsManager()
-        this._SocketManager = new SocketManager()
+        this._WebManager = new WebManager()
         this._UpdatesManager = new UpdatesManager()
         this._ProfilesManager = new ProfilesManager()
         this._ModulesManager = new ModulesManager()
+        this._UpdateManager = new UpdateManager()
         this.emit("postInit")
         LogHelper.info(this.LangManager.getTranslate().LauncherServer.initEnd)
         this.inited = true
@@ -85,8 +84,8 @@ export class LauncherServer extends EventEmitter {
         return this._ModulesManager
     }
 
-    get SocketManager(): SocketManager {
-        return this._SocketManager
+    get WebManager(): WebManager {
+        return this._WebManager
     }
 
     get UpdatesManager(): UpdatesManager {
@@ -99,6 +98,10 @@ export class LauncherServer extends EventEmitter {
 
     get AuthlibManager(): AuthlibManager {
         return this._AuthlibManager
+    }
+
+    get UpdateManager(): UpdateManager {
+        return this._UpdateManager
     }
 }
 

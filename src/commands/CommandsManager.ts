@@ -1,15 +1,17 @@
 import * as ReadLine from "readline"
 
-import { LogHelper } from "../helpers/LogHelper"
+import { LogHelper } from "@root/helpers"
+
 import { App } from "../LauncherServer"
 import { AbstractCommand } from "./AbstractCommand"
 import { AboutCommand } from "./basic/AboutCommand"
 import { HelpCommand } from "./basic/HelpCommand"
 import { LangCommand } from "./basic/LangCommand"
-import { LicenseCommand } from "./basic/LicenseCommand"
 import { StopCommand } from "./basic/StopCommand"
+import { UpdateCommand } from "./basic/UpdateCommand"
 import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
 import { DownloadClientCommand } from "./updates/DownloadClientCommand"
+import { SyncAllCommand } from "./updates/SyncAllCommand"
 import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
 
@@ -30,12 +32,13 @@ export class CommandsManager {
         this.registerCommand(new DownloadAssetsCommand())
         this.registerCommand(new SyncUpdatesCommand())
         this.registerCommand(new SyncProfilesCommand())
-        this.registerCommand(new LicenseCommand())
+        this.registerCommand(new SyncAllCommand())
         this.registerCommand(new LangCommand())
+        this.registerCommand(new UpdateCommand())
     }
 
     registerCommand(command: AbstractCommand): void {
-        this.commands.set(command.getName(), command)
+        this.commands.set(command.name, command)
     }
 
     private consoleInit(): void {

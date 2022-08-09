@@ -1,9 +1,14 @@
-import { App } from "../../LauncherServer"
+import { App } from "@root/LauncherServer"
+
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class SyncUpdatesCommand extends AbstractCommand {
     constructor() {
-        super("syncupdates", "Синхронизировать папку updates", Category.UPDATES)
+        super(
+            "syncupdates",
+            App.LangManager.getTranslate().CommandsManager.commands.updates.SyncUpdatesCommand,
+            Category.UPDATES
+        )
     }
 
     invoke(): void {

@@ -1,8 +1,11 @@
-import { LogHelper } from "../helpers/LogHelper"
-import { App } from "../LauncherServer"
-import { Translate } from "./Translate"
+import { LogHelper } from "@root/helpers"
+import { App } from "@root/LauncherServer"
+
+import enTranslate from "./en.json"
+import ruTranslate from "./ru.json"
 
 export type Lang = "ru" | "en"
+export type Translate = typeof ruTranslate | typeof enTranslate
 
 export class LangManager {
     private langList: Map<Lang, Translate> = new Map()
@@ -10,25 +13,25 @@ export class LangManager {
 
     constructor() {
         this.setLangs()
-        const selectedLang = App.ConfigManager.getConfig().lang || "en"
+        const selectedLang = App.ConfigManager.getConfig().lang
 
         if (!this.langList.has(selectedLang))
-            LogHelper.fatal("Invalid lang settings! Language %s not found.", selectedLang)
+            LogHelper.fatal(`Invalid lang settings! Language "${selectedLang}" not found.`)
         this.currentLang = this.langList.get(selectedLang)
 
-        LogHelper.dev("LangManager init, selected language: %s", selectedLang)
+        LogHelper.dev(`LangManager init, selected language: ${selectedLang}`)
     }
 
     private setLangs(): void {
-        this.langList.set("ru", require("./ru.json"))
-        this.langList.set("en", require("./en.json"))
+        this.langList.set("ru", ruTranslate)
+        this.langList.set("en", enTranslate)
     }
 
-    getTranslate(): Translate {
+    public getTranslate(): Translate {
         return this.currentLang
     }
 
-    changeLang(lang: Lang): any {
+    public changeLang(lang: Lang): any {
         if (!this.langList.has(lang)) return LogHelper.error("Language %s not found!", lang)
         this.currentLang = this.langList.get(lang)
         App.ConfigManager.setProp("lang", lang)

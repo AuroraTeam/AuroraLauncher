@@ -1,13 +1,19 @@
+import { LogHelper } from "@root/helpers"
+import { App } from "@root/LauncherServer"
+
 import { FabricManager } from "../../download/FabricManager"
 import { MirrorManager } from "../../download/MirrorManager"
 import { MojangManager } from "../../download/MojangManager"
-import { LogHelper } from "../../helpers/LogHelper"
-import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class DownloadClientCommand extends AbstractCommand {
     constructor() {
-        super("downloadclient", "Загрузить клиент", Category.UPDATES, "<version> <folder name> <?source type>")
+        super(
+            "downloadclient",
+            App.LangManager.getTranslate().CommandsManager.commands.updates.DownloadClientCommand,
+            Category.UPDATES,
+            "<version> <folder name> <?source type>"
+        )
     }
 
     async invoke(...args: string[]): Promise<void> {
@@ -15,21 +21,25 @@ export class DownloadClientCommand extends AbstractCommand {
         if (!clientName) return LogHelper.error("Укажите название/версию клиента!")
         if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
 
+        const DownloadManager = this.getDownloadManager(sourceType)
+        if (!DownloadManager) return
+
         App.CommandsManager.console.pause()
+        await new DownloadManager().downloadClient(clientName, dirName)
+        App.CommandsManager.console.resume()
+    }
+
+    private getDownloadManager(sourceType: string) {
         switch (sourceType) {
             case "mirror":
-                await new MirrorManager().downloadClient(clientName, dirName)
-                break
+                return MirrorManager
             case "fabric":
-                await new FabricManager().downloadClient(clientName, dirName)
-                break
+                return FabricManager
             case "mojang":
-                await new MojangManager().downloadClient(clientName, dirName)
-                break
+                return MojangManager
             default:
                 LogHelper.error(`Неизвестный тип источника: ${sourceType}`)
-                break
+                return
         }
-        App.CommandsManager.console.resume()
     }
 }

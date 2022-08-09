@@ -1,69 +1,43 @@
 import { LogHelper } from "../helpers/LogHelper"
 import { App } from "../LauncherServer"
-import { AbstractProvider } from "./AbstractProvider"
-import { AbstractAuthProvider } from "./authProviders/AbstractAuthProvider"
+import { AbstractAuthProvider } from "./AbstractAuthProvider"
 import { AcceptAuthProvider } from "./authProviders/AcceptAuthProvider"
 import { MojangAuthProvider } from "./authProviders/MojangAuthProvider"
+// import { MySQLAuthProvider } from "./authProviders/MySQLAuthProvider"
 import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
-import { AbstractTextureProvider } from "./textureProviders/AbstractTextureProvider"
-import { VoidTextureProvider } from "./textureProviders/VoidTextureProvider"
 
-type ProviderMap<P> = Map<string, P>
-
-// TODO
-// Ох уж эти приколы с типами
-// Другие решения получалсь не красивыми
+// TODO Ох уж эти приколы с типами
+// Другие решения получались не красивыми
 // Если есть идеи как сделать лучше - пишите))
 type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider | typeof MojangAuthProvider
-type AnyTextureProvider = typeof VoidTextureProvider
+// | typeof MySQLAuthProvider
 
 export class AuthManager {
-    private authProvider: AbstractAuthProvider
-    private textureProvider: AbstractTextureProvider
-    authProviders: ProviderMap<typeof AbstractAuthProvider> = new Map()
-    textureProviders: ProviderMap<typeof AbstractTextureProvider> = new Map()
+    private readonly authProvider: AbstractAuthProvider
+    private readonly authProviders: Map<string, AnyAuthProvider> = new Map()
 
     constructor() {
         this.registerAuthProviders()
-        this.registerTextureProviders()
 
-        const config = App.ConfigManager.getConfig().auth
+        const providerType = App.ConfigManager.getConfig().auth.type
 
-        this.authProvider = new (this.getProvider("authProvider", config.authProvider.type) as AnyAuthProvider)()
-        this.textureProvider = new (this.getProvider(
-            "textureProvider",
-            config.textureProvider.type
-        ) as AnyTextureProvider)()
+        if (!this.authProviders.has(providerType))
+            LogHelper.fatal(App.LangManager.getTranslate().AuthManager.invalidProvider)
+        this.authProvider = new (this.authProviders.get(providerType))()
+    }
+
+    private registerAuthProviders(): void {
+        this.registerProvider(AcceptAuthProvider)
+        this.registerProvider(RejectAuthProvider)
+        this.registerProvider(MojangAuthProvider)
+        // this.registerProvider(MySQLAuthProvider)
+    }
+
+    private registerProvider(provider: AnyAuthProvider): void {
+        this.authProviders.set(provider.getType(), provider)
     }
 
     getAuthProvider(): AbstractAuthProvider {
         return this.authProvider
-    }
-
-    getTextureProvider(): AbstractTextureProvider {
-        return this.textureProvider
-    }
-
-    private getProvider(providerType: "authProvider" | "textureProvider", type: string): AbstractProvider {
-        const providersMap = providerType === "authProvider" ? this.authProviders : this.textureProviders
-        if (!providersMap.has(type)) LogHelper.fatal(`Invalid provider "${type}" in ${providerType} config`) //TODO перевод
-        return providersMap.get(type)
-    }
-
-    private registerAuthProviders(): void {
-        this.registerProvider(this.authProviders, AcceptAuthProvider)
-        this.registerProvider(this.authProviders, RejectAuthProvider)
-        this.registerProvider(this.authProviders, MojangAuthProvider)
-    }
-
-    private registerTextureProviders(): void {
-        this.registerProvider(this.textureProviders, VoidTextureProvider)
-    }
-
-    private registerProvider(
-        providerMap: ProviderMap<typeof AbstractProvider>,
-        provider: typeof AbstractProvider
-    ): void {
-        providerMap.set(provider.getType(), provider)
     }
 }

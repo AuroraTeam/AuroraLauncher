@@ -1,4 +1,5 @@
-import { App } from "../../../LauncherServer"
+import { App } from "@root/LauncherServer"
+
 import { ResponseData } from "../types/Response"
 import { AbstractRequest } from "./AbstractRequest"
 

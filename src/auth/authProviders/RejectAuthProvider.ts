@@ -1,13 +1,13 @@
-import { ResponseError } from "../../api/websocket/types/ErrorResponse"
-import { App } from "../../LauncherServer"
-import { AbstractAuthProvider, AbstractAuthProviderConfig } from "./AbstractAuthProvider"
+import { ResponseError } from "@root/api/websocket/ResponseError"
+import { App } from "@root/LauncherServer"
+
+import { AbstractAuthProvider, AbstractAuthProviderConfig } from "../AbstractAuthProvider"
 
 export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"
     private config: RejectAuthProviderConfig = {
         type: "reject",
-        message:
-            (App.ConfigManager.getConfig().auth.authProvider as RejectAuthProviderConfig).message || "Auth rejected",
+        message: (App.ConfigManager.getConfig().auth as RejectAuthProviderConfig).message || "Auth rejected",
     }
 
     auth(): any {

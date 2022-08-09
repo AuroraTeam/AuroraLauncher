@@ -7,7 +7,7 @@ import {
     AuthResponseData,
     PrivilegesResponseData,
     ProfilesResponseData,
-} from "./AbstractAuthProvider"
+} from "../AbstractAuthProvider"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
     static type = "accept"

@@ -1,11 +1,17 @@
-import { LogHelper } from "../../helpers/LogHelper"
+import { LogHelper } from "@root/helpers"
+import { App } from "@root/LauncherServer"
+
 import { Lang } from "../../langs/LangManager"
-import { App } from "../../LauncherServer"
 import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class LangCommand extends AbstractCommand {
     constructor() {
-        super("lang", "Переключает используемый язык", Category.BASIC, "<lang> (ru|en)")
+        super(
+            "lang",
+            App.LangManager.getTranslate().CommandsManager.commands.basic.LangCommand,
+            Category.BASIC,
+            "<lang> (ru|en)"
+        )
     }
 
     invoke(...[lang]: [lang: Lang]): void {

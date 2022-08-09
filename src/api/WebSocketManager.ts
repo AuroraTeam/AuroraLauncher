@@ -1,21 +1,21 @@
 import * as http from "http"
 
+import { JsonHelper } from "@auroralauncher/core"
 import { NIL as NIL_UUID } from "uuid"
 import * as ws from "ws"
 
-import { JsonHelper } from "../helpers/JsonHelper"
 import { LogHelper } from "../helpers/LogHelper"
 import { wsErrorResponse } from "./websocket/types/ErrorResponse"
 import { wsRequest } from "./websocket/types/Request"
 import { wsResponse } from "./websocket/types/Response"
-import { WsRequestsManager, wsClient } from "./websocket/WsRequestsManager"
+import { WsRequestsManager } from "./websocket/WsRequestsManager"
 
 export class WebSocketManager {
-    webSocketServer: ws.Server
-    requestsManager = new WsRequestsManager()
+    private webSocketServer: ws.WebSocketServer
+    private requestsManager = new WsRequestsManager()
 
-    webSocketServerInit(wsServerOptions: ws.ServerOptions): void {
-        this.webSocketServer = new ws.Server(wsServerOptions)
+    public createWebSocket(wsServerOptions: ws.ServerOptions): void {
+        this.webSocketServer = new ws.WebSocketServer(wsServerOptions)
         this.webSocketServer.on("connection", (ws: wsClient, req: http.IncomingMessage) => this.connectHandler(ws, req))
 
         const interval = setInterval(() => {
@@ -32,13 +32,16 @@ export class WebSocketManager {
         })
     }
 
-    connectHandler(ws: wsClient, req: http.IncomingMessage): void {
+    private connectHandler(ws: wsClient, req: http.IncomingMessage): void {
         ws.on("ping", ws.pong) // На случай всяких внешних проверок, аля чекалки статуса
         ws.on("pong", () => (ws.clientData.isAlive = true))
+        // Добавляем хелпер
+        ws.sendResponse = (data: wsResponse | wsErrorResponse) => ws.send(JsonHelper.toJSON(data))
 
         // Получаем IP юзера
         const clientIP = req.socket.remoteAddress
         // Разрешаем только один коннект на один IP
+        // TODO Привет ребятам за NAT, сделать опционально (напишу, а то ещё опять забуду)
         if (Array.from(this.webSocketServer.clients).some((c: wsClient) => c.clientData?.ip === clientIP)) {
             ws.sendResponse({
                 uuid: NIL_UUID,
@@ -53,8 +56,6 @@ export class WebSocketManager {
             ip: clientIP,
             isAuthed: false,
         }
-        // Добавляем хелпер
-        ws.sendResponse = (data: wsResponse | wsErrorResponse) => ws.send(JsonHelper.toJSON(data))
 
         // Обработка приходящих сообщений
         ws.on("message", async (message: string) => {
@@ -94,4 +95,13 @@ export class WebSocketManager {
             })
         })
     }
+}
+
+export interface wsClient extends ws {
+    clientData: {
+        isAlive: boolean
+        isAuthed: boolean
+        ip: string
+    }
+    sendResponse: (data: wsResponse | wsErrorResponse) => void
 }
