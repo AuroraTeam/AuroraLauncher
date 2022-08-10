@@ -8,7 +8,7 @@ import semver from "semver"
 import { branch, version as currentVersion } from "../../package.json"
 
 export class UpdateManager {
-    private readonly apiUrl = new URL("versions.json", "https://api.aurora-launcher.ru/")
+    private readonly apiUrl = new URL("latest", "https://api.aurora-launcher.ru/")
     private readonly fileType: "js" | "binary-win" | "binary-mac" | "binary-linux"
     private readonly execFileName: string
 
@@ -17,15 +17,15 @@ export class UpdateManager {
             switch (SystemHelper.getPlatform()) {
                 case "win32":
                     this.fileType = "binary-win"
-                    this.execFileName = "LauncherServer_win64.exe"
+                    this.execFileName = "LauncherServer-win.exe"
                     break
                 case "darwin":
                     this.fileType = "binary-mac"
-                    this.execFileName = "LauncherServer_mac64"
+                    this.execFileName = "LauncherServer-macos"
                     break
                 case "linux":
                     this.fileType = "binary-linux"
-                    this.execFileName = "LauncherServer_linux64"
+                    this.execFileName = "LauncherServer-linux"
                     break
             }
         } else {
@@ -54,7 +54,12 @@ export class UpdateManager {
     public async checkUpdate(): Promise<void | Version> {
         LogHelper.info("Checking for new version...")
 
-        const versionsData = await this.getVersionsData()
+        let versionsData: VersionsData
+        try {
+            versionsData = await this.getVersionsData()
+        } catch (_) {
+            return LogHelper.info("No updates available")
+        }
         const latestVersion = versionsData[<"stable" | "dev">branch]
 
         if (!this.needUpdate(latestVersion)) return LogHelper.info("No updates available")
