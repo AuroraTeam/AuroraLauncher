@@ -1,4 +1,4 @@
-import * as ReadLine from "readline"
+import ReadLine from "readline"
 
 import { LogHelper } from "@root/helpers"
 

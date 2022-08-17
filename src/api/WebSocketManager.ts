@@ -1,8 +1,8 @@
-import * as http from "http"
+import http from "http"
 
 import { JsonHelper } from "@auroralauncher/core"
 import { NIL as NIL_UUID } from "uuid"
-import * as ws from "ws"
+import WebSocket, { ServerOptions, WebSocketServer } from "ws"
 
 import { LogHelper } from "../helpers/LogHelper"
 import { wsErrorResponse } from "./websocket/types/ErrorResponse"
@@ -11,11 +11,11 @@ import { wsResponse } from "./websocket/types/Response"
 import { WsRequestsManager } from "./websocket/WsRequestsManager"
 
 export class WebSocketManager {
-    private webSocketServer: ws.WebSocketServer
+    private webSocketServer: WebSocketServer
     private requestsManager = new WsRequestsManager()
 
-    public createWebSocket(wsServerOptions: ws.ServerOptions): void {
-        this.webSocketServer = new ws.WebSocketServer(wsServerOptions)
+    public createWebSocket(wsServerOptions: ServerOptions): void {
+        this.webSocketServer = new WebSocketServer(wsServerOptions)
         this.webSocketServer.on("connection", (ws: wsClient, req: http.IncomingMessage) => this.connectHandler(ws, req))
 
         const interval = setInterval(() => {
@@ -97,7 +97,7 @@ export class WebSocketManager {
     }
 }
 
-export interface wsClient extends ws {
+export interface wsClient extends WebSocket {
     clientData: {
         isAlive: boolean
         isAuthed: boolean

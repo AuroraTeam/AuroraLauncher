@@ -1,6 +1,6 @@
-import * as crypto from "crypto"
-import * as fs from "fs"
-import * as path from "path"
+import crypto from "crypto"
+import fs from "fs"
+import path from "path"
 
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"

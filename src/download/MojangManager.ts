@@ -1,7 +1,7 @@
 // TODO Ещё больше try/catch для отлова возможных ошибок
 
-import * as fs from "fs"
-import * as path from "path"
+import fs from "fs"
+import path from "path"
 import { URL } from "url"
 
 import { JsonHelper } from "@auroralauncher/core"
