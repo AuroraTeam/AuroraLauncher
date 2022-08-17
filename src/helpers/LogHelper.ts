@@ -1,4 +1,5 @@
-import * as fs from "fs"
+import { appendFileSync } from "fs"
+import { EOL } from "os"
 import { format } from "util"
 
 import chalk from "chalk"
@@ -44,48 +45,42 @@ export class LogHelper {
     private static log(level: LogLevel, msg: any, ...args: any[]) {
         if (level === LogLevel.RAW) return this.rawLog(msg, ...args)
 
-        const date = new Date().toLocaleString("ru", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-        })
+        const date = new Date().toLocaleString()
 
         let coloredStr: string = chalk.gray(date)
+
         switch (level) {
             case LogLevel.DEBUG:
             case LogLevel.DEV:
-                coloredStr += chalk.green(` [${level.toUpperCase()}] `) + msg
+                coloredStr += chalk.green(` [${level}] `) + msg
                 break
             case LogLevel.ERROR:
             case LogLevel.FATAL:
-                coloredStr += chalk.red(` [${level.toUpperCase()}] ${msg}`)
+                coloredStr += chalk.red(` [${level}] ${msg}`)
                 break
             case LogLevel.INFO:
-                coloredStr += chalk.cyan(` [${level.toUpperCase()}] `) + msg
+                coloredStr += chalk.cyan(` [${level}] `) + msg
                 break
             case LogLevel.WARN:
-                coloredStr += chalk.yellow(` [${level.toUpperCase()}] ${msg}`)
+                coloredStr += chalk.yellow(` [${level}] ${msg}`)
                 break
         }
         this.rawLog(coloredStr, ...args)
     }
 
     private static rawLog(msg: any, ...args: any[]) {
-        const message = format(msg, ...args) + "\n"
+        const message = format(msg, ...args) + EOL
         process.stdout.write(message)
-        fs.appendFileSync(StorageHelper.logFile, stripAnsi(message))
+        appendFileSync(StorageHelper.logFile, stripAnsi(message))
     }
 }
 
 enum LogLevel {
-    DEBUG = "debug",
-    DEV = "dev",
-    ERROR = "error",
-    FATAL = "fatal",
-    INFO = "info",
-    RAW = "raw",
-    WARN = "warn",
+    DEBUG = "DEBUG",
+    DEV = "DEV",
+    ERROR = "ERROR",
+    FATAL = "FATAL",
+    INFO = "INFO",
+    RAW = "RAW",
+    WARN = "WARN",
 }
