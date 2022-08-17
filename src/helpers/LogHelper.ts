@@ -42,7 +42,7 @@ export class LogHelper {
         this.saveLog(msg + EOL)
     }
 
-    public static log(level: LogLevel, msg: any, ...args: any[]) {
+    private static log(level: LogLevel, msg: any, ...args: any[]) {
         const date = new Date().toLocaleString()
 
         let coloredStr: string = chalk.gray(date)
