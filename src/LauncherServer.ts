@@ -35,7 +35,6 @@ export class LauncherServer extends EventEmitter {
     main(): void {
         if (this.inited) return
 
-        LogHelper.debug("Preinit")
         StorageHelper.createMissing()
         this.printVersion()
 

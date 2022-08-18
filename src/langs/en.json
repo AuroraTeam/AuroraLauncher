@@ -89,6 +89,16 @@
             }
         }
     },
+    "UpdateManager": {
+        "check": "Checking for new version...",
+        "checkEnd": "No updates available",
+        "checkErr": "Can't find version data",
+        "newUpdateAvaliable": "New version available: %s",
+        "newUpdate": "The latest LauncherServer version is %s, but you have %s. The latest version was built on %s",
+        "updating": "Updating LauncherServer...",
+        "downloadingLatestVer": "Downloading latest version of current branch...",
+        "downloadEnd": "Download complete! Please restart LauncherServer."
+    },
     "UpdatesManager": {
         "sync": "Syncing updates dir",
         "syncTime": "Syncing \"%s\" - %dms",
@@ -107,6 +117,11 @@
     },
     "AuthManager": {
         "invalidProvider": "Invalid provider %s in the auth config"
+    },
+    "AuthlibManager": {
+        "keysExists": "Keys exists, skip generate",
+        "privateKeySaved": "Private key saved",
+        "publicKeySaved": "Public key saved"
     },
     "WebSocketManager": {
         "certNotFound": "Certificate file not found",

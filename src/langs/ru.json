@@ -89,6 +89,16 @@
             }
         }
     },
+    "UpdateManager": {
+        "check": "Проверка на наличие новой версии...",
+        "checkEnd": "Обновления отсутствуют",
+        "checkErr": "Не удается найти данные о версии",
+        "newUpdateAvaliable": "Доступна новая версия: %s",
+        "newUpdate": "Последняя версия LauncherServer это %s, но у тебя установлена %s. Последняя версия была собрана %s",
+        "updating": "Обновление LauncherServer...",
+        "downloadingCurrVer": "Загрузка последней версии текущей ветки....",
+        "downloadEnd": "Загрузка завершена! Пожалуйста, перезапустите LauncherServer."
+    },
     "UpdatesManager": {
         "sync": "Синхронизация папки updates",
         "syncTime": "Папка \"%s\" - %dms",
@@ -107,6 +117,11 @@
     },
     "AuthManager": {
         "invalidProvider": "Невалидный провайдер %s в авторизационном конфиге"
+    },
+    "AuthlibManager": {
+        "keysExists": "Ключи существуют, генерация пропущена",
+        "privateKeySaved": "Приватный ключ сохранен",
+        "publicKeySaved": "Публичный ключ сохранен"
     },
     "WebSocketManager": {
         "certNotFound": "Файл сертификата не найден",

@@ -1,11 +1,10 @@
 import path from "path"
 
 import { HttpHelper, LogHelper, StorageHelper, SystemHelper } from "@root/helpers"
+import { App } from "@root/LauncherServer"
 import semver from "semver"
 
-// currentVersion для читабельности кода
-// TODO вынести выбор ветки обновлений в конфиг лаунчсервера
-import { branch, version as currentVersion } from "../../package.json"
+import { version as currentVersion } from "../../package.json"
 
 export class UpdateManager {
     private readonly apiUrl = new URL("latest", "https://api.aurora-launcher.ru/")
@@ -40,44 +39,45 @@ export class UpdateManager {
         const latestVersion = await this.checkUpdate()
         if (!latestVersion) return
 
-        LogHelper.info("Updating LauncherServer...")
-        LogHelper.info("Downloading current version...")
+        LogHelper.info(App.LangManager.getTranslate().UpdateManager.updating)
+        LogHelper.info(App.LangManager.getTranslate().UpdateManager.downloadingLatestVer)
         await HttpHelper.downloadFile(
             new URL(latestVersion.files[this.fileType]),
             path.resolve(StorageHelper.storageDir, this.execFileName)
         )
 
-        LogHelper.info("Download complete! Please restart LauncherServer.")
+        LogHelper.info(App.LangManager.getTranslate().UpdateManager.downloadEnd)
         process.exit(0)
     }
 
     public async checkUpdate(): Promise<void | Version> {
-        LogHelper.info("Checking for new version...")
+        LogHelper.info(App.LangManager.getTranslate().UpdateManager.check)
 
         let versionsData: VersionsData
         try {
             versionsData = await this.getVersionsData()
         } catch (_) {
-            return LogHelper.info("No updates available")
+            return LogHelper.info(App.LangManager.getTranslate().UpdateManager.checkEnd)
         }
-        const latestVersion = versionsData[<"stable" | "dev">branch]
+        const latestVersion = versionsData[<"stable" | "dev">App.ConfigManager.getConfig().branch]
 
-        if (!this.needUpdate(latestVersion)) return LogHelper.info("No updates available")
+        if (!this.needUpdate(latestVersion))
+            return LogHelper.info(App.LangManager.getTranslate().UpdateManager.checkEnd)
 
-        LogHelper.info(`New version available: ${latestVersion}`)
+        LogHelper.info(App.LangManager.getTranslate().UpdateManager.newUpdateAvaliable, latestVersion)
         const latestVersionData = versionsData.versions.find(({ version }) => version === latestVersion)
-        if (!latestVersionData) return LogHelper.error("Can't find version data")
+        if (!latestVersionData) return LogHelper.error(App.LangManager.getTranslate().UpdateManager.checkErr)
 
         LogHelper.info(
-            `The latest LauncherServer version is ${latestVersion}, but you have ${currentVersion}. The latest version was built on ${new Date(
-                latestVersionData.date
-            ).toLocaleString()}.`
+            App.LangManager.getTranslate().UpdateManager.newUpdate,
+            latestVersion,
+            currentVersion,
+            new Date(latestVersionData.date).toLocaleString()
         )
+
         return latestVersionData
     }
 
-    // Две функции ниже оставил на случай использования извне (например для модулей)
-    // мб позже вырежу если не пригодятся, либо оставлю для более простой читабельности кода
     public getVersionsData(): Promise<VersionsData> {
         return HttpHelper.getJson<VersionsData>(this.apiUrl)
     }

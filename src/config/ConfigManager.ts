@@ -18,7 +18,7 @@ export class ConfigManager {
             this.config = LauncherServerConfig.getDefaults()
             this.save()
             LogHelper.info(
-                "The configuration file has been successfully created. Configure it and run LaunchServer again."
+                "The configuration file has been successfully created. Configure it and run LauncherServer again."
             )
             process.exit(0)
         }
