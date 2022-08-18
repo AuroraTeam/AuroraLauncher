@@ -18,11 +18,14 @@ export class UpdatesManager {
             .filter((folder) => folder.isDirectory())
 
         if (folders.length === 0) return LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncSkip)
+
         LogHelper.info(App.LangManager.getTranslate().UpdatesManager.sync)
 
         folders.forEach(({ name }) => {
             const startTime = Date.now()
+
             this.hashDirs.set(name, this.hashDir(path.join(StorageHelper.updatesDir, name)))
+
             LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncTime, name, Date.now() - startTime)
         })
 

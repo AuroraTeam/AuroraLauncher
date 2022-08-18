@@ -14,9 +14,10 @@ export class StorageHelper extends CoreStorageHelper {
     static readonly authlibDir: string = path.resolve(StorageHelper.storageDir, "authlib")
     static readonly tempDir: string = path.resolve(StorageHelper.storageDir, "temp")
     static readonly configFile: string = path.resolve(StorageHelper.storageDir, "LauncherServerConfig.json")
-    static readonly logFile: string = path.resolve(StorageHelper.storageDir, "LauncherServer.log")
+    static readonly logsDir: string = path.resolve(StorageHelper.storageDir, "logs")
 
     static createMissing(): void {
+        if (!fs.existsSync(this.logsDir)) fs.mkdirSync(this.logsDir)
         if (!fs.existsSync(this.updatesDir)) fs.mkdirSync(this.updatesDir)
         if (!fs.existsSync(this.profilesDir)) fs.mkdirSync(this.profilesDir)
         if (!fs.existsSync(this.modulesDir)) fs.mkdirSync(this.modulesDir)

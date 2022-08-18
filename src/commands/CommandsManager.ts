@@ -5,6 +5,7 @@ import { LogHelper } from "@root/helpers"
 import { App } from "../LauncherServer"
 import { AbstractCommand } from "./AbstractCommand"
 import { AboutCommand } from "./basic/AboutCommand"
+import { BranchCommand } from "./basic/BranchCommand"
 import { HelpCommand } from "./basic/HelpCommand"
 import { LangCommand } from "./basic/LangCommand"
 import { StopCommand } from "./basic/StopCommand"
@@ -35,6 +36,7 @@ export class CommandsManager {
         this.registerCommand(new SyncAllCommand())
         this.registerCommand(new LangCommand())
         this.registerCommand(new UpdateCommand())
+        this.registerCommand(new BranchCommand())
     }
 
     registerCommand(command: AbstractCommand): void {
@@ -54,12 +56,16 @@ export class CommandsManager {
         })
         this.console.on("line", (line) => {
             LogHelper.handleUserPrompt(line)
+
             const args = line.match(/"[^"]*"|[^\s"]+/g)?.map((s) => s.trim().replace(/"/g, ""))
             if (!args) return
+
             const cmd = args.shift().toLowerCase()
             if (!this.commands.has(cmd))
                 return LogHelper.error(App.LangManager.getTranslate().CommandsManager.cmdNotFound, cmd)
+
             LogHelper.dev(App.LangManager.getTranslate().CommandsManager.invokeCmd, cmd)
+
             this.commands.get(cmd).invoke(...args)
         })
     }

@@ -2,6 +2,8 @@ import crypto from "crypto"
 import fs from "fs"
 import path from "path"
 
+import { App } from "@root/LauncherServer"
+
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"
 
@@ -13,7 +15,7 @@ export class AuthlibManager {
 
     constructor() {
         if (fs.existsSync(this.privateKeyPath) && fs.existsSync(this.publicKeyPath))
-            LogHelper.info("Keys exists, skip generate")
+            LogHelper.info(App.LangManager.getTranslate().AuthlibManager.keysExists)
         else this.generateKeys()
         this.setKeys()
     }
@@ -42,9 +44,9 @@ export class AuthlibManager {
         })
 
         fs.writeFileSync(this.privateKeyPath, keys.privateKey)
-        LogHelper.info("Private key saved")
+        LogHelper.info(App.LangManager.getTranslate().AuthlibManager.privateKeySaved)
         fs.writeFileSync(this.publicKeyPath, keys.publicKey)
-        LogHelper.info("Public key saved")
+        LogHelper.info(App.LangManager.getTranslate().AuthlibManager.privateKeySaved)
     }
 
     public getSignature(data: string): string {

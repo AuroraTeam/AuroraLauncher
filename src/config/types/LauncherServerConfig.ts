@@ -14,6 +14,7 @@ export class LauncherServerConfig {
     projectID: string
     projectName: string
     lang: Lang
+    branch: branch
     env: Envirovement
     mirrors: string[]
     auth: AbstractAuthProviderConfig
@@ -26,6 +27,7 @@ export class LauncherServerConfig {
         config.projectID = v4()
         config.projectName = ""
         config.lang = "ru"
+        config.branch = "stable"
         config.env = Envirovement.DEV
         config.mirrors = []
         config.auth = AbstractAuthProvider.getDefaultConfig()
@@ -48,3 +50,5 @@ export enum Envirovement {
     DEBUG = "debug",
     DEV = "dev",
 }
+
+type branch = "stable" | "latest" | "dev"
