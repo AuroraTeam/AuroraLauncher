@@ -9,14 +9,12 @@ import stripAnsi from "strip-ansi"
 
 import { StorageHelper } from "./StorageHelper"
 
-moment.locale("ru") //мдам
-
 export class LogHelper {
     private static readonly isDevEnabled = process.argv.includes("--dev")
     private static readonly isDebugEnabled = process.argv.includes("--debug") || process.argv.includes("--dev")
     private static readonly logFile = resolve(
         StorageHelper.logsDir,
-        `LauncherServer-${moment().format(`YYYY.MM.DD hh.mm.ss`)}.log`
+        `LauncherServer-${moment().format(`YYYY.MM.DD HH.mm.ss`)}.log`
     )
 
     public static debug(msg: any, ...args: any[]): void {
