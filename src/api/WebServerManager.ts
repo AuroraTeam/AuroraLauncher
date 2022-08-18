@@ -1,7 +1,7 @@
-import * as fs from "fs"
-import * as http from "http"
-import * as https from "https"
-import * as path from "path"
+import fs from "fs"
+import http from "http"
+import https from "https"
+import path from "path"
 
 import { LogHelper } from "../helpers/LogHelper"
 import { StorageHelper } from "../helpers/StorageHelper"

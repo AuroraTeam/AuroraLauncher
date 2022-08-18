@@ -1,4 +1,4 @@
-import * as ReadLine from "readline"
+import ReadLine from "readline"
 
 import { LogHelper } from "@root/helpers"
 
@@ -53,6 +53,7 @@ export class CommandsManager {
             prompt: "",
         })
         this.console.on("line", (line) => {
+            LogHelper.handleUserPrompt(line)
             const args = line.match(/"[^"]*"|[^\s"]+/g)?.map((s) => s.trim().replace(/"/g, ""))
             if (!args) return
             const cmd = args.shift().toLowerCase()

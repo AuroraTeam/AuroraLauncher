@@ -1,6 +1,6 @@
 {
     "name": "auroralauncher-launcherserver",
-    "version": "0.0.3",
+    "version": "0.1.0-dev",
     "branch": "dev",
     "description": "LauncherServer for AuroraLauncher",
     "keywords": [
@@ -12,12 +12,13 @@
         "url": "https://github.com/AuroraTeam/LauncherServer/issues"
     },
     "repository": "github:aurorateam/launcherserver",
-    "license": "GPL-3.0",
+    "license": "MIT",
     "author": "AuroraTeam",
     "contributors": [
         "JoCat (https://github.com/JoCat)",
         "LoomeL (https://github.com/LoomeL)",
-        "FIXxp (https://github.com/FIXxp)"
+        "FIXxp (https://github.com/FIXxp)",
+        "IsTopNick (https://github.com/IsTopNick)"
     ],
     "main": "dist/LauncherServer.js",
     "scripts": {
@@ -48,6 +49,7 @@
         "prettier": "^2.4.0",
         "prettier-plugin-import-sort": "0.0.7",
         "rimraf": "^3.0.2",
+        "source-map-support": "^0.5.21",
         "typescript": "^4.4.3"
     },
     "dependencies": {

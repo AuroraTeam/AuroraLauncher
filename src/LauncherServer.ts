@@ -1,3 +1,4 @@
+import "source-map-support/register"
 import "reflect-metadata"
 
 import { EventEmitter } from "events"
@@ -33,20 +34,11 @@ export class LauncherServer extends EventEmitter {
 
     main(): void {
         if (this.inited) return
+
+        LogHelper.debug("Preinit")
         StorageHelper.createMissing()
-        LogHelper.raw(
-            chalk.bold(
-                chalk.cyan("AuroraLauncher ") +
-                    chalk.green("LauncherServer ") +
-                    "v" +
-                    chalk.yellow(version) +
-                    chalk.green("\nCopyright (C) 2020 - 2022 ") +
-                    chalk.blue("AuroraTeam (https://github.com/AuroraTeam)") +
-                    chalk.green("\nLicensed under the MIT License") +
-                    chalk.green("\nDocumentation page: ") +
-                    chalk.blue("https://docs.aurora-launcher.ru/")
-            )
-        )
+        this.printVersion()
+
         LogHelper.info("Initialization start")
         this._ConfigManager = new ConfigManager()
         this._LangManager = new LangManager()
@@ -58,6 +50,7 @@ export class LauncherServer extends EventEmitter {
         this._ProfilesManager = new ProfilesManager()
         this._ModulesManager = new ModulesManager()
         this._UpdateManager = new UpdateManager()
+
         this.emit("postInit")
         LogHelper.info(this.LangManager.getTranslate().LauncherServer.initEnd)
         this.inited = true
@@ -101,6 +94,21 @@ export class LauncherServer extends EventEmitter {
 
     get UpdateManager(): UpdateManager {
         return this._UpdateManager
+    }
+
+    private printVersion() {
+        LogHelper.raw(
+            chalk.bold(
+                chalk.cyan("AuroraLauncher ") +
+                    chalk.green("LauncherServer ") +
+                    chalk.yellow(`v${version}`) +
+                    chalk.green(`\nCopyright (C) 2020 - ${new Date().getFullYear()} `) +
+                    chalk.blue("AuroraTeam (https://github.com/AuroraTeam)") +
+                    chalk.green("\nLicensed under the MIT License") +
+                    chalk.green("\nDocumentation page: ") +
+                    chalk.blue("https://docs.aurora-launcher.ru/")
+            )
+        )
     }
 }
 

@@ -1,4 +1,4 @@
-import * as fs from "fs"
+import fs from "fs"
 
 import { LogHelper, StorageHelper } from "@root/helpers"
 import { set } from "lodash"
