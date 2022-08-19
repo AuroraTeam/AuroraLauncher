@@ -1,8 +1,8 @@
 import { LogHelper } from "@root/helpers"
-// import { App } from "@root/LauncherServer"
-// import prompts from "prompts"
 
 import { AbstractCommand, Category } from "../AbstractCommand"
+// import { App } from "@root/LauncherServer"
+// import prompts from "prompts"
 
 export class BranchCommand extends AbstractCommand {
     constructor() {

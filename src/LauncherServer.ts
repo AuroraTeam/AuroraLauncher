@@ -13,11 +13,11 @@ import { CommandsManager } from "./commands/CommandsManager"
 import { ConfigManager } from "./config/ConfigManager"
 import { LogHelper } from "./helpers/LogHelper"
 import { StorageHelper } from "./helpers/StorageHelper"
+import { InstancesManager } from "./instances/InstancesManager"
 import { LangManager } from "./langs/LangManager"
 import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
 import { UpdateManager } from "./update/UpdateManager"
-import { UpdatesManager } from "./updates/UpdatesManager"
 
 export class LauncherServer extends EventEmitter {
     private _ConfigManager: ConfigManager
@@ -26,7 +26,7 @@ export class LauncherServer extends EventEmitter {
     private _CommandsManager: CommandsManager
     private _ModulesManager: ModulesManager
     private _WebManager: WebManager
-    private _UpdatesManager: UpdatesManager
+    private _InstancesManager: InstancesManager
     private _UpdateManager: UpdateManager
     private _ProfilesManager: ProfilesManager
     private _AuthlibManager: AuthlibManager
@@ -45,7 +45,7 @@ export class LauncherServer extends EventEmitter {
         this._AuthlibManager = new AuthlibManager()
         this._CommandsManager = new CommandsManager()
         this._WebManager = new WebManager()
-        this._UpdatesManager = new UpdatesManager()
+        this._InstancesManager = new InstancesManager()
         this._ProfilesManager = new ProfilesManager()
         this._ModulesManager = new ModulesManager()
         this._UpdateManager = new UpdateManager()
@@ -79,8 +79,8 @@ export class LauncherServer extends EventEmitter {
         return this._WebManager
     }
 
-    get UpdatesManager(): UpdatesManager {
-        return this._UpdatesManager
+    get UpdatesManager(): InstancesManager {
+        return this._InstancesManager
     }
 
     get ProfilesManager(): ProfilesManager {

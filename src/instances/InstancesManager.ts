@@ -5,14 +5,14 @@ import path from "path"
 import { LogHelper, StorageHelper } from "@root/helpers"
 import { App } from "@root/LauncherServer"
 
-export class UpdatesManager {
+export class InstancesManager {
     hashDirs: Map<string, HashedFile[]> = new Map()
 
     constructor() {
-        this.hashUpdatesDir()
+        this.hashInstancesDir()
     }
 
-    hashUpdatesDir(): void {
+    hashInstancesDir(): void {
         const folders = fs
             .readdirSync(StorageHelper.updatesDir, { withFileTypes: true })
             .filter((folder) => folder.isDirectory())
