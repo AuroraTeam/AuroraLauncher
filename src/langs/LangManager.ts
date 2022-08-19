@@ -35,6 +35,6 @@ export class LangManager {
         if (!this.langList.has(lang)) return LogHelper.error("Language %s not found!", lang)
         this.currentLang = this.langList.get(lang)
         App.ConfigManager.setProp("lang", lang)
-        LogHelper.info("Language changed")
+        LogHelper.info("Language has been changed. A complete change requires a restart LauncherServer")
     }
 }

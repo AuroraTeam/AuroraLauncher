@@ -8,6 +8,7 @@ import { AboutCommand } from "./basic/AboutCommand"
 import { BranchCommand } from "./basic/BranchCommand"
 import { HelpCommand } from "./basic/HelpCommand"
 import { LangCommand } from "./basic/LangCommand"
+import { ModulesCommand } from "./basic/ModulesCommand"
 import { StopCommand } from "./basic/StopCommand"
 import { UpdateCommand } from "./basic/UpdateCommand"
 import { DownloadAssetsCommand } from "./updates/DownloadAssetsCommand"
@@ -37,6 +38,7 @@ export class CommandsManager {
         this.registerCommand(new LangCommand())
         this.registerCommand(new UpdateCommand())
         this.registerCommand(new BranchCommand())
+        this.registerCommand(new ModulesCommand())
     }
 
     registerCommand(command: AbstractCommand): void {

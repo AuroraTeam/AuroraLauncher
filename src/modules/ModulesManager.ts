@@ -4,9 +4,12 @@ import path from "path"
 import { LogHelper } from "@root/helpers/LogHelper"
 import { StorageHelper } from "@root/helpers/StorageHelper"
 import { App } from "@root/LauncherServer"
+import chalk from "chalk"
+
+import { AbstractModule, IGetInfo } from "./AbstractModule"
 
 export class ModulesManager {
-    private modulesList: Map<any, any> = new Map() // TODO
+    public static modulesList: Map<IGetInfo, AbstractModule[]> = new Map()
 
     constructor() {
         this.loadModules()
@@ -19,7 +22,7 @@ export class ModulesManager {
 
             const files = fs
                 .readdirSync(StorageHelper.modulesDir, { withFileTypes: true })
-                .filter((folder) => folder.isFile() && folder.name.endsWith(".js"))
+                .filter((file) => file.isFile() && file.name.endsWith(".js"))
 
             if (files.length === 0) return LogHelper.info(App.LangManager.getTranslate().ModulesManager.loadingSkip)
 
@@ -40,10 +43,18 @@ export class ModulesManager {
 
             // TODO validate
 
-            this.modulesList.set(Module.getInfo(), new Module().init(App))
+            ModulesManager.modulesList.set(Module.getInfo(), new Module().init(App))
         } catch (error) {
             LogHelper.debug(error.message)
-            LogHelper.fatal(App.LangManager.getTranslate().ModulesManager.moduleLoadingErr, moduleName)
+            LogHelper.error(App.LangManager.getTranslate().ModulesManager.moduleLoadingErr, moduleName)
         }
+    }
+
+    public static listModules() {
+        LogHelper.info("Загруженные модули:")
+
+        ModulesManager.modulesList.forEach((value, key) => {
+            LogHelper.info(`${chalk.bold(key.name)} - ${key.description}`)
+        })
     }
 }
