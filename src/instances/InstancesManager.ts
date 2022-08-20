@@ -53,7 +53,7 @@ export class InstancesManager {
     }
 }
 
-export class HashedFile {
+export type HashedFile = {
     path: string
     hashsum: string
     size: number

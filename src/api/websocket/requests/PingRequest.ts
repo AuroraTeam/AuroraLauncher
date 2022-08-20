@@ -1,12 +1,9 @@
-import { ResponseData } from "../types/Response"
-import { AbstractRequest } from "./AbstractRequest"
+import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 
 export class PingRequest extends AbstractRequest {
-    type = "ping"
+    method = "ping"
 
-    invoke(): ResponseData {
-        return {
-            result: "pong",
-        }
+    invoke(): ResponseResult {
+        return "pong"
     }
 }

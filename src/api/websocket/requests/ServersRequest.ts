@@ -1,12 +1,10 @@
 import { App } from "@root/LauncherServer"
-
-import { ResponseData } from "../types/Response"
-import { AbstractRequest } from "./AbstractRequest"
+import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 
 export class ServersRequest extends AbstractRequest {
-    type = "servers"
+    method = "servers"
 
-    invoke(): ResponseData {
+    invoke(): ResponseResult {
         const servers: any[] = []
         App.ProfilesManager.profiles
             .sort((a, b) => a.sortIndex - b.sortIndex)
@@ -21,8 +19,6 @@ export class ServersRequest extends AbstractRequest {
                 })
             })
 
-        return {
-            servers,
-        }
+        return servers
     }
 }

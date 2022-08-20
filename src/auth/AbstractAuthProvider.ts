@@ -1,4 +1,4 @@
-import { ResponseData } from "../api/websocket/types/Response"
+import { JsonObject } from "aurora-rpc-server"
 
 export abstract class AbstractAuthProvider {
     protected static type: string
@@ -30,32 +30,32 @@ export interface AbstractAuthProviderConfig {
     type: string
 }
 
-export interface AuthResponseData extends ResponseData {
+export interface AuthResponseData extends JsonObject {
     username: string
     userUUID: string
     accessToken: string
 }
 
-export interface HasJoinedResponseData extends ResponseData {
+export interface HasJoinedResponseData extends JsonObject {
     userUUID: string
     skinUrl?: string
     capeUrl?: string
 }
 
-export interface ProfileResponseData extends ResponseData {
+export interface ProfileResponseData extends JsonObject {
     username: string
     skinUrl?: string
     capeUrl?: string
 }
 
-export interface PrivilegesResponseData extends ResponseData {
+export interface PrivilegesResponseData extends JsonObject {
     onlineChat: boolean
     multiplayerServer: boolean
     multiplayerRealms: boolean
     telemetry: boolean
 }
 
-export interface ProfilesResponseData extends ResponseData {
+export interface ProfilesResponseData extends JsonObject {
     id: string
     name: string
 }
