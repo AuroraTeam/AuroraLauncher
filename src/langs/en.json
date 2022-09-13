@@ -99,11 +99,11 @@
         "downloadingLatestVer": "Downloading latest version of current branch...",
         "downloadEnd": "Download complete! Please restart LauncherServer."
     },
-    "UpdatesManager": {
-        "sync": "Syncing updates dir",
+    "InstancesManager": {
+        "sync": "Syncing instances dir",
         "syncTime": "Syncing \"%s\" - %dms",
-        "syncEnd": "Syncing updates dir end",
-        "syncSkip": "Updates dir empty. Skip sync"
+        "syncEnd": "Syncing instances dir end",
+        "syncSkip": "Instances dir empty. Skip sync"
     },
     "ProgressHelper": {
         "loading": "{bar} {percentage}%",

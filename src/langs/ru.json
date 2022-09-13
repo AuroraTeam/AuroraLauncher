@@ -99,11 +99,11 @@
         "downloadingCurrVer": "Загрузка последней версии текущей ветки....",
         "downloadEnd": "Загрузка завершена! Пожалуйста, перезапустите LauncherServer."
     },
-    "UpdatesManager": {
-        "sync": "Синхронизация папки updates",
+    "InstancesManager": {
+        "sync": "Синхронизация папки instances",
         "syncTime": "Папка \"%s\" - %dms",
         "syncEnd": "Синхронизация завершена",
-        "syncSkip": "Папка updates пуста. Синхронизация пропущена"
+        "syncSkip": "Папка instances пуста. Синхронизация пропущена"
     },
     "ProgressHelper": {
         "loading": "{bar} {percentage}%",

@@ -3,14 +3,13 @@ import { App } from "../LauncherServer"
 import { AbstractAuthProvider } from "./AbstractAuthProvider"
 import { AcceptAuthProvider } from "./authProviders/AcceptAuthProvider"
 import { MojangAuthProvider } from "./authProviders/MojangAuthProvider"
-// import { MySQLAuthProvider } from "./authProviders/MySQLAuthProvider"
+import { MySQLAuthProvider } from "./authProviders/MySQLAuthProvider"
 import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 
 // TODO Ох уж эти приколы с типами
 // Другие решения получались не красивыми
 // Если есть идеи как сделать лучше - пишите))
-type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider | typeof MojangAuthProvider
-// | typeof MySQLAuthProvider
+type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider | typeof MojangAuthProvider | typeof MySQLAuthProvider
 
 export class AuthManager {
     private readonly authProvider: AbstractAuthProvider
@@ -30,7 +29,7 @@ export class AuthManager {
         this.registerProvider(AcceptAuthProvider)
         this.registerProvider(RejectAuthProvider)
         this.registerProvider(MojangAuthProvider)
-        // this.registerProvider(MySQLAuthProvider)
+        this.registerProvider(MySQLAuthProvider)
     }
 
     private registerProvider(provider: AnyAuthProvider): void {

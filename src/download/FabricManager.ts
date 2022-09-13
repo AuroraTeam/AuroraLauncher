@@ -25,7 +25,7 @@ export class FabricManager extends MojangManager {
         const profileUUID = await super.downloadClient(clientVer, dirName, true)
         if (profileUUID === undefined) return
 
-        const librariesDir = path.resolve(StorageHelper.updatesDir, dirName, "libraries")
+        const librariesDir = path.resolve(StorageHelper.instancesDir, dirName, "libraries")
 
         LogHelper.info(App.LangManager.getTranslate().DownloadManager.FabricManager.client.download)
         const librariesList: Set<string> = new Set()

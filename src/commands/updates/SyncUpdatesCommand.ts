@@ -5,13 +5,13 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 export class SyncUpdatesCommand extends AbstractCommand {
     constructor() {
         super(
-            "syncupdates",
+            "syncinstances",
             App.LangManager.getTranslate().CommandsManager.commands.updates.SyncUpdatesCommand,
             Category.UPDATES
         )
     }
 
     invoke(): void {
-        App.UpdatesManager.hashUpdatesDir()
+        App.InstancesManager.hashInstancesDir()
     }
 }

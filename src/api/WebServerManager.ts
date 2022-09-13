@@ -57,10 +57,10 @@ export class WebServerManager {
         url = url.replace(/\/{2,}/g, "/").slice(6)
         if (url.endsWith("/")) url = url.slice(0, -1)
 
-        const filePath = path.join(StorageHelper.updatesDir, url)
+        const filePath = path.join(StorageHelper.instancesDir, url)
 
         // Защита от выхода из директории
-        if (!filePath.startsWith(StorageHelper.updatesDir)) {
+        if (!filePath.startsWith(StorageHelper.instancesDir)) {
             return res.writeHead(400).end()
         }
 

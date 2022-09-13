@@ -29,7 +29,7 @@ export class MojangManager {
         const libraries: any[] = version.libraries
 
         // Client
-        const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
+        const clientDir = path.resolve(StorageHelper.instancesDir, dirName)
         if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.dirExist)
         fs.mkdirSync(clientDir)
         try {
@@ -104,7 +104,7 @@ export class MojangManager {
         const version: any = await this.getVersionInfo(assetsVer)
         if (version === undefined) return
 
-        const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
+        const assetsDir = path.resolve(StorageHelper.instancesDir, dirName)
         if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.dirExist)
         fs.mkdirSync(assetsDir)
 

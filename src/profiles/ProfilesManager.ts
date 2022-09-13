@@ -34,7 +34,7 @@ export class ProfilesManager {
                 if (e instanceof SyntaxError) {
                     LogHelper.error(App.LangManager.getTranslate().ProfilesManager.loadingErr, file)
                 } else {
-                    LogHelper.error(e)
+                    LogHelper.debug(e)
                 }
             }
         })
