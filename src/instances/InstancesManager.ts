@@ -14,22 +14,22 @@ export class InstancesManager {
 
     hashInstancesDir(): void {
         const folders = fs
-            .readdirSync(StorageHelper.updatesDir, { withFileTypes: true })
+            .readdirSync(StorageHelper.instancesDir, { withFileTypes: true })
             .filter((folder) => folder.isDirectory())
 
-        if (folders.length === 0) return LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncSkip)
+        if (folders.length === 0) return LogHelper.info(App.LangManager.getTranslate().InstancesManager.syncSkip)
 
-        LogHelper.info(App.LangManager.getTranslate().UpdatesManager.sync)
+        LogHelper.info(App.LangManager.getTranslate().InstancesManager.sync)
 
         folders.forEach(({ name }) => {
             const startTime = Date.now()
 
-            this.hashDirs.set(name, this.hashDir(path.join(StorageHelper.updatesDir, name)))
+            this.hashDirs.set(name, this.hashDir(path.join(StorageHelper.instancesDir, name)))
 
-            LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncTime, name, Date.now() - startTime)
+            LogHelper.info(App.LangManager.getTranslate().InstancesManager.syncTime, name, Date.now() - startTime)
         })
 
-        LogHelper.info(App.LangManager.getTranslate().UpdatesManager.syncEnd)
+        LogHelper.info(App.LangManager.getTranslate().InstancesManager.syncEnd)
     }
 
     hashDir(dir: string, arrayOfFiles: HashedFile[] = []): HashedFile[] {
@@ -46,7 +46,7 @@ export class InstancesManager {
 
     hashFile(path: string): HashedFile {
         return {
-            path: path.replace(StorageHelper.updatesDir, ""),
+            path: path.replace(StorageHelper.instancesDir, ""),
             size: fs.statSync(path).size,
             hashsum: crypto.createHash("sha1").update(fs.readFileSync(path)).digest("hex"),
         }

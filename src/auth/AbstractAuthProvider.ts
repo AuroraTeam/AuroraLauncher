@@ -15,9 +15,9 @@ export abstract class AbstractAuthProvider {
 
     abstract auth(username: string, password: string): PromiseOr<AuthResponseData>
 
-    abstract join(accessToken: string, userUUID: string, serverId: string): PromiseOr<boolean>
+    abstract join(accessToken: string, userUUID: string, serverID: string): PromiseOr<boolean>
 
-    abstract hasJoined(username: string, serverId: string): PromiseOr<HasJoinedResponseData>
+    abstract hasJoined(username: string, serverID: string): PromiseOr<HasJoinedResponseData>
 
     abstract profile(userUUID: string): PromiseOr<ProfileResponseData>
 

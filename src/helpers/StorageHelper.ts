@@ -7,7 +7,7 @@ import { SystemHelper } from "./SystemHelper"
 
 export class StorageHelper extends CoreStorageHelper {
     static readonly storageDir: string = SystemHelper.isStandalone() ? path.dirname(process.execPath) : __dirname
-    static readonly updatesDir: string = path.resolve(StorageHelper.storageDir, "updates")
+    static readonly instancesDir: string = path.resolve(StorageHelper.storageDir, "updates")
     static readonly profilesDir: string = path.resolve(StorageHelper.storageDir, "profiles")
     static readonly modulesDir: string = path.resolve(StorageHelper.storageDir, "modules")
     // static readonly runtimeDir: string = path.resolve(StorageHelper.storageDir, "runtime") // TODO auto download
@@ -18,7 +18,7 @@ export class StorageHelper extends CoreStorageHelper {
 
     static createMissing(): void {
         if (!fs.existsSync(this.logsDir)) fs.mkdirSync(this.logsDir)
-        if (!fs.existsSync(this.updatesDir)) fs.mkdirSync(this.updatesDir)
+        if (!fs.existsSync(this.instancesDir)) fs.mkdirSync(this.instancesDir)
         if (!fs.existsSync(this.profilesDir)) fs.mkdirSync(this.profilesDir)
         if (!fs.existsSync(this.modulesDir)) fs.mkdirSync(this.modulesDir)
         // if (!fs.existsSync(this.runtimeDir)) fs.mkdirSync(this.runtimeDir)

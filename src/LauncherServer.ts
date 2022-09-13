@@ -55,6 +55,18 @@ export class LauncherServer extends EventEmitter {
         this.inited = true
     }
 
+    public reload() {
+        this._ConfigManager = new ConfigManager()
+        this._LangManager = new LangManager()
+        this._AuthManager = new AuthManager()
+        this._AuthlibManager = new AuthlibManager()
+        this._CommandsManager = new CommandsManager()
+        this._InstancesManager = new InstancesManager()
+        this._ProfilesManager = new ProfilesManager()
+        this._ModulesManager = new ModulesManager()
+        this._UpdateManager = new UpdateManager()
+    }
+
     get ConfigManager(): ConfigManager {
         return this._ConfigManager
     }
@@ -79,7 +91,7 @@ export class LauncherServer extends EventEmitter {
         return this._WebManager
     }
 
-    get UpdatesManager(): InstancesManager {
+    get InstancesManager(): InstancesManager {
         return this._InstancesManager
     }
 

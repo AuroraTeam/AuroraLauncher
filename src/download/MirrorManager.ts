@@ -16,7 +16,7 @@ export class MirrorManager {
      */
     async downloadClient(clientName: string, dirName: string): Promise<void> {
         const mirrors: string[] = App.ConfigManager.getConfig().mirrors
-        const clientDir = path.resolve(StorageHelper.updatesDir, dirName)
+        const clientDir = path.resolve(StorageHelper.instancesDir, dirName)
         if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.dirExist)
 
         const mirror = mirrors.find(async (mirror) => {
@@ -79,7 +79,7 @@ export class MirrorManager {
      */
     async downloadAssets(assetsName: string, dirName: string): Promise<void> {
         const mirrors: string[] = App.ConfigManager.getConfig().mirrors
-        const assetsDir = path.resolve(StorageHelper.updatesDir, dirName)
+        const assetsDir = path.resolve(StorageHelper.instancesDir, dirName)
         if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.dirExist)
 
         const mirror = mirrors.find(async (mirror) => {
