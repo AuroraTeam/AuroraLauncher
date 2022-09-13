@@ -30,7 +30,7 @@ export class LauncherServer extends EventEmitter {
     private _UpdateManager: UpdateManager
     private _ProfilesManager: ProfilesManager
     private _AuthlibManager: AuthlibManager
-    public inited = false
+    private inited = false
 
     main(): void {
         if (this.inited) return
