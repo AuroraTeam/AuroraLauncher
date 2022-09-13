@@ -30,7 +30,7 @@ export class LauncherServer extends EventEmitter {
     private _UpdateManager: UpdateManager
     private _ProfilesManager: ProfilesManager
     private _AuthlibManager: AuthlibManager
-    private inited = false
+    public inited = false
 
     main(): void {
         if (this.inited) return
@@ -53,6 +53,18 @@ export class LauncherServer extends EventEmitter {
         this.emit("postInit")
         LogHelper.info(this.LangManager.getTranslate().LauncherServer.initEnd)
         this.inited = true
+    }
+
+    public reload() {
+        this._ConfigManager = new ConfigManager()
+        this._LangManager = new LangManager()
+        this._AuthManager = new AuthManager()
+        this._AuthlibManager = new AuthlibManager()
+        this._CommandsManager = new CommandsManager()
+        this._InstancesManager = new InstancesManager()
+        this._ProfilesManager = new ProfilesManager()
+        this._ModulesManager = new ModulesManager()
+        this._UpdateManager = new UpdateManager()
     }
 
     get ConfigManager(): ConfigManager {
@@ -79,7 +91,7 @@ export class LauncherServer extends EventEmitter {
         return this._WebManager
     }
 
-    get UpdatesManager(): InstancesManager {
+    get InstancesManager(): InstancesManager {
         return this._InstancesManager
     }
 

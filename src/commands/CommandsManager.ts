@@ -16,6 +16,7 @@ import { DownloadClientCommand } from "./updates/DownloadClientCommand"
 import { SyncAllCommand } from "./updates/SyncAllCommand"
 import { SyncProfilesCommand } from "./updates/SyncProfilesCommand"
 import { SyncUpdatesCommand } from "./updates/SyncUpdatesCommand"
+import { ReloadCommand } from "./basic/ReloadCommand"
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
@@ -39,6 +40,7 @@ export class CommandsManager {
         this.registerCommand(new UpdateCommand())
         this.registerCommand(new BranchCommand())
         this.registerCommand(new ModulesCommand())
+        this.registerCommand(new ReloadCommand())
     }
 
     registerCommand(command: AbstractCommand): void {
