@@ -1,7 +1,10 @@
+import { StorageHelper } from "@root/helpers"
 import UUIDHelper from "@root/helpers/UUIDHelper"
 import { App } from "@root/LauncherServer"
 import { Column, DataSource, Entity, Generated, In, PrimaryGeneratedColumn } from "typeorm"
 import { v4 } from "uuid"
+import { LauncherServerConfig } from "../../config/types/LauncherServerConfig"
+import fs from "fs"
 
 import {
     AbstractAuthProvider,
@@ -69,7 +72,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
 
         return userData
     }
-    async join(accessToken: string, userUUID: string, serverId: string): Promise<boolean> {
+    async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
         const user = await this.userRepository.findOne({
             where: {
                 accessToken: accessToken,
@@ -79,13 +82,13 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
 
         if (!user) return false
 
-        user.serverId = serverId
+        user.serverID = serverID
 
         await this.userRepository.save(user)
 
         return true
     }
-    async hasJoined(username: string, serverId: string): Promise<HasJoinedResponseData> {
+    async hasJoined(username: string, serverID: string): Promise<HasJoinedResponseData> {
         const user = await this.userRepository.findOne({
             where: {
                 username: username,
@@ -93,7 +96,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
         })
 
         if (!user) throw Error("User not found")
-        if (user.serverId !== serverId) throw Error("Invalid serverId")
+        if (user.serverID !== serverID) throw Error("Invalid serverId")
 
         return user
     }
@@ -128,7 +131,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
     }
 }
 
-@Entity(App.ConfigManager.getConfig().db.properties.tableName)
+@Entity(LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString()).db.properties.tableName)
 class User {
     @PrimaryGeneratedColumn()
     id: number
@@ -150,7 +153,7 @@ class User {
     accessToken: string
 
     @Column("text")
-    serverId: string
+    serverID: string
 
     @Column("text")
     skinUrl: string
