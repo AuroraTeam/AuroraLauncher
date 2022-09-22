@@ -1,11 +1,12 @@
+import fs from "fs"
+
 import { StorageHelper } from "@root/helpers"
 import UUIDHelper from "@root/helpers/UUIDHelper"
 import { App } from "@root/LauncherServer"
 import { Column, DataSource, Entity, Generated, In, PrimaryGeneratedColumn } from "typeorm"
 import { v4 } from "uuid"
-import { LauncherServerConfig } from "../../config/types/LauncherServerConfig"
-import fs from "fs"
 
+import { LauncherServerConfig } from "../../config/types/LauncherServerConfig"
 import {
     AbstractAuthProvider,
     AuthResponseData,
@@ -163,15 +164,15 @@ class User {
 
     // Privileges
     // MySQL fix https://github.com/typeorm/typeorm/issues/3622
-    @Column({ width: 1, default: true })
+    @Column({ width: 1, type: "boolean", default: true })
     onlineChat: boolean
 
-    @Column({ width: 1, default: true })
+    @Column({ width: 1, type: "boolean", default: true })
     multiplayerServer: boolean
 
-    @Column({ width: 1, default: true })
+    @Column({ width: 1, type: "boolean", default: true })
     multiplayerRealms: boolean
 
-    @Column({ width: 1, default: false })
+    @Column({ width: 1, type: "boolean", default: false })
     telemetry: boolean
 }

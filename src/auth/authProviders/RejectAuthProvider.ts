@@ -1,5 +1,5 @@
-import { ResponseError } from "@root/api/websocket/ResponseError"
 import { App } from "@root/LauncherServer"
+import { ResponseError } from "aurora-rpc-server"
 
 import { AbstractAuthProvider, AbstractAuthProviderConfig } from "../AbstractAuthProvider"
 
@@ -11,7 +11,7 @@ export class RejectAuthProvider extends AbstractAuthProvider {
     }
 
     auth(): any {
-        throw new ResponseError(200, this.config.message)
+        throw new ResponseError(this.config.message, 200)
     }
 
     join(): any {
