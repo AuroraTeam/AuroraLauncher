@@ -26,20 +26,20 @@ export class WebRequestManager {
         this.requests.push(request)
     }
 
-    async getRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
+    async getRequest(req: IncomingMessage, res: ServerResponse) {
         res.setHeader("X-Authlib-Injector-API-Location", "/authlib")
         const request = this.requests.find((r) => r.url.test(req.url))
         // Нижние 2 обработчика корректны для api.mojang.com и authserver.mojang.com
         if (request === undefined)
             return res.writeHead(404).end(
-                JsonHelper.toJSON({
+                JsonHelper.toJson({
                     error: "Not Found",
                     errorMessage: "The server has not found anything matching the request URI",
                 })
             )
         if (request.method !== req.method)
             return res.writeHead(405).end(
-                JsonHelper.toJSON({
+                JsonHelper.toJson({
                     error: "Method Not Allowed",
                     errorMessage:
                         "The method specified in the request is not allowed for the resource identified by the request URI",

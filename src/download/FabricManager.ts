@@ -59,7 +59,7 @@ export class FabricManager extends MojangManager {
 
         let loaders: any[]
         try {
-            loaders = JsonHelper.fromJSON(loadersData)
+            loaders = JsonHelper.fromJson(loadersData)
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(App.LangManager.getTranslate().DownloadManager.FabricManager.info.errJsonParsing)
@@ -84,7 +84,7 @@ export class FabricManager extends MojangManager {
         }
 
         try {
-            return JsonHelper.fromJSON(versionData)
+            return JsonHelper.fromJson(versionData)
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(App.LangManager.getTranslate().DownloadManager.FabricManager.info.errClientParsing)

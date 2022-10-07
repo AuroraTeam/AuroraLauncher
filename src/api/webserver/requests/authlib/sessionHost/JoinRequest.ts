@@ -15,7 +15,7 @@ export class JoinRequest extends AbstractRequest {
         if (!HttpHelper.isJsonPostData(req)) return HttpHelper.sendError(res, 400, "BadRequestException")
 
         try {
-            data = JsonHelper.fromJSON(await HttpHelper.parsePostData(req))
+            data = JsonHelper.fromJson<any>(await HttpHelper.parsePostData(req))
         } catch (error) {
             return HttpHelper.sendError(res, 400, "BadRequestException")
         }

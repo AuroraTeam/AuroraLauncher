@@ -1,3 +1,4 @@
+// TODO А нужно ли нам это?
 export class ValidationHelper {
     static username(username: string): boolean {
         return this.raw(username, "^[A-Za-z0-9_]{4,16}$")

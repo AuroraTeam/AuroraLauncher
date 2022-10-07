@@ -16,7 +16,7 @@ export class SystemHelper {
     }
 
     /**
-     * @returns true если это упакованная версия лаунчера
+     * @returns true, если это упакованная версия лаунчерсервера
      */
     public static isStandalone(): boolean {
         return process.pkg !== undefined

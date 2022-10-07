@@ -5,6 +5,10 @@ import getRawBody from "raw-body"
 
 import { JsonHelper } from "./JsonHelper"
 
+/**
+ * HttpClient Helper
+ * Бля ору, говнокод, надо вырезать отсюда серверные функции
+ */
 export class HttpHelper extends CoreHttpHelper {
     // TODO Проработать этот момент
     public static isEmptyQuery(query: URLSearchParams): boolean {
@@ -22,7 +26,7 @@ export class HttpHelper extends CoreHttpHelper {
 
     public static sendJson(res: http.ServerResponse, data: object): void {
         res.setHeader("Content-Type", "application/json; charset=utf-8")
-        res.end(JsonHelper.toJSON(data))
+        res.end(JsonHelper.toJson(data))
     }
 
     public static isJsonPostData(req: http.IncomingMessage): boolean {
@@ -37,8 +41,10 @@ export class HttpHelper extends CoreHttpHelper {
         return await getRawBody(req, { limit: "500kb", encoding: "utf-8" })
     }
 
-    // TODO Перенести в класс CoreHttpHelper
-    public static async getJson<T>(url: URL): Promise<T> {
-        return JsonHelper.fromJSON<T>(await this.readFile(url))
+    /**
+     * @deprecated use `HttpHelper.getResourceFromJson()`
+     */
+    public static getJson<T>(url: URL): Promise<T> {
+        return this.getResourceFromJson(url)
     }
 }

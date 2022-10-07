@@ -37,7 +37,7 @@ export class LauncherServerConfig {
     }
 
     public toJSON(): string {
-        return JsonHelper.toJSON(instanceToPlain(this), true)
+        return JsonHelper.toJson(instanceToPlain(this), true)
     }
 
     public static fromJSON(json: string): LauncherServerConfig {

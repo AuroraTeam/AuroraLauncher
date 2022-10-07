@@ -96,7 +96,7 @@
         "newUpdateAvaliable": "Доступна новая версия: %s",
         "newUpdate": "Последняя версия LauncherServer это %s, но у тебя установлена %s. Последняя версия была собрана %s",
         "updating": "Обновление LauncherServer...",
-        "downloadingCurrVer": "Загрузка последней версии текущей ветки....",
+        "downloadingLatestVer": "Загрузка последней версии текущей ветки....",
         "downloadEnd": "Загрузка завершена! Пожалуйста, перезапустите LauncherServer."
     },
     "InstancesManager": {

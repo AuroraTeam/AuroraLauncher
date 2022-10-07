@@ -61,7 +61,7 @@ export class MirrorManager {
 
         //Profiles
         App.ProfilesManager.createProfile({
-            ...JsonHelper.fromJSON(profile),
+            ...JsonHelper.fromJson(profile),
             clientDir: dirName,
             servers: [
                 {

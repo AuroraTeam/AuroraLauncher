@@ -68,10 +68,10 @@ export class ProfileConfig {
     }
 
     public toJSON(): string {
-        return JsonHelper.toJSON(this.toObject(), true)
+        return JsonHelper.toJson(this.toObject(), true)
     }
 
     public static fromJSON(json: string): ProfileConfig {
-        return plainToInstance(ProfileConfig, JsonHelper.fromJSON<ProfileConfig>(json))
+        return plainToInstance(ProfileConfig, JsonHelper.fromJson<ProfileConfig>(json))
     }
 }

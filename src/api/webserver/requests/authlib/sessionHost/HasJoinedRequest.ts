@@ -39,7 +39,7 @@ export class HasJoinedRequest extends AbstractRequest {
         }
 
         const texturesValue = Buffer.from(
-            JsonHelper.toJSON({
+            JsonHelper.toJson({
                 timestamp: Date.now(),
                 profileId: user.userUUID,
                 profileName: username,
