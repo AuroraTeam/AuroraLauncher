@@ -7,7 +7,7 @@ import { AbstractCommand, Category } from "../AbstractCommand"
 
 export class AboutCommand extends AbstractCommand {
     constructor() {
-        super("about", App.LangManager.getTranslate().CommandsManager.commands.basic.AboutCommand, Category.BASIC)
+        super("about", App.LangManager.getTranslate.CommandsManager.commands.basic.AboutCommand, Category.BASIC)
     }
 
     invoke(): void {

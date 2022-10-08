@@ -66,9 +66,9 @@ export class CommandsManager {
 
             const cmd = args.shift().toLowerCase()
             if (!this.commands.has(cmd))
-                return LogHelper.error(App.LangManager.getTranslate().CommandsManager.cmdNotFound, cmd)
+                return LogHelper.error(App.LangManager.getTranslate.CommandsManager.cmdNotFound, cmd)
 
-            LogHelper.dev(App.LangManager.getTranslate().CommandsManager.invokeCmd, cmd)
+            LogHelper.dev(App.LangManager.getTranslate.CommandsManager.invokeCmd, cmd)
 
             this.commands.get(cmd).invoke(...args)
         })

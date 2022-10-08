@@ -5,7 +5,7 @@ export class UpdatesRequest extends AbstractRequest {
     method = "updates"
 
     invoke(data: UpdatesRequestData): ResponseResult {
-        return App.UpdatesManager.hashDirs.get(data.dir)
+        return App.InstancesManager.hashedDirs.get(data.dir)
     }
 }
 

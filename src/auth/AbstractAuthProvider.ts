@@ -13,6 +13,7 @@ export abstract class AbstractAuthProvider {
         }
     }
 
+    
     abstract auth(username: string, password: string): PromiseOr<AuthResponseData>
 
     abstract join(accessToken: string, userUUID: string, serverID: string): PromiseOr<boolean>

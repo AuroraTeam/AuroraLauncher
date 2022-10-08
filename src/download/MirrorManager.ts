@@ -15,42 +15,42 @@ export class MirrorManager {
      * @param dirName - Название конечной папки
      */
     async downloadClient(clientName: string, dirName: string): Promise<void> {
-        const mirrors: string[] = App.ConfigManager.getConfig().mirrors
+        const mirrors: string[] = App.ConfigManager.getConfig.mirrors
         const clientDir = path.resolve(StorageHelper.instancesDir, dirName)
-        if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.dirExist)
+        if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate.DownloadManager.dirExist)
 
         const mirror = mirrors.find(async (mirror) => {
             if (
-                (await HttpHelper.existFile(new URL(`/clients/${clientName}.json`, mirror))) &&
-                (await HttpHelper.existFile(new URL(`/clients/${clientName}.zip`, mirror)))
+                (await HttpHelper.existsResource(new URL(`/clients/${clientName}.json`, mirror))) &&
+                (await HttpHelper.existsResource(new URL(`/clients/${clientName}.zip`, mirror)))
             )
                 return true
         })
         if (mirror === undefined)
-            return LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.client.notFound)
+            return LogHelper.error(App.LangManager.getTranslate.DownloadManager.MirrorManager.client.notFound)
 
         let profile: string
         let client: string
 
         try {
-            LogHelper.info(App.LangManager.getTranslate().DownloadManager.MirrorManager.client.download)
-            profile = await HttpHelper.readFile(new URL(`/clients/${clientName}.json`, mirror))
+            LogHelper.info(App.LangManager.getTranslate.DownloadManager.MirrorManager.client.download)
+            profile = await HttpHelper.getResource(new URL(`/clients/${clientName}.json`, mirror))
             client = await HttpHelper.downloadFile(new URL(`/clients/${clientName}.zip`, mirror), null, {
                 saveToTempFile: true,
             })
         } catch (error) {
-            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.client.downloadErr)
+            LogHelper.error(App.LangManager.getTranslate.DownloadManager.MirrorManager.client.downloadErr)
             LogHelper.debug(error)
             return
         }
 
         try {
             fs.mkdirSync(clientDir)
-            LogHelper.info(App.LangManager.getTranslate().DownloadManager.MirrorManager.client.unpacking)
+            LogHelper.info(App.LangManager.getTranslate.DownloadManager.MirrorManager.client.unpacking)
             ZipHelper.unzipArchive(client, clientDir)
         } catch (error) {
             fs.rmdirSync(clientDir, { recursive: true })
-            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.client.unpackingErr)
+            LogHelper.error(App.LangManager.getTranslate.DownloadManager.MirrorManager.client.unpackingErr)
             LogHelper.debug(error)
             return
         } finally {
@@ -69,7 +69,7 @@ export class MirrorManager {
                 },
             ],
         } as ProfileConfig)
-        LogHelper.info(App.LangManager.getTranslate().DownloadManager.MirrorManager.client.success)
+        LogHelper.info(App.LangManager.getTranslate.DownloadManager.MirrorManager.client.success)
     }
 
     /**
@@ -78,36 +78,36 @@ export class MirrorManager {
      * @param dirName - Название конечной папки
      */
     async downloadAssets(assetsName: string, dirName: string): Promise<void> {
-        const mirrors: string[] = App.ConfigManager.getConfig().mirrors
+        const mirrors: string[] = App.ConfigManager.getConfig.mirrors
         const assetsDir = path.resolve(StorageHelper.instancesDir, dirName)
-        if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate().DownloadManager.dirExist)
+        if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate.DownloadManager.dirExist)
 
         const mirror = mirrors.find(async (mirror) => {
-            if (await HttpHelper.existFile(new URL(`/assets/${assetsName}.zip`, mirror))) return true
+            if (await HttpHelper.existsResource(new URL(`/assets/${assetsName}.zip`, mirror))) return true
         })
         if (mirror === undefined)
-            return LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.assets.notFound)
+            return LogHelper.error(App.LangManager.getTranslate.DownloadManager.MirrorManager.assets.notFound)
 
         let assets: string
 
         try {
-            LogHelper.info(App.LangManager.getTranslate().DownloadManager.MirrorManager.assets.download)
+            LogHelper.info(App.LangManager.getTranslate.DownloadManager.MirrorManager.assets.download)
             assets = await HttpHelper.downloadFile(new URL(`/assets/${assetsName}.zip`, mirror), null, {
                 saveToTempFile: true,
             })
         } catch (error) {
-            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.assets.downloadErr)
+            LogHelper.error(App.LangManager.getTranslate.DownloadManager.MirrorManager.assets.downloadErr)
             LogHelper.debug(error)
             return
         }
 
         try {
             fs.mkdirSync(assetsDir)
-            LogHelper.info(App.LangManager.getTranslate().DownloadManager.MirrorManager.assets.unpacking)
+            LogHelper.info(App.LangManager.getTranslate.DownloadManager.MirrorManager.assets.unpacking)
             ZipHelper.unzipArchive(assets, assetsDir)
         } catch (error) {
             fs.rmdirSync(assetsDir, { recursive: true })
-            LogHelper.error(App.LangManager.getTranslate().DownloadManager.MirrorManager.assets.unpackingErr)
+            LogHelper.error(App.LangManager.getTranslate.DownloadManager.MirrorManager.assets.unpackingErr)
             LogHelper.debug(error)
             return
         } finally {
@@ -116,6 +116,6 @@ export class MirrorManager {
             })
         }
 
-        LogHelper.info(App.LangManager.getTranslate().DownloadManager.MirrorManager.assets.success)
+        LogHelper.info(App.LangManager.getTranslate.DownloadManager.MirrorManager.assets.success)
     }
 }

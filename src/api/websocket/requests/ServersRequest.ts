@@ -4,6 +4,10 @@ import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 export class ServersRequest extends AbstractRequest {
     method = "servers"
 
+   /**
+    * It returns a list of servers.
+    * @returns An array of objects.
+    */
     invoke(): ResponseResult {
         const servers: any[] = []
         App.ProfilesManager.profiles

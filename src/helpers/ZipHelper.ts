@@ -18,8 +18,7 @@ export class ZipHelper {
         progress.start(stat.size, 0)
 
         zipfile.getEntries().forEach((entry) => {
-            if (entry.isDirectory) return
-            if (whitelist.length > 0 && !whitelist.includes(extname(entry.entryName))) return
+            if (entry.isDirectory || (whitelist.length > 0 && !whitelist.includes(extname(entry.entryName)))) return
 
             progress.increment(entry.header.compressedSize)
             zipfile.extractEntryTo(entry, destDir)

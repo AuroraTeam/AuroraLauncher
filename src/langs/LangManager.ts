@@ -13,28 +13,43 @@ export class LangManager {
 
     constructor() {
         this.setLangs()
-        const selectedLang = App.ConfigManager.getConfig().lang
+        const selectedLang = App.ConfigManager.getConfig.lang
 
-        if (!this.langList.has(selectedLang))
+        if (!this.langList.has(selectedLang)) {
             LogHelper.fatal(`Invalid lang settings! Language "${selectedLang}" not found.`)
+        }
+
         this.currentLang = this.langList.get(selectedLang)
 
-        LogHelper.dev(`LangManager init, selected language: ${selectedLang}`)
+        LogHelper.dev(`LangManager init. Selected language: ${selectedLang}`)
     }
 
+    /**
+     * It sets the language list.
+     */
     private setLangs(): void {
-        this.langList.set("ru", ruTranslate)
-        this.langList.set("en", enTranslate)
+        this.langList.set("ru", ruTranslate).set("en", enTranslate)
     }
 
-    public getTranslate(): Translate {
+    /**
+     * It returns the current language
+     * @returns The current language
+     */
+    get getTranslate(): Translate {
         return this.currentLang
     }
 
-    public changeLang(lang: Lang): any {
+    /**
+     * It Change the current language of the server
+     * @param {Lang} lang - The language to change to
+     * @returns The current language
+     */
+    public changeLang(lang: Lang): void {
         if (!this.langList.has(lang)) return LogHelper.error("Language %s not found!", lang)
+        
         this.currentLang = this.langList.get(lang)
         App.ConfigManager.setProp("lang", lang)
+
         LogHelper.info("Language has been changed. A complete change requires a restart LauncherServer")
     }
 }

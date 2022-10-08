@@ -10,7 +10,7 @@ export class DownloadClientCommand extends AbstractCommand {
     constructor() {
         super(
             "downloadclient",
-            App.LangManager.getTranslate().CommandsManager.commands.updates.DownloadClientCommand,
+            App.LangManager.getTranslate.CommandsManager.commands.updates.DownloadClientCommand,
             Category.UPDATES,
             "<version> <folder name> <?source type>"
         )

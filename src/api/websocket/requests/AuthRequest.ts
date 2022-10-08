@@ -7,6 +7,12 @@ import { WebSocketClient } from "aurora-rpc-server/dist/types/types/Client" // T
 export class AuthRequest extends AbstractRequest {
     method = "auth"
 
+    /**
+     * It takes a login and password, passes them to the auth provider, and returns the result
+     * @param {AuthRequestData} data - AuthRequestData - the data that was sent from the client.
+     * @param "{WebSocketClient} ws - WebSocketClient - the client that sent the request"
+     * @returns ResponseResult
+     */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async invoke(data: AuthRequestData, ws: WebSocketClient): Promise<ResponseResult> {
         const provider = App.AuthManager.getAuthProvider()

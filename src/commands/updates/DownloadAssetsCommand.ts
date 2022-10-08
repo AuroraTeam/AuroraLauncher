@@ -9,7 +9,7 @@ export class DownloadAssetsCommand extends AbstractCommand {
     constructor() {
         super(
             "downloadassets",
-            App.LangManager.getTranslate().CommandsManager.commands.updates.DownloadAssetsCommand,
+            App.LangManager.getTranslate.CommandsManager.commands.updates.DownloadAssetsCommand,
             Category.UPDATES,
             "<version> <folder name> <?source type>"
         )

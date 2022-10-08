@@ -19,7 +19,7 @@ import {
 export class MySQLAuthProvider extends AbstractAuthProvider {
     static type = "mysql"
 
-    private readonly db = App.ConfigManager.getConfig().db
+    private readonly db = App.ConfigManager.getConfig.db
 
     private readonly connection = new DataSource({
         type: this.db.type,
@@ -73,6 +73,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
 
         return userData
     }
+
     async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
         const user = await this.userRepository.findOne({
             where: {
@@ -89,6 +90,8 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
 
         return true
     }
+
+    
     async hasJoined(username: string, serverID: string): Promise<HasJoinedResponseData> {
         const user = await this.userRepository.findOne({
             where: {
@@ -101,8 +104,9 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
 
         return user
     }
+
     async profile(userUUID: string): Promise<ProfileResponseData> {
-        const user = await this.userRepository.findOne({
+        const user: User = await this.userRepository.findOne({
             where: {
                 userUUID: userUUID,
             },
@@ -111,7 +115,9 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
         if (!user) throw Error("User not found")
 
         return user
+        
     }
+
     privileges(): PromiseOr<PrivilegesResponseData> {
         return {
             onlineChat: true,
@@ -120,6 +126,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
             telemetry: false,
         }
     }
+    
     async profiles(userUUIDs: string[]): Promise<ProfilesResponseData[]> {
         return Array.from(
             await this.userRepository.findBy({
@@ -132,7 +139,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
     }
 }
 
-@Entity(LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString()).db.properties.tableName)
+@Entity()
 class User {
     @PrimaryGeneratedColumn()
     id: number
@@ -163,7 +170,7 @@ class User {
     capeUrl: string
 
     // Privileges
-    // MySQL fix https://github.com/typeorm/typeorm/issues/3622
+    // MySQL fix https://github.com/typeorm/typeorm/issues/3622 | Пофиксили уже вроде // Не похоже
     @Column({ width: 1, type: "boolean", default: true })
     onlineChat: boolean
 

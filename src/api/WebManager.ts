@@ -13,7 +13,7 @@ export class WebManager {
     private webSocketManager: Server
 
     constructor() {
-        const { host, port } = App.ConfigManager.getConfig().api
+        const { host, port } = App.ConfigManager.getConfig.api
         const webServer = this.webServerManager.createWebServer()
 
         this.webSocketManager = new Server({ server: webServer })

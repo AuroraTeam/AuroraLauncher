@@ -17,7 +17,7 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     auth(username: string): AuthResponseData {
         const data = {
             username,
-            userUUID: UUIDHelper.getWithoutDashes(v5(username, App.ConfigManager.getConfig().projectID)),
+            userUUID: UUIDHelper.getWithoutDashes(v5(username, App.ConfigManager.getConfig.projectID)),
             accessToken: UUIDHelper.getWithoutDashes(v4()),
         }
 
@@ -40,11 +40,11 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
         return true
     }
 
-    hasJoined(username: string, serverId: string): UserData {
+    hasJoined(username: string, serverID: string): UserData {
         if (!this.sessionsDB.has(username)) throw Error("User not found")
         const user = this.sessionsDB.get(username)
 
-        if (user.serverId !== serverId) throw Error("Invalid serverId")
+        if (user.serverId !== serverID) throw Error("Invalid serverId")
         return user
     }
 

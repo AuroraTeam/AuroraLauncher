@@ -6,7 +6,7 @@ export class SyncUpdatesCommand extends AbstractCommand {
     constructor() {
         super(
             "syncinstances",
-            App.LangManager.getTranslate().CommandsManager.commands.updates.SyncUpdatesCommand,
+            App.LangManager.getTranslate.CommandsManager.commands.updates.SyncUpdatesCommand,
             Category.UPDATES
         )
     }
