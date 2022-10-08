@@ -1,30 +1,28 @@
+import { MojangAuthProvider } from "@root/auth/authProviders/MojangAuthProvider"
 import { App } from "@root/LauncherServer"
-
-import { RequestData } from "../types/Request"
-import { ResponseData } from "../types/Response"
-import { AbstractRequest } from "./AbstractRequest"
+import { AbstractRequest, JsonObject, ResponseResult } from "aurora-rpc-server"
 
 // TODO Указание доп.параметров для запуска клиента при использовании различных провайдеров
 // Для работы Authlib
 
 export class ProfileRequest extends AbstractRequest {
-    type = "profile"
+    method = "profile"
 
-    invoke(data: ProfileRequestData): ResponseData {
-        const config = App.ConfigManager.getConfig().auth as any
+    invoke(data: ProfileRequestData): ResponseResult {
+        const config = App.ConfigManager.getConfig.auth as MojangAuthProvider["config"]
 
         const profile = App.ProfilesManager.profiles.find((p) => p.uuid == data.uuid)
-        profile.jvmArgs = profile.jvmArgs.concat([
+        profile.jvmArgs.push(
             `-Dminecraft.api.auth.host=${config.authHost || "http://127.0.0.1:1370/authlib"}`,
             `-Dminecraft.api.account.host=${config.accountHost || "http://127.0.0.1:1370/authlib"}`,
             `-Dminecraft.api.session.host=${config.sessionHost || "http://127.0.0.1:1370/authlib"}`,
-            `-Dminecraft.api.services.host=${config.servicesHost || "http://127.0.0.1:1370/authlib"}`,
-        ])
+            `-Dminecraft.api.services.host=${config.servicesHost || "http://127.0.0.1:1370/authlib"}`
+        )
 
-        return { profile }
+        return profile.toObject()
     }
 }
 
-interface ProfileRequestData extends RequestData {
+interface ProfileRequestData extends JsonObject {
     uuid: string
 }

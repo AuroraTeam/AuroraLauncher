@@ -15,27 +15,31 @@ export class ModulesManager {
         this.loadModules()
     }
 
-    async loadModules() {
+    async loadModules(): Promise<void> {
         try {
-            LogHelper.info(App.LangManager.getTranslate().ModulesManager.loadingStart)
+            LogHelper.info(App.LangManager.getTranslate.ModulesManager.loadingStart)
             const startTime = Date.now()
 
             const files = fs
                 .readdirSync(StorageHelper.modulesDir, { withFileTypes: true })
                 .filter((file) => file.isFile() && file.name.endsWith(".js"))
 
-            if (files.length === 0) return LogHelper.info(App.LangManager.getTranslate().ModulesManager.loadingSkip)
+            if (files.length === 0) return LogHelper.info(App.LangManager.getTranslate.ModulesManager.loadingSkip)
 
             await Promise.all(files.map((file) => this.loadModule(file.name)))
 
-            LogHelper.info(App.LangManager.getTranslate().ModulesManager.loadingEnd, Date.now() - startTime)
+            LogHelper.info(App.LangManager.getTranslate.ModulesManager.loadingEnd, Date.now() - startTime)
         } catch (error) {
             LogHelper.debug(error.message)
-            LogHelper.error(`${App.LangManager.getTranslate().ModulesManager.loadingErr}`)
+            LogHelper.error(App.LangManager.getTranslate.ModulesManager.loadingErr)
         }
     }
 
-    private async loadModule(moduleName: string) {
+    /**
+     * It loads a module from the modules directory, and if it's valid, it adds it to the modules list
+     * @param {string} moduleName - The name of the module to load
+     */
+    private async loadModule(moduleName: string): Promise<void> {
         try {
             const modulePath = path.resolve(StorageHelper.modulesDir, moduleName)
 
@@ -46,11 +50,14 @@ export class ModulesManager {
             ModulesManager.modulesList.set(Module.getInfo(), new Module().init(App))
         } catch (error) {
             LogHelper.debug(error.message)
-            LogHelper.error(App.LangManager.getTranslate().ModulesManager.moduleLoadingErr, moduleName)
+            LogHelper.error(App.LangManager.getTranslate.ModulesManager.moduleLoadingErr, moduleName)
         }
     }
 
-    public static listModules() {
+    /**
+     * It lists all the modules that are loaded.
+     */
+    public static listModules(): void {
         LogHelper.info("Загруженные модули:")
 
         ModulesManager.modulesList.forEach((value, key) => {

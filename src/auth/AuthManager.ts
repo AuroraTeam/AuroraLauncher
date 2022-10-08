@@ -18,10 +18,10 @@ export class AuthManager {
     constructor() {
         this.registerAuthProviders()
 
-        const providerType = App.ConfigManager.getConfig().auth.type
+        const providerType = App.ConfigManager.getConfig.auth.type
 
         if (!this.authProviders.has(providerType))
-            LogHelper.fatal(App.LangManager.getTranslate().AuthManager.invalidProvider)
+            LogHelper.fatal(App.LangManager.getTranslate.AuthManager.invalidProvider)
         this.authProvider = new (this.authProviders.get(providerType))()
     }
 

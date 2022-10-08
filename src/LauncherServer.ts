@@ -1,8 +1,6 @@
 import "source-map-support/register"
 import "reflect-metadata"
 
-import { EventEmitter } from "events"
-
 import chalk from "chalk"
 
 import { version } from "../package.json"
@@ -19,7 +17,7 @@ import { ModulesManager } from "./modules/ModulesManager"
 import { ProfilesManager } from "./profiles/ProfilesManager"
 import { UpdateManager } from "./update/UpdateManager"
 
-export class LauncherServer extends EventEmitter {
+export class LauncherServer {
     private _ConfigManager: ConfigManager
     private _LangManager: LangManager
     private _AuthManager: AuthManager
@@ -32,10 +30,13 @@ export class LauncherServer extends EventEmitter {
     private _AuthlibManager: AuthlibManager
     private inited = false
 
+    /**
+     * It initializes the LauncherServer.
+     */
     main(): void {
         if (this.inited) return
 
-        StorageHelper.createMissing()
+        StorageHelper.validate()
         this.printVersion()
 
         LogHelper.info("Initialization start")
@@ -50,11 +51,13 @@ export class LauncherServer extends EventEmitter {
         this._ModulesManager = new ModulesManager()
         this._UpdateManager = new UpdateManager()
 
-        this.emit("postInit")
-        LogHelper.info(this.LangManager.getTranslate().LauncherServer.initEnd)
+        LogHelper.info(this.LangManager.getTranslate.LauncherServer.initEnd)
         this.inited = true
     }
 
+    /**
+     * It reload the LauncherServer.
+     */
     public reload() {
         this._ConfigManager = new ConfigManager()
         this._LangManager = new LangManager()
@@ -125,18 +128,3 @@ export class LauncherServer extends EventEmitter {
 
 export const App = new LauncherServer()
 App.main()
-
-export declare interface LauncherServer {
-    on(event: "postInit", listener: () => void): this
-    once(event: "postInit", listener: () => void): this
-    addListener(event: "postInit", listener: () => void): this
-    removeListener(event: "postInit", listener: () => void): this
-    emit(event: "postInit"): boolean
-
-    /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-    on(event: "close", listener: () => void): this
-    once(event: "close", listener: () => void): this
-    addListener(event: "close", listener: () => void): this
-    removeListener(event: "close", listener: () => void): this
-    emit(event: "close"): boolean
-}

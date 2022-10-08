@@ -1,19 +1,14 @@
 import { App } from "@root/LauncherServer"
-
-import { RequestData } from "../types/Request"
-import { ResponseData } from "../types/Response"
-import { AbstractRequest } from "./AbstractRequest"
+import { AbstractRequest, JsonObject, ResponseResult } from "aurora-rpc-server"
 
 export class UpdatesRequest extends AbstractRequest {
-    type = "updates"
+    method = "updates"
 
-    invoke(data: UpdatesRequestData): ResponseData {
-        return {
-            hashes: App.UpdatesManager.hashDirs.get(data.dir),
-        }
+    invoke(data: UpdatesRequestData): ResponseResult {
+        return App.InstancesManager.hashedDirs.get(data.dir)
     }
 }
 
-interface UpdatesRequestData extends RequestData {
+interface UpdatesRequestData extends JsonObject {
     dir: string
 }

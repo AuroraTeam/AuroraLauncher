@@ -9,7 +9,7 @@ export class MojangAuthProvider extends AbstractAuthProvider {
 
     constructor() {
         super()
-        const config = App.ConfigManager.getConfig().auth as MojangAuthProviderConfig
+        const config = App.ConfigManager.getConfig.auth as MojangAuthProviderConfig
         this.config = {
             type: "mojang",
             authHost: config.authHost || "https://authserver.mojang.com",

@@ -31,5 +31,3 @@
 //     ip: string
 //     secret: string
 // }
-
-//TODO: можно сделать что-то типо sessionStorage только для json (localStorage)

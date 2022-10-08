@@ -63,8 +63,12 @@ export class ProfileConfig {
         clientArgs: [] as string[],
     }
 
+    toObject() {
+        return instanceToPlain(this)
+    }
+
     public toJSON(): string {
-        return JsonHelper.toJSON(instanceToPlain(this), true)
+        return JsonHelper.toJSON(this.toObject(), true)
     }
 
     public static fromJSON(json: string): ProfileConfig {

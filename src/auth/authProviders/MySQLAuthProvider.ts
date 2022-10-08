@@ -1,11 +1,12 @@
+import fs from "fs"
+
 import { StorageHelper } from "@root/helpers"
 import UUIDHelper from "@root/helpers/UUIDHelper"
 import { App } from "@root/LauncherServer"
 import { Column, DataSource, Entity, Generated, In, PrimaryGeneratedColumn } from "typeorm"
 import { v4 } from "uuid"
-import { LauncherServerConfig } from "../../config/types/LauncherServerConfig"
-import fs from "fs"
 
+import { LauncherServerConfig } from "../../config/types/LauncherServerConfig"
 import {
     AbstractAuthProvider,
     AuthResponseData,
@@ -18,7 +19,7 @@ import {
 export class MySQLAuthProvider extends AbstractAuthProvider {
     static type = "mysql"
 
-    private readonly db = App.ConfigManager.getConfig().db
+    private readonly db = App.ConfigManager.getConfig.db
 
     private readonly connection = new DataSource({
         type: this.db.type,
@@ -72,6 +73,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
 
         return userData
     }
+
     async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
         const user = await this.userRepository.findOne({
             where: {
@@ -88,6 +90,8 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
 
         return true
     }
+
+    
     async hasJoined(username: string, serverID: string): Promise<HasJoinedResponseData> {
         const user = await this.userRepository.findOne({
             where: {
@@ -100,8 +104,9 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
 
         return user
     }
+
     async profile(userUUID: string): Promise<ProfileResponseData> {
-        const user = await this.userRepository.findOne({
+        const user: User = await this.userRepository.findOne({
             where: {
                 userUUID: userUUID,
             },
@@ -110,7 +115,9 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
         if (!user) throw Error("User not found")
 
         return user
+        
     }
+
     privileges(): PromiseOr<PrivilegesResponseData> {
         return {
             onlineChat: true,
@@ -119,6 +126,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
             telemetry: false,
         }
     }
+    
     async profiles(userUUIDs: string[]): Promise<ProfilesResponseData[]> {
         return Array.from(
             await this.userRepository.findBy({
@@ -131,7 +139,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
     }
 }
 
-@Entity(LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString()).db.properties.tableName)
+@Entity()
 class User {
     @PrimaryGeneratedColumn()
     id: number
@@ -160,4 +168,18 @@ class User {
 
     @Column("text")
     capeUrl: string
+
+    // Privileges
+    // MySQL fix https://github.com/typeorm/typeorm/issues/3622 | Пофиксили уже вроде
+    @Column({ width: 1, type: "boolean", default: true })
+    onlineChat: boolean
+
+    @Column({ width: 1, type: "boolean", default: true })
+    multiplayerServer: boolean
+
+    @Column({ width: 1, type: "boolean", default: true })
+    multiplayerRealms: boolean
+
+    @Column({ width: 1, type: "boolean", default: false })
+    telemetry: boolean
 }

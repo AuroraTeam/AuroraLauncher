@@ -8,6 +8,6 @@ export class UpdateCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        App.UpdateManager.checkAndInstallUpdate()
+        App.UpdateManager.installUpdate()
     }
 }

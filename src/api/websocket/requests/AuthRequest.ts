@@ -1,22 +1,27 @@
 import { App } from "@root/LauncherServer"
+import { AbstractRequest, JsonObject, ResponseResult } from "aurora-rpc-server"
+//import { WebSocketClient } from "aurora-rpc-server/dist/types/types/Client" // TODO
 
-import { wsClient } from "../../WebSocketManager"
-import { RequestData } from "../types/Request"
-import { ResponseData } from "../types/Response"
-import { AbstractRequest } from "./AbstractRequest"
+// Сломано :)
 
 export class AuthRequest extends AbstractRequest {
-    type = "auth"
+    method = "auth"
 
-    async invoke(data: AuthRequestData, ws: wsClient): Promise<ResponseData> {
+    /**
+     * It takes a login and password, passes them to the auth provider, and returns the result
+     * @param {AuthRequestData} data - AuthRequestData - the data that was sent from the client.
+     * @param "{WebSocketClient} ws - WebSocketClient - the client that sent the request"
+     * @returns ResponseResult
+     */
+    async invoke(data: AuthRequestData): Promise<ResponseResult> {
         const provider = App.AuthManager.getAuthProvider()
         const res = await provider.auth(data.login, data.password)
-        ws.clientData.isAuthed = true
+        // ws.isAuthed = true
         return res
     }
 }
 
-interface AuthRequestData extends RequestData {
+interface AuthRequestData extends JsonObject {
     login: string
     password: string
 }

@@ -15,7 +15,7 @@ export class AuthlibManager {
 
     constructor() {
         if (fs.existsSync(this.privateKeyPath) && fs.existsSync(this.publicKeyPath))
-            LogHelper.info(App.LangManager.getTranslate().AuthlibManager.keysExists)
+            LogHelper.info(App.LangManager.getTranslate.AuthlibManager.keysExists)
         else this.generateKeys()
         this.setKeys()
     }
@@ -30,6 +30,9 @@ export class AuthlibManager {
         this.publicKey = fs.readFileSync(this.publicKeyPath).toString()
     }
 
+    /**
+     * It generates a pair of RSA keys, saves them to the file system.
+     */
     private generateKeys(): void {
         const keys = crypto.generateKeyPairSync("rsa", {
             modulusLength: 4096,
@@ -44,11 +47,16 @@ export class AuthlibManager {
         })
 
         fs.writeFileSync(this.privateKeyPath, keys.privateKey)
-        LogHelper.info(App.LangManager.getTranslate().AuthlibManager.privateKeySaved)
+        LogHelper.info(App.LangManager.getTranslate.AuthlibManager.privateKeySaved)
         fs.writeFileSync(this.publicKeyPath, keys.publicKey)
-        LogHelper.info(App.LangManager.getTranslate().AuthlibManager.privateKeySaved)
+        LogHelper.info(App.LangManager.getTranslate.AuthlibManager.privateKeySaved)
     }
 
+    /**
+     * Issuing signature
+     * @param {string} data - The data to be signed.
+     * @returns The signature of the data.
+     */
     public getSignature(data: string): string {
         const sign = crypto.createSign("sha1")
         sign.update(data)
