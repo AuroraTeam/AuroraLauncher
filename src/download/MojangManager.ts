@@ -59,22 +59,18 @@ export class MojangManager {
         // Natives
         const nativesDir = path.resolve(clientDir, "natives")
         fs.mkdirSync(nativesDir)
+        const tempDir = StorageHelper.getTmpPath()
         try {
             LogHelper.info(App.LangManager.getTranslate.DownloadManager.MojangManager.natives.download)
-            await HttpHelper.downloadFiles(
-                librariesList.natives,
-                this.clientsLink,
-                StorageHelper.tempDir,
-                (filePath) => {
-                    ZipHelper.unzipArchive(filePath, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
-                }
-            )
+            await HttpHelper.downloadFiles(librariesList.natives, this.clientsLink, tempDir, (filePath) => {
+                ZipHelper.unzipArchive(filePath, nativesDir, [".dll", ".so", ".dylib", ".jnilib"])
+            })
         } catch (error) {
             LogHelper.error(App.LangManager.getTranslate.DownloadManager.MojangManager.natives.downloadErr)
             LogHelper.debug(error)
             return
         }
-        rimraf(path.resolve(StorageHelper.tempDir, "*"), (e) => {
+        rimraf(path.resolve(tempDir, "*"), (e) => {
             if (e !== null) LogHelper.warn(e)
         })
 
