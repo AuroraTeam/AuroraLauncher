@@ -112,7 +112,7 @@ export class MojangManager {
         fs.mkdirSync(path.resolve(assetsDir, "indexes"))
         fs.writeFileSync(path.resolve(assetsDir, `indexes/${version.assets}.json`), assetsFile)
 
-        const { objects: assetsData } = JsonHelper.fromJson(assetsFile)
+        const { objects: assetsData } = JsonHelper.fromJson<any>(assetsFile)
         const assetsHashes: Set<string> = new Set()
         for (const key in assetsData) {
             const hash = assetsData[key].hash
