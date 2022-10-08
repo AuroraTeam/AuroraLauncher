@@ -72,6 +72,6 @@ export class ProfileConfig {
     }
 
     public static fromJSON(json: string): ProfileConfig {
-        return plainToInstance(ProfileConfig, JsonHelper.fromJSON<ProfileConfig>(json))
+        return plainToInstance(ProfileConfig, JsonHelper.fromJson<ProfileConfig>(json))
     }
 }

@@ -9,6 +9,7 @@ export class ProfileRequest extends AbstractRequest {
     method = "profile"
 
     invoke(data: ProfileRequestData): ResponseResult {
+        // Сделал кринж
         const config = App.ConfigManager.getConfig.auth as MojangAuthProvider["config"]
 
         const profile = App.ProfilesManager.profiles.find((p) => p.uuid == data.uuid)

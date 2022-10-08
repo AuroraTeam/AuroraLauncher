@@ -170,7 +170,7 @@ class User {
     capeUrl: string
 
     // Privileges
-    // MySQL fix https://github.com/typeorm/typeorm/issues/3622 | Пофиксили уже вроде
+    // MySQL fix https://github.com/typeorm/typeorm/issues/3622 | Пофиксили уже вроде // Не похоже
     @Column({ width: 1, type: "boolean", default: true })
     onlineChat: boolean
 
