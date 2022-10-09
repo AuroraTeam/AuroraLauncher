@@ -1,7 +1,7 @@
 import fs from "fs"
 
 import { LogHelper, StorageHelper } from "@root/helpers"
-import { set } from "lodash"
+import { set } from "lodash-es"
 
 import { LauncherServerConfig } from "./types/LauncherServerConfig"
 
@@ -46,9 +46,9 @@ export class ConfigManager {
         this.save()
     }
 
-   /**
-    * It loads the config file
-    */
+    /**
+     * It loads the config file
+     */
     private load(): void {
         try {
             this.config = LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString())

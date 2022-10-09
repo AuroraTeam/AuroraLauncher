@@ -1,6 +1,6 @@
 import { JsonHelper } from "@auroralauncher/core"
 import { instanceToPlain, plainToInstance } from "class-transformer"
-import { merge } from "lodash"
+import { merge } from "lodash-es"
 import { v4 } from "uuid"
 
 import { ProfileServerConfig } from "./ProfileServerConfig"

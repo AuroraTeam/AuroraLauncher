@@ -4,7 +4,6 @@ import { resolve } from "path"
 import { format } from "util"
 
 import chalk from "chalk"
-import moment from "moment"
 import stripAnsi from "strip-ansi"
 
 import { StorageHelper } from "./StorageHelper"
@@ -12,10 +11,12 @@ import { StorageHelper } from "./StorageHelper"
 export class LogHelper {
     private static readonly isDevEnabled = process.argv.includes("--dev")
     private static readonly isDebugEnabled = process.argv.includes("--debug") || process.argv.includes("--dev")
-    private static readonly logFile = resolve(
-        StorageHelper.logsDir,
-        `LauncherServer-${moment().format(`YYYY.MM.DD HH.mm.ss`)}.log`
-    )
+
+    private static readonly logFile = resolve(StorageHelper.logsDir, `LauncherServer-${this.getLogDate()}.log`)
+
+    private static getLogDate() {
+        return new Date().toISOString().slice(0, 19).replace(/-|:/g, ".").replace("T", "-")
+    }
 
     public static debug(msg: any, ...args: any[]): void {
         if (!this.isDebugEnabled) return
