@@ -6,7 +6,7 @@
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceRoot}",
-            "program": "${workspaceRoot}/dist/LauncherServer.js",
+            "program": "${workspaceRoot}/dist/app.js",
             "preLaunchTask": "npm: build:dev",
             "console": "integratedTerminal",
             "args": ["--dev"],
