@@ -34,7 +34,8 @@ export class WebRequestManager {
             return res.writeHead(404).end(
                 JsonHelper.toJson({
                     error: "Not Found",
-                    errorMessage: "The server has not found anything matching the request URI",
+                    errorMessage:
+                        "The server has not found anything matching the request URI",
                 })
             )
         if (request.method !== req.method)

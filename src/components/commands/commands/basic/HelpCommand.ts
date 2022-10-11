@@ -6,16 +6,22 @@ export class HelpCommand extends AbstractCommand {
     constructor() {
         super({
             name: "help",
-            description: App.LangManager.getTranslate.CommandsManager.commands.basic.HelpCommand,
+            description:
+                App.LangManager.getTranslate.CommandsManager.commands.basic
+                    .HelpCommand,
             category: Category.BASIC,
         })
     }
 
     invoke(): void {
-        const commandsList: Map<Category, AbstractCommand[]> = new Map(Object.values(Category).map((c) => [c, []]))
-        Array.from(App.CommandsManager.commands.values()).forEach((command: AbstractCommand) => {
-            commandsList.get(command.info.category).push(command)
-        })
+        const commandsList: Map<Category, AbstractCommand[]> = new Map(
+            Object.values(Category).map((c) => [c, []])
+        )
+        Array.from(App.CommandsManager.commands.values()).forEach(
+            (command: AbstractCommand) => {
+                commandsList.get(command.info.category).push(command)
+            }
+        )
 
         commandsList.forEach((category, category_name) => {
             if (category.length === 0) return
@@ -23,7 +29,9 @@ export class HelpCommand extends AbstractCommand {
             category.forEach((command: AbstractCommand) => {
                 LogHelper.info(
                     `${chalk.bold(command.info.name)}${
-                        !command.info.usage ? "" : chalk.red(" ", command.info.usage)
+                        !command.info.usage
+                            ? ""
+                            : chalk.red(" ", command.info.usage)
                     } - ${command.info.description}`
                 )
             })

@@ -17,16 +17,26 @@ export class InstancesManager {
             .readdirSync(StorageHelper.instancesDir, { withFileTypes: true })
             .filter((folder) => folder.isDirectory())
 
-        if (folders.length === 0) return LogHelper.info(App.LangManager.getTranslate.InstancesManager.syncSkip)
+        if (folders.length === 0)
+            return LogHelper.info(
+                App.LangManager.getTranslate.InstancesManager.syncSkip
+            )
 
         LogHelper.info(App.LangManager.getTranslate.InstancesManager.sync)
 
         folders.forEach(({ name }) => {
             const startTime = Date.now()
 
-            this.hashedDirs.set(name, this.hashDir(path.join(StorageHelper.instancesDir, name)))
+            this.hashedDirs.set(
+                name,
+                this.hashDir(path.join(StorageHelper.instancesDir, name))
+            )
 
-            LogHelper.info(App.LangManager.getTranslate.InstancesManager.syncTime, name, Date.now() - startTime)
+            LogHelper.info(
+                App.LangManager.getTranslate.InstancesManager.syncTime,
+                name,
+                Date.now() - startTime
+            )
         })
 
         LogHelper.info(App.LangManager.getTranslate.InstancesManager.syncEnd)
@@ -61,7 +71,10 @@ export class InstancesManager {
         return {
             path: path.replace(StorageHelper.instancesDir, ""),
             size: fs.statSync(path).size,
-            hashsum: crypto.createHash("sha1").update(fs.readFileSync(path)).digest("hex"),
+            hashsum: crypto
+                .createHash("sha1")
+                .update(fs.readFileSync(path))
+                .digest("hex"),
         }
     }
 }

@@ -11,7 +11,8 @@ export class JoinRequest extends AbstractRequest {
     async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         let data
 
-        if (!HttpHelper.isJsonPostData(req)) return HttpHelper.sendError(res, 400, "BadRequestException")
+        if (!HttpHelper.isJsonPostData(req))
+            return HttpHelper.sendError(res, 400, "BadRequestException")
 
         try {
             data = JsonHelper.fromJson<any>(await HttpHelper.parsePostData(req))

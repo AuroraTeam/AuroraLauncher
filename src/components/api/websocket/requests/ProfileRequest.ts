@@ -12,12 +12,22 @@ export class ProfileRequest extends AbstractRequest {
     invoke(data: ProfileRequestData): ResponseResult {
         const config = App.ConfigManager.config.auth as MojangAuthProviderConfig
 
-        const profile = App.ProfilesManager.profiles.find((p: ProfileConfig) => p.uuid == data.uuid)
+        const profile = App.ProfilesManager.profiles.find(
+            (p: ProfileConfig) => p.uuid == data.uuid
+        )
         profile.jvmArgs.push(
-            `-Dminecraft.api.auth.host=${config.authHost || "http://127.0.0.1:1370/authlib"}`,
-            `-Dminecraft.api.account.host=${config.accountHost || "http://127.0.0.1:1370/authlib"}`,
-            `-Dminecraft.api.session.host=${config.sessionHost || "http://127.0.0.1:1370/authlib"}`,
-            `-Dminecraft.api.services.host=${config.servicesHost || "http://127.0.0.1:1370/authlib"}`
+            `-Dminecraft.api.auth.host=${
+                config.authHost || "http://127.0.0.1:1370/authlib"
+            }`,
+            `-Dminecraft.api.account.host=${
+                config.accountHost || "http://127.0.0.1:1370/authlib"
+            }`,
+            `-Dminecraft.api.session.host=${
+                config.sessionHost || "http://127.0.0.1:1370/authlib"
+            }`,
+            `-Dminecraft.api.services.host=${
+                config.servicesHost || "http://127.0.0.1:1370/authlib"
+            }`
         )
 
         return profile.toObject()

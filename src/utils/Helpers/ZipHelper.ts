@@ -11,14 +11,23 @@ export class ZipHelper {
      * @param archive - путь до архива
      * @param destDir - конечная папка
      */
-    static unzipArchive(archive: string, destDir: string, whitelist: string[] = []): void {
+    static unzipArchive(
+        archive: string,
+        destDir: string,
+        whitelist: string[] = []
+    ): void {
         const zipfile = new AdmZip(archive)
         const stat = statSync(archive)
         const progress = ProgressHelper.getLoadingProgressBar()
         progress.start(stat.size, 0)
 
         zipfile.getEntries().forEach((entry) => {
-            if (entry.isDirectory || (whitelist.length > 0 && !whitelist.includes(extname(entry.entryName)))) return
+            if (
+                entry.isDirectory ||
+                (whitelist.length > 0 &&
+                    !whitelist.includes(extname(entry.entryName)))
+            )
+                return
 
             progress.increment(entry.header.compressedSize)
             zipfile.extractEntryTo(entry, destDir)

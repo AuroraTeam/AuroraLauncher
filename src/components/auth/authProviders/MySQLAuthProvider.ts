@@ -8,7 +8,14 @@ import {
     ProfilesResponseData,
     UUIDHelper,
 } from "@root/utils"
-import { Column, DataSource, Entity, Generated, In, PrimaryGeneratedColumn } from "typeorm"
+import {
+    Column,
+    DataSource,
+    Entity,
+    Generated,
+    In,
+    PrimaryGeneratedColumn,
+} from "typeorm"
 import { v4 } from "uuid"
 
 // typeorm похоже придётся выпиливать
@@ -70,7 +77,11 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
         return userData
     }
 
-    async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
+    async join(
+        accessToken: string,
+        userUUID: string,
+        serverID: string
+    ): Promise<boolean> {
         const user = await this.userRepository.findOne({
             where: {
                 accessToken: accessToken,
@@ -87,7 +98,10 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
         return true
     }
 
-    async hasJoined(username: string, serverID: string): Promise<HasJoinedResponseData> {
+    async hasJoined(
+        username: string,
+        serverID: string
+    ): Promise<HasJoinedResponseData> {
         const user = await this.userRepository.findOne({
             where: {
                 username: username,

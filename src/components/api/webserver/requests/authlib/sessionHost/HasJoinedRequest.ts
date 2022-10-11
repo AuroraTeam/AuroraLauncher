@@ -16,11 +16,15 @@ export class HasJoinedRequest extends AbstractRequest {
         const username = data.get("username")
         const serverId = data.get("serverId")
 
-        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return HttpHelper.sendError(res)
+        if (this.isInvalidValue(username) || this.isInvalidValue(serverId))
+            return HttpHelper.sendError(res)
 
         let user
         try {
-            user = await App.AuthManager.getAuthProvider().hasJoined(username, serverId)
+            user = await App.AuthManager.getAuthProvider().hasJoined(
+                username,
+                serverId
+            )
         } catch (error) {
             return HttpHelper.sendError(res, 400, error.message)
         }

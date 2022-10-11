@@ -5,7 +5,9 @@ export class SyncAllCommand extends AbstractCommand {
     constructor() {
         super({
             name: "syncall",
-            description: App.LangManager.getTranslate.CommandsManager.commands.updates.SyncAllCommand,
+            description:
+                App.LangManager.getTranslate.CommandsManager.commands.updates
+                    .SyncAllCommand,
             category: Category.UPDATES,
         })
     }

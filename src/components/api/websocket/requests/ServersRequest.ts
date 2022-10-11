@@ -11,7 +11,10 @@ export class ServersRequest extends AbstractRequest {
     invoke(): ResponseResult {
         const servers: any[] = []
         App.ProfilesManager.profiles
-            .sort((a: { sortIndex: number }, b: { sortIndex: number }) => a.sortIndex - b.sortIndex)
+            .sort(
+                (a: { sortIndex: number }, b: { sortIndex: number }) =>
+                    a.sortIndex - b.sortIndex
+            )
             .forEach((p: { servers: any[]; uuid: any }) => {
                 p.servers.forEach((s) => {
                     servers.push({

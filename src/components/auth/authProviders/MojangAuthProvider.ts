@@ -1,5 +1,10 @@
 import { App } from "@root/app"
-import { AbstractAuthProvider, AbstractAuthProviderConfig, AuthResponseData, HttpHelper } from "@root/utils"
+import {
+    AbstractAuthProvider,
+    AbstractAuthProviderConfig,
+    AuthResponseData,
+    HttpHelper,
+} from "@root/utils"
 
 export class MojangAuthProvider extends AbstractAuthProvider {
     static type = "mojang"
@@ -12,8 +17,10 @@ export class MojangAuthProvider extends AbstractAuthProvider {
             type: "mojang",
             authHost: config.authHost || "https://authserver.mojang.com",
             accountHost: config.accountHost || "https://api.mojang.com",
-            sessionHost: config.sessionHost || "https://sessionserver.mojang.com",
-            servicesHost: config.servicesHost || "https://api.minecraftservices.com",
+            sessionHost:
+                config.sessionHost || "https://sessionserver.mojang.com",
+            servicesHost:
+                config.servicesHost || "https://api.minecraftservices.com",
         }
     }
 

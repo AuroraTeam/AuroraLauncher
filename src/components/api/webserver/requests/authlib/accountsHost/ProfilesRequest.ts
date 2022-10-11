@@ -12,7 +12,8 @@ export class ProfilesRequest extends AbstractRequest {
     async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
         let data: string[]
 
-        if (!HttpHelper.isJsonPostData(req)) return HttpHelper.sendError(res, 400, "BadRequestException")
+        if (!HttpHelper.isJsonPostData(req))
+            return HttpHelper.sendError(res, 400, "BadRequestException")
 
         try {
             data = JsonHelper.fromJson(await HttpHelper.parsePostData(req))
@@ -20,7 +21,8 @@ export class ProfilesRequest extends AbstractRequest {
             return HttpHelper.sendError(res, 400, "BadRequestException")
         }
 
-        if (!Array.isArray(data) || data.length === 0) return HttpHelper.sendError(res, 400, "BadRequestException")
+        if (!Array.isArray(data) || data.length === 0)
+            return HttpHelper.sendError(res, 400, "BadRequestException")
 
         if (data.length > 10)
             return HttpHelper.sendError(
@@ -30,6 +32,9 @@ export class ProfilesRequest extends AbstractRequest {
                 "Not more that 10 profile name per call is allowed."
             )
 
-        HttpHelper.sendJson(res, await App.AuthManager.getAuthProvider().profiles(data)) // ??
+        HttpHelper.sendJson(
+            res,
+            await App.AuthManager.getAuthProvider().profiles(data)
+        ) // ??
     }
 }

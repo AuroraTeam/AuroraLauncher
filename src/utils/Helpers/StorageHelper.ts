@@ -7,7 +7,9 @@ import { SystemHelper } from "./SystemHelper"
 
 export class StorageHelper extends CoreStorageHelper {
     /* Folders */
-    static readonly storageDir: string = SystemHelper.isStandalone() ? dirname(process.execPath) : __dirname
+    static readonly storageDir: string = SystemHelper.isStandalone()
+        ? dirname(process.execPath)
+        : __dirname
     static readonly instancesDir: string = resolve(this.storageDir, "updates")
     static readonly profilesDir: string = resolve(this.storageDir, "profiles")
     static readonly modulesDir: string = resolve(this.storageDir, "modules")
@@ -16,7 +18,10 @@ export class StorageHelper extends CoreStorageHelper {
     static readonly logsDir: string = resolve(this.storageDir, "logs")
 
     /* Files */
-    static readonly configFile: string = resolve(this.storageDir, "LauncherServerConfig.json")
+    static readonly configFile: string = resolve(
+        this.storageDir,
+        "LauncherServerConfig.json"
+    )
 
     static validate(): void {
         if (!existsSync(this.instancesDir)) mkdirSync(this.instancesDir)

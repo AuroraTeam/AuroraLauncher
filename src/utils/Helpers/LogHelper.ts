@@ -10,12 +10,20 @@ import { StorageHelper } from "./StorageHelper"
 
 export class LogHelper {
     private static readonly isDevEnabled = process.argv.includes("--dev")
-    private static readonly isDebugEnabled = process.argv.includes("--debug") || process.argv.includes("--dev")
+    private static readonly isDebugEnabled =
+        process.argv.includes("--debug") || process.argv.includes("--dev")
 
-    private static readonly logFile = resolve(StorageHelper.logsDir, `LauncherServer-${this.getLogDate()}.log`)
+    private static readonly logFile = resolve(
+        StorageHelper.logsDir,
+        `LauncherServer-${this.getLogDate()}.log`
+    )
 
     private static getLogDate() {
-        return new Date().toISOString().slice(0, 19).replace(/-|:/g, ".").replace("T", "-")
+        return new Date()
+            .toISOString()
+            .slice(0, 19)
+            .replace(/-|:/g, ".")
+            .replace("T", "-")
     }
 
     public static debug(msg: any, ...args: any[]): void {

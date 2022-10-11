@@ -25,17 +25,31 @@ export class FabricManager extends MojangManager {
         const profileUUID = await super.downloadClient(clientVer, dirName, true)
         if (profileUUID === undefined) return
 
-        const librariesDir = path.resolve(StorageHelper.instancesDir, dirName, "libraries")
+        const librariesDir = path.resolve(
+            StorageHelper.instancesDir,
+            dirName,
+            "libraries"
+        )
 
-        LogHelper.info(App.LangManager.getTranslate.DownloadManager.FabricManager.client.download)
+        LogHelper.info(
+            App.LangManager.getTranslate.DownloadManager.FabricManager.client
+                .download
+        )
         const librariesList: Set<string> = new Set()
         fabricVersion.libraries.forEach((lib: any) => {
             librariesList.add(this.getLibPath(lib.name))
         })
         try {
-            await HttpHelper.downloadFiles(librariesList, this.fabricLink, librariesDir)
+            await HttpHelper.downloadFiles(
+                librariesList,
+                this.fabricLink,
+                librariesDir
+            )
         } catch (error) {
-            LogHelper.error(App.LangManager.getTranslate.DownloadManager.FabricManager.client.downloadErr)
+            LogHelper.error(
+                App.LangManager.getTranslate.DownloadManager.FabricManager
+                    .client.downloadErr
+            )
             LogHelper.debug(error)
             return
         }
@@ -44,18 +58,26 @@ export class FabricManager extends MojangManager {
         App.ProfilesManager.editProfile(profileUUID, {
             mainClass: fabricVersion.mainClass,
         } as ProfileConfig)
-        LogHelper.info(App.LangManager.getTranslate.DownloadManager.FabricManager.client.success)
+        LogHelper.info(
+            App.LangManager.getTranslate.DownloadManager.FabricManager.client
+                .success
+        )
     }
 
     async getFabricVersionInfo(version: string): Promise<any> {
         let loadersData
         try {
             loadersData = await HttpHelper.getResource(
-                new URL(`https://meta.fabricmc.net/v2/versions/loader/${version}`)
+                new URL(
+                    `https://meta.fabricmc.net/v2/versions/loader/${version}`
+                )
             )
         } catch (error) {
             LogHelper.debug(error)
-            LogHelper.error(App.LangManager.getTranslate.DownloadManager.FabricManager.info.unavailableSite)
+            LogHelper.error(
+                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                    .unavailableSite
+            )
             return
         }
 
@@ -64,24 +86,36 @@ export class FabricManager extends MojangManager {
             loaders = JsonHelper.fromJson(loadersData)
         } catch (error) {
             LogHelper.debug(error)
-            LogHelper.error(App.LangManager.getTranslate.DownloadManager.FabricManager.info.errJsonParsing)
+            LogHelper.error(
+                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                    .errJsonParsing
+            )
             return
         }
 
         const data = loaders.find((data: any) => data.loader.stable === true)
         if (data === undefined) {
-            LogHelper.error(App.LangManager.getTranslate.DownloadManager.FabricManager.info.verNotFound, version)
+            LogHelper.error(
+                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                    .verNotFound,
+                version
+            )
             return
         }
 
         let versionData
         try {
             versionData = await HttpHelper.getResource(
-                new URL(`https://meta.fabricmc.net/v2/versions/loader/${version}/${data.loader.version}/profile/json`)
+                new URL(
+                    `https://meta.fabricmc.net/v2/versions/loader/${version}/${data.loader.version}/profile/json`
+                )
             )
         } catch (error) {
             LogHelper.debug(error)
-            LogHelper.error(App.LangManager.getTranslate.DownloadManager.FabricManager.info.clientDataNotFound)
+            LogHelper.error(
+                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                    .clientDataNotFound
+            )
             return
         }
 
@@ -89,7 +123,10 @@ export class FabricManager extends MojangManager {
             return JsonHelper.fromJson(versionData)
         } catch (error) {
             LogHelper.debug(error)
-            LogHelper.error(App.LangManager.getTranslate.DownloadManager.FabricManager.info.errClientParsing)
+            LogHelper.error(
+                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                    .errClientParsing
+            )
             return
         }
     }
@@ -97,6 +134,8 @@ export class FabricManager extends MojangManager {
     // Вынести в хелпер?
     getLibPath(name: string): string {
         const patterns = name.split(":")
-        return `${patterns[0].replace(/\./g, "/")}/${patterns[1]}/${patterns[2]}/${patterns[1]}-${patterns[2]}.jar`
+        return `${patterns[0].replace(/\./g, "/")}/${patterns[1]}/${
+            patterns[2]
+        }/${patterns[1]}-${patterns[2]}.jar`
     }
 }

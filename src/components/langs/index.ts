@@ -16,7 +16,9 @@ export class LangManager {
         const selectedLang = App.ConfigManager.config.lang
 
         if (!this.langList.has(selectedLang)) {
-            LogHelper.fatal(`Invalid lang settings! Language "${selectedLang}" not found.`)
+            LogHelper.fatal(
+                `Invalid lang settings! Language "${selectedLang}" not found.`
+            )
         }
 
         this.currentLang = this.langList.get(selectedLang)
@@ -45,11 +47,14 @@ export class LangManager {
      * @returns The current language
      */
     public changeLang(lang: Lang): void {
-        if (!this.langList.has(lang)) return LogHelper.error("Language %s not found!", lang)
+        if (!this.langList.has(lang))
+            return LogHelper.error("Language %s not found!", lang)
 
         this.currentLang = this.langList.get(lang)
         App.ConfigManager.setProp("lang", lang)
 
-        LogHelper.info("Language has been changed. A complete change requires a restart LauncherServer")
+        LogHelper.info(
+            "Language has been changed. A complete change requires a restart LauncherServer"
+        )
     }
 }

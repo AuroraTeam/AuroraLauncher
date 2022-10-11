@@ -7,8 +7,15 @@ import semver from "semver"
 import { version as currentVersion } from "../../../package.json"
 
 export class UpdateManager {
-    private readonly apiUrl = new URL("latest", "https://api.aurora-launcher.ru/")
-    private readonly fileType: "js" | "binary-win" | "binary-mac" | "binary-linux"
+    private readonly apiUrl = new URL(
+        "latest",
+        "https://api.aurora-launcher.ru/"
+    )
+    private readonly fileType:
+        | "js"
+        | "binary-win"
+        | "binary-mac"
+        | "binary-linux"
     private readonly execFileName: string
 
     constructor() {
@@ -40,7 +47,9 @@ export class UpdateManager {
         if (!latestVersion) return
 
         LogHelper.info(App.LangManager.getTranslate.UpdateManager.updating)
-        LogHelper.info(App.LangManager.getTranslate.UpdateManager.downloadingLatestVer)
+        LogHelper.info(
+            App.LangManager.getTranslate.UpdateManager.downloadingLatestVer
+        )
         await HttpHelper.downloadFile(
             new URL(latestVersion.files[this.fileType]),
             path.resolve(StorageHelper.storageDir, this.execFileName)
@@ -61,15 +70,29 @@ export class UpdateManager {
         try {
             versionsData = await this.getVersionsData()
         } catch (_) {
-            return LogHelper.info(App.LangManager.getTranslate.UpdateManager.checkEnd)
+            return LogHelper.info(
+                App.LangManager.getTranslate.UpdateManager.checkEnd
+            )
         }
-        const latestVersion = versionsData[<"stable" | "dev">App.ConfigManager.config.branch]
+        const latestVersion =
+            versionsData[<"stable" | "dev">App.ConfigManager.config.branch]
 
-        if (!this.needUpdate(latestVersion)) return LogHelper.info(App.LangManager.getTranslate.UpdateManager.checkEnd)
+        if (!this.needUpdate(latestVersion))
+            return LogHelper.info(
+                App.LangManager.getTranslate.UpdateManager.checkEnd
+            )
 
-        LogHelper.info(App.LangManager.getTranslate.UpdateManager.newUpdateAvaliable, latestVersion)
-        const latestVersionData = versionsData.versions.find(({ version }) => version === latestVersion)
-        if (!latestVersionData) return LogHelper.error(App.LangManager.getTranslate.UpdateManager.checkErr)
+        LogHelper.info(
+            App.LangManager.getTranslate.UpdateManager.newUpdateAvaliable,
+            latestVersion
+        )
+        const latestVersionData = versionsData.versions.find(
+            ({ version }) => version === latestVersion
+        )
+        if (!latestVersionData)
+            return LogHelper.error(
+                App.LangManager.getTranslate.UpdateManager.checkErr
+            )
 
         LogHelper.info(
             App.LangManager.getTranslate.UpdateManager.newUpdate,

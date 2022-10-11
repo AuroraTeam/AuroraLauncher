@@ -5,7 +5,9 @@ export class SyncProfilesCommand extends AbstractCommand {
     constructor() {
         super({
             name: "syncprofiles",
-            description: App.LangManager.getTranslate.CommandsManager.commands.updates.SyncProfilesCommand,
+            description:
+                App.LangManager.getTranslate.CommandsManager.commands.updates
+                    .SyncProfilesCommand,
             category: Category.UPDATES,
         })
     }

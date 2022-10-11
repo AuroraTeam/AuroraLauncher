@@ -32,7 +32,12 @@ export class HttpHelper extends CoreHttpHelper {
      * @param {string} [error] - The error code.
      * @param {string} [errorMessage] - The message that will be displayed to the user.
      */
-    public static sendError(res: http.ServerResponse, code = 400, error?: string, errorMessage?: string): void {
+    public static sendError(
+        res: http.ServerResponse,
+        code = 400,
+        error?: string,
+        errorMessage?: string
+    ): void {
         res.statusCode = code
         this.sendJson(res, { error, errorMessage })
     }
@@ -54,7 +59,10 @@ export class HttpHelper extends CoreHttpHelper {
      * @returns A boolean value.
      */
     public static isJsonPostData(req: http.IncomingMessage): boolean {
-        return !!req.headers["content-type"] || req.headers["content-type"].includes("application/json")
+        return (
+            !!req.headers["content-type"] ||
+            req.headers["content-type"].includes("application/json")
+        )
     }
 
     /**
@@ -63,7 +71,9 @@ export class HttpHelper extends CoreHttpHelper {
      * @param req - http.IncomingMessage
      * @returns A promise that resolves to a string.
      */
-    public static async parsePostData(req: http.IncomingMessage): Promise<string> {
+    public static async parsePostData(
+        req: http.IncomingMessage
+    ): Promise<string> {
         return await getRawBody(req, { limit: "500kb", encoding: "utf-8" })
     }
 

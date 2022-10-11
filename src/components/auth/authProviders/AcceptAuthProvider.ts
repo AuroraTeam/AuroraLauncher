@@ -1,6 +1,11 @@
 import { App } from "@root/app"
 import { UUIDHelper } from "@root/utils"
-import { AbstractAuthProvider, AuthResponseData, PrivilegesResponseData, ProfilesResponseData } from "@root/utils"
+import {
+    AbstractAuthProvider,
+    AuthResponseData,
+    PrivilegesResponseData,
+    ProfilesResponseData,
+} from "@root/utils"
 import { v4, v5 } from "uuid"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
@@ -11,7 +16,9 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     auth(username: string): AuthResponseData {
         const data = {
             username,
-            userUUID: UUIDHelper.getWithoutDashes(v5(username, App.ConfigManager.config.projectID)),
+            userUUID: UUIDHelper.getWithoutDashes(
+                v5(username, App.ConfigManager.config.projectID)
+            ),
             accessToken: UUIDHelper.getWithoutDashes(v4()),
         }
 
@@ -43,7 +50,9 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     }
 
     profile(userUUID: string): UserData {
-        const user = Array.from(this.sessionsDB.values()).find((e) => e.userUUID === userUUID)
+        const user = Array.from(this.sessionsDB.values()).find(
+            (e) => e.userUUID === userUUID
+        )
         if (user === undefined) throw Error("User not found")
         return user
     }

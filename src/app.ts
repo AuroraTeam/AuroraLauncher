@@ -117,7 +117,9 @@ export class LauncherServer {
                 chalk.cyan("AuroraLauncher ") +
                     chalk.green("LauncherServer ") +
                     chalk.yellow(`v${version}`) +
-                    chalk.green(`\nCopyright (C) 2020 - ${new Date().getFullYear()} `) +
+                    chalk.green(
+                        `\nCopyright (C) 2020 - ${new Date().getFullYear()} `
+                    ) +
                     chalk.blue("AuroraTeam (https://github.com/AuroraTeam)") +
                     chalk.green("\nLicensed under the MIT License") +
                     chalk.green("\nDocumentation page: ") +

@@ -54,7 +54,9 @@ export class CommandsManager {
             output: process.stdout,
             completer: (line: string) => {
                 const completions = Array.from(this.commands.keys())
-                const hits = completions.filter((c) => c.startsWith(line.toLowerCase()))
+                const hits = completions.filter((c) =>
+                    c.startsWith(line.toLowerCase())
+                )
                 return [hits.length ? hits : completions, line]
             },
             prompt: "",
@@ -62,14 +64,22 @@ export class CommandsManager {
         this.console.on("line", (line) => {
             LogHelper.handleUserPrompt(line)
 
-            const args = line.match(/"[^"]*"|[^\s"]+/g)?.map((s) => s.trim().replace(/"/g, ""))
+            const args = line
+                .match(/"[^"]*"|[^\s"]+/g)
+                ?.map((s) => s.trim().replace(/"/g, ""))
             if (!args) return
 
             const cmd = args.shift().toLowerCase()
             if (!this.commands.has(cmd))
-                return LogHelper.error(App.LangManager.getTranslate.CommandsManager.cmdNotFound, cmd)
+                return LogHelper.error(
+                    App.LangManager.getTranslate.CommandsManager.cmdNotFound,
+                    cmd
+                )
 
-            LogHelper.dev(App.LangManager.getTranslate.CommandsManager.invokeCmd, cmd)
+            LogHelper.dev(
+                App.LangManager.getTranslate.CommandsManager.invokeCmd,
+                cmd
+            )
 
             this.commands.get(cmd).invoke(...args)
         })

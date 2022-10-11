@@ -12,7 +12,8 @@ export class InjectorRequest extends AbstractRequest {
     async emit(_: IncomingMessage, res: ServerResponse): Promise<void> {
         HttpHelper.sendJson(res, {
             meta: {
-                serverName: App.ConfigManager.config.projectName || "Aurora Launcher",
+                serverName:
+                    App.ConfigManager.config.projectName || "Aurora Launcher",
                 implementationName: "aurora-launchserver",
                 implementationVersion: "0.0.1",
                 "feature.no_mojang_namespace": true,

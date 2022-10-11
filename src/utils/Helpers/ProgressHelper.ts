@@ -1,4 +1,11 @@
-import { Format, GenericFormatter, MultiBar, Options, Params, SingleBar } from "cli-progress"
+import {
+    Format,
+    GenericFormatter,
+    MultiBar,
+    Options,
+    Params,
+    SingleBar,
+} from "cli-progress"
 
 export class ProgressHelper {
     private static barCompleteChar = "\u2588"
@@ -17,15 +24,23 @@ export class ProgressHelper {
         return this.getMultiProgress(this.downloadFormatter)
     }
 
-    private static getProgress(format: string | GenericFormatter, barsize = this.barsize): SingleBar {
+    private static getProgress(
+        format: string | GenericFormatter,
+        barsize = this.barsize
+    ): SingleBar {
         return new SingleBar(this.getDefaultParams(format, barsize))
     }
 
-    private static getMultiProgress(format: string | GenericFormatter): MultiBar {
+    private static getMultiProgress(
+        format: string | GenericFormatter
+    ): MultiBar {
         return new MultiBar(this.getDefaultParams(format))
     }
 
-    private static getDefaultParams(format: string | GenericFormatter, barsize = this.barsize): Options {
+    private static getDefaultParams(
+        format: string | GenericFormatter,
+        barsize = this.barsize
+    ): Options {
         return {
             format,
             barCompleteChar: this.barCompleteChar,
@@ -43,7 +58,11 @@ export class ProgressHelper {
     private static downloadFormatter(
         options: Options,
         params: Params,
-        payload: { speed: string; value_formatted: string; total_formatted: string }
+        payload: {
+            speed: string
+            value_formatted: string
+            total_formatted: string
+        }
     ) {
         const elapsedTime = Math.round((Date.now() - params.startTime) / 1000)
         const speed = params.value / elapsedTime

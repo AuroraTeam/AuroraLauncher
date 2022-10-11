@@ -6,7 +6,9 @@ export class DownloadClientCommand extends AbstractCommand {
     constructor() {
         super({
             name: "downloadclient",
-            description: App.LangManager.getTranslate.CommandsManager.commands.updates.DownloadClientCommand,
+            description:
+                App.LangManager.getTranslate.CommandsManager.commands.updates
+                    .DownloadClientCommand,
             category: Category.UPDATES,
             usage: "<version> <folder name> <?source type>",
         })
@@ -14,8 +16,10 @@ export class DownloadClientCommand extends AbstractCommand {
 
     async invoke(...args: string[]): Promise<void> {
         const [clientName, dirName, sourceType = "mojang"] = args
-        if (!clientName) return LogHelper.error("Укажите название/версию клиента!")
-        if (!dirName) return LogHelper.error("Укажите название папки для клиента!")
+        if (!clientName)
+            return LogHelper.error("Укажите название/версию клиента!")
+        if (!dirName)
+            return LogHelper.error("Укажите название папки для клиента!")
 
         const DownloadManager = this.getDownloadManager(sourceType)
         if (!DownloadManager) return

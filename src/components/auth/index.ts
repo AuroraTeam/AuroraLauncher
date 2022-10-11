@@ -9,7 +9,10 @@ import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 // TODO Ох уж эти приколы с типами
 // Другие решения получались не красивыми
 // Если есть идеи как сделать лучше - пишите))
-type AnyAuthProvider = typeof AcceptAuthProvider | typeof RejectAuthProvider | typeof MojangAuthProvider
+type AnyAuthProvider =
+    | typeof AcceptAuthProvider
+    | typeof RejectAuthProvider
+    | typeof MojangAuthProvider
 //  | typeof MySQLAuthProvider
 
 export class AuthManager {
@@ -22,7 +25,9 @@ export class AuthManager {
         const providerType = App.ConfigManager.config.auth.type
 
         if (!this.authProviders.has(providerType))
-            LogHelper.fatal(App.LangManager.getTranslate.AuthManager.invalidProvider)
+            LogHelper.fatal(
+                App.LangManager.getTranslate.AuthManager.invalidProvider
+            )
         this.authProvider = new (this.authProviders.get(providerType))()
     }
 

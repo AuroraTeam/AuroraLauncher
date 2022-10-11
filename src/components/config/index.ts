@@ -51,11 +51,15 @@ export class ConfigManager {
      */
     private load(): void {
         try {
-            this.#config = LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString())
+            this.#config = LauncherServerConfig.fromJSON(
+                fs.readFileSync(StorageHelper.configFile).toString()
+            )
         } catch (e) {
             if (e instanceof SyntaxError) {
                 LogHelper.error(e)
-                LogHelper.fatal("Json syntax broken. Try fix or delete LauncherServerConfig.json")
+                LogHelper.fatal(
+                    "Json syntax broken. Try fix or delete LauncherServerConfig.json"
+                )
             }
             LogHelper.fatal(e)
         }

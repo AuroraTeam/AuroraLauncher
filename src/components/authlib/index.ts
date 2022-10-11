@@ -12,8 +12,13 @@ export class AuthlibManager {
     private publicKey: string
 
     constructor() {
-        if (fs.existsSync(this.privateKeyPath) && fs.existsSync(this.publicKeyPath)) {
-            LogHelper.info(App.LangManager.getTranslate.AuthlibManager.keysExists)
+        if (
+            fs.existsSync(this.privateKeyPath) &&
+            fs.existsSync(this.publicKeyPath)
+        ) {
+            LogHelper.info(
+                App.LangManager.getTranslate.AuthlibManager.keysExists
+            )
         } else {
             this.generateKeys()
         }
@@ -47,9 +52,13 @@ export class AuthlibManager {
         })
 
         fs.writeFileSync(this.privateKeyPath, keys.privateKey)
-        LogHelper.info(App.LangManager.getTranslate.AuthlibManager.privateKeySaved)
+        LogHelper.info(
+            App.LangManager.getTranslate.AuthlibManager.privateKeySaved
+        )
         fs.writeFileSync(this.publicKeyPath, keys.publicKey)
-        LogHelper.info(App.LangManager.getTranslate.AuthlibManager.privateKeySaved)
+        LogHelper.info(
+            App.LangManager.getTranslate.AuthlibManager.privateKeySaved
+        )
     }
 
     /**

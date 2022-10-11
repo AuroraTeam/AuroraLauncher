@@ -6,7 +6,9 @@ export class RejectAuthProvider extends AbstractAuthProvider {
     static type = "reject"
     private config: RejectAuthProviderConfig = {
         type: "reject",
-        message: (App.ConfigManager.config.auth as RejectAuthProviderConfig).message || "Auth rejected",
+        message:
+            (App.ConfigManager.config.auth as RejectAuthProviderConfig)
+                .message || "Auth rejected",
     }
 
     auth(): any {

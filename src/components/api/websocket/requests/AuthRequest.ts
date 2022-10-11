@@ -15,7 +15,10 @@ export class AuthRequest extends AbstractRequest {
      * @returns ResponseResult
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async invoke(data: AuthRequestData, ws: WebSocketClient): Promise<ResponseResult> {
+    async invoke(
+        data: AuthRequestData,
+        ws: WebSocketClient
+    ): Promise<ResponseResult> {
         const provider = App.AuthManager.getAuthProvider()
         const res = await provider.auth(data.login, data.password)
         // ws.isAuthed = true

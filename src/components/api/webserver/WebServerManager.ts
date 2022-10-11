@@ -17,13 +17,15 @@ export class WebServerManager {
      * @returns The web server
      */
     public createWebServer(): http.Server | https.Server {
-        if (this.webServer) throw new Error("The web server has already been created")
+        if (this.webServer)
+            throw new Error("The web server has already been created")
 
         const { ssl, useSSL } = App.ConfigManager.config.api
 
         if (!useSSL) {
-            this.webServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) =>
-                this.requestListener(req, res)
+            this.webServer = http.createServer(
+                (req: http.IncomingMessage, res: http.ServerResponse) =>
+                    this.requestListener(req, res)
             )
             return this.webServer
         }
@@ -32,10 +34,14 @@ export class WebServerManager {
         const keyPath = path.resolve(StorageHelper.storageDir, ssl.key)
 
         if (!fs.existsSync(certPath)) {
-            LogHelper.fatal(App.LangManager.getTranslate.WebSocketManager.certNotFound)
+            LogHelper.fatal(
+                App.LangManager.getTranslate.WebSocketManager.certNotFound
+            )
         }
         if (!fs.existsSync(keyPath)) {
-            LogHelper.fatal(App.LangManager.getTranslate.WebSocketManager.keyNotFound)
+            LogHelper.fatal(
+                App.LangManager.getTranslate.WebSocketManager.keyNotFound
+            )
         }
 
         this.webServer = https.createServer(
@@ -43,7 +49,8 @@ export class WebServerManager {
                 cert: fs.readFileSync(certPath),
                 key: fs.readFileSync(keyPath),
             },
-            (req: http.IncomingMessage, res: http.ServerResponse) => this.requestListener(req, res)
+            (req: http.IncomingMessage, res: http.ServerResponse) =>
+                this.requestListener(req, res)
         )
         return this.webServer
     }
@@ -55,12 +62,18 @@ export class WebServerManager {
      * @param res - http.ServerResponse - The response object that will be sent back to the client.
      * @returns The response object
      */
-    private requestListener(req: http.IncomingMessage, res: http.ServerResponse): http.ServerResponse {
+    private requestListener(
+        req: http.IncomingMessage,
+        res: http.ServerResponse
+    ): http.ServerResponse {
         if (req.url.startsWith("/files")) return this.fileListing(req.url, res)
         this.requestsManager.getRequest(req, res)
     }
 
-    private fileListing(url: string, res: http.ServerResponse): http.ServerResponse {
+    private fileListing(
+        url: string,
+        res: http.ServerResponse
+    ): http.ServerResponse {
         const { disableListing, hideListing } = App.ConfigManager.config.api
         if (disableListing) return res.writeHead(404).end("Not found!")
 
@@ -95,7 +108,11 @@ export class WebServerManager {
 
             if (url.length !== 0) files.unshift("..")
             res.write("<style>*{font-family:monospace; font-size:14px}</style>")
-            res.end(files.map((el) => `<a href="/files${url}/${el}">${el}</a>`).join("<br>"))
+            res.end(
+                files
+                    .map((el) => `<a href="/files${url}/${el}">${el}</a>`)
+                    .join("<br>")
+            )
         })
     }
 }
