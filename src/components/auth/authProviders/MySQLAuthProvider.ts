@@ -12,6 +12,7 @@ import {
     UUIDHelper
 } from "@root/utils"
 
+// typeorm похоже придётся выпиливать
 export class MySQLAuthProvider extends AbstractAuthProvider {
     static type = "mysql"
 
@@ -87,7 +88,6 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
         return true
     }
 
-    
     async hasJoined(username: string, serverID: string): Promise<HasJoinedResponseData> {
         const user = await this.userRepository.findOne({
             where: {
@@ -111,7 +111,6 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
         if (!user) throw Error("User not found")
 
         return user
-        
     }
 
     privileges(): PromiseOr<PrivilegesResponseData> {
@@ -122,7 +121,7 @@ export class MySQLAuthProvider extends AbstractAuthProvider {
             telemetry: false,
         }
     }
-    
+
     async profiles(userUUIDs: string[]): Promise<ProfilesResponseData[]> {
         return Array.from(
             await this.userRepository.findBy({

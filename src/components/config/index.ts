@@ -46,9 +46,9 @@ export class ConfigManager {
         this.save()
     }
 
-   /**
-    * It loads the config file
-    */
+    /**
+     * It loads the config file
+     */
     private load(): void {
         try {
             this.config = LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString())
