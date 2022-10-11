@@ -1,7 +1,4 @@
 import { App } from "@root/app"
-import { Column, DataSource, Entity, Generated, In, PrimaryGeneratedColumn } from "typeorm"
-import { v4 } from "uuid"
-
 import {
     AbstractAuthProvider,
     AuthResponseData,
@@ -9,14 +6,16 @@ import {
     PrivilegesResponseData,
     ProfileResponseData,
     ProfilesResponseData,
-    UUIDHelper
+    UUIDHelper,
 } from "@root/utils"
+import { Column, DataSource, Entity, Generated, In, PrimaryGeneratedColumn } from "typeorm"
+import { v4 } from "uuid"
 
 // typeorm похоже придётся выпиливать
 export class MySQLAuthProvider extends AbstractAuthProvider {
     static type = "mysql"
 
-    private readonly db = App.ConfigManager.getConfig.db
+    private readonly db = App.ConfigManager.config.db
 
     private readonly connection = new DataSource({
         type: this.db.type,

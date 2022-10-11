@@ -1,13 +1,7 @@
-import { UUIDHelper } from "@root/utils"
 import { App } from "@root/app"
+import { UUIDHelper } from "@root/utils"
+import { AbstractAuthProvider, AuthResponseData, PrivilegesResponseData, ProfilesResponseData } from "@root/utils"
 import { v4, v5 } from "uuid"
-
-import {
-    AbstractAuthProvider,
-    AuthResponseData,
-    PrivilegesResponseData,
-    ProfilesResponseData,
-} from "@root/utils"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
     static type = "accept"
@@ -17,7 +11,7 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     auth(username: string): AuthResponseData {
         const data = {
             username,
-            userUUID: UUIDHelper.getWithoutDashes(v5(username, App.ConfigManager.getConfig.projectID)),
+            userUUID: UUIDHelper.getWithoutDashes(v5(username, App.ConfigManager.config.projectID)),
             accessToken: UUIDHelper.getWithoutDashes(v4()),
         }
 

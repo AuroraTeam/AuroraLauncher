@@ -1,6 +1,6 @@
+import { App } from "@root/app"
 import { Server } from "aurora-rpc-server"
 
-import { App } from "@root/app"
 import { WebServerManager } from "../index"
 import { AuthRequest } from "./requests/AuthRequest"
 import { PingRequest } from "./requests/PingRequest"
@@ -13,7 +13,7 @@ export class WebManager {
     private webSocketManager: Server
 
     constructor() {
-        const { host, port } = App.ConfigManager.getConfig.api
+        const { host, port } = App.ConfigManager.config.api
         const webServer = this.webServerManager.createWebServer()
 
         this.webSocketManager = new Server({ server: webServer })

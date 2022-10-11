@@ -1,12 +1,7 @@
 import path from "path"
 
-import {
-    HttpHelper,
-    LogHelper,
-    StorageHelper,
-    SystemHelper
-} from "@root/utils"
 import { App } from "@root/app"
+import { HttpHelper, LogHelper, StorageHelper, SystemHelper } from "@root/utils"
 import semver from "semver"
 
 import { version as currentVersion } from "../../../package.json"
@@ -68,10 +63,9 @@ export class UpdateManager {
         } catch (_) {
             return LogHelper.info(App.LangManager.getTranslate.UpdateManager.checkEnd)
         }
-        const latestVersion = versionsData[<"stable" | "dev">App.ConfigManager.getConfig.branch]
+        const latestVersion = versionsData[<"stable" | "dev">App.ConfigManager.config.branch]
 
-        if (!this.needUpdate(latestVersion))
-            return LogHelper.info(App.LangManager.getTranslate.UpdateManager.checkEnd)
+        if (!this.needUpdate(latestVersion)) return LogHelper.info(App.LangManager.getTranslate.UpdateManager.checkEnd)
 
         LogHelper.info(App.LangManager.getTranslate.UpdateManager.newUpdateAvaliable, latestVersion)
         const latestVersionData = versionsData.versions.find(({ version }) => version === latestVersion)

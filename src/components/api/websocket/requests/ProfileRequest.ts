@@ -1,5 +1,5 @@
 import { App } from "@root/app"
-import { MojangAuthProvider } from "@root/components/auth/authProviders/MojangAuthProvider"
+import { MojangAuthProviderConfig } from "@root/components/auth/authProviders/MojangAuthProvider"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 
@@ -10,8 +10,7 @@ export class ProfileRequest extends AbstractRequest {
     method = "profile"
 
     invoke(data: ProfileRequestData): ResponseResult {
-        // Сделал кринж
-        const config = App.ConfigManager.getConfig.auth as MojangAuthProvider["config"]
+        const config = App.ConfigManager.config.auth as MojangAuthProviderConfig
 
         const profile = App.ProfilesManager.profiles.find((p: ProfileConfig) => p.uuid == data.uuid)
         profile.jvmArgs.push(

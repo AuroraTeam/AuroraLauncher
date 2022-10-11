@@ -1,5 +1,5 @@
-import { LogHelper } from "@root/utils"
 import { App } from "@root/app"
+import { LogHelper } from "@root/utils"
 
 import enTranslate from "./utils/en.json"
 import ruTranslate from "./utils/ru.json"
@@ -13,7 +13,7 @@ export class LangManager {
 
     constructor() {
         this.setLangs()
-        const selectedLang = App.ConfigManager.getConfig.lang
+        const selectedLang = App.ConfigManager.config.lang
 
         if (!this.langList.has(selectedLang)) {
             LogHelper.fatal(`Invalid lang settings! Language "${selectedLang}" not found.`)

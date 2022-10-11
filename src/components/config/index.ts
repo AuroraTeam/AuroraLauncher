@@ -6,7 +6,7 @@ import { set } from "lodash-es"
 import { LauncherServerConfig } from "./utils/LauncherServerConfig"
 
 export class ConfigManager {
-    private config: LauncherServerConfig
+    #config: LauncherServerConfig
 
     constructor() {
         if (fs.existsSync(StorageHelper.configFile)) {
@@ -18,7 +18,7 @@ export class ConfigManager {
         } else {
             LogHelper.info("Configuration not found! Create default config")
 
-            this.config = LauncherServerConfig.getDefaults()
+            this.#config = LauncherServerConfig.getDefaults()
             this.save()
 
             LogHelper.info(
@@ -32,7 +32,7 @@ export class ConfigManager {
      * It returns the config object.
      * @returns The config object
      */
-    get getConfig(): LauncherServerConfig {
+    get config(): LauncherServerConfig {
         return this.config
     }
 
@@ -51,7 +51,7 @@ export class ConfigManager {
      */
     private load(): void {
         try {
-            this.config = LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString())
+            this.#config = LauncherServerConfig.fromJSON(fs.readFileSync(StorageHelper.configFile).toString())
         } catch (e) {
             if (e instanceof SyntaxError) {
                 LogHelper.error(e)

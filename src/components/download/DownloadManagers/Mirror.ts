@@ -3,9 +3,9 @@ import path from "path"
 import { URL } from "url"
 
 import { JsonHelper } from "@auroralauncher/core"
-import { HttpHelper, LogHelper, StorageHelper, ZipHelper } from "@root/utils"
 import { App } from "@root/app"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
+import { HttpHelper, LogHelper, StorageHelper, ZipHelper } from "@root/utils"
 import rimraf from "rimraf"
 
 export class MirrorManager {
@@ -15,7 +15,7 @@ export class MirrorManager {
      * @param dirName - Название конечной папки
      */
     async downloadClient(clientName: string, dirName: string): Promise<void> {
-        const mirrors: string[] = App.ConfigManager.getConfig.mirrors
+        const mirrors: string[] = App.ConfigManager.config.mirrors
         const clientDir = path.resolve(StorageHelper.instancesDir, dirName)
         if (fs.existsSync(clientDir)) return LogHelper.error(App.LangManager.getTranslate.DownloadManager.dirExist)
 
@@ -78,7 +78,7 @@ export class MirrorManager {
      * @param dirName - Название конечной папки
      */
     async downloadAssets(assetsName: string, dirName: string): Promise<void> {
-        const mirrors: string[] = App.ConfigManager.getConfig.mirrors
+        const mirrors: string[] = App.ConfigManager.config.mirrors
         const assetsDir = path.resolve(StorageHelper.instancesDir, dirName)
         if (fs.existsSync(assetsDir)) return LogHelper.error(App.LangManager.getTranslate.DownloadManager.dirExist)
 

@@ -1,6 +1,5 @@
 import { App } from "@root/app"
-
-import { AbstractAuthProvider, AbstractAuthProviderConfig, AuthResponseData, HttpHelper} from "@root/utils"
+import { AbstractAuthProvider, AbstractAuthProviderConfig, AuthResponseData, HttpHelper } from "@root/utils"
 
 export class MojangAuthProvider extends AbstractAuthProvider {
     static type = "mojang"
@@ -8,7 +7,7 @@ export class MojangAuthProvider extends AbstractAuthProvider {
 
     constructor() {
         super()
-        const config = App.ConfigManager.getConfig.auth as MojangAuthProviderConfig
+        const config = App.ConfigManager.config.auth as MojangAuthProviderConfig
         this.config = {
             type: "mojang",
             authHost: config.authHost || "https://authserver.mojang.com",
@@ -59,7 +58,7 @@ export class MojangAuthProvider extends AbstractAuthProvider {
     }
 }
 
-interface MojangAuthProviderConfig extends AbstractAuthProviderConfig {
+export interface MojangAuthProviderConfig extends AbstractAuthProviderConfig {
     authHost: string
     accountHost: string
     sessionHost: string
