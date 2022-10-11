@@ -1,7 +1,7 @@
-import { MojangAuthProvider } from "@root/components/auth/authProviders/MojangAuthProvider"
 import { App } from "@root/app"
-import { AbstractRequest, JsonObject, ResponseResult } from "aurora-rpc-server"
+import { MojangAuthProvider } from "@root/components/auth/authProviders/MojangAuthProvider"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
+import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 
 // TODO Указание доп.параметров для запуска клиента при использовании различных провайдеров
 // Для работы Authlib
@@ -25,6 +25,6 @@ export class ProfileRequest extends AbstractRequest {
     }
 }
 
-interface ProfileRequestData extends JsonObject {
+interface ProfileRequestData {
     uuid: string
 }

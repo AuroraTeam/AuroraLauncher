@@ -1,6 +1,7 @@
 import { App } from "@root/app"
-import { AbstractRequest, JsonObject, ResponseResult } from "aurora-rpc-server"
-import { WebSocketClient } from "aurora-rpc-server/dist/types/types/Client" // TODO
+import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
+
+type WebSocketClient = Parameters<AbstractRequest["invoke"]>["1"]
 
 // Сломано :)
 
@@ -9,8 +10,8 @@ export class AuthRequest extends AbstractRequest {
 
     /**
      * It takes a login and password, passes them to the auth provider, and returns the result
-     * @param {AuthRequestData} data - AuthRequestData - the data that was sent from the client.
-     * @param "{WebSocketClient} ws - WebSocketClient - the client that sent the request"
+     * @param {AuthRequestData} data - AuthRequestData - the data that was sent from the client
+     * @param {WebSocketClient} ws - WebSocketClient - the client that sent the request
      * @returns ResponseResult
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,7 +23,7 @@ export class AuthRequest extends AbstractRequest {
     }
 }
 
-interface AuthRequestData extends JsonObject {
+interface AuthRequestData {
     login: string
     password: string
 }

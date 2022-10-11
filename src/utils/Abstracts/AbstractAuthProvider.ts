@@ -1,5 +1,3 @@
-import { JsonObject } from "aurora-rpc-server"
-
 export abstract class AbstractAuthProvider {
     protected static type: string
 
@@ -13,7 +11,6 @@ export abstract class AbstractAuthProvider {
         }
     }
 
-    
     abstract auth(username: string, password: string): PromiseOr<AuthResponseData>
 
     abstract join(accessToken: string, userUUID: string, serverID: string): PromiseOr<boolean>
@@ -31,32 +28,32 @@ export interface AbstractAuthProviderConfig {
     type: string
 }
 
-export interface AuthResponseData extends JsonObject {
+export interface AuthResponseData {
     username: string
     userUUID: string
     accessToken: string
 }
 
-export interface HasJoinedResponseData extends JsonObject {
+export interface HasJoinedResponseData {
     userUUID: string
     skinUrl?: string
     capeUrl?: string
 }
 
-export interface ProfileResponseData extends JsonObject {
+export interface ProfileResponseData {
     username: string
     skinUrl?: string
     capeUrl?: string
 }
 
-export interface PrivilegesResponseData extends JsonObject {
+export interface PrivilegesResponseData {
     onlineChat: boolean
     multiplayerServer: boolean
     multiplayerRealms: boolean
     telemetry: boolean
 }
 
-export interface ProfilesResponseData extends JsonObject {
+export interface ProfilesResponseData {
     id: string
     name: string
 }
