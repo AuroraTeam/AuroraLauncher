@@ -1,11 +1,10 @@
 import fs from "fs"
 import path from "path"
 
-import { LogHelper, StorageHelper } from "@root/utils/"
 import { App } from "@root/app"
-import chalk from "chalk"
-
 import { AbstractModule, IGetInfo } from "@root/utils"
+import { LogHelper, StorageHelper } from "@root/utils/"
+import chalk from "chalk"
 
 export class ModulesManager {
     public static modulesList: Map<IGetInfo, AbstractModule[]> = new Map()

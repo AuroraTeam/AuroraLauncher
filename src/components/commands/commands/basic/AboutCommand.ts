@@ -1,5 +1,5 @@
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import { App } from "@root/app"
+import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import chalk from "chalk"
 
 import { version } from "../../../../../package.json"

@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from "http"
 
-import { HttpHelper } from "@root/utils"
 import { App } from "@root/app"
+import { HttpHelper } from "@root/utils"
 
 import { AbstractRequest } from "../../AbstractRequest"
 

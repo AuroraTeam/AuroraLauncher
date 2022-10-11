@@ -1,6 +1,6 @@
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import { App } from "@root/app"
 import { Lang } from "@root/components"
+import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 export class LangCommand extends AbstractCommand {
     constructor() {
@@ -8,7 +8,7 @@ export class LangCommand extends AbstractCommand {
             name: "lang",
             description: App.LangManager.getTranslate.CommandsManager.commands.basic.LangCommand,
             category: Category.BASIC,
-            usage: "<lang> (ru|en)"
+            usage: "<lang> (ru|en)",
         })
     }
 

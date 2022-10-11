@@ -1,5 +1,6 @@
-import { JsonHelper } from "@root/utils"
 import { IncomingMessage, ServerResponse } from "http"
+
+import { JsonHelper } from "@root/utils"
 
 import { AbstractRequest } from "./requests/AbstractRequest"
 import { ProfilesRequest } from "./requests/authlib/accountsHost/ProfilesRequest"

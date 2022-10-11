@@ -1,5 +1,5 @@
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import { App } from "@root/app"
+import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import chalk from "chalk"
 
 export class HelpCommand extends AbstractCommand {
@@ -22,9 +22,9 @@ export class HelpCommand extends AbstractCommand {
             LogHelper.info(`=== [ %s ] ===`, category_name.toUpperCase())
             category.forEach((command: AbstractCommand) => {
                 LogHelper.info(
-                    `${chalk.bold(command.info.name)}${!command.info.usage ? "" : chalk.red(" ", command.info.usage)} - ${
-                        command.info.description
-                    }`
+                    `${chalk.bold(command.info.name)}${
+                        !command.info.usage ? "" : chalk.red(" ", command.info.usage)
+                    } - ${command.info.description}`
                 )
             })
         })

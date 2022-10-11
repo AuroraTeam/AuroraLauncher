@@ -1,7 +1,6 @@
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
-
 import { App } from "@root/app"
-import { MirrorManager, FabricManager, MojangManager } from "@root/components/"
+import { FabricManager, MirrorManager, MojangManager } from "@root/components/"
+import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 export class DownloadClientCommand extends AbstractCommand {
     constructor() {
@@ -9,7 +8,7 @@ export class DownloadClientCommand extends AbstractCommand {
             name: "downloadclient",
             description: App.LangManager.getTranslate.CommandsManager.commands.updates.DownloadClientCommand,
             category: Category.UPDATES,
-            usage:  "<version> <folder name> <?source type>"
+            usage: "<version> <folder name> <?source type>",
         })
     }
 

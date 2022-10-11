@@ -4,9 +4,9 @@ import path from "path"
 import { URL } from "url"
 
 import { JsonHelper } from "@auroralauncher/core"
-import { HttpHelper, LogHelper, StorageHelper } from "@root/utils"
 import { App } from "@root/app"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
+import { HttpHelper, LogHelper, StorageHelper } from "@root/utils"
 
 import { MojangManager } from "./Mojang"
 
@@ -50,7 +50,9 @@ export class FabricManager extends MojangManager {
     async getFabricVersionInfo(version: string): Promise<any> {
         let loadersData
         try {
-            loadersData = await HttpHelper.getResource(new URL(`https://meta.fabricmc.net/v2/versions/loader/${version}`))
+            loadersData = await HttpHelper.getResource(
+                new URL(`https://meta.fabricmc.net/v2/versions/loader/${version}`)
+            )
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(App.LangManager.getTranslate.DownloadManager.FabricManager.info.unavailableSite)

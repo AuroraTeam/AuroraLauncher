@@ -5,9 +5,9 @@ import path from "path"
 import { URL } from "url"
 
 import { JsonHelper } from "@auroralauncher/core"
-import { HttpHelper, LogHelper, StorageHelper, ZipHelper } from "@root/utils"
 import { App } from "@root/app"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
+import { HttpHelper, LogHelper, StorageHelper, ZipHelper } from "@root/utils"
 import rimraf from "rimraf"
 
 export class MojangManager {

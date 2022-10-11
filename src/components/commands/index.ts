@@ -1,10 +1,23 @@
 import ReadLine from "readline"
 
+import { App } from "@root/app"
 import { AbstractCommand, LogHelper } from "@root/utils"
 
-import { App } from "@root/app"
-import { AboutCommand, BranchCommand, DownloadAssetsCommand, DownloadClientCommand, HelpCommand, LangCommand, ModulesCommand, ReloadCommand, StopCommand, SyncAllCommand, SyncInstancesCommand, SyncProfilesCommand, UpdateCommand } from "./commands"
-
+import {
+    AboutCommand,
+    BranchCommand,
+    DownloadAssetsCommand,
+    DownloadClientCommand,
+    HelpCommand,
+    LangCommand,
+    ModulesCommand,
+    ReloadCommand,
+    StopCommand,
+    SyncAllCommand,
+    SyncInstancesCommand,
+    SyncProfilesCommand,
+    UpdateCommand,
+} from "./commands"
 
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()

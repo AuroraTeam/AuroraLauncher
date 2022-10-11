@@ -3,7 +3,6 @@ import fs from "fs"
 import { resolve } from "path"
 
 import { App } from "@root/app"
-
 import { LogHelper, StorageHelper } from "@root/utils"
 
 export class AuthlibManager {

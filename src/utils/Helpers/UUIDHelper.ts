@@ -1,5 +1,4 @@
 export class UUIDHelper {
-    
     /**
      * It takes a uuid with dashes, and returns a with all dashes removed.
      * @param {string} uuid - The UUID to format.

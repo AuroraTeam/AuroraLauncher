@@ -2,8 +2,8 @@ import crypto from "crypto"
 import fs from "fs"
 import path from "path"
 
-import { LogHelper, StorageHelper } from "@root/utils"
 import { App } from "@root/app"
+import { LogHelper, StorageHelper } from "@root/utils"
 
 export class InstancesManager {
     hashedDirs: Map<string, HashedFile[]> = new Map()
@@ -52,11 +52,11 @@ export class InstancesManager {
         return arrayOfFiles
     }
 
-   /**
-    * It takes a path to a file, and returns an object containing the path, size, and hash of the file
-    * @param {string} path - The path to the file you want to hash.
-    * @returns A hashed file.
-    */
+    /**
+     * It takes a path to a file, and returns an object containing the path, size, and hash of the file
+     * @param {string} path - The path to the file you want to hash.
+     * @returns A hashed file.
+     */
     hashFile(path: string): HashedFile {
         return {
             path: path.replace(StorageHelper.instancesDir, ""),

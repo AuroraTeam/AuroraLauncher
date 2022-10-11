@@ -1,8 +1,8 @@
 import fs from "fs"
 import path from "path"
 
-import { LogHelper, StorageHelper } from "@root/utils"
 import { App } from "@root/app"
+import { LogHelper, StorageHelper } from "@root/utils"
 
 import { ProfileConfig } from "./utils/ProfileConfig"
 

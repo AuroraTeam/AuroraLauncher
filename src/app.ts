@@ -4,7 +4,18 @@ import "reflect-metadata"
 import chalk from "chalk"
 
 import { version } from "../package.json"
-import { ConfigManager, LangManager, AuthManager, CommandsManager, ModulesManager, WebManager, InstancesManager, UpdateManager, ProfilesManager, AuthlibManager } from "./components"
+import {
+    AuthManager,
+    AuthlibManager,
+    CommandsManager,
+    ConfigManager,
+    InstancesManager,
+    LangManager,
+    ModulesManager,
+    ProfilesManager,
+    UpdateManager,
+    WebManager,
+} from "./components"
 import { LogHelper, StorageHelper } from "./utils"
 
 export class LauncherServer {

@@ -15,10 +15,10 @@ export class SystemHelper {
         return process.platform === "win32"
     }
 
-   /**
-    * It returns true if the platform is Mac.
-    * @returns The platform that the application is running on.
-    */
+    /**
+     * It returns true if the platform is Mac.
+     * @returns The platform that the application is running on.
+     */
     public static isMac(): boolean {
         return process.platform === "darwin"
     }
