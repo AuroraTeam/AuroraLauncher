@@ -32,7 +32,7 @@ export class ConfigManager {
      * It returns the config object.
      * @returns The config object
      */
-    get сonfig(): LauncherServerConfig {
+    get config(): LauncherServerConfig {
         return this.#config
     }
 
@@ -42,7 +42,7 @@ export class ConfigManager {
      * @param {string | number | boolean} value - The value to set the property to.
      */
     public setProp(prop: string, value: string | number | boolean): void {
-        set(this.config, prop, value)
+        set(this.#config, prop, value)
         this.save()
     }
 
@@ -69,6 +69,6 @@ export class ConfigManager {
      * It saves the config file
      */
     private save(): void {
-        fs.writeFileSync(StorageHelper.configFile, this.config.toJSON())
+        fs.writeFileSync(StorageHelper.configFile, this.#config.toJSON())
     }
 }
