@@ -32,8 +32,8 @@ export class ConfigManager {
      * It returns the config object.
      * @returns The config object
      */
-    get config(): LauncherServerConfig {
-        return this.config
+    get сonfig(): LauncherServerConfig {
+        return this.#config
     }
 
     /**
