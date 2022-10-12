@@ -1,4 +1,4 @@
-import { JsonHelper } from "@auroralauncher/core"
+import { JsonHelper } from "@root/utils"
 import { instanceToPlain, plainToInstance } from "class-transformer"
 import { merge } from "lodash-es"
 import { v4 } from "uuid"

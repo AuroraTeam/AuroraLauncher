@@ -58,9 +58,8 @@ export class LogHelper {
     }
 
     private static log(level: LogLevel, msg: any, ...args: any[]) {
-        const date = new Date().toLocaleString()
 
-        let coloredStr: string = chalk.gray(date)
+        let coloredStr: string = chalk.gray(this.getLogDate())
 
         switch (level) {
             case LogLevel.DEBUG:

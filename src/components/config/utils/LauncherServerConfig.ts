@@ -1,6 +1,5 @@
-import { JsonHelper } from "@auroralauncher/core"
 import { Lang } from "@root/components"
-import { AbstractAuthProvider, AbstractAuthProviderConfig } from "@root/utils"
+import { AbstractAuthProvider, AbstractAuthProviderConfig, JsonHelper } from "@root/utils"
 import { instanceToPlain, plainToInstance } from "class-transformer"
 import { v4 } from "uuid"
 
