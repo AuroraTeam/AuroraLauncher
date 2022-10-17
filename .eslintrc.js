@@ -9,8 +9,10 @@ module.exports = {
     parserOptions: {
         ecmaVersion: "latest",
     },
-    plugins: ["@typescript-eslint"],
+    plugins: ["@typescript-eslint", "node"],
     rules: {
         "@typescript-eslint/no-explicit-any": "off",
+        "node/no-sync": "warn", // TODO Set to error
+        "node/prefer-promises/fs": "warn", // TODO Set to error
     },
 }

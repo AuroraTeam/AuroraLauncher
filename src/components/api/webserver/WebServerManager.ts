@@ -1,7 +1,8 @@
 import fs from "fs"
+import { readdir, stat } from "fs/promises"
 import http from "http"
 import https from "https"
-import path from "path"
+import { join, resolve } from "path"
 
 import { App } from "@root/app"
 import { LogHelper, StorageHelper } from "@root/utils"
@@ -30,8 +31,8 @@ export class WebServerManager {
             return this.webServer
         }
 
-        const certPath = path.resolve(StorageHelper.storageDir, ssl.cert)
-        const keyPath = path.resolve(StorageHelper.storageDir, ssl.key)
+        const certPath = resolve(StorageHelper.storageDir, ssl.cert)
+        const keyPath = resolve(StorageHelper.storageDir, ssl.key)
 
         if (!fs.existsSync(certPath)) {
             LogHelper.fatal(
@@ -65,54 +66,59 @@ export class WebServerManager {
     private requestListener(
         req: http.IncomingMessage,
         res: http.ServerResponse
-    ): http.ServerResponse {
+    ) {
         if (req.url.startsWith("/files")) return this.fileListing(req.url, res)
         this.requestsManager.getRequest(req, res)
     }
 
-    private fileListing(
-        url: string,
-        res: http.ServerResponse
-    ): http.ServerResponse {
+    private async fileListing(url: string, res: http.ServerResponse) {
         const { disableListing, hideListing } = App.ConfigManager.config.api
         if (disableListing) return res.writeHead(404).end("Not found!")
 
         if (url.includes("?")) url = url.split("?")[0]
         url = url.replace(/\/{2,}/g, "/").slice(6)
-        if (url.endsWith("/")) url = url.slice(0, -1)
+        if (url.at(-1) === "/") url = url.slice(0, -1)
 
-        const filePath = path.join(StorageHelper.instancesDir, url)
+        const path = join(StorageHelper.instancesDir, url)
 
         // Защита от выхода из директории
-        if (!filePath.startsWith(StorageHelper.instancesDir)) {
+        if (!path.startsWith(StorageHelper.instancesDir)) {
             return res.writeHead(400).end()
         }
 
-        if (!fs.existsSync(filePath)) {
-            return res.writeHead(404).end("Not found!")
+        let stats
+        try {
+            stats = await stat(path)
+        } catch (error) {
+            if (error.code === "ENOENT") {
+                res.writeHead(404).end("Not found!")
+            } else {
+                LogHelper.warn(error)
+                res.writeHead(500).end()
+            }
+            return
         }
 
-        const stats = fs.statSync(filePath)
         if (stats.isFile()) {
-            fs.createReadStream(filePath).pipe(res)
-            return
+            return fs.createReadStream(path).pipe(res)
         }
 
         if (hideListing) return res.writeHead(404).end()
 
-        fs.readdir(filePath, (err, files) => {
-            if (err) {
-                LogHelper.warn(err)
-                return res.writeHead(500).end()
-            }
+        try {
+            const dirListing = await readdir(path)
 
-            if (url.length !== 0) files.unshift("..")
-            res.write("<style>*{font-family:monospace; font-size:14px}</style>")
+            if (url.length !== 0) dirListing.unshift("..")
+            res.write("<style>*{font-family:monospace; font-size:16px}</style>")
+
             res.end(
-                files
+                dirListing
                     .map((el) => `<a href="/files${url}/${el}">${el}</a>`)
                     .join("<br>")
             )
-        })
+        } catch (error) {
+            LogHelper.warn(error)
+            res.writeHead(500).end()
+        }
     }
 }

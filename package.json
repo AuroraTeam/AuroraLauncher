@@ -45,6 +45,7 @@
         "@typescript-eslint/parser": "^5.39.0",
         "esbuild": "^0.15.10",
         "eslint": "^8.25.0",
+        "eslint-plugin-node": "^11.1.0",
         "import-sort-style-module": "^6.0.0",
         "pkg": "^5.8.0",
         "prettier": "^2.7.1",
