@@ -12,11 +12,8 @@ export class ProfilesRequest extends AbstractRequest {
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         let data: string[]
 
-        if (!req.isJsonPostData())
-            return res.sendError(400, "BadRequestException")
-
         try {
-            data = JsonHelper.fromJson(await req.parsePostData())
+            data = JsonHelper.fromJson(await req.getRawBody())
         } catch (error) {
             return res.sendError(400, "BadRequestException")
         }

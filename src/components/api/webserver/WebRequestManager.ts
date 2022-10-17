@@ -34,18 +34,8 @@ export class WebRequestManager {
         const webResponse = new WebResponse(res)
 
         // Нижние 2 обработчика корректны для api.mojang.com и authserver.mojang.com
-        if (request === undefined)
-            return webResponse.sendError(
-                404,
-                "Not Found",
-                "The server has not found anything matching the request URI"
-            )
-        if (request.method !== req.method)
-            return webResponse.sendError(
-                405,
-                "Method Not Allowed",
-                "The method specified in the request is not allowed for the resource identified by the request URI"
-            )
+        if (request === undefined) return webResponse.sendError(404)
+        if (request.method !== req.method) return webResponse.sendError(405)
         request.emit(webRequest, webResponse)
     }
 }

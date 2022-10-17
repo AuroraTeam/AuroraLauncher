@@ -15,15 +15,10 @@ export class JoinRequest extends AbstractRequest {
     method = "POST"
     url = /^\/authlib\/sessionserver\/session\/minecraft\/join$/
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
-        let data
-
-        if (!req.isJsonPostData())
-            return res.sendError(400, "BadRequestException")
+        let data: JoinRequestDto
 
         try {
-            data = JsonHelper.fromJson<JoinRequestDto>(
-                await req.parsePostData()
-            )
+            data = JsonHelper.fromJson<JoinRequestDto>(await req.getRawBody())
         } catch (error) {
             return res.sendError(400, "BadRequestException")
         }
