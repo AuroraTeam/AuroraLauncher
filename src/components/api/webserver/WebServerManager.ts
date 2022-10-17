@@ -109,7 +109,7 @@ export class WebServerManager {
             const dirListing = await readdir(path)
 
             if (url.length !== 0) dirListing.unshift("..")
-            res.write("<style>*{font-family:monospace; font-size:16px}</style>")
+            res.write("<style>*{font-family:monospace}</style>")
 
             res.end(
                 dirListing
