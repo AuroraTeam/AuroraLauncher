@@ -3,7 +3,6 @@ import { Server } from "aurora-rpc-server"
 
 import { WebServerManager } from "../index"
 import { AuthRequest } from "./requests/AuthRequest"
-import { PingRequest } from "./requests/PingRequest"
 import { ProfileRequest } from "./requests/ProfileRequest"
 import { ServersRequest } from "./requests/ServersRequest"
 import { UpdatesRequest } from "./requests/UpdatesRequest"
@@ -23,7 +22,6 @@ export class WebManager {
     }
 
     private registerRequests(): void {
-        this.webSocketManager.registerRequest(new PingRequest())
         this.webSocketManager.registerRequest(new AuthRequest())
         this.webSocketManager.registerRequest(new ServersRequest())
         this.webSocketManager.registerRequest(new ProfileRequest())
