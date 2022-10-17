@@ -17,7 +17,8 @@ export class WebResponse {
      */
     public sendError(code = 400, error?: string, errorMessage?: string): void {
         this.raw.statusCode = code
-        this.sendJson({ error, errorMessage })
+        if (error) this.sendJson({ error, errorMessage })
+        else this.raw.end()
     }
 
     /**
