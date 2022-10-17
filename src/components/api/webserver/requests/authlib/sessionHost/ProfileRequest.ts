@@ -1,8 +1,7 @@
-import { IncomingMessage, ServerResponse } from "http"
-
 import { App } from "@root/app"
-import { HttpHelper } from "@root/utils"
 
+import { WebRequest } from "../../../WebRequest"
+import { WebResponse } from "../../../WebResponse"
 import { AbstractRequest } from "../../AbstractRequest"
 
 export class ProfileRequest extends AbstractRequest {
@@ -10,8 +9,8 @@ export class ProfileRequest extends AbstractRequest {
     url =
         /^\/authlib\/sessionserver\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
 
-    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
-        const matches = req.url.match(this.url)
+    async emit(req: WebRequest, res: WebResponse): Promise<void> {
+        const matches = req.raw.url.match(this.url)
         const uuid = matches.groups.uuid
         const signed = matches[3] === "false"
 
@@ -19,8 +18,9 @@ export class ProfileRequest extends AbstractRequest {
         try {
             user = await App.AuthManager.getAuthProvider().profile(uuid)
         } catch (error) {
-            res.statusCode = 204
-            return res.end()
+            res.raw.statusCode = 204
+            res.raw.end()
+            return
         }
 
         const textures: any = {}
@@ -59,6 +59,6 @@ export class ProfileRequest extends AbstractRequest {
         if (signed)
             data.properties[0].signature =
                 App.AuthlibManager.getSignature(texturesValue)
-        HttpHelper.sendJson(res, data)
+        res.sendJson(data)
     }
 }

@@ -1,16 +1,15 @@
-import { IncomingMessage, ServerResponse } from "http"
-
 import { App } from "@root/app"
-import { HttpHelper } from "@root/utils"
 
+import { WebRequest } from "../WebRequest"
+import { WebResponse } from "../WebResponse"
 import { AbstractRequest } from "./AbstractRequest"
 
 export class InjectorRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib$/
 
-    async emit(_: IncomingMessage, res: ServerResponse): Promise<void> {
-        HttpHelper.sendJson(res, {
+    async emit(_: WebRequest, res: WebResponse): Promise<void> {
+        res.sendJson({
             meta: {
                 serverName:
                     App.ConfigManager.config.projectName || "Aurora Launcher",

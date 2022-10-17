@@ -1,25 +1,24 @@
-import { IncomingMessage, ServerResponse } from "http"
-
 import { App } from "@root/app"
-import { HttpHelper } from "@root/utils"
 
+import { WebRequest } from "../../../WebRequest"
+import { WebResponse } from "../../../WebResponse"
 import { AbstractRequest } from "../../AbstractRequest"
 
 export class PrivelegesRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib\/minecraftservices\/privileges$/
 
-    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
-        const accessToken = req.headers.authorization
+    async emit(req: WebRequest, res: WebResponse): Promise<void> {
+        const accessToken = req.raw.headers.authorization
 
         if ("string" !== typeof accessToken || accessToken.trim().length === 0)
-            return HttpHelper.sendError(res)
+            return res.sendError()
 
         const user = await App.AuthManager.getAuthProvider().privileges(
             accessToken.slice(7)
         )
 
-        HttpHelper.sendJson(res, {
+        res.sendJson({
             privileges: {
                 onlineChat: {
                     enabled: user.onlineChat,

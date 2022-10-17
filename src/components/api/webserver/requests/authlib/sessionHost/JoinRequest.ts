@@ -1,23 +1,31 @@
-import { IncomingMessage, ServerResponse } from "http"
-
 import { App } from "@root/app"
-import { HttpHelper, JsonHelper } from "@root/utils"
+import { JsonHelper } from "@root/utils"
 
+import { WebRequest } from "../../../WebRequest"
+import { WebResponse } from "../../../WebResponse"
 import { AbstractRequest } from "../../AbstractRequest"
+
+interface JoinRequestDto {
+    accessToken: string
+    selectedProfile: string
+    serverId: string
+}
 
 export class JoinRequest extends AbstractRequest {
     method = "POST"
     url = /^\/authlib\/sessionserver\/session\/minecraft\/join$/
-    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
+    async emit(req: WebRequest, res: WebResponse): Promise<void> {
         let data
 
-        if (!HttpHelper.isJsonPostData(req))
-            return HttpHelper.sendError(res, 400, "BadRequestException")
+        if (!req.isJsonPostData())
+            return res.sendError(400, "BadRequestException")
 
         try {
-            data = JsonHelper.fromJson<any>(await HttpHelper.parsePostData(req))
+            data = JsonHelper.fromJson<JoinRequestDto>(
+                await req.parsePostData()
+            )
         } catch (error) {
-            return HttpHelper.sendError(res, 400, "BadRequestException")
+            return res.sendError(400, "BadRequestException")
         }
 
         if (
@@ -25,7 +33,7 @@ export class JoinRequest extends AbstractRequest {
             this.isInvalidValue(data.selectedProfile) ||
             this.isInvalidValue(data.serverId)
         )
-            return HttpHelper.sendError(res, 400, "BadRequestException")
+            return res.sendError(400, "BadRequestException")
 
         const status = await App.AuthManager.getAuthProvider().join(
             data.accessToken,
@@ -33,13 +41,12 @@ export class JoinRequest extends AbstractRequest {
             data.serverId
         )
         if (!status)
-            return HttpHelper.sendError(
-                res,
+            return res.sendError(
                 400,
                 "ForbiddenOperationException",
                 "Invalid credentials. Invalid username or password."
             )
 
-        res.end()
+        res.raw.end()
     }
 }

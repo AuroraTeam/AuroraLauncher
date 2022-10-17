@@ -1,23 +1,19 @@
-import { IncomingMessage, ServerResponse } from "http"
-
 import { App } from "@root/app"
-import { HttpHelper, JsonHelper } from "@root/utils"
+import { JsonHelper } from "@root/utils"
 
+import { WebRequest } from "../../../WebRequest"
+import { WebResponse } from "../../../WebResponse"
 import { AbstractRequest } from "../../AbstractRequest"
 
 export class HasJoinedRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib\/sessionserver\/session\/minecraft\/hasJoined/
 
-    async emit(req: IncomingMessage, res: ServerResponse): Promise<void> {
-        const data = HttpHelper.parseQuery(req.url)
-        if (HttpHelper.isEmptyQuery(data)) return HttpHelper.sendError(res)
-
-        const username = data.get("username")
-        const serverId = data.get("serverId")
+    async emit(req: WebRequest, res: WebResponse): Promise<void> {
+        const { username, serverId } = req.query
 
         if (this.isInvalidValue(username) || this.isInvalidValue(serverId))
-            return HttpHelper.sendError(res)
+            return res.sendError()
 
         let user
         try {
@@ -26,7 +22,7 @@ export class HasJoinedRequest extends AbstractRequest {
                 serverId
             )
         } catch (error) {
-            return HttpHelper.sendError(res, 400, error.message)
+            return res.sendError(400, error.message)
         }
 
         const textures: any = {}
@@ -51,7 +47,7 @@ export class HasJoinedRequest extends AbstractRequest {
             })
         ).toString("base64")
 
-        HttpHelper.sendJson(res, {
+        res.sendJson({
             id: user.userUUID,
             name: username,
             properties: [
