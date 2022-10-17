@@ -14,9 +14,9 @@ export class AuthRequest extends AbstractRequest {
      * @param {WebSocketClient} ws - WebSocketClient - the client that sent the request
      * @returns ResponseResult
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async invoke(
         data: AuthRequestData,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         ws: WebSocketClient
     ): Promise<ResponseResult> {
         const provider = App.AuthManager.getAuthProvider()
