@@ -29,14 +29,11 @@ export class LauncherServer {
     private _UpdateManager: UpdateManager
     private _ProfilesManager: ProfilesManager
     private _AuthlibManager: AuthlibManager
-    private inited = false
 
     /**
      * It initializes the LauncherServer.
      */
     constructor() {
-        if (this.inited) return
-
         StorageHelper.validate()
         this.printVersion()
 
@@ -53,7 +50,6 @@ export class LauncherServer {
         this._UpdateManager = new UpdateManager()
 
         LogHelper.info(this.LangManager.getTranslate.LauncherServer.initEnd)
-        this.inited = true
     }
 
     /**
