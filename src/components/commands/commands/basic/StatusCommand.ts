@@ -1,4 +1,4 @@
-import { App } from "@root/LauncherServer"
+import { App } from "@root/app"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 export class StatusCommand extends AbstractCommand {

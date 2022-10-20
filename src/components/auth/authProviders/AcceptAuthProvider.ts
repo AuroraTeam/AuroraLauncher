@@ -1,4 +1,4 @@
-import { App } from "@root/LauncherServer"
+import { App } from "@root/app"
 import { UUIDHelper } from "@root/utils"
 import {
     AbstractAuthProvider,

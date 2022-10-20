@@ -1,7 +1,7 @@
 import fs from "fs"
 import path from "path"
 
-import { LauncherServer } from "@root/LauncherServer"
+import { LauncherServer } from "@root/app"
 import { AbstractModule, IGetInfo } from "@root/utils"
 import { LogHelper, StorageHelper } from "@root/utils/"
 import chalk from "chalk"

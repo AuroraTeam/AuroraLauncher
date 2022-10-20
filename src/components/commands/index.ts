@@ -1,6 +1,6 @@
 import ReadLine from "readline"
 
-import { App, LauncherServer } from "@root/LauncherServer"
+import { App, LauncherServer } from "@root/app"
 import { AbstractCommand, LogHelper } from "@root/utils"
 
 import { InstancesManager } from "../instances"

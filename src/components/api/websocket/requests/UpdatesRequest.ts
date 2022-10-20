@@ -1,4 +1,4 @@
-import { App } from "@root/LauncherServer"
+import { App } from "@root/app"
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 
 export class UpdatesRequest extends AbstractRequest {
