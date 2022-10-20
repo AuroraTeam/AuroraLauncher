@@ -5,12 +5,9 @@
             "name": "Debug",
             "type": "node",
             "request": "launch",
-            "cwd": "${workspaceRoot}",
-            "program": "${workspaceRoot}/dist/app.js",
-            "preLaunchTask": "npm: build:dev",
-            "console": "integratedTerminal",
-            "args": ["--dev"],
-            "sourceMaps": true
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"],
+            "console": "integratedTerminal"
         }
     ]
 }
