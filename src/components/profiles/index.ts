@@ -1,15 +1,15 @@
 import fs from "fs"
 import path from "path"
 
-import { App } from "@root/app"
 import { LogHelper, StorageHelper } from "@root/utils"
 
+import { LangManager } from "../langs"
 import { ProfileConfig } from "./utils/ProfileConfig"
 
 export class ProfilesManager {
     profiles: ProfileConfig[] = []
 
-    constructor() {
+    constructor(private readonly langManager: LangManager) {
         this.loadProfiles()
     }
 
@@ -21,10 +21,10 @@ export class ProfilesManager {
 
         if (files.length === 0)
             return LogHelper.info(
-                App.LangManager.getTranslate.ProfilesManager.syncSkip
+                this.langManager.getTranslate.ProfilesManager.syncSkip
             )
 
-        LogHelper.info(App.LangManager.getTranslate.ProfilesManager.sync)
+        LogHelper.info(this.langManager.getTranslate.ProfilesManager.sync)
 
         files.forEach((file) => {
             if (!file.endsWith(".json")) return
@@ -38,7 +38,8 @@ export class ProfilesManager {
             } catch (e) {
                 if (e instanceof SyntaxError) {
                     LogHelper.error(
-                        App.LangManager.getTranslate.ProfilesManager.loadingErr,
+                        this.langManager.getTranslate.ProfilesManager
+                            .loadingErr,
                         file
                     )
                 } else {
@@ -46,7 +47,7 @@ export class ProfilesManager {
                 }
             }
         })
-        LogHelper.info(App.LangManager.getTranslate.ProfilesManager.syncEnd)
+        LogHelper.info(this.langManager.getTranslate.ProfilesManager.syncEnd)
     }
 
     /**

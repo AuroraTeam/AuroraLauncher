@@ -1,13 +1,20 @@
-import { App } from "@root/app"
-import { MirrorManager, MojangManager } from "@root/components"
+import {
+    CommandsManager,
+    LangManager,
+    MirrorManager,
+    MojangManager,
+} from "@root/components"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 export class DownloadAssetsCommand extends AbstractCommand {
-    constructor() {
+    constructor(
+        langManager: LangManager,
+        private readonly commandsManager: CommandsManager
+    ) {
         super({
             name: "downloadassets",
             description:
-                App.LangManager.getTranslate.CommandsManager.commands.updates
+                langManager.getTranslate.CommandsManager.commands.updates
                     .DownloadAssetsCommand,
             category: Category.UPDATES,
             usage: "<version> <folder name> <?source type>",
@@ -24,12 +31,12 @@ export class DownloadAssetsCommand extends AbstractCommand {
         const DownloadManager = this.getDownloadManager(sourceType)
         if (!DownloadManager) return
 
-        App.CommandsManager.console.pause()
+        this.commandsManager.console.pause()
         await new DownloadManager().downloadAssets(
             assetsName,
             `assets${assetsName}`
         )
-        App.CommandsManager.console.resume()
+        this.commandsManager.console.resume()
     }
 
     private getDownloadManager(sourceType: string) {

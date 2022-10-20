@@ -1,13 +1,18 @@
-import { App } from "@root/app"
+import { LangManager } from "@root/components/langs"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import chalk from "chalk"
 
+import { CommandsManager } from "../.."
+
 export class HelpCommand extends AbstractCommand {
-    constructor() {
+    constructor(
+        langManager: LangManager,
+        private readonly commandsManager: CommandsManager
+    ) {
         super({
             name: "help",
             description:
-                App.LangManager.getTranslate.CommandsManager.commands.basic
+                langManager.getTranslate.CommandsManager.commands.basic
                     .HelpCommand,
             category: Category.BASIC,
         })
@@ -17,7 +22,7 @@ export class HelpCommand extends AbstractCommand {
         const commandsList: Map<Category, AbstractCommand[]> = new Map(
             Object.values(Category).map((c) => [c, []])
         )
-        Array.from(App.CommandsManager.commands.values()).forEach(
+        Array.from(this.commandsManager.commands.values()).forEach(
             (command: AbstractCommand) => {
                 commandsList.get(command.info.category).push(command)
             }

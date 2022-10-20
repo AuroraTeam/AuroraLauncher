@@ -1,22 +1,27 @@
 import fs from "fs"
 import path from "path"
 
-import { App } from "@root/app"
+import { LauncherServer } from "@root/app"
 import { AbstractModule, IGetInfo } from "@root/utils"
 import { LogHelper, StorageHelper } from "@root/utils/"
 import chalk from "chalk"
 
+import { LangManager } from "../langs"
+
 export class ModulesManager {
     public static modulesList: Map<IGetInfo, AbstractModule[]> = new Map()
 
-    constructor() {
+    constructor(
+        private readonly langManager: LangManager,
+        private readonly launcherServer: LauncherServer
+    ) {
         this.loadModules()
     }
 
     async loadModules(): Promise<void> {
         try {
             LogHelper.info(
-                App.LangManager.getTranslate.ModulesManager.loadingStart
+                this.langManager.getTranslate.ModulesManager.loadingStart
             )
             const startTime = Date.now()
 
@@ -26,19 +31,19 @@ export class ModulesManager {
 
             if (files.length === 0)
                 return LogHelper.info(
-                    App.LangManager.getTranslate.ModulesManager.loadingSkip
+                    this.langManager.getTranslate.ModulesManager.loadingSkip
                 )
 
             await Promise.all(files.map((file) => this.loadModule(file.name)))
 
             LogHelper.info(
-                App.LangManager.getTranslate.ModulesManager.loadingEnd,
+                this.langManager.getTranslate.ModulesManager.loadingEnd,
                 Date.now() - startTime
             )
         } catch (error) {
             LogHelper.debug(error.message)
             LogHelper.error(
-                App.LangManager.getTranslate.ModulesManager.loadingErr
+                this.langManager.getTranslate.ModulesManager.loadingErr
             )
         }
     }
@@ -60,12 +65,12 @@ export class ModulesManager {
 
             ModulesManager.modulesList.set(
                 Module.getInfo(),
-                new Module().init(App)
+                new Module().init(this.launcherServer)
             )
         } catch (error) {
             LogHelper.debug(error.message)
             LogHelper.error(
-                App.LangManager.getTranslate.ModulesManager.moduleLoadingErr,
+                this.langManager.getTranslate.ModulesManager.moduleLoadingErr,
                 moduleName
             )
         }

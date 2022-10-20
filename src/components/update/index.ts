@@ -1,10 +1,11 @@
 import path from "path"
 
-import { App } from "@root/app"
 import { HttpHelper, LogHelper, StorageHelper, SystemHelper } from "@root/utils"
 import semver from "semver"
 
 import { version as currentVersion } from "../../../package.json"
+import { ConfigManager } from "../config"
+import { LangManager } from "../langs"
 
 export class UpdateManager {
     private readonly apiUrl = new URL(
@@ -18,7 +19,10 @@ export class UpdateManager {
         | "binary-linux"
     private readonly execFileName: string
 
-    constructor() {
+    constructor(
+        private readonly configManager: ConfigManager,
+        private readonly langManager: LangManager
+    ) {
         if (SystemHelper.isStandalone()) {
             switch (SystemHelper.getPlatform()) {
                 case "win32":
@@ -46,16 +50,16 @@ export class UpdateManager {
         const latestVersion = await this.checkUpdate()
         if (!latestVersion) return
 
-        LogHelper.info(App.LangManager.getTranslate.UpdateManager.updating)
+        LogHelper.info(this.langManager.getTranslate.UpdateManager.updating)
         LogHelper.info(
-            App.LangManager.getTranslate.UpdateManager.downloadingLatestVer
+            this.langManager.getTranslate.UpdateManager.downloadingLatestVer
         )
         await HttpHelper.downloadFile(
             new URL(latestVersion.files[this.fileType]),
             path.resolve(StorageHelper.storageDir, this.execFileName)
         )
 
-        LogHelper.info(App.LangManager.getTranslate.UpdateManager.downloadEnd)
+        LogHelper.info(this.langManager.getTranslate.UpdateManager.downloadEnd)
         process.exit(0)
     }
 
@@ -64,26 +68,26 @@ export class UpdateManager {
      * @returns The latest version data or void
      */
     public async checkUpdate(): Promise<void | Version> {
-        LogHelper.info(App.LangManager.getTranslate.UpdateManager.check)
+        LogHelper.info(this.langManager.getTranslate.UpdateManager.check)
 
         let versionsData: VersionsData
         try {
             versionsData = await this.getVersionsData()
         } catch (_) {
             return LogHelper.info(
-                App.LangManager.getTranslate.UpdateManager.checkEnd
+                this.langManager.getTranslate.UpdateManager.checkEnd
             )
         }
         const latestVersion =
-            versionsData[<"stable" | "dev">App.ConfigManager.config.branch]
+            versionsData[<"stable" | "dev">this.configManager.config.branch]
 
         if (!this.needUpdate(latestVersion))
             return LogHelper.info(
-                App.LangManager.getTranslate.UpdateManager.checkEnd
+                this.langManager.getTranslate.UpdateManager.checkEnd
             )
 
         LogHelper.info(
-            App.LangManager.getTranslate.UpdateManager.newUpdateAvaliable,
+            this.langManager.getTranslate.UpdateManager.newUpdateAvaliable,
             latestVersion
         )
         const latestVersionData = versionsData.versions.find(
@@ -91,11 +95,11 @@ export class UpdateManager {
         )
         if (!latestVersionData)
             return LogHelper.error(
-                App.LangManager.getTranslate.UpdateManager.checkErr
+                this.langManager.getTranslate.UpdateManager.checkErr
             )
 
         LogHelper.info(
-            App.LangManager.getTranslate.UpdateManager.newUpdate,
+            this.langManager.getTranslate.UpdateManager.newUpdate,
             latestVersion,
             currentVersion,
             new Date(latestVersionData.date).toLocaleString()

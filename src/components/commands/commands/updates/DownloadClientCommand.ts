@@ -1,13 +1,21 @@
-import { App } from "@root/app"
-import { FabricManager, MirrorManager, MojangManager } from "@root/components/"
+import {
+    CommandsManager,
+    FabricManager,
+    LangManager,
+    MirrorManager,
+    MojangManager,
+} from "@root/components/"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 export class DownloadClientCommand extends AbstractCommand {
-    constructor() {
+    constructor(
+        langManager: LangManager,
+        private readonly commandsManager: CommandsManager
+    ) {
         super({
             name: "downloadclient",
             description:
-                App.LangManager.getTranslate.CommandsManager.commands.updates
+                langManager.getTranslate.CommandsManager.commands.updates
                     .DownloadClientCommand,
             category: Category.UPDATES,
             usage: "<version> <folder name> <?source type>",
@@ -24,9 +32,9 @@ export class DownloadClientCommand extends AbstractCommand {
         const DownloadManager = this.getDownloadManager(sourceType)
         if (!DownloadManager) return
 
-        App.CommandsManager.console.pause()
+        this.commandsManager.console.pause()
         await new DownloadManager().downloadClient(clientName, dirName)
-        App.CommandsManager.console.resume()
+        this.commandsManager.console.resume()
     }
 
     private getDownloadManager(sourceType: string) {

@@ -1,12 +1,12 @@
-import { App } from "@root/app"
+import { LangManager } from "@root/components/langs"
 import { AbstractCommand, Category } from "@root/utils"
 
 export class StopCommand extends AbstractCommand {
-    constructor() {
+    constructor(langManager: LangManager) {
         super({
             name: "stop",
             description:
-                App.LangManager.getTranslate.CommandsManager.commands.basic
+                langManager.getTranslate.CommandsManager.commands.basic
                     .StopCommand,
             category: Category.BASIC,
         })

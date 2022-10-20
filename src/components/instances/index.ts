@@ -2,16 +2,18 @@ import crypto from "crypto"
 import fs from "fs"
 import path from "path"
 
-import { App } from "@root/app"
 import { LogHelper, StorageHelper } from "@root/utils"
+
+import { LangManager } from "../langs"
 
 export class InstancesManager {
     hashedDirs: Map<string, HashedFile[]> = new Map()
 
-    constructor() {
+    constructor(private readonly langManager: LangManager) {
         this.hashInstancesDir()
     }
 
+    // TODO move to constructor?
     hashInstancesDir(): void {
         const folders = fs
             .readdirSync(StorageHelper.instancesDir, { withFileTypes: true })
@@ -19,10 +21,10 @@ export class InstancesManager {
 
         if (folders.length === 0)
             return LogHelper.info(
-                App.LangManager.getTranslate.InstancesManager.syncSkip
+                this.langManager.getTranslate.InstancesManager.syncSkip
             )
 
-        LogHelper.info(App.LangManager.getTranslate.InstancesManager.sync)
+        LogHelper.info(this.langManager.getTranslate.InstancesManager.sync)
 
         folders.forEach(({ name }) => {
             const startTime = Date.now()
@@ -33,13 +35,13 @@ export class InstancesManager {
             )
 
             LogHelper.info(
-                App.LangManager.getTranslate.InstancesManager.syncTime,
+                this.langManager.getTranslate.InstancesManager.syncTime,
                 name,
                 Date.now() - startTime
             )
         })
 
-        LogHelper.info(App.LangManager.getTranslate.InstancesManager.syncEnd)
+        LogHelper.info(this.langManager.getTranslate.InstancesManager.syncEnd)
     }
 
     /**

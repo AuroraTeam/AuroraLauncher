@@ -1,8 +1,12 @@
-import { App } from "@root/app"
+import { LauncherServer } from "@root/app"
+import { LangManager } from "@root/components/langs"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 export class ReloadCommand extends AbstractCommand {
-    constructor() {
+    constructor(
+        langManager: LangManager,
+        private readonly launcherServer: LauncherServer
+    ) {
         super({
             name: "reload",
             description: "Restarts LauncherServer",
@@ -12,6 +16,6 @@ export class ReloadCommand extends AbstractCommand {
 
     invoke(): void {
         LogHelper.info("LauncherServer restarts...")
-        App.reload()
+        this.launcherServer.reload()
     }
 }

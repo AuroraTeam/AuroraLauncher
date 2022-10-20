@@ -1,6 +1,6 @@
-import { App } from "@root/app"
 import { LogHelper } from "@root/utils"
 
+import { ConfigManager } from "../config"
 import enTranslate from "./utils/en.json"
 import ruTranslate from "./utils/ru.json"
 
@@ -11,9 +11,9 @@ export class LangManager {
     private langList: Map<Lang, Translate> = new Map()
     private currentLang: Translate
 
-    constructor() {
+    constructor(private readonly configManager: ConfigManager) {
         this.setLangs()
-        const selectedLang = App.ConfigManager.config.lang
+        const selectedLang = configManager.config.lang
 
         if (!this.langList.has(selectedLang)) {
             LogHelper.fatal(
@@ -51,7 +51,7 @@ export class LangManager {
             return LogHelper.error("Language %s not found!", lang)
 
         this.currentLang = this.langList.get(lang)
-        App.ConfigManager.setProp("lang", lang)
+        this.configManager.setProp("lang", lang)
 
         LogHelper.info(
             "Language has been changed. A complete change requires a restart LauncherServer"

@@ -1,15 +1,15 @@
-import { App } from "@root/app"
+import { LangManager } from "@root/components/langs"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import chalk from "chalk"
 
 import { version } from "../../../../../package.json"
 
 export class AboutCommand extends AbstractCommand {
-    constructor() {
+    constructor(langManager: LangManager) {
         super({
             name: "about",
             description:
-                App.LangManager.getTranslate.CommandsManager.commands.basic
+                langManager.getTranslate.CommandsManager.commands.basic
                     .AboutCommand,
             category: Category.BASIC,
         })

@@ -1,8 +1,12 @@
-import { App } from "@root/app"
+import { LangManager } from "@root/components/langs"
+import { UpdateManager } from "@root/components/update"
 import { AbstractCommand, Category } from "@root/utils"
 
 export class UpdateCommand extends AbstractCommand {
-    constructor() {
+    constructor(
+        langManager: LangManager,
+        private readonly updateManager: UpdateManager
+    ) {
         super({
             name: "update",
             description: "Update LauncherServer",
@@ -11,6 +15,6 @@ export class UpdateCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        App.UpdateManager.installUpdate()
+        this.updateManager.installUpdate()
     }
 }

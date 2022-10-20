@@ -1,6 +1,7 @@
-import { App } from "@root/app"
 import { AbstractAuthProvider, LogHelper } from "@root/utils"
 
+import { ConfigManager } from "../config"
+import { LangManager } from "../langs"
 import { AcceptAuthProvider } from "./authProviders/AcceptAuthProvider"
 import { MojangAuthProvider } from "./authProviders/MojangAuthProvider"
 // import { MySQLAuthProvider } from "./authProviders/MySQLAuthProvider"
@@ -19,16 +20,18 @@ export class AuthManager {
     private readonly authProvider: AbstractAuthProvider
     private readonly authProviders: Map<string, AnyAuthProvider> = new Map()
 
-    constructor() {
+    constructor(configManager: ConfigManager, langManager: LangManager) {
         this.registerAuthProviders()
 
-        const providerType = App.ConfigManager.config.auth.type
+        const providerType = configManager.config.auth.type
 
         if (!this.authProviders.has(providerType))
             LogHelper.fatal(
-                App.LangManager.getTranslate.AuthManager.invalidProvider
+                langManager.getTranslate.AuthManager.invalidProvider
             )
-        this.authProvider = new (this.authProviders.get(providerType))()
+        this.authProvider = new (this.authProviders.get(providerType))(
+            configManager
+        )
     }
 
     private registerAuthProviders(): void {

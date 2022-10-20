@@ -1,13 +1,12 @@
-import { App } from "@root/app"
-import { Lang } from "@root/components"
+import { Lang, LangManager } from "@root/components"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 export class LangCommand extends AbstractCommand {
-    constructor() {
+    constructor(private readonly langManager: LangManager) {
         super({
             name: "lang",
             description:
-                App.LangManager.getTranslate.CommandsManager.commands.basic
+                langManager.getTranslate.CommandsManager.commands.basic
                     .LangCommand,
             category: Category.BASIC,
             usage: "<lang> (ru|en)",
@@ -16,6 +15,6 @@ export class LangCommand extends AbstractCommand {
 
     invoke(...[lang]: [lang: Lang]): void {
         if (!lang) return LogHelper.error("Укажите язык!")
-        App.LangManager.changeLang(lang)
+        this.langManager.changeLang(lang)
     }
 }

@@ -1,18 +1,21 @@
-import { App } from "@root/app"
+import { InstancesManager, LangManager } from "@root/components"
 import { AbstractCommand, Category } from "@root/utils"
 
 export class SyncInstancesCommand extends AbstractCommand {
-    constructor() {
+    constructor(
+        langManager: LangManager,
+        private readonly instancesManager: InstancesManager
+    ) {
         super({
             name: "syncinstances",
             description:
-                App.LangManager.getTranslate.CommandsManager.commands.updates
+                langManager.getTranslate.CommandsManager.commands.updates
                     .SyncUpdatesCommand,
             category: Category.UPDATES,
         })
     }
 
     invoke(): void {
-        App.InstancesManager.hashInstancesDir()
+        this.instancesManager.hashInstancesDir()
     }
 }

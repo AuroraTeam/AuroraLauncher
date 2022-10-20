@@ -38,16 +38,30 @@ export class LauncherServer {
         this.printVersion()
 
         LogHelper.info("Initialization start")
+        LogHelper.dev("aboba")
         this._ConfigManager = new ConfigManager()
-        this._LangManager = new LangManager()
-        this._AuthManager = new AuthManager()
-        this._AuthlibManager = new AuthlibManager()
-        this._CommandsManager = new CommandsManager()
+        this._LangManager = new LangManager(this._ConfigManager)
+        this._AuthManager = new AuthManager(
+            this.ConfigManager,
+            this.LangManager
+        )
+        this._AuthlibManager = new AuthlibManager(this.LangManager)
+        this._CommandsManager = new CommandsManager(
+            this._LangManager,
+            this._ModulesManager,
+            this._UpdateManager,
+            this._ProfilesManager,
+            this._InstancesManager,
+            this
+        )
         this._WebManager = new WebManager(this.ConfigManager, this.LangManager)
-        this._InstancesManager = new InstancesManager()
-        this._ProfilesManager = new ProfilesManager()
-        this._ModulesManager = new ModulesManager()
-        this._UpdateManager = new UpdateManager()
+        this._InstancesManager = new InstancesManager(this.LangManager)
+        this._ProfilesManager = new ProfilesManager(this.LangManager)
+        this._ModulesManager = new ModulesManager(this.LangManager, this)
+        this._UpdateManager = new UpdateManager(
+            this.ConfigManager,
+            this.LangManager
+        )
 
         LogHelper.info(this.LangManager.getTranslate.LauncherServer.initEnd)
     }
@@ -57,14 +71,27 @@ export class LauncherServer {
      */
     public reload() {
         this._ConfigManager = new ConfigManager()
-        this._LangManager = new LangManager()
-        this._AuthManager = new AuthManager()
-        this._AuthlibManager = new AuthlibManager()
-        this._CommandsManager = new CommandsManager()
-        this._InstancesManager = new InstancesManager()
-        this._ProfilesManager = new ProfilesManager()
-        this._ModulesManager = new ModulesManager()
-        this._UpdateManager = new UpdateManager()
+        this._LangManager = new LangManager(this._ConfigManager)
+        this._AuthManager = new AuthManager(
+            this.ConfigManager,
+            this.LangManager
+        )
+        this._AuthlibManager = new AuthlibManager(this.LangManager)
+        this._CommandsManager = new CommandsManager(
+            this._LangManager,
+            this._ModulesManager,
+            this._UpdateManager,
+            this._ProfilesManager,
+            this._InstancesManager,
+            this
+        )
+        this._InstancesManager = new InstancesManager(this.LangManager)
+        this._ProfilesManager = new ProfilesManager(this.LangManager)
+        this._ModulesManager = new ModulesManager(this.LangManager, this)
+        this._UpdateManager = new UpdateManager(
+            this.ConfigManager,
+            this.LangManager
+        )
     }
 
     get ConfigManager(): ConfigManager {

@@ -2,8 +2,9 @@ import crypto from "crypto"
 import fs from "fs"
 import { resolve } from "path"
 
-import { App } from "@root/app"
 import { LogHelper, StorageHelper } from "@root/utils"
+
+import { LangManager } from "../langs"
 
 export class AuthlibManager {
     private publicKeyPath = resolve(StorageHelper.authlibDir, "public.pem")
@@ -11,14 +12,12 @@ export class AuthlibManager {
     private privateKey: Buffer
     private publicKey: string
 
-    constructor() {
+    constructor(private readonly langManager: LangManager) {
         if (
             fs.existsSync(this.privateKeyPath) &&
             fs.existsSync(this.publicKeyPath)
         ) {
-            LogHelper.info(
-                App.LangManager.getTranslate.AuthlibManager.keysExists
-            )
+            LogHelper.info(langManager.getTranslate.AuthlibManager.keysExists)
         } else {
             this.generateKeys()
         }
@@ -53,11 +52,11 @@ export class AuthlibManager {
 
         fs.writeFileSync(this.privateKeyPath, keys.privateKey)
         LogHelper.info(
-            App.LangManager.getTranslate.AuthlibManager.privateKeySaved
+            this.langManager.getTranslate.AuthlibManager.privateKeySaved
         )
         fs.writeFileSync(this.publicKeyPath, keys.publicKey)
         LogHelper.info(
-            App.LangManager.getTranslate.AuthlibManager.privateKeySaved
+            this.langManager.getTranslate.AuthlibManager.privateKeySaved
         )
     }
 

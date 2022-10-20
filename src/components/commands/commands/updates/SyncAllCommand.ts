@@ -1,19 +1,27 @@
-import { App } from "@root/app"
+import {
+    InstancesManager,
+    LangManager,
+    ProfilesManager,
+} from "@root/components"
 import { AbstractCommand, Category } from "@root/utils"
 
 export class SyncAllCommand extends AbstractCommand {
-    constructor() {
+    constructor(
+        langManager: LangManager,
+        private readonly profilesManager: ProfilesManager,
+        private readonly instancesManager: InstancesManager
+    ) {
         super({
             name: "syncall",
             description:
-                App.LangManager.getTranslate.CommandsManager.commands.updates
+                langManager.getTranslate.CommandsManager.commands.updates
                     .SyncAllCommand,
             category: Category.UPDATES,
         })
     }
 
     invoke(): void {
-        App.ProfilesManager.reloadProfiles()
-        App.InstancesManager.hashInstancesDir()
+        this.profilesManager.reloadProfiles()
+        this.instancesManager.hashInstancesDir()
     }
 }
