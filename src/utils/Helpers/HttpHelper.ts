@@ -1,5 +1,3 @@
-import http from "http"
-
 import { HttpHelper as CoreHttpHelper } from "@auroralauncher/core"
 
 /**

@@ -1,9 +1,9 @@
-import { appendFileSync } from "fs"
 import { EOL } from "os"
 import { resolve } from "path"
 import { format } from "util"
 
 import chalk from "chalk"
+import { Writer } from "steno"
 import stripAnsi from "strip-ansi"
 
 import { StorageHelper } from "./StorageHelper"
@@ -13,11 +13,6 @@ export class LogHelper {
     private static readonly isDebugEnabled =
         process.argv.includes("--debug") || process.argv.includes("--dev")
 
-    private static readonly logFile = resolve(
-        StorageHelper.logsDir,
-        `LauncherServer-${this.getLogDate()}.log`
-    )
-
     private static getLogDate() {
         return new Date()
             .toISOString()
@@ -25,6 +20,11 @@ export class LogHelper {
             .replace(/-|:/g, ".")
             .replace("T", "-")
     }
+    private static readonly logFile = resolve(
+        StorageHelper.logsDir,
+        `LauncherServer-${this.getLogDate()}.log`
+    )
+    private static logWriter = new Writer(this.logFile)
 
     public static debug(msg: any, ...args: any[]): void {
         if (!this.isDebugEnabled) return
@@ -58,7 +58,6 @@ export class LogHelper {
     }
 
     private static log(level: LogLevel, msg: any, ...args: any[]) {
-
         let coloredStr: string = chalk.gray(new Date().toLocaleString())
 
         switch (level) {
@@ -87,7 +86,7 @@ export class LogHelper {
     }
 
     private static saveLog(message: string) {
-        appendFileSync(this.logFile, stripAnsi(message))
+        this.logWriter.write(stripAnsi(message))
     }
 }
 
