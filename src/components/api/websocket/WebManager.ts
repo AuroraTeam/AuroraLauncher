@@ -1,4 +1,5 @@
-import { App } from "@root/app"
+import { ConfigManager } from "@root/components/config"
+import { LangManager } from "@root/components/langs"
 import { Server } from "aurora-rpc-server"
 
 import { WebServerManager } from "../index"
@@ -8,17 +9,20 @@ import { ServersRequest } from "./requests/ServersRequest"
 import { UpdatesRequest } from "./requests/UpdatesRequest"
 
 export class WebManager {
-    private webServerManager = new WebServerManager()
+    private webServerManager: WebServerManager
     private webSocketManager: Server
 
-    constructor() {
-        const { host, port } = App.ConfigManager.config.api
-        const webServer = this.webServerManager.createWebServer()
+    constructor(configManager: ConfigManager, langManager: LangManager) {
+        const { host, port } = configManager.config.api
 
-        this.webSocketManager = new Server({ server: webServer })
+        this.webServerManager = new WebServerManager(configManager, langManager)
+
+        this.webSocketManager = new Server({
+            server: this.webServerManager.server,
+        })
         this.registerRequests()
 
-        webServer.listen({ host, port })
+        this.webServerManager.server.listen({ host, port })
     }
 
     private registerRequests(): void {

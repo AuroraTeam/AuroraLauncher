@@ -34,7 +34,7 @@ export class LauncherServer {
     /**
      * It initializes the LauncherServer.
      */
-    main(): void {
+    constructor() {
         if (this.inited) return
 
         StorageHelper.validate()
@@ -46,7 +46,7 @@ export class LauncherServer {
         this._AuthManager = new AuthManager()
         this._AuthlibManager = new AuthlibManager()
         this._CommandsManager = new CommandsManager()
-        this._WebManager = new WebManager()
+        this._WebManager = new WebManager(this.ConfigManager, this.LangManager)
         this._InstancesManager = new InstancesManager()
         this._ProfilesManager = new ProfilesManager()
         this._ModulesManager = new ModulesManager()
@@ -129,5 +129,7 @@ export class LauncherServer {
     }
 }
 
+/**
+ * @deprecated use dependency injection instead
+ */
 export const App = new LauncherServer()
-App.main()

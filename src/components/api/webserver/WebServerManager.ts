@@ -4,7 +4,8 @@ import http from "http"
 import https from "https"
 import { join, resolve } from "path"
 
-import { App } from "@root/app"
+import { ConfigManager } from "@root/components/config"
+import { LangManager } from "@root/components/langs"
 import { LogHelper, StorageHelper } from "@root/utils"
 
 import { WebRequestManager } from "./WebRequestManager"
@@ -13,22 +14,25 @@ export class WebServerManager {
     private webServer: http.Server | https.Server
     private requestsManager = new WebRequestManager()
 
-    /**
-     * It creates a web server
-     * @returns The web server
-     */
-    public createWebServer(): http.Server | https.Server {
+    public get server() {
+        return this.webServer
+    }
+
+    constructor(
+        private readonly configManager: ConfigManager,
+        private readonly langManager: LangManager
+    ) {
         if (this.webServer)
             throw new Error("The web server has already been created")
 
-        const { ssl, useSSL } = App.ConfigManager.config.api
+        const { ssl, useSSL } = this.configManager.config.api
 
         if (!useSSL) {
             this.webServer = http.createServer(
                 (req: http.IncomingMessage, res: http.ServerResponse) =>
                     this.requestListener(req, res)
             )
-            return this.webServer
+            return
         }
 
         const certPath = resolve(StorageHelper.storageDir, ssl.cert)
@@ -36,12 +40,12 @@ export class WebServerManager {
 
         if (!fs.existsSync(certPath)) {
             LogHelper.fatal(
-                App.LangManager.getTranslate.WebSocketManager.certNotFound
+                this.langManager.getTranslate.WebSocketManager.certNotFound
             )
         }
         if (!fs.existsSync(keyPath)) {
             LogHelper.fatal(
-                App.LangManager.getTranslate.WebSocketManager.keyNotFound
+                this.langManager.getTranslate.WebSocketManager.keyNotFound
             )
         }
 
@@ -53,7 +57,6 @@ export class WebServerManager {
             (req: http.IncomingMessage, res: http.ServerResponse) =>
                 this.requestListener(req, res)
         )
-        return this.webServer
     }
 
     /**
@@ -72,7 +75,7 @@ export class WebServerManager {
     }
 
     private async fileListing(url: string, res: http.ServerResponse) {
-        const { disableListing, hideListing } = App.ConfigManager.config.api
+        const { disableListing, hideListing } = this.configManager.config.api
         if (disableListing) return res.writeHead(404).end("Not found!")
 
         if (url.includes("?")) url = url.split("?")[0]
