@@ -20,7 +20,8 @@ export class LogHelper {
             .replace(/-|:/g, ".")
             .replace("T", "-")
     }
-    private static readonly logFile = resolve(
+
+    private static readonly logFilePath = resolve(
         StorageHelper.logsDir,
         `LauncherServer-${this.getLogDate()}.log`
     )
@@ -85,7 +86,7 @@ export class LogHelper {
     }
 
     private static saveLog(message: string) {
-        appendFile(this.logFile, stripAnsi(message))
+        appendFile(this.logFilePath, stripAnsi(message))
     }
 }
 
