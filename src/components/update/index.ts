@@ -113,7 +113,7 @@ export class UpdateManager {
      * @returns A promise of type VersionsData
      */
     public getVersionsData(): Promise<VersionsData> {
-        return HttpHelper.getJson<VersionsData>(this.apiUrl)
+        return HttpHelper.getResourceFromJson<VersionsData>(this.apiUrl)
     }
 
     /**
