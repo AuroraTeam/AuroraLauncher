@@ -1,9 +1,9 @@
+import { appendFile } from "fs/promises"
 import { EOL } from "os"
 import { resolve } from "path"
 import { format } from "util"
 
 import chalk from "chalk"
-import { Writer } from "steno"
 import stripAnsi from "strip-ansi"
 
 import { StorageHelper } from "./StorageHelper"
@@ -24,7 +24,6 @@ export class LogHelper {
         StorageHelper.logsDir,
         `LauncherServer-${this.getLogDate()}.log`
     )
-    private static logWriter = new Writer(this.logFile)
 
     public static debug(msg: any, ...args: any[]): void {
         if (!this.isDebugEnabled) return
@@ -86,7 +85,7 @@ export class LogHelper {
     }
 
     private static saveLog(message: string) {
-        this.logWriter.write(stripAnsi(message))
+        appendFile(this.logFile, stripAnsi(message))
     }
 }
 

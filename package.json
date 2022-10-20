@@ -68,7 +68,6 @@
         "raw-body": "^2.5.1",
         "reflect-metadata": "^0.1.13",
         "semver": "^7.3.8",
-        "steno": "^3.0.0",
         "strip-ansi": "^7.0.1",
         "typeorm": "^0.3.10",
         "uuid": "^9.0.0"
