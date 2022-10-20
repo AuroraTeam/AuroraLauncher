@@ -4,9 +4,15 @@ import fs from "fs"
 import path from "path"
 import { URL } from "url"
 
-import { App } from "@root/app"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
-import { HttpHelper, LogHelper, StorageHelper, ZipHelper, JsonHelper } from "@root/utils"
+import { App } from "@root/LauncherServer"
+import {
+    HttpHelper,
+    JsonHelper,
+    LogHelper,
+    StorageHelper,
+    ZipHelper,
+} from "@root/utils"
 import rimraf from "rimraf"
 
 export class MojangManager {

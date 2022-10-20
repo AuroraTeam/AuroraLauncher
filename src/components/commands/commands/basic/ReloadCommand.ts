@@ -1,5 +1,5 @@
-import { LauncherServer } from "@root/app"
 import { LangManager } from "@root/components/langs"
+import { LauncherServer } from "@root/LauncherServer"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 export class ReloadCommand extends AbstractCommand {

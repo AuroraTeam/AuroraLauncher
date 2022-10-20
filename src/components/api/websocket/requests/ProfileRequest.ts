@@ -1,6 +1,6 @@
-import { App } from "@root/app"
 import { MojangAuthProviderConfig } from "@root/components/auth/authProviders/MojangAuthProvider"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
+import { App } from "@root/LauncherServer"
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 
 // TODO Указание доп.параметров для запуска клиента при использовании различных провайдеров

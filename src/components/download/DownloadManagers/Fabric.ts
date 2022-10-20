@@ -3,9 +3,9 @@
 import path from "path"
 import { URL } from "url"
 
-import { App } from "@root/app"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
-import { HttpHelper, LogHelper, StorageHelper, JsonHelper } from "@root/utils"
+import { App } from "@root/LauncherServer"
+import { HttpHelper, JsonHelper, LogHelper, StorageHelper } from "@root/utils"
 
 import { MojangManager } from "./Mojang"
 
