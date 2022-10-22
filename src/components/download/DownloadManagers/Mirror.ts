@@ -11,11 +11,11 @@ export class MirrorManager {
     /**
      * Скачивание клиена с зеркала
      * @param clientName - Название архива с файлами клиента
-     * @param dirName - Название конечной папки
+     * @param instanceName - Название инстанции
      */
-    async downloadClient(clientName: string, dirName: string): Promise<void> {
+    async downloadClient(clientName: string, instanceName: string): Promise<void> {
         const mirrors: string[] = App.ConfigManager.config.mirrors
-        const clientDir = path.resolve(StorageHelper.instancesDir, dirName)
+        const clientDir = path.resolve(StorageHelper.instancesDir, instanceName)
         if (fs.existsSync(clientDir))
             return LogHelper.error(
                 App.LangManager.getTranslate.DownloadManager.dirExist
@@ -73,7 +73,7 @@ export class MirrorManager {
             )
             ZipHelper.unzipArchive(client, clientDir)
         } catch (error) {
-            fs.rmdirSync(clientDir, { recursive: true })
+            fs.rmSync(clientDir, { recursive: true, force: true })
             LogHelper.error(
                 App.LangManager.getTranslate.DownloadManager.MirrorManager
                     .client.unpackingErr
@@ -89,10 +89,10 @@ export class MirrorManager {
         //Profiles
         App.ProfilesManager.createProfile({
             ...JsonHelper.fromJson(profile),
-            clientDir: dirName,
+            clientDir: instanceName,
             servers: [
                 {
-                    title: dirName,
+                    title: instanceName,
                 },
             ],
         } as ProfileConfig)
@@ -104,12 +104,11 @@ export class MirrorManager {
 
     /**
      * Скачивание ассетов с зеркала
-     * @param assetsName - Название архива с файлами ассетов
-     * @param dirName - Название конечной папки
+     * @param assetsVer - Название архива с файлами ассетов
      */
-    async downloadAssets(assetsName: string, dirName: string): Promise<void> {
+    async downloadAssets(assetsVer: string): Promise<void> {
         const mirrors: string[] = App.ConfigManager.config.mirrors
-        const assetsDir = path.resolve(StorageHelper.instancesDir, dirName)
+        const assetsDir = path.resolve(StorageHelper.assetsDir, assetsVer)
         if (fs.existsSync(assetsDir))
             return LogHelper.error(
                 App.LangManager.getTranslate.DownloadManager.dirExist
@@ -118,7 +117,7 @@ export class MirrorManager {
         const mirror = mirrors.find(async (mirror) => {
             if (
                 await HttpHelper.existsResource(
-                    new URL(`/assets/${assetsName}.zip`, mirror)
+                    new URL(`/assets/${assetsVer}.zip`, mirror)
                 )
             )
                 return true
@@ -137,7 +136,7 @@ export class MirrorManager {
                     .assets.download
             )
             assets = await HttpHelper.downloadFile(
-                new URL(`/assets/${assetsName}.zip`, mirror),
+                new URL(`/assets/${assetsVer}.zip`, mirror),
                 null,
                 {
                     saveToTempFile: true,
@@ -160,7 +159,7 @@ export class MirrorManager {
             )
             ZipHelper.unzipArchive(assets, assetsDir)
         } catch (error) {
-            fs.rmdirSync(assetsDir, { recursive: true })
+            fs.rmSync(assetsDir, { recursive: true, force: true })
             LogHelper.error(
                 App.LangManager.getTranslate.DownloadManager.MirrorManager
                     .assets.unpackingErr

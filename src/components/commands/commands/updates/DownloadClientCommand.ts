@@ -23,17 +23,17 @@ export class DownloadClientCommand extends AbstractCommand {
     }
 
     async invoke(...args: string[]): Promise<void> {
-        const [clientName, dirName, sourceType = "mojang"] = args
+        const [clientName, instanceName, sourceType = "mojang"] = args
         if (!clientName)
             return LogHelper.error("Укажите название/версию клиента!")
-        if (!dirName)
-            return LogHelper.error("Укажите название папки для клиента!")
+        if (!instanceName)
+            return LogHelper.error("Укажите название папки для инстанции!")
 
         const DownloadManager = this.getDownloadManager(sourceType)
         if (!DownloadManager) return
 
         this.commandsManager.console.pause()
-        await new DownloadManager().downloadClient(clientName, dirName)
+        await new DownloadManager().downloadClient(clientName, instanceName)
         this.commandsManager.console.resume()
     }
 

@@ -22,20 +22,15 @@ export class DownloadAssetsCommand extends AbstractCommand {
     }
 
     async invoke(...args: string[]): Promise<void> {
-        const [assetsName, dirName, sourceType = "mojang"] = args
-        if (!assetsName)
-            return LogHelper.error("Укажите название/версию ассетов!")
-        if (!dirName)
-            return LogHelper.error("Укажите название папки для ассетов!")
+        const [assetsVer, sourceType = "mojang"] = args
+        if (!assetsVer)
+            return LogHelper.error("Укажите версию ассетов!")
 
         const DownloadManager = this.getDownloadManager(sourceType)
         if (!DownloadManager) return
 
         this.commandsManager.console.pause()
-        await new DownloadManager().downloadAssets(
-            assetsName,
-            `assets${assetsName}`
-        )
+        await new DownloadManager().downloadAssets(assetsVer)
         this.commandsManager.console.resume()
     }
 

@@ -1,6 +1,6 @@
 import crypto from "crypto"
 import fs from "fs"
-import path from "path"
+import { join } from "path"
 
 import { LogHelper, StorageHelper } from "@root/utils"
 
@@ -16,7 +16,7 @@ export class InstancesManager {
     // TODO move to constructor?
     hashInstancesDir(): void {
         const folders = fs
-            .readdirSync(StorageHelper.instancesDir, { withFileTypes: true })
+        .readdirSync(StorageHelper.instancesDir, { withFileTypes: true })
             .filter((folder) => folder.isDirectory())
 
         if (folders.length === 0)
@@ -31,7 +31,7 @@ export class InstancesManager {
 
             this.hashedDirs.set(
                 name,
-                this.hashDir(path.join(StorageHelper.instancesDir, name))
+                this.hashDir(join(StorageHelper.instancesDir, name))
             )
 
             LogHelper.info(
@@ -54,7 +54,7 @@ export class InstancesManager {
      */
     hashDir(dir: string, arrayOfFiles: HashedFile[] = []): HashedFile[] {
         fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
-            const file = path.join(dir, entry.name)
+            const file = join(dir, entry.name)
             if (entry.isDirectory()) {
                 arrayOfFiles.concat(this.hashDir(file, arrayOfFiles))
             } else {

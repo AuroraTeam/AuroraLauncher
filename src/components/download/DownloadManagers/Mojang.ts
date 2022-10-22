@@ -1,5 +1,3 @@
-// TODO Ещё больше try/catch для отлова возможных ошибок
-
 import fs from "fs"
 import path from "path"
 import { URL } from "url"
@@ -18,12 +16,12 @@ export class MojangManager {
     /**
      * Скачивание клиента с зеркала Mojang
      * @param clientVer - Версия клиента
-     * @param dirName - Название конечной папки
+     * @param instanceName - Название истанции
      * @param modloader
      */
     async downloadClient(
         clientVer: string,
-        dirName: string,
+        instanceName: string,
         modloader = false
     ): Promise<any> {
         const version: any = await this.getVersionInfo(clientVer)
@@ -33,7 +31,7 @@ export class MojangManager {
         const libraries: any[] = version.libraries
 
         // Client
-        const clientDir = path.resolve(StorageHelper.instancesDir, dirName)
+        const clientDir = path.resolve(StorageHelper.instancesDir, instanceName)
         if (fs.existsSync(clientDir))
             return LogHelper.error(
                 App.LangManager.getTranslate.DownloadManager.dirExist
@@ -58,8 +56,8 @@ export class MojangManager {
         }
 
         // Libraries
-        const librariesDir = path.resolve(clientDir, "libraries")
-        fs.mkdirSync(librariesDir)
+        const librariesDir = path.resolve(StorageHelper.librariesDir, clientVer)
+        if (!fs.existsSync(librariesDir)) fs.mkdirSync(librariesDir)
 
         LogHelper.info(
             App.LangManager.getTranslate.DownloadManager.MojangManager.libraries
@@ -125,13 +123,13 @@ export class MojangManager {
         //Profiles
         return App.ProfilesManager.createProfile({
             version: clientVer,
-            clientDir: dirName,
+            clientDir: instanceName,
             mainClass: version.mainClass,
             assetsDir: `assets${version.assets}`,
             assetsIndex: version.assets,
             servers: [
                 {
-                    title: dirName,
+                    title: instanceName,
                 },
             ],
         } as ProfileConfig)
@@ -140,13 +138,12 @@ export class MojangManager {
     /**
      * Скачивание клиена с зеркала Mojang
      * @param assetsVer - Версия клиента
-     * @param dirName - Название конечной папки
      */
-    async downloadAssets(assetsVer: string, dirName: string): Promise<void> {
+    async downloadAssets(assetsVer: string): Promise<void> {
         const version: any = await this.getVersionInfo(assetsVer)
         if (version === undefined) return
 
-        const assetsDir = path.resolve(StorageHelper.instancesDir, dirName)
+        const assetsDir = path.resolve(StorageHelper.assetsDir, assetsVer)
         if (fs.existsSync(assetsDir))
             return LogHelper.error(
                 App.LangManager.getTranslate.DownloadManager.dirExist
@@ -244,11 +241,6 @@ export class MojangManager {
                 ) {
                     natives.push("natives-linux", "natives-windows")
                 }
-
-                // Костыль для твич либ
-                // if (natives.includes('natives-windows-${arch}')) {
-                //     natives.push("natives-windows-32")
-                // }
 
                 natives.forEach((native) => {
                     const nativeData = lib.downloads.classifiers[native]

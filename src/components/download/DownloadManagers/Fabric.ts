@@ -1,5 +1,3 @@
-// TODO Ещё больше try/catch для отлова возможных ошибок
-
 import path from "path"
 import { URL } from "url"
 
@@ -15,19 +13,18 @@ export class FabricManager extends MojangManager {
     /**
      * Скачивание клиента с зеркала Mojang + Fabric
      * @param clientVer - Версия клиента
-     * @param dirName - Название конечной папки
+     * @param instanceName - Название инстанции
      */
-    async downloadClient(clientVer: string, dirName: string): Promise<void> {
+    async downloadClient(clientVer: string, instanceName: string): Promise<void> {
         const fabricVersion: any = await this.getFabricVersionInfo(clientVer)
         if (fabricVersion === undefined) return
 
-        const profileUUID = await super.downloadClient(clientVer, dirName, true)
+        const profileUUID = await super.downloadClient(clientVer, instanceName, true)
         if (profileUUID === undefined) return
 
         const librariesDir = path.resolve(
-            StorageHelper.instancesDir,
-            dirName,
-            "libraries"
+            StorageHelper.librariesDir,
+            clientVer
         )
 
         LogHelper.info(
@@ -130,7 +127,6 @@ export class FabricManager extends MojangManager {
         }
     }
 
-    // Вынести в хелпер?
     getLibPath(name: string): string {
         const patterns = name.split(":")
         return `${patterns[0].replace(/\./g, "/")}/${patterns[1]}/${
