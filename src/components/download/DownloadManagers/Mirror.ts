@@ -1,11 +1,17 @@
 import fs from "fs"
+import { rmdir } from "fs/promises"
 import path from "path"
 import { URL } from "url"
 
 import { App } from "@root/app"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
-import { HttpHelper, LogHelper, StorageHelper, ZipHelper, JsonHelper } from "@root/utils"
-import rimraf from "rimraf"
+import {
+    HttpHelper,
+    JsonHelper,
+    LogHelper,
+    StorageHelper,
+    ZipHelper,
+} from "@root/utils"
 
 export class MirrorManager {
     /**
@@ -13,7 +19,10 @@ export class MirrorManager {
      * @param clientName - Название архива с файлами клиента
      * @param instanceName - Название инстанции
      */
-    async downloadClient(clientName: string, instanceName: string): Promise<void> {
+    async downloadClient(
+        clientName: string,
+        instanceName: string
+    ): Promise<void> {
         const mirrors: string[] = App.ConfigManager.config.mirrors
         const clientDir = path.resolve(StorageHelper.instancesDir, instanceName)
         if (fs.existsSync(clientDir))
@@ -81,9 +90,7 @@ export class MirrorManager {
             LogHelper.debug(error)
             return
         } finally {
-            rimraf(client, (e) => {
-                if (e !== null) LogHelper.warn(e)
-            })
+            await rmdir(client)
         }
 
         //Profiles
@@ -167,9 +174,7 @@ export class MirrorManager {
             LogHelper.debug(error)
             return
         } finally {
-            rimraf(assets, (e) => {
-                if (e !== null) LogHelper.warn(e)
-            })
+            await rmdir(assets)
         }
 
         LogHelper.info(

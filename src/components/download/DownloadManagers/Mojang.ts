@@ -1,11 +1,17 @@
 import fs from "fs"
+import { mkdir, rmdir } from "fs/promises"
 import path from "path"
 import { URL } from "url"
 
 import { App } from "@root/app"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
-import { HttpHelper, LogHelper, StorageHelper, ZipHelper, JsonHelper } from "@root/utils"
-import rimraf from "rimraf"
+import {
+    HttpHelper,
+    JsonHelper,
+    LogHelper,
+    StorageHelper,
+    ZipHelper,
+} from "@root/utils"
 
 export class MojangManager {
     clientsLink = "https://libraries.minecraft.net/"
@@ -82,13 +88,16 @@ export class MojangManager {
 
         // Natives
         const nativesDir = path.resolve(clientDir, "natives")
-        fs.mkdirSync(nativesDir)
+        await mkdir(nativesDir)
+
         const tempDir = StorageHelper.getTmpPath()
+        await mkdir(tempDir)
+
+        LogHelper.info(
+            App.LangManager.getTranslate.DownloadManager.MojangManager.natives
+                .download
+        )
         try {
-            LogHelper.info(
-                App.LangManager.getTranslate.DownloadManager.MojangManager
-                    .natives.download
-            )
             await HttpHelper.downloadFiles(
                 librariesList.natives,
                 this.clientsLink,
@@ -109,16 +118,16 @@ export class MojangManager {
             )
             LogHelper.debug(error)
             return
+        } finally {
+            await rmdir(tempDir)
         }
-        rimraf(path.resolve(tempDir, "*"), (e) => {
-            if (e !== null) LogHelper.warn(e)
-        })
 
-        if (!modloader)
+        if (!modloader) {
             LogHelper.info(
                 App.LangManager.getTranslate.DownloadManager.MojangManager
                     .client.success
             )
+        }
 
         //Profiles
         return App.ProfilesManager.createProfile({
