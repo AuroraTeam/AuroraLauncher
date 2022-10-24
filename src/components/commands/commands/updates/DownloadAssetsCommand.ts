@@ -23,8 +23,7 @@ export class DownloadAssetsCommand extends AbstractCommand {
 
     async invoke(...args: string[]): Promise<void> {
         const [assetsVer, sourceType = "mojang"] = args
-        if (!assetsVer)
-            return LogHelper.error("Укажите версию ассетов!")
+        if (!assetsVer) return LogHelper.error("Укажите версию ассетов!")
 
         const DownloadManager = this.getDownloadManager(sourceType)
         if (!DownloadManager) return

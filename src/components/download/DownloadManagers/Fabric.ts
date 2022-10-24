@@ -3,7 +3,7 @@ import { URL } from "url"
 
 import { App } from "@root/app"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
-import { HttpHelper, LogHelper, StorageHelper, JsonHelper } from "@root/utils"
+import { HttpHelper, JsonHelper, LogHelper, StorageHelper } from "@root/utils"
 
 import { MojangManager } from "./Mojang"
 
@@ -15,17 +15,21 @@ export class FabricManager extends MojangManager {
      * @param clientVer - Версия клиента
      * @param instanceName - Название инстанции
      */
-    async downloadClient(clientVer: string, instanceName: string): Promise<void> {
+    async downloadClient(
+        clientVer: string,
+        instanceName: string
+    ): Promise<void> {
         const fabricVersion: any = await this.getFabricVersionInfo(clientVer)
         if (fabricVersion === undefined) return
 
-        const profileUUID = await super.downloadClient(clientVer, instanceName, true)
+        const profileUUID = await super.downloadClient(
+            clientVer,
+            instanceName,
+            true
+        )
         if (profileUUID === undefined) return
 
-        const librariesDir = path.resolve(
-            StorageHelper.librariesDir,
-            clientVer
-        )
+        const librariesDir = path.resolve(StorageHelper.librariesDir, clientVer)
 
         LogHelper.info(
             App.LangManager.getTranslate.DownloadManager.FabricManager.client

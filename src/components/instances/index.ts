@@ -16,7 +16,7 @@ export class InstancesManager {
     // TODO move to constructor?
     hashInstancesDir(): void {
         const folders = fs
-        .readdirSync(StorageHelper.instancesDir, { withFileTypes: true })
+            .readdirSync(StorageHelper.instancesDir, { withFileTypes: true })
             .filter((folder) => folder.isDirectory())
 
         if (folders.length === 0)
