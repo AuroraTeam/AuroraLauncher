@@ -38,7 +38,6 @@ export class LauncherServer {
         this.printVersion()
 
         LogHelper.info("Initialization start")
-        LogHelper.dev("aboba")
         this._ConfigManager = new ConfigManager()
         this._LangManager = new LangManager(this._ConfigManager)
         this._AuthManager = new AuthManager(
