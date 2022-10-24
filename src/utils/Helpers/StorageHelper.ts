@@ -1,4 +1,5 @@
-import { existsSync, mkdirSync } from "fs"
+import { PathLike, existsSync, mkdirSync } from "fs"
+import { rm } from "fs/promises"
 import { dirname, resolve } from "path"
 
 import { StorageHelper as CoreStorageHelper } from "@auroralauncher/core"
@@ -35,5 +36,9 @@ export class StorageHelper extends CoreStorageHelper {
         if (!existsSync(this.modulesDir)) mkdirSync(this.modulesDir)
         if (!existsSync(this.authlibDir)) mkdirSync(this.authlibDir)
         if (!existsSync(this.logsDir)) mkdirSync(this.logsDir)
+    }
+
+    static rmdirRecursive(path: PathLike) {
+        return rm(path, { recursive: true, force: true })
     }
 }

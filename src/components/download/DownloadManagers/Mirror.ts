@@ -1,5 +1,4 @@
 import fs from "fs"
-import { rmdir } from "fs/promises"
 import path from "path"
 import { URL } from "url"
 
@@ -90,7 +89,7 @@ export class MirrorManager {
             LogHelper.debug(error)
             return
         } finally {
-            await rmdir(client)
+            await StorageHelper.rmdirRecursive(client).catch()
         }
 
         //Profiles
@@ -174,7 +173,7 @@ export class MirrorManager {
             LogHelper.debug(error)
             return
         } finally {
-            await rmdir(assets)
+            await StorageHelper.rmdirRecursive(assets).catch()
         }
 
         LogHelper.info(

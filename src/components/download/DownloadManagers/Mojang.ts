@@ -1,5 +1,5 @@
 import fs from "fs"
-import { mkdir, rmdir } from "fs/promises"
+import { mkdir } from "fs/promises"
 import path from "path"
 import { URL } from "url"
 
@@ -119,7 +119,7 @@ export class MojangManager {
             LogHelper.debug(error)
             return
         } finally {
-            await rmdir(tempDir)
+            await StorageHelper.rmdirRecursive(tempDir).catch()
         }
 
         if (!modloader) {
