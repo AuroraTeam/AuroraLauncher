@@ -1,4 +1,4 @@
-import { appendFile } from "fs/promises"
+import { createWriteStream } from "fs"
 import { EOL } from "os"
 import { resolve } from "path"
 import { format } from "util"
@@ -24,6 +24,11 @@ export class LogHelper {
     private static readonly logFilePath = resolve(
         StorageHelper.logsDir,
         `LauncherServer-${this.getLogDate()}.log`
+    )
+
+    private static readonly logFileStream = createWriteStream(
+        this.logFilePath,
+        { flags: "a" }
     )
 
     public static debug(msg: any, ...args: any[]): void {
@@ -82,11 +87,11 @@ export class LogHelper {
     public static raw(msg: any, ...args: any[]) {
         const message = format(msg, ...args) + EOL
         process.stdout.write(message)
-        this.saveLog(message)
+        this.saveLog(stripAnsi(message))
     }
 
     private static saveLog(message: string) {
-        appendFile(this.logFilePath, stripAnsi(message))
+        this.logFileStream.write(message)
     }
 }
 
