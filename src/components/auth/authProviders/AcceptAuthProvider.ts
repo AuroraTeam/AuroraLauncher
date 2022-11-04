@@ -10,7 +10,7 @@ import { v4, v5 } from "uuid"
 export class AcceptAuthProvider extends AbstractAuthProvider {
     protected static readonly type = "accept"
 
-    private sessionsDB: Map<string, UserData> = new Map()
+    private sessionsDB: UserData[] = []
 
     auth(username: string): AuthResponseData {
         const data = {
@@ -21,7 +21,14 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
             accessToken: UUIDHelper.getWithoutDashes(v4()),
         }
 
-        this.sessionsDB.set(data.username, {
+        const userIndex = this.sessionsDB.findIndex(
+            (user) => user.username === username
+        )
+        if (userIndex) {
+            this.sessionsDB.splice(userIndex, 1)
+        }
+
+        this.sessionsDB.push({
             ...data,
             serverId: undefined,
         })
@@ -30,29 +37,27 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     }
 
     join(accessToken: string, userUUID: string, serverId: string): boolean {
-        const user = Array.from(this.sessionsDB.values()).find(
-            (e) => e.accessToken === accessToken && e.userUUID === userUUID
+        const user = this.sessionsDB.find(
+            (user) =>
+                user.accessToken === accessToken && user.userUUID === userUUID
         )
-        if (user === undefined) return false
+        if (!user) return false
 
         user.serverId = serverId
-        this.sessionsDB.set(user.username, user)
         return true
     }
 
-    hasJoined(username: string, serverID: string): UserData {
-        if (!this.sessionsDB.has(username)) throw Error("User not found")
-        const user = this.sessionsDB.get(username)
+    hasJoined(username: string, serverId: string): UserData {
+        const user = this.sessionsDB.find((user) => user.username === username)
+        if (!user) throw Error("User not found")
 
-        if (user.serverId !== serverID) throw Error("Invalid serverId")
+        if (user.serverId !== serverId) throw Error("Invalid serverId")
         return user
     }
 
     profile(userUUID: string): UserData {
-        const user = Array.from(this.sessionsDB.values()).find(
-            (e) => e.userUUID === userUUID
-        )
-        if (user === undefined) throw Error("User not found")
+        const user = this.sessionsDB.find((e) => e.userUUID === userUUID)
+        if (!user) throw Error("User not found")
         return user
     }
 
@@ -66,11 +71,11 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     }
 
     profiles(userUUIDs: string[]): ProfilesResponseData[] {
-        return Array.from(this.sessionsDB.values())
-            .filter((e) => userUUIDs.includes(e.userUUID))
-            .map((usr) => ({
-                id: usr.userUUID,
-                name: usr.username,
+        return this.sessionsDB
+            .filter((user) => userUUIDs.includes(user.userUUID))
+            .map((user) => ({
+                id: user.userUUID,
+                name: user.username,
             }))
     }
 }
