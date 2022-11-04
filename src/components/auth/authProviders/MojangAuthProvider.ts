@@ -1,4 +1,4 @@
-import { App } from "@root/app"
+import { ConfigManager } from "@root/components/config"
 import {
     AbstractAuthProvider,
     AbstractAuthProviderConfig,
@@ -10,11 +10,12 @@ export class MojangAuthProvider extends AbstractAuthProvider {
     static type = "mojang"
     private config: MojangAuthProviderConfig
 
-    constructor() {
-        super()
-        const config = App.ConfigManager.config.auth as MojangAuthProviderConfig
+    constructor(configManager: ConfigManager) {
+        super(configManager)
+
+        const config = <MojangAuthProviderConfig>configManager.config.auth
         this.config = {
-            type: "mojang",
+            type: MojangAuthProvider.type,
             authHost: config.authHost || "https://authserver.mojang.com",
             accountHost: config.accountHost || "https://api.mojang.com",
             sessionHost:
@@ -25,7 +26,7 @@ export class MojangAuthProvider extends AbstractAuthProvider {
     }
 
     async auth(username: string, password: string): Promise<AuthResponseData> {
-        const result = await HttpHelper.makePostRequest<AuthenticateResponse>(
+        const result = await HttpHelper.postJson<AuthenticateResponse>(
             new URL("authenticate", this.config.authHost),
             {
                 agent: {

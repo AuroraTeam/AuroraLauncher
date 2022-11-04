@@ -1,4 +1,3 @@
-import { App } from "@root/app"
 import { UUIDHelper } from "@root/utils"
 import {
     AbstractAuthProvider,
@@ -17,7 +16,7 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
         const data = {
             username,
             userUUID: UUIDHelper.getWithoutDashes(
-                v5(username, App.ConfigManager.config.projectID)
+                v5(username, this.configManager.config.projectID)
             ),
             accessToken: UUIDHelper.getWithoutDashes(v4()),
         }

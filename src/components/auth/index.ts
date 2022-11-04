@@ -7,18 +7,10 @@ import { MojangAuthProvider } from "./authProviders/MojangAuthProvider"
 // import { MySQLAuthProvider } from "./authProviders/MySQLAuthProvider"
 import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 
-// TODO Ох уж эти приколы с типами
-// Другие решения получались не красивыми
-// Если есть идеи как сделать лучше - пишите))
-type AnyAuthProvider =
-    | typeof AcceptAuthProvider
-    | typeof RejectAuthProvider
-    | typeof MojangAuthProvider
-//  | typeof MySQLAuthProvider
-
 export class AuthManager {
     private readonly authProvider: AbstractAuthProvider
-    private readonly authProviders: Map<string, AnyAuthProvider> = new Map()
+    private readonly authProviders: Map<string, typeof AbstractAuthProvider> =
+        new Map()
 
     constructor(configManager: ConfigManager, langManager: LangManager) {
         this.registerAuthProviders()
@@ -29,9 +21,11 @@ export class AuthManager {
             LogHelper.fatal(
                 langManager.getTranslate.AuthManager.invalidProvider
             )
-        this.authProvider = new (this.authProviders.get(providerType))(
-            configManager
-        )
+
+        // Да, вертел я типизацию
+        this.authProvider = new (<typeof AcceptAuthProvider>(
+            this.authProviders.get(providerType)
+        ))(configManager)
     }
 
     private registerAuthProviders(): void {
@@ -41,7 +35,7 @@ export class AuthManager {
         // this.registerProvider(MySQLAuthProvider)
     }
 
-    private registerProvider(provider: AnyAuthProvider): void {
+    private registerProvider(provider: typeof AbstractAuthProvider): void {
         this.authProviders.set(provider.getType(), provider)
     }
 
