@@ -9,12 +9,6 @@ export abstract class AbstractAuthProvider {
         return this.type
     }
 
-    public static getDefaultConfig(): AbstractAuthProviderConfig {
-        return {
-            type: "accept",
-        }
-    }
-
     abstract auth(
         username: string,
         password: string
@@ -38,8 +32,12 @@ export abstract class AbstractAuthProvider {
     abstract profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[]>
 }
 
-export interface AbstractAuthProviderConfig {
+export class AbstractAuthProviderConfig {
     type: string
+
+    static getDefaultConfig(): AbstractAuthProviderConfig {
+        return { type: "accept" }
+    }
 }
 
 export interface AuthResponseData {
