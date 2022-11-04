@@ -2,16 +2,13 @@ import { AbstractAuthProvider, AbstractAuthProviderConfig } from "@root/utils"
 import { ResponseError } from "aurora-rpc-server"
 
 export class RejectAuthProvider extends AbstractAuthProvider {
-    static type = "reject"
-    private config: RejectAuthProviderConfig = {
-        type: RejectAuthProvider.type,
-        message:
-            (<RejectAuthProviderConfig>this.configManager.config.auth)
-                .message || "Auth rejected",
-    }
+    protected static readonly type = "reject"
+    private message =
+        (<RejectAuthProviderConfig>this.configManager.config.auth).message ||
+        "Auth rejected"
 
     auth(): any {
-        throw new ResponseError(this.config.message, 200)
+        throw new ResponseError(this.message, 200)
     }
 
     join(): any {

@@ -1,4 +1,3 @@
-import { ConfigManager } from "@root/components/config"
 import {
     AbstractAuthProvider,
     AbstractAuthProviderConfig,
@@ -7,27 +6,15 @@ import {
 } from "@root/utils"
 
 export class MojangAuthProvider extends AbstractAuthProvider {
-    static type = "mojang"
-    private config: MojangAuthProviderConfig
+    protected static readonly type = "mojang"
 
-    constructor(configManager: ConfigManager) {
-        super(configManager)
-
-        const config = <MojangAuthProviderConfig>configManager.config.auth
-        this.config = {
-            type: MojangAuthProvider.type,
-            authHost: config.authHost || "https://authserver.mojang.com",
-            accountHost: config.accountHost || "https://api.mojang.com",
-            sessionHost:
-                config.sessionHost || "https://sessionserver.mojang.com",
-            servicesHost:
-                config.servicesHost || "https://api.minecraftservices.com",
-        }
-    }
+    private authHost =
+        (<MojangAuthProviderConfig>this.configManager.config.auth).authHost ||
+        "https://authserver.mojang.com"
 
     async auth(username: string, password: string): Promise<AuthResponseData> {
         const result = await HttpHelper.postJson<AuthenticateResponse>(
-            new URL("authenticate", this.config.authHost),
+            new URL("authenticate", this.authHost),
             {
                 agent: {
                     name: "Minecraft",

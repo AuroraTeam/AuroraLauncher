@@ -8,9 +8,9 @@ import {
 import { v4, v5 } from "uuid"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
-    static type = "accept"
+    protected static readonly type = "accept"
 
-    sessionsDB: Map<string, UserData> = new Map()
+    private sessionsDB: Map<string, UserData> = new Map()
 
     auth(username: string): AuthResponseData {
         const data = {
