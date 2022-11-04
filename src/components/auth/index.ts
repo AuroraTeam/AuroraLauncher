@@ -23,9 +23,10 @@ export class AuthManager {
             )
 
         // Да, вертел я типизацию
-        this.authProvider = new (<typeof AcceptAuthProvider>(
+        const Provider = <typeof AcceptAuthProvider>(
             this.authProviders.get(providerType)
-        ))(configManager)
+        )
+        this.authProvider = new Provider(configManager)
     }
 
     private registerAuthProviders(): void {
