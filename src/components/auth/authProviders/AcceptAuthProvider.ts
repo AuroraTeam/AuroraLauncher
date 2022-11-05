@@ -15,10 +15,8 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     auth(username: string): AuthResponseData {
         const data = {
             username,
-            userUUID: UUIDHelper.getWithoutDashes(
-                v5(username, this.configManager.config.projectID)
-            ),
-            accessToken: UUIDHelper.getWithoutDashes(v4()),
+            userUUID: v5(username, this.configManager.config.projectID),
+            accessToken: v4(),
         }
 
         const userIndex = this.sessionsDB.findIndex(
@@ -39,7 +37,8 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
     join(accessToken: string, userUUID: string, serverId: string): boolean {
         const user = this.sessionsDB.find(
             (user) =>
-                user.accessToken === accessToken && user.userUUID === userUUID
+                user.accessToken === accessToken &&
+                user.userUUID === UUIDHelper.getWithDashes(userUUID)
         )
         if (!user) return false
 

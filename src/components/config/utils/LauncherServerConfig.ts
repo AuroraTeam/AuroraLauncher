@@ -1,14 +1,9 @@
 import { Lang } from "@root/components"
-import {
-    AbstractAuthProvider,
-    AbstractAuthProviderConfig,
-    JsonHelper,
-} from "@root/utils"
+import { AbstractAuthProviderConfig, JsonHelper } from "@root/utils"
 import { instanceToPlain, plainToInstance } from "class-transformer"
 import { v4 } from "uuid"
 
 import { ApiConfig } from "./ApiConfig"
-import { DatabaseConfig } from "./DatabaseConfig"
 
 export class LauncherServerConfig {
     configVersion: number
@@ -20,7 +15,6 @@ export class LauncherServerConfig {
     mirrors: string[]
     auth: AbstractAuthProviderConfig
     api: ApiConfig
-    db: DatabaseConfig
 
     static getDefaults(): LauncherServerConfig {
         const config = new LauncherServerConfig()
@@ -33,7 +27,6 @@ export class LauncherServerConfig {
         config.mirrors = []
         config.auth = AbstractAuthProviderConfig.getDefaultConfig()
         config.api = ApiConfig.getDefaultConfig()
-        config.db = DatabaseConfig.getDefaultConfig()
         return config
     }
 

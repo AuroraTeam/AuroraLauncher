@@ -3,8 +3,8 @@ import { AbstractAuthProvider, LogHelper } from "@root/utils"
 import { ConfigManager } from "../config"
 import { LangManager } from "../langs"
 import { AcceptAuthProvider } from "./authProviders/AcceptAuthProvider"
+import { DatabaseAuthProvider } from "./authProviders/DatabaseAuthProvider"
 import { MojangAuthProvider } from "./authProviders/MojangAuthProvider"
-// import { MySQLAuthProvider } from "./authProviders/MySQLAuthProvider"
 import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 
 export class AuthManager {
@@ -33,7 +33,7 @@ export class AuthManager {
         this.registerProvider(AcceptAuthProvider)
         this.registerProvider(RejectAuthProvider)
         this.registerProvider(MojangAuthProvider)
-        // this.registerProvider(MySQLAuthProvider)
+        this.registerProvider(DatabaseAuthProvider)
     }
 
     private registerProvider(provider: typeof AbstractAuthProvider): void {
