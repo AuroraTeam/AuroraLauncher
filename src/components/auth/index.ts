@@ -4,6 +4,7 @@ import { ConfigManager } from "../config"
 import { LangManager } from "../langs"
 import { AcceptAuthProvider } from "./authProviders/AcceptAuthProvider"
 import { DatabaseAuthProvider } from "./authProviders/DatabaseAuthProvider"
+import { JsonAuthProvider } from "./authProviders/JsonAuthProvider"
 import { MojangAuthProvider } from "./authProviders/MojangAuthProvider"
 import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 
@@ -34,6 +35,7 @@ export class AuthManager {
         this.registerProvider(RejectAuthProvider)
         this.registerProvider(MojangAuthProvider)
         this.registerProvider(DatabaseAuthProvider)
+        this.registerProvider(JsonAuthProvider)
     }
 
     private registerProvider(provider: typeof AbstractAuthProvider): void {
