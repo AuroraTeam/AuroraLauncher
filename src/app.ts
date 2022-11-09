@@ -1,4 +1,3 @@
-import "source-map-support/register"
 import "reflect-metadata"
 
 import chalk from "chalk"
