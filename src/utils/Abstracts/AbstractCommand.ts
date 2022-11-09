@@ -4,8 +4,8 @@ export abstract class AbstractCommand {
     protected constructor(options: commandOptions) {
         this.info = {
             name: options.name,
-            description: options.description || "Информация не указана.",
-            usage: options.usage || "Информация не указана.",
+            description: options.description,
+            usage: options.usage,
             category: options.category,
         }
     }
@@ -15,8 +15,8 @@ export abstract class AbstractCommand {
 
 export interface commandOptions {
     name: string
-    description?: string
-    usage?: string
+    description: string
+    usage: string
     category: Category
 }
 
