@@ -1,4 +1,4 @@
-import { ConfigManager } from "@root/components/config"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
 import {
     AbstractAuthProvider,
     AbstractAuthProviderConfig,
@@ -16,8 +16,8 @@ import { DataSource, EntitySchema, In } from "typeorm"
 export class DatabaseAuthProvider implements AbstractAuthProvider {
     private userRepository
 
-    constructor(configManager: ConfigManager) {
-        const config = <DatabaseAuthProviderConfig>configManager.config.auth
+    constructor({ auth }: LauncherServerConfig) {
+        const config = <DatabaseAuthProviderConfig>auth
 
         if (!config.properties.tableName) {
             LogHelper.fatal("tableName not defined")

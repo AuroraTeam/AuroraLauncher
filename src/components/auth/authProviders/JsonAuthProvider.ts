@@ -1,4 +1,4 @@
-import { ConfigManager } from "@root/components/config"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
 import {
     AbstractAuthProvider,
     AbstractAuthProviderConfig,
@@ -13,8 +13,8 @@ import {
 export class JsonAuthProvider implements AbstractAuthProvider {
     private config: JsonAuthProviderConfig
 
-    constructor(configManager: ConfigManager) {
-        this.config = <JsonAuthProviderConfig>configManager.config.auth
+    constructor({ auth }: LauncherServerConfig) {
+        this.config = <JsonAuthProviderConfig>auth
     }
 
     async auth(username: string, password: string): Promise<AuthResponseData> {

@@ -31,7 +31,7 @@ export class AuthManager {
         }
 
         const Provider = this.authProviders.get(providerType)
-        this.authProvider = new Provider(configManager)
+        this.authProvider = new Provider(configManager.config)
     }
 
     private registerAuthProviders(): void {

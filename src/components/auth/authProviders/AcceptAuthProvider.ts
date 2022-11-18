@@ -1,4 +1,4 @@
-import { ConfigManager } from "@root/components/config"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
 import { UUIDHelper } from "@root/utils"
 import {
     AbstractAuthProvider,
@@ -12,8 +12,8 @@ export class AcceptAuthProvider implements AbstractAuthProvider {
     private projectID: string
     private sessionsDB: UserData[] = []
 
-    constructor(configManager: ConfigManager) {
-        this.projectID = configManager.config.projectID
+    constructor({ projectID }: LauncherServerConfig) {
+        this.projectID = projectID
     }
 
     auth(username: string): AuthResponseData {

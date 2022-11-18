@@ -1,4 +1,4 @@
-import { ConfigManager } from "@root/components/config"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
 import {
     AbstractAuthProvider,
     AbstractAuthProviderConfig,
@@ -9,9 +9,9 @@ import {
 export class MojangAuthProvider implements AbstractAuthProvider {
     private authHost: string
 
-    constructor(configManager: ConfigManager) {
+    constructor({ auth }: LauncherServerConfig) {
         this.authHost =
-            (<MojangAuthProviderConfig>configManager.config.auth).authHost ||
+            (<MojangAuthProviderConfig>auth).authHost ||
             "https://authserver.mojang.com"
     }
 

@@ -1,14 +1,13 @@
-import { ConfigManager } from "@root/components/config"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
 import { AbstractAuthProvider, AbstractAuthProviderConfig } from "@root/utils"
 import { ResponseError } from "aurora-rpc-server"
 
 export class RejectAuthProvider implements AbstractAuthProvider {
     private message: string
 
-    constructor(configManager: ConfigManager) {
+    constructor({ auth }: LauncherServerConfig) {
         this.message =
-            (<RejectAuthProviderConfig>configManager.config.auth).message ||
-            "Auth rejected"
+            (<RejectAuthProviderConfig>auth).message || "Auth rejected"
     }
 
     auth(): any {

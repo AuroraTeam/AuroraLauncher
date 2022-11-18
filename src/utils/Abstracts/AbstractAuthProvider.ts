@@ -1,7 +1,7 @@
-import { ConfigManager } from "@root/components"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
 
 export interface AbstractAuthProviderConstructor {
-    new (configManager: ConfigManager): AbstractAuthProvider
+    new (configManager: LauncherServerConfig): AbstractAuthProvider
 }
 
 export interface AbstractAuthProvider {
