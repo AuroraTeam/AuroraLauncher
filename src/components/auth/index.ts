@@ -1,4 +1,8 @@
-import { AbstractAuthProvider, LogHelper } from "@root/utils"
+import {
+    AbstractAuthProvider,
+    AbstractAuthProviderConstructor,
+    LogHelper,
+} from "@root/utils"
 
 import { ConfigManager } from "../config"
 import { LangManager } from "../langs"
@@ -10,23 +14,23 @@ import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 
 export class AuthManager {
     private readonly authProvider: AbstractAuthProvider
-    private readonly authProviders: Map<string, typeof AbstractAuthProvider> =
-        new Map()
+    private readonly authProviders: Map<
+        string,
+        AbstractAuthProviderConstructor
+    > = new Map()
 
     constructor(configManager: ConfigManager, langManager: LangManager) {
         this.registerAuthProviders()
 
         const providerType = configManager.config.auth.type
 
-        if (!this.authProviders.has(providerType))
+        if (!this.authProviders.has(providerType)) {
             LogHelper.fatal(
                 langManager.getTranslate.AuthManager.invalidProvider
             )
+        }
 
-        // Да, вертел я типизацию
-        const Provider = <typeof AcceptAuthProvider>(
-            this.authProviders.get(providerType)
-        )
+        const Provider = this.authProviders.get(providerType)
         this.authProvider = new Provider(configManager)
     }
 
@@ -40,7 +44,7 @@ export class AuthManager {
 
     private registerProvider(
         type: string,
-        provider: typeof AbstractAuthProvider
+        provider: AbstractAuthProviderConstructor
     ): void {
         this.authProviders.set(type, provider)
     }

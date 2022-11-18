@@ -1,3 +1,4 @@
+import { ConfigManager } from "@root/components/config"
 import {
     AbstractAuthProvider,
     AbstractAuthProviderConfig,
@@ -5,10 +6,14 @@ import {
     HttpHelper,
 } from "@root/utils"
 
-export class MojangAuthProvider extends AbstractAuthProvider {
-    private authHost =
-        (<MojangAuthProviderConfig>this.configManager.config.auth).authHost ||
-        "https://authserver.mojang.com"
+export class MojangAuthProvider implements AbstractAuthProvider {
+    private authHost: string
+
+    constructor(configManager: ConfigManager) {
+        this.authHost =
+            (<MojangAuthProviderConfig>configManager.config.auth).authHost ||
+            "https://authserver.mojang.com"
+    }
 
     async auth(username: string, password: string): Promise<AuthResponseData> {
         const result = await HttpHelper.postJson<AuthenticateResponse>(

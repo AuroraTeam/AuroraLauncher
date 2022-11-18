@@ -1,29 +1,28 @@
 import { ConfigManager } from "@root/components"
 
-export abstract class AbstractAuthProvider {
-    constructor(protected readonly configManager: ConfigManager) {}
+export interface AbstractAuthProviderConstructor {
+    new (configManager: ConfigManager): AbstractAuthProvider
+}
 
-    abstract auth(
-        username: string,
-        password: string
-    ): PromiseOr<AuthResponseData>
+export interface AbstractAuthProvider {
+    auth(username: string, password: string): PromiseOr<AuthResponseData>
 
-    abstract join(
+    join(
         accessToken: string,
         userUUID: string,
         serverID: string
     ): PromiseOr<boolean>
 
-    abstract hasJoined(
+    hasJoined(
         username: string,
         serverID: string
     ): PromiseOr<HasJoinedResponseData>
 
-    abstract profile(userUUID: string): PromiseOr<ProfileResponseData>
+    profile(userUUID: string): PromiseOr<ProfileResponseData>
 
-    abstract privileges(accessToken: string): PromiseOr<PrivilegesResponseData>
+    privileges(accessToken: string): PromiseOr<PrivilegesResponseData>
 
-    abstract profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[]>
+    profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[]>
 }
 
 export class AbstractAuthProviderConfig {

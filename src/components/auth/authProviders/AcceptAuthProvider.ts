@@ -1,3 +1,4 @@
+import { ConfigManager } from "@root/components/config"
 import { UUIDHelper } from "@root/utils"
 import {
     AbstractAuthProvider,
@@ -7,13 +8,18 @@ import {
 } from "@root/utils"
 import { v4, v5 } from "uuid"
 
-export class AcceptAuthProvider extends AbstractAuthProvider {
+export class AcceptAuthProvider implements AbstractAuthProvider {
+    private projectID: string
     private sessionsDB: UserData[] = []
+
+    constructor(configManager: ConfigManager) {
+        this.projectID = configManager.config.projectID
+    }
 
     auth(username: string): AuthResponseData {
         const data = {
             username,
-            userUUID: v5(username, this.configManager.config.projectID),
+            userUUID: v5(username, this.projectID),
             accessToken: v4(),
         }
 

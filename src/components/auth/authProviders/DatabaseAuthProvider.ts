@@ -13,23 +13,19 @@ import {
 import { ResponseError } from "aurora-rpc-server"
 import { DataSource, EntitySchema, In } from "typeorm"
 
-export class DatabaseAuthProvider extends AbstractAuthProvider {
-    private readonly config = <DatabaseAuthProviderConfig>(
-        this.configManager.config.auth
-    )
-
+export class DatabaseAuthProvider implements AbstractAuthProvider {
     private userRepository
 
     constructor(configManager: ConfigManager) {
-        super(configManager)
+        const config = <DatabaseAuthProviderConfig>configManager.config.auth
 
-        if (!this.config.properties.tableName) {
+        if (!config.properties.tableName) {
             LogHelper.fatal("tableName not defined")
         }
-        const UserEntity = getUserEntity(this.config.properties)
+        const UserEntity = getUserEntity(config.properties)
 
         const connection = new DataSource({
-            ...this.config.connection,
+            ...config.connection,
             entities: [UserEntity],
         })
 
