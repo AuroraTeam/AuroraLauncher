@@ -14,8 +14,6 @@ import { ResponseError } from "aurora-rpc-server"
 import { DataSource, EntitySchema, In } from "typeorm"
 
 export class DatabaseAuthProvider extends AbstractAuthProvider {
-    protected static readonly type = "db"
-
     private readonly config = <DatabaseAuthProviderConfig>(
         this.configManager.config.auth
     )

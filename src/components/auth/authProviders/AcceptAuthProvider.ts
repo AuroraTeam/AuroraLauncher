@@ -8,8 +8,6 @@ import {
 import { v4, v5 } from "uuid"
 
 export class AcceptAuthProvider extends AbstractAuthProvider {
-    protected static readonly type = "accept"
-
     private sessionsDB: UserData[] = []
 
     auth(username: string): AuthResponseData {

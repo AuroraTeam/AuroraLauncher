@@ -6,8 +6,6 @@ import {
 } from "@root/utils"
 
 export class MojangAuthProvider extends AbstractAuthProvider {
-    protected static readonly type = "mojang"
-
     private authHost =
         (<MojangAuthProviderConfig>this.configManager.config.auth).authHost ||
         "https://authserver.mojang.com"

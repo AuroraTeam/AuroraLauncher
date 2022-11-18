@@ -10,8 +10,6 @@ import {
 } from "@root/utils"
 
 export class JsonAuthProvider extends AbstractAuthProvider {
-    protected static readonly type = "json"
-
     private config = <JsonAuthProviderConfig>this.configManager.config.auth
 
     async auth(username: string, password: string): Promise<AuthResponseData> {

@@ -31,15 +31,18 @@ export class AuthManager {
     }
 
     private registerAuthProviders(): void {
-        this.registerProvider(AcceptAuthProvider)
-        this.registerProvider(RejectAuthProvider)
-        this.registerProvider(MojangAuthProvider)
-        this.registerProvider(DatabaseAuthProvider)
-        this.registerProvider(JsonAuthProvider)
+        this.registerProvider("accept", AcceptAuthProvider)
+        this.registerProvider("reject", RejectAuthProvider)
+        this.registerProvider("mojang", MojangAuthProvider)
+        this.registerProvider("db", DatabaseAuthProvider)
+        this.registerProvider("json", JsonAuthProvider)
     }
 
-    private registerProvider(provider: typeof AbstractAuthProvider): void {
-        this.authProviders.set(provider.getType(), provider)
+    private registerProvider(
+        type: string,
+        provider: typeof AbstractAuthProvider
+    ): void {
+        this.authProviders.set(type, provider)
     }
 
     getAuthProvider(): AbstractAuthProvider {

@@ -1,13 +1,7 @@
 import { ConfigManager } from "@root/components"
 
 export abstract class AbstractAuthProvider {
-    protected static readonly type: string
-
     constructor(protected readonly configManager: ConfigManager) {}
-
-    public static getType(): string {
-        return this.type
-    }
 
     abstract auth(
         username: string,
