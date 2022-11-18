@@ -6,17 +6,27 @@ import { LogHelper, StorageHelper } from "@root/utils"
 
 import { LangManager } from "../langs"
 
+type HashesMap = Map<string, HashedFile[]>
+
 export class InstancesManager {
-    hashedDirs: Map<string, HashedFile[]> = new Map()
+    hashedDirs = {
+        assets: new Map() as HashesMap,
+        libraries: new Map() as HashesMap,
+        instances: new Map() as HashesMap,
+    }
 
     constructor(private readonly langManager: LangManager) {
-        this.hashInstancesDir()
+        this.hashInstancesDir("assets")
+        this.hashInstancesDir("libraries")
+        this.hashInstancesDir("instances")
     }
 
     // TODO move to constructor?
-    hashInstancesDir(): void {
+    hashInstancesDir(dir: "assets" | "libraries" | "instances"): void {
         const folders = fs
-            .readdirSync(StorageHelper.instancesDir, { withFileTypes: true })
+            .readdirSync(join(StorageHelper.filesDir, dir), {
+                withFileTypes: true,
+            })
             .filter((folder) => folder.isDirectory())
 
         if (folders.length === 0)
@@ -29,9 +39,9 @@ export class InstancesManager {
         folders.forEach(({ name }) => {
             const startTime = Date.now()
 
-            this.hashedDirs.set(
+            this.hashedDirs[dir].set(
                 name,
-                this.hashDir(join(StorageHelper.instancesDir, name))
+                this.hashDir(join(StorageHelper.filesDir, dir, name))
             )
 
             LogHelper.info(

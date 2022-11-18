@@ -4,11 +4,12 @@ import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 export class UpdatesRequest extends AbstractRequest {
     method = "updates"
 
-    invoke({ dir }: UpdatesRequestData): ResponseResult {
-        return App.InstancesManager.hashedDirs.get(dir)
+    invoke({ type, dir }: UpdatesRequestData): ResponseResult {
+        return App.InstancesManager.hashedDirs[type].get(dir)
     }
 }
 
 interface UpdatesRequestData {
+    type: "assets" | "libraries" | "instances"
     dir: string
 }
