@@ -10,6 +10,7 @@ import {
     ProfilesResponseData,
     UUIDHelper,
 } from "@root/utils"
+import { ResponseError } from "aurora-rpc-server"
 import { DataSource, EntitySchema, In } from "typeorm"
 
 export class DatabaseAuthProvider extends AbstractAuthProvider {
@@ -43,7 +44,7 @@ export class DatabaseAuthProvider extends AbstractAuthProvider {
 
     async auth(username: string): Promise<AuthResponseData> {
         const user = await this.userRepository.findOneBy({ username })
-        if (!user) throw Error("User not found")
+        if (!user) throw new ResponseError("User not found", 100)
 
         const userData = {
             username,
@@ -214,6 +215,7 @@ export class DatabaseAuthProviderConfig extends AbstractAuthProviderConfig {
     }
 }
 
+// type AvaliableDataBaseType = DatabaseType
 type AvaliableDataBaseType =
     | "mysql"
     | "mariadb"

@@ -71,7 +71,7 @@ export class AcceptAuthProvider extends AbstractAuthProvider {
 
     profiles(userUUIDs: string[]): ProfilesResponseData[] {
         return this.sessionsDB
-            .filter((user) => userUUIDs.includes(user.userUUID))
+            .filter(({ userUUID }) => userUUIDs.includes(userUUID))
             .map((user) => ({
                 id: user.userUUID,
                 name: user.username,

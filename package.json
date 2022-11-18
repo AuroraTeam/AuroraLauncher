@@ -22,7 +22,7 @@
     ],
     "main": "dist/app.js",
     "scripts": {
-        "dev": "concurrently --handle-input -n build,app -c blue.bold,yellow.bold \"nodemon -- --dev\" \"npm:build:dev -- --watch\"",
+        "dev": "concurrently -i -n build,app -c blue.bold,yellow.bold \"nodemon -- --dev\" \"npm:build:dev -- --watch\"",
         "build:dev": "esbuild src/app.ts --platform=node --target=node16 --bundle --outdir=dist --sourcemap",
         "build:prod": "esbuild src/app.ts --platform=node --target=node16 --bundle --outdir=dist --sourcemap=inline --minify",
         "build:bin": "pkg dist/app.js -t node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist --compress GZip",
