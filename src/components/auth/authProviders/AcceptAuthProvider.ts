@@ -6,6 +6,7 @@ import {
     PrivilegesResponseData,
     ProfilesResponseData,
 } from "@root/utils"
+import { ResponseError } from "aurora-rpc-server"
 import { v4, v5 } from "uuid"
 
 export class AcceptAuthProvider implements AbstractAuthProvider {
@@ -52,15 +53,17 @@ export class AcceptAuthProvider implements AbstractAuthProvider {
 
     hasJoined(username: string, serverId: string): UserData {
         const user = this.sessionsDB.find((user) => user.username === username)
-        if (!user) throw Error("User not found")
+        if (!user) throw new ResponseError("User not found", 100)
 
-        if (user.serverId !== serverId) throw Error("Invalid serverId")
+        if (user.serverId !== serverId) {
+            throw new ResponseError("Invalid serverId", 101)
+        }
         return user
     }
 
     profile(userUUID: string): UserData {
         const user = this.sessionsDB.find((e) => e.userUUID === userUUID)
-        if (!user) throw Error("User not found")
+        if (!user) throw new ResponseError("User not found", 100)
         return user
     }
 

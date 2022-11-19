@@ -11,7 +11,7 @@ export class RejectAuthProvider implements AbstractAuthProvider {
     }
 
     auth(): any {
-        throw new ResponseError(this.message, 200)
+        throw new ResponseError(this.message, 110)
     }
 
     join(): any {

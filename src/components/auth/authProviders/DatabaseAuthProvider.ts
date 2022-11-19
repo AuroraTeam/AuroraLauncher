@@ -75,8 +75,10 @@ export class DatabaseAuthProvider implements AbstractAuthProvider {
         serverID: string
     ): Promise<HasJoinedResponseData> {
         const user = await this.userRepository.findOneBy({ username })
-        if (!user) throw Error("User not found")
-        if (user.serverID !== serverID) throw Error("Invalid serverId")
+        if (!user) throw new ResponseError("User not found", 100)
+        if (user.serverID !== serverID) {
+            throw new ResponseError("Invalid serverId", 101)
+        }
 
         return {
             userUUID: <string>user.userUUID,
@@ -87,7 +89,7 @@ export class DatabaseAuthProvider implements AbstractAuthProvider {
 
     async profile(userUUID: string): Promise<ProfileResponseData> {
         const user = await this.userRepository.findOneBy({ userUUID })
-        if (!user) throw Error("User not found")
+        if (!user) throw new ResponseError("User not found", 100)
 
         return {
             username: <string>user.username,
