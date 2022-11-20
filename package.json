@@ -23,8 +23,8 @@
     "main": "dist/app.js",
     "scripts": {
         "dev": "concurrently -i -n build,app -c blue.bold,yellow.bold \"nodemon -- --dev\" \"npm:build:dev -- --watch\"",
-        "build:dev": "esbuild src/app.ts --platform=node --target=node16 --bundle --outdir=dist --sourcemap",
-        "build:prod": "esbuild src/app.ts --platform=node --target=node16 --bundle --outdir=dist --sourcemap=inline --minify",
+        "build:dev": "node build.mjs",
+        "build:prod": "node build.mjs --sourcemap=inline --minify",
         "build:bin": "pkg dist/app.js -t node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist --compress GZip",
         "clean": "rimraf dist",
         "prettier": "prettier --config .prettierrc.json --write src",
@@ -33,6 +33,7 @@
         "start": "node ."
     },
     "devDependencies": {
+        "@anatine/esbuild-decorators": "^0.2.19",
         "@types/adm-zip": "^0.5.0",
         "@types/cli-progress": "^3.11.0",
         "@types/lodash-es": "^4.17.6",
@@ -45,10 +46,11 @@
         "@typescript-eslint/eslint-plugin": "^5.39.0",
         "@typescript-eslint/parser": "^5.39.0",
         "concurrently": "^7.4.0",
-        "esbuild": "^0.15.10",
+        "esbuild": "^0.14.54",
         "eslint": "^8.25.0",
         "eslint-plugin-node": "^11.1.0",
         "import-sort-style-module": "^6.0.0",
+        "minimist": "^1.2.7",
         "nodemon": "^2.0.20",
         "pkg": "^5.8.0",
         "prettier": "^2.7.1",
@@ -71,11 +73,12 @@
         "reflect-metadata": "^0.1.13",
         "semver": "^7.3.8",
         "strip-ansi": "^7.0.1",
+        "tsyringe": "^4.7.0",
         "typeorm": "^0.3.10",
         "uuid": "^9.0.0"
     },
     "importSort": {
-        ".js, .ts": {
+        ".js, .mjs, .ts": {
             "style": "module",
             "parser": "typescript"
         }
