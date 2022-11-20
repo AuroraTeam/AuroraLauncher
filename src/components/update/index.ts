@@ -2,11 +2,14 @@ import path from "path"
 
 import { HttpHelper, LogHelper, StorageHelper, SystemHelper } from "@root/utils"
 import semver from "semver"
+import { injectable, singleton } from "tsyringe"
 
 import { version as currentVersion } from "../../../package.json"
 import { ConfigManager } from "../config"
 import { LangManager } from "../langs"
 
+@singleton()
+@injectable()
 export class UpdateManager {
     private readonly apiUrl = new URL(
         "latest",

@@ -3,6 +3,7 @@ import {
     AbstractAuthProviderConstructor,
     LogHelper,
 } from "@root/utils"
+import { injectable, singleton } from "tsyringe"
 
 import { ConfigManager } from "../config"
 import { LangManager } from "../langs"
@@ -12,6 +13,8 @@ import { JsonAuthProvider } from "./authProviders/JsonAuthProvider"
 import { MojangAuthProvider } from "./authProviders/MojangAuthProvider"
 import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 
+@singleton()
+@injectable()
 export class AuthManager {
     private readonly authProvider: AbstractAuthProvider
     private readonly authProviders: Map<

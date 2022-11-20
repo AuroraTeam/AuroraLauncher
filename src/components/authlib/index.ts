@@ -3,9 +3,12 @@ import fs from "fs"
 import { resolve } from "path"
 
 import { LogHelper, StorageHelper } from "@root/utils"
+import { injectable, singleton } from "tsyringe"
 
 import { LangManager } from "../langs"
 
+@singleton()
+@injectable()
 export class AuthlibManager {
     private publicKeyPath = resolve(StorageHelper.authlibDir, "public.pem")
     private privateKeyPath = resolve(StorageHelper.authlibDir, "private.pem")

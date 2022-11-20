@@ -2,6 +2,7 @@ import ReadLine from "readline"
 
 import { App, LauncherServer } from "@root/app"
 import { AbstractCommand, LogHelper } from "@root/utils"
+import { singleton } from "tsyringe"
 
 import { InstancesManager } from "../instances"
 import { LangManager } from "../langs"
@@ -24,6 +25,7 @@ import {
     UpdateCommand,
 } from "./commands"
 
+@singleton()
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
     console: ReadLine.Interface

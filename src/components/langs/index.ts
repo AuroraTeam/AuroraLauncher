@@ -1,4 +1,5 @@
 import { LogHelper } from "@root/utils"
+import { injectable, singleton } from "tsyringe"
 
 import { ConfigManager } from "../config"
 import enTranslate from "./utils/en.json"
@@ -7,6 +8,8 @@ import ruTranslate from "./utils/ru.json"
 export type Lang = "ru" | "en"
 export type Translate = typeof ruTranslate | typeof enTranslate
 
+@singleton()
+@injectable()
 export class LangManager {
     private langList: Map<Lang, Translate> = new Map()
     private currentLang: Translate

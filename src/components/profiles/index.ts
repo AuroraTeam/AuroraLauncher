@@ -2,10 +2,13 @@ import fs from "fs"
 import path from "path"
 
 import { LogHelper, StorageHelper } from "@root/utils"
+import { injectable, singleton } from "tsyringe"
 
 import { LangManager } from "../langs"
 import { ProfileConfig } from "./utils/ProfileConfig"
 
+@singleton()
+@injectable()
 export class ProfilesManager {
     profiles: ProfileConfig[] = []
 

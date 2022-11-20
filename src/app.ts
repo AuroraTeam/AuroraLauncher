@@ -1,6 +1,7 @@
 import "reflect-metadata"
 
 import chalk from "chalk"
+import { container, singleton } from "tsyringe"
 
 import { version } from "../package.json"
 import {
@@ -17,6 +18,7 @@ import {
 } from "./components"
 import { LogHelper, StorageHelper } from "./utils"
 
+@singleton()
 export class LauncherServer {
     private _ConfigManager: ConfigManager
     private _LangManager: LangManager
@@ -37,13 +39,16 @@ export class LauncherServer {
         this.printVersion()
 
         LogHelper.info("Initialization start")
-        this._ConfigManager = new ConfigManager()
-        this._LangManager = new LangManager(this._ConfigManager)
-        this._AuthManager = new AuthManager(
-            this.ConfigManager,
-            this.LangManager
-        )
-        this._AuthlibManager = new AuthlibManager(this.LangManager)
+        this.initialize()
+
+        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd)
+    }
+
+    private initialize() {
+        this._ConfigManager = container.resolve(ConfigManager)
+        this._LangManager = container.resolve(LangManager)
+        this._AuthManager = container.resolve(AuthManager)
+        this._AuthlibManager = container.resolve(AuthlibManager)
         this._CommandsManager = new CommandsManager(
             this._LangManager,
             this._ModulesManager,
@@ -52,44 +57,19 @@ export class LauncherServer {
             this._InstancesManager,
             this
         )
-        this._WebManager = new WebManager(this.ConfigManager, this.LangManager)
-        this._InstancesManager = new InstancesManager(this.LangManager)
-        this._ProfilesManager = new ProfilesManager(this.LangManager)
-        this._ModulesManager = new ModulesManager(this.LangManager, this)
-        this._UpdateManager = new UpdateManager(
-            this.ConfigManager,
-            this.LangManager
-        )
-
-        LogHelper.info(this.LangManager.getTranslate.LauncherServer.initEnd)
+        this._InstancesManager = container.resolve(InstancesManager)
+        this._ProfilesManager = container.resolve(ProfilesManager)
+        this._ModulesManager = container.resolve(ModulesManager)
+        this._UpdateManager = container.resolve(UpdateManager)
     }
 
     /**
      * It reload the LauncherServer.
      */
     public reload() {
-        this._ConfigManager = new ConfigManager()
-        this._LangManager = new LangManager(this._ConfigManager)
-        this._AuthManager = new AuthManager(
-            this.ConfigManager,
-            this.LangManager
-        )
-        this._AuthlibManager = new AuthlibManager(this.LangManager)
-        this._CommandsManager = new CommandsManager(
-            this._LangManager,
-            this._ModulesManager,
-            this._UpdateManager,
-            this._ProfilesManager,
-            this._InstancesManager,
-            this
-        )
-        this._InstancesManager = new InstancesManager(this.LangManager)
-        this._ProfilesManager = new ProfilesManager(this.LangManager)
-        this._ModulesManager = new ModulesManager(this.LangManager, this)
-        this._UpdateManager = new UpdateManager(
-            this.ConfigManager,
-            this.LangManager
-        )
+        LogHelper.info("Reload LaunchServer")
+        // container.reset()
+        this.initialize()
     }
 
     get ConfigManager(): ConfigManager {
@@ -153,4 +133,4 @@ export class LauncherServer {
 /**
  * @deprecated use dependency injection instead
  */
-export const App = new LauncherServer()
+export const App = container.resolve(LauncherServer)

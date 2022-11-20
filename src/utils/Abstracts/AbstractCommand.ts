@@ -16,7 +16,7 @@ export abstract class AbstractCommand {
 export interface commandOptions {
     name: string
     description: string
-    usage: string
+    usage?: string
     category: Category
 }
 

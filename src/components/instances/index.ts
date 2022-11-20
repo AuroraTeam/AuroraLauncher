@@ -3,11 +3,14 @@ import fs from "fs"
 import { join } from "path"
 
 import { LogHelper, StorageHelper } from "@root/utils"
+import { injectable, singleton } from "tsyringe"
 
 import { LangManager } from "../langs"
 
 type HashesMap = Map<string, HashedFile[]>
 
+@singleton()
+@injectable()
 export class InstancesManager {
     hashedDirs = {
         assets: new Map() as HashesMap,

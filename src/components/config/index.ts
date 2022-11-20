@@ -2,9 +2,11 @@ import fs from "fs"
 
 import { LogHelper, StorageHelper } from "@root/utils"
 import { set } from "lodash-es"
+import { singleton } from "tsyringe"
 
 import { LauncherServerConfig } from "./utils/LauncherServerConfig"
 
+@singleton()
 export class ConfigManager {
     #config: LauncherServerConfig
 
