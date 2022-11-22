@@ -1,12 +1,10 @@
-import { LangManager } from "@root/components/langs"
 import { UpdateManager } from "@root/components/update"
 import { AbstractCommand, Category } from "@root/utils"
+import { injectable } from "tsyringe"
 
+@injectable()
 export class UpdateCommand extends AbstractCommand {
-    constructor(
-        langManager: LangManager,
-        private readonly updateManager: UpdateManager
-    ) {
+    constructor(private readonly updateManager: UpdateManager) {
         super({
             name: "update",
             description: "Update LauncherServer",

@@ -49,14 +49,7 @@ export class LauncherServer {
         this._LangManager = container.resolve(LangManager)
         this._AuthManager = container.resolve(AuthManager)
         this._AuthlibManager = container.resolve(AuthlibManager)
-        this._CommandsManager = new CommandsManager(
-            this._LangManager,
-            this._ModulesManager,
-            this._UpdateManager,
-            this._ProfilesManager,
-            this._InstancesManager,
-            this
-        )
+        this._CommandsManager = container.resolve(CommandsManager)
         this._InstancesManager = container.resolve(InstancesManager)
         this._ProfilesManager = container.resolve(ProfilesManager)
         this._ModulesManager = container.resolve(ModulesManager)
@@ -68,46 +61,76 @@ export class LauncherServer {
      */
     public reload() {
         LogHelper.info("Reload LaunchServer")
-        // container.reset()
+        container.clearInstances()
         this.initialize()
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get ConfigManager(): ConfigManager {
         return this._ConfigManager
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get LangManager(): LangManager {
         return this._LangManager
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get AuthManager(): AuthManager {
         return this._AuthManager
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get CommandsManager(): CommandsManager {
         return this._CommandsManager
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get ModulesManager(): ModulesManager {
         return this._ModulesManager
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get WebManager(): WebManager {
         return this._WebManager
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get InstancesManager(): InstancesManager {
         return this._InstancesManager
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get ProfilesManager(): ProfilesManager {
         return this._ProfilesManager
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get AuthlibManager(): AuthlibManager {
         return this._AuthlibManager
     }
 
+    /**
+     * @deprecated use dependency injection instead
+     */
     get UpdateManager(): UpdateManager {
         return this._UpdateManager
     }

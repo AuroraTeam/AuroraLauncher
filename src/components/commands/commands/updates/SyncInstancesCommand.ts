@@ -1,6 +1,8 @@
 import { InstancesManager, LangManager } from "@root/components"
 import { AbstractCommand, Category } from "@root/utils"
+import { injectable } from "tsyringe"
 
+@injectable()
 export class SyncInstancesCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
@@ -16,6 +18,6 @@ export class SyncInstancesCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        this.instancesManager.hashInstancesDir()
+        this.instancesManager.hashInstancesDir("instances")
     }
 }

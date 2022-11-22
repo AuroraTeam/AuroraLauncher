@@ -16,10 +16,7 @@ export class AuthlibManager {
     private publicKey: string
 
     constructor(private readonly langManager: LangManager) {
-        if (
-            fs.existsSync(this.privateKeyPath) &&
-            fs.existsSync(this.publicKeyPath)
-        ) {
+        if (this.keysExists()) {
             LogHelper.info(langManager.getTranslate.AuthlibManager.keysExists)
         } else {
             this.generateKeys()
@@ -27,9 +24,11 @@ export class AuthlibManager {
         this.setKeys()
     }
 
-    public regenerateKeys(): void {
-        this.generateKeys()
-        this.setKeys()
+    private keysExists() {
+        return (
+            fs.existsSync(this.privateKeyPath) &&
+            fs.existsSync(this.publicKeyPath)
+        )
     }
 
     private setKeys(): void {

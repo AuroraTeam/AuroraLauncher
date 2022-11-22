@@ -1,10 +1,11 @@
 import { LauncherServer } from "@root/app"
-import { LangManager } from "@root/components/langs"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
+import { delay, inject, injectable } from "tsyringe"
 
+@injectable()
 export class ReloadCommand extends AbstractCommand {
     constructor(
-        langManager: LangManager,
+        @inject(delay(() => LauncherServer))
         private readonly launcherServer: LauncherServer
     ) {
         super({

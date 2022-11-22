@@ -1,14 +1,9 @@
 import ReadLine from "readline"
 
-import { App, LauncherServer } from "@root/app"
+import { App } from "@root/app"
 import { AbstractCommand, LogHelper } from "@root/utils"
-import { singleton } from "tsyringe"
+import { container, injectable, singleton } from "tsyringe"
 
-import { InstancesManager } from "../instances"
-import { LangManager } from "../langs"
-import { ModulesManager } from "../modules"
-import { ProfilesManager } from "../profiles"
-import { UpdateManager } from "../update"
 import {
     AboutCommand,
     BranchCommand,
@@ -26,52 +21,30 @@ import {
 } from "./commands"
 
 @singleton()
+@injectable()
 export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
     console: ReadLine.Interface
 
-    constructor(
-        private readonly langManager: LangManager,
-        private readonly modulesManager: ModulesManager,
-        private readonly updateManager: UpdateManager,
-        private readonly profilesManager: ProfilesManager,
-        private readonly instancesManager: InstancesManager,
-        private readonly launcherServer: LauncherServer
-    ) {
+    constructor() {
         this.commandsInit()
         this.consoleInit()
     }
 
     private commandsInit(): void {
-        this.registerCommand(new StopCommand(this.langManager))
-        this.registerCommand(new AboutCommand(this.langManager))
-        this.registerCommand(new HelpCommand(this.langManager, this))
-        this.registerCommand(new DownloadClientCommand(this.langManager, this))
-        this.registerCommand(new DownloadAssetsCommand(this.langManager, this))
-        this.registerCommand(
-            new SyncInstancesCommand(this.langManager, this.instancesManager)
-        )
-        this.registerCommand(
-            new SyncProfilesCommand(this.langManager, this.profilesManager)
-        )
-        this.registerCommand(
-            new SyncAllCommand(
-                this.langManager,
-                this.profilesManager,
-                this.instancesManager
-            )
-        )
-        this.registerCommand(new LangCommand(this.langManager))
-        this.registerCommand(
-            new UpdateCommand(this.langManager, this.updateManager)
-        )
-        this.registerCommand(new BranchCommand(this.langManager))
-        this.registerCommand(
-            new ModulesCommand(this.langManager, this.modulesManager)
-        )
-        this.registerCommand(
-            new ReloadCommand(this.langManager, this.launcherServer)
-        )
+        this.registerCommand(container.resolve(StopCommand))
+        this.registerCommand(container.resolve(AboutCommand))
+        this.registerCommand(container.resolve(HelpCommand))
+        this.registerCommand(container.resolve(DownloadClientCommand))
+        this.registerCommand(container.resolve(DownloadAssetsCommand))
+        this.registerCommand(container.resolve(SyncInstancesCommand))
+        this.registerCommand(container.resolve(SyncProfilesCommand))
+        this.registerCommand(container.resolve(SyncAllCommand))
+        this.registerCommand(container.resolve(LangCommand))
+        this.registerCommand(container.resolve(UpdateCommand))
+        this.registerCommand(container.resolve(BranchCommand))
+        this.registerCommand(container.resolve(ModulesCommand))
+        this.registerCommand(container.resolve(ReloadCommand))
     }
 
     registerCommand(command: AbstractCommand): void {

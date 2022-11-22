@@ -1,9 +1,11 @@
 import { LangManager } from "@root/components/langs"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import chalk from "chalk"
+import { injectable } from "tsyringe"
 
 import { version } from "../../../../../package.json"
 
+@injectable()
 export class AboutCommand extends AbstractCommand {
     constructor(langManager: LangManager) {
         super({

@@ -1,6 +1,8 @@
 import { LangManager, ProfilesManager } from "@root/components"
 import { AbstractCommand, Category } from "@root/utils"
+import { injectable } from "tsyringe"
 
+@injectable()
 export class SyncProfilesCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,

@@ -1,11 +1,10 @@
-import { LangManager } from "@root/components"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 // import { App } from "@root/app"
 // import prompts from "prompts"
 
 export class BranchCommand extends AbstractCommand {
-    constructor(langManager: LangManager) {
+    constructor() {
         super({
             name: "branch",
             description: "Branch selection",

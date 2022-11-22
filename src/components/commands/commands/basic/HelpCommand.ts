@@ -1,12 +1,15 @@
 import { LangManager } from "@root/components/langs"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import chalk from "chalk"
+import { delay, inject, injectable } from "tsyringe"
 
 import { CommandsManager } from "../.."
 
+@injectable()
 export class HelpCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
+        @inject(delay(() => CommandsManager))
         private readonly commandsManager: CommandsManager
     ) {
         super({

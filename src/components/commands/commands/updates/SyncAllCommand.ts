@@ -4,7 +4,9 @@ import {
     ProfilesManager,
 } from "@root/components"
 import { AbstractCommand, Category } from "@root/utils"
+import { injectable } from "tsyringe"
 
+@injectable()
 export class SyncAllCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
@@ -22,6 +24,6 @@ export class SyncAllCommand extends AbstractCommand {
 
     invoke(): void {
         this.profilesManager.reloadProfiles()
-        this.instancesManager.hashInstancesDir()
+        this.instancesManager.hashInstancesDir("instances")
     }
 }

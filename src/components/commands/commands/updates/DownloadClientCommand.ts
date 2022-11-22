@@ -6,10 +6,13 @@ import {
     MojangManager,
 } from "@root/components/"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
+import { delay, inject, injectable } from "tsyringe"
 
+@injectable()
 export class DownloadClientCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
+        @inject(delay(() => CommandsManager))
         private readonly commandsManager: CommandsManager
     ) {
         super({
