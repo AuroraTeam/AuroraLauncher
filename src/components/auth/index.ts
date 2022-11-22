@@ -22,19 +22,14 @@ export class AuthManager {
         AbstractAuthProviderConstructor
     > = new Map()
 
-    constructor(configManager: ConfigManager, langManager: LangManager) {
+    constructor(
+        private configManager: ConfigManager,
+        private langManager: LangManager
+    ) {
         this.registerAuthProviders()
 
         const providerType = configManager.config.auth.type
-
-        if (!this.authProviders.has(providerType)) {
-            LogHelper.fatal(
-                langManager.getTranslate.AuthManager.invalidProvider
-            )
-        }
-
-        const Provider = this.authProviders.get(providerType)
-        this.authProvider = new Provider(configManager.config)
+        this.authProvider = this.getProvider(providerType)
     }
 
     private registerAuthProviders(): void {
@@ -52,7 +47,21 @@ export class AuthManager {
         this.authProviders.set(type, provider)
     }
 
+    /**
+     * @deprecated
+     */
     getAuthProvider(): AbstractAuthProvider {
         return this.authProvider
+    }
+
+    getProvider(providerType: string): AbstractAuthProvider {
+        if (!this.authProviders.has(providerType)) {
+            LogHelper.fatal(
+                this.langManager.getTranslate.AuthManager.invalidProvider
+            )
+        }
+
+        const Provider = this.authProviders.get(providerType)
+        return new Provider(this.configManager.config)
     }
 }
