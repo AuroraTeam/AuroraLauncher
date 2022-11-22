@@ -2,7 +2,9 @@ import fs from "fs"
 import path from "path"
 import { URL } from "url"
 
-import { App } from "@root/app"
+import { ConfigManager } from "@root/components/config"
+import { LangManager } from "@root/components/langs"
+import { ProfilesManager } from "@root/components/profiles"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
 import {
     HttpHelper,
@@ -11,8 +13,16 @@ import {
     StorageHelper,
     ZipHelper,
 } from "@root/utils"
+import { injectable } from "tsyringe"
 
+@injectable()
 export class MirrorManager {
+    constructor(
+        private langManager: LangManager,
+        private profilesManager: ProfilesManager,
+        private configManager: ConfigManager
+    ) {}
+
     /**
      * Скачивание клиена с зеркала
      * @param clientName - Название архива с файлами клиента
@@ -22,11 +32,11 @@ export class MirrorManager {
         clientName: string,
         instanceName: string
     ): Promise<void> {
-        const mirrors: string[] = App.ConfigManager.config.mirrors
+        const mirrors: string[] = this.configManager.config.mirrors
         const clientDir = path.resolve(StorageHelper.instancesDir, instanceName)
         if (fs.existsSync(clientDir))
             return LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.dirExist
+                this.langManager.getTranslate.DownloadManager.dirExist
             )
 
         const mirror = mirrors.find(async (mirror) => {
@@ -42,7 +52,7 @@ export class MirrorManager {
         })
         if (mirror === undefined)
             return LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .client.notFound
             )
 
@@ -51,7 +61,7 @@ export class MirrorManager {
 
         try {
             LogHelper.info(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .client.download
             )
             profile = await HttpHelper.getResource(
@@ -66,7 +76,7 @@ export class MirrorManager {
             )
         } catch (error) {
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .client.downloadErr
             )
             LogHelper.debug(error)
@@ -76,14 +86,14 @@ export class MirrorManager {
         try {
             fs.mkdirSync(clientDir)
             LogHelper.info(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .client.unpacking
             )
             ZipHelper.unzipArchive(client, clientDir)
         } catch (error) {
             fs.rmSync(clientDir, { recursive: true, force: true })
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .client.unpackingErr
             )
             LogHelper.debug(error)
@@ -93,7 +103,7 @@ export class MirrorManager {
         }
 
         //Profiles
-        App.ProfilesManager.createProfile({
+        this.profilesManager.createProfile({
             ...JsonHelper.fromJson(profile),
             clientDir: instanceName,
             servers: [
@@ -103,7 +113,7 @@ export class MirrorManager {
             ],
         } as ProfileConfig)
         LogHelper.info(
-            App.LangManager.getTranslate.DownloadManager.MirrorManager.client
+            this.langManager.getTranslate.DownloadManager.MirrorManager.client
                 .success
         )
     }
@@ -113,11 +123,11 @@ export class MirrorManager {
      * @param assetsVer - Название архива с файлами ассетов
      */
     async downloadAssets(assetsVer: string): Promise<void> {
-        const mirrors: string[] = App.ConfigManager.config.mirrors
+        const mirrors: string[] = this.configManager.config.mirrors
         const assetsDir = path.resolve(StorageHelper.assetsDir, assetsVer)
         if (fs.existsSync(assetsDir))
             return LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.dirExist
+                this.langManager.getTranslate.DownloadManager.dirExist
             )
 
         const mirror = mirrors.find(async (mirror) => {
@@ -130,7 +140,7 @@ export class MirrorManager {
         })
         if (mirror === undefined)
             return LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .assets.notFound
             )
 
@@ -138,7 +148,7 @@ export class MirrorManager {
 
         try {
             LogHelper.info(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .assets.download
             )
             assets = await HttpHelper.downloadFile(
@@ -150,7 +160,7 @@ export class MirrorManager {
             )
         } catch (error) {
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .assets.downloadErr
             )
             LogHelper.debug(error)
@@ -160,14 +170,14 @@ export class MirrorManager {
         try {
             fs.mkdirSync(assetsDir)
             LogHelper.info(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .assets.unpacking
             )
             ZipHelper.unzipArchive(assets, assetsDir)
         } catch (error) {
             fs.rmSync(assetsDir, { recursive: true, force: true })
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MirrorManager
+                this.langManager.getTranslate.DownloadManager.MirrorManager
                     .assets.unpackingErr
             )
             LogHelper.debug(error)
@@ -177,7 +187,7 @@ export class MirrorManager {
         }
 
         LogHelper.info(
-            App.LangManager.getTranslate.DownloadManager.MirrorManager.assets
+            this.langManager.getTranslate.DownloadManager.MirrorManager.assets
                 .success
         )
     }

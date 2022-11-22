@@ -3,7 +3,8 @@ import { mkdir } from "fs/promises"
 import path from "path"
 import { URL } from "url"
 
-import { App } from "@root/app"
+import { LangManager } from "@root/components/langs"
+import { ProfilesManager } from "@root/components/profiles"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
 import {
     HttpHelper,
@@ -12,12 +13,19 @@ import {
     StorageHelper,
     ZipHelper,
 } from "@root/utils"
+import { injectable } from "tsyringe"
 
+@injectable()
 export class MojangManager {
     clientsLink = "https://libraries.minecraft.net/"
     assetsLink = "https://resources.download.minecraft.net/"
     versionManifestLink =
         "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+
+    constructor(
+        protected langManager: LangManager,
+        protected profilesManager: ProfilesManager
+    ) {}
 
     /**
      * Скачивание клиента с зеркала Mojang
@@ -40,12 +48,12 @@ export class MojangManager {
         const clientDir = path.resolve(StorageHelper.instancesDir, instanceName)
         if (fs.existsSync(clientDir))
             return LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.dirExist
+                this.langManager.getTranslate.DownloadManager.dirExist
             )
         fs.mkdirSync(clientDir)
         try {
             LogHelper.info(
-                App.LangManager.getTranslate.DownloadManager.MojangManager
+                this.langManager.getTranslate.DownloadManager.MojangManager
                     .client.download
             )
             await HttpHelper.downloadFile(
@@ -54,7 +62,7 @@ export class MojangManager {
             )
         } catch (error) {
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MojangManager
+                this.langManager.getTranslate.DownloadManager.MojangManager
                     .client.downloadErr
             )
             LogHelper.debug(error)
@@ -66,8 +74,8 @@ export class MojangManager {
         if (!fs.existsSync(librariesDir)) fs.mkdirSync(librariesDir)
 
         LogHelper.info(
-            App.LangManager.getTranslate.DownloadManager.MojangManager.libraries
-                .download
+            this.langManager.getTranslate.DownloadManager.MojangManager
+                .libraries.download
         )
         const librariesList = this.librariesParse(libraries)
 
@@ -79,7 +87,7 @@ export class MojangManager {
             )
         } catch (error) {
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MojangManager
+                this.langManager.getTranslate.DownloadManager.MojangManager
                     .libraries.downloadErr
             )
             LogHelper.debug(error)
@@ -94,7 +102,7 @@ export class MojangManager {
         await mkdir(tempDir)
 
         LogHelper.info(
-            App.LangManager.getTranslate.DownloadManager.MojangManager.natives
+            this.langManager.getTranslate.DownloadManager.MojangManager.natives
                 .download
         )
         try {
@@ -113,7 +121,7 @@ export class MojangManager {
             )
         } catch (error) {
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MojangManager
+                this.langManager.getTranslate.DownloadManager.MojangManager
                     .natives.downloadErr
             )
             LogHelper.debug(error)
@@ -124,13 +132,13 @@ export class MojangManager {
 
         if (!modloader) {
             LogHelper.info(
-                App.LangManager.getTranslate.DownloadManager.MojangManager
+                this.langManager.getTranslate.DownloadManager.MojangManager
                     .client.success
             )
         }
 
         //Profiles
-        return App.ProfilesManager.createProfile({
+        return this.profilesManager.createProfile({
             version: clientVer,
             clientDir: instanceName,
             mainClass: version.mainClass,
@@ -155,7 +163,7 @@ export class MojangManager {
         const assetsDir = path.resolve(StorageHelper.assetsDir, assetsVer)
         if (fs.existsSync(assetsDir))
             return LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.dirExist
+                this.langManager.getTranslate.DownloadManager.dirExist
             )
         fs.mkdirSync(assetsDir)
 
@@ -176,7 +184,7 @@ export class MojangManager {
         }
 
         LogHelper.info(
-            App.LangManager.getTranslate.DownloadManager.MojangManager.assets
+            this.langManager.getTranslate.DownloadManager.MojangManager.assets
                 .download
         )
         try {
@@ -187,14 +195,14 @@ export class MojangManager {
             )
         } catch (error) {
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MojangManager
+                this.langManager.getTranslate.DownloadManager.MojangManager
                     .assets.downloadErr
             )
             LogHelper.debug(error)
             return
         }
         LogHelper.info(
-            App.LangManager.getTranslate.DownloadManager.MojangManager.assets
+            this.langManager.getTranslate.DownloadManager.MojangManager.assets
                 .success
         )
     }
@@ -271,7 +279,7 @@ export class MojangManager {
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MojangManager.info
+                this.langManager.getTranslate.DownloadManager.MojangManager.info
                     .unavailableSite
             )
             return
@@ -283,7 +291,7 @@ export class MojangManager {
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MojangManager.info
+                this.langManager.getTranslate.DownloadManager.MojangManager.info
                     .errVerParsing
             )
             return
@@ -292,7 +300,7 @@ export class MojangManager {
         const _version = versions.find((v: any) => v.id === version)
         if (_version === undefined) {
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MojangManager.info
+                this.langManager.getTranslate.DownloadManager.MojangManager.info
                     .verNotFound,
                 version
             )
@@ -305,7 +313,7 @@ export class MojangManager {
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MojangManager.info
+                this.langManager.getTranslate.DownloadManager.MojangManager.info
                     .clientDataNotFound
             )
             return
@@ -316,7 +324,7 @@ export class MojangManager {
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.MojangManager.info
+                this.langManager.getTranslate.DownloadManager.MojangManager.info
                     .errClientParsing
             )
             return

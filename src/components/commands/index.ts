@@ -1,9 +1,9 @@
 import ReadLine from "readline"
 
-import { App } from "@root/app"
 import { AbstractCommand, LogHelper } from "@root/utils"
 import { container, injectable, singleton } from "tsyringe"
 
+import { LangManager } from "../langs"
 import {
     AboutCommand,
     BranchCommand,
@@ -26,7 +26,7 @@ export class CommandsManager {
     commands: Map<string, AbstractCommand> = new Map()
     console: ReadLine.Interface
 
-    constructor() {
+    constructor(private readonly langManager: LangManager) {
         this.commandsInit()
         this.consoleInit()
     }
@@ -75,12 +75,12 @@ export class CommandsManager {
             const cmd = args.shift().toLowerCase()
             if (!this.commands.has(cmd))
                 return LogHelper.error(
-                    App.LangManager.getTranslate.CommandsManager.cmdNotFound,
+                    this.langManager.getTranslate.CommandsManager.cmdNotFound,
                     cmd
                 )
 
             LogHelper.dev(
-                App.LangManager.getTranslate.CommandsManager.invokeCmd,
+                this.langManager.getTranslate.CommandsManager.invokeCmd,
                 cmd
             )
 

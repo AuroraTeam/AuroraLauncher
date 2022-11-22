@@ -1,14 +1,21 @@
 import path from "path"
 import { URL } from "url"
 
-import { App } from "@root/app"
+import { LangManager } from "@root/components/langs"
+import { ProfilesManager } from "@root/components/profiles"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
 import { HttpHelper, JsonHelper, LogHelper, StorageHelper } from "@root/utils"
+import { injectable } from "tsyringe"
 
 import { MojangManager } from "./Mojang"
 
+@injectable()
 export class FabricManager extends MojangManager {
     fabricLink = "https://maven.fabricmc.net/"
+
+    constructor(langManager: LangManager, profilesManager: ProfilesManager) {
+        super(langManager, profilesManager)
+    }
 
     /**
      * Скачивание клиента с зеркала Mojang + Fabric
@@ -32,7 +39,7 @@ export class FabricManager extends MojangManager {
         const librariesDir = path.resolve(StorageHelper.librariesDir, clientVer)
 
         LogHelper.info(
-            App.LangManager.getTranslate.DownloadManager.FabricManager.client
+            this.langManager.getTranslate.DownloadManager.FabricManager.client
                 .download
         )
         const librariesList: Set<string> = new Set()
@@ -47,7 +54,7 @@ export class FabricManager extends MojangManager {
             )
         } catch (error) {
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.FabricManager
+                this.langManager.getTranslate.DownloadManager.FabricManager
                     .client.downloadErr
             )
             LogHelper.debug(error)
@@ -55,11 +62,11 @@ export class FabricManager extends MojangManager {
         }
 
         //Profiles
-        App.ProfilesManager.editProfile(profileUUID, {
+        this.profilesManager.editProfile(profileUUID, {
             mainClass: fabricVersion.mainClass,
         } as ProfileConfig)
         LogHelper.info(
-            App.LangManager.getTranslate.DownloadManager.FabricManager.client
+            this.langManager.getTranslate.DownloadManager.FabricManager.client
                 .success
         )
     }
@@ -75,7 +82,7 @@ export class FabricManager extends MojangManager {
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                this.langManager.getTranslate.DownloadManager.FabricManager.info
                     .unavailableSite
             )
             return
@@ -87,7 +94,7 @@ export class FabricManager extends MojangManager {
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                this.langManager.getTranslate.DownloadManager.FabricManager.info
                     .errJsonParsing
             )
             return
@@ -96,7 +103,7 @@ export class FabricManager extends MojangManager {
         const data = loaders.find((data: any) => data.loader.stable === true)
         if (data === undefined) {
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                this.langManager.getTranslate.DownloadManager.FabricManager.info
                     .verNotFound,
                 version
             )
@@ -113,7 +120,7 @@ export class FabricManager extends MojangManager {
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                this.langManager.getTranslate.DownloadManager.FabricManager.info
                     .clientDataNotFound
             )
             return
@@ -124,7 +131,7 @@ export class FabricManager extends MojangManager {
         } catch (error) {
             LogHelper.debug(error)
             LogHelper.error(
-                App.LangManager.getTranslate.DownloadManager.FabricManager.info
+                this.langManager.getTranslate.DownloadManager.FabricManager.info
                     .errClientParsing
             )
             return

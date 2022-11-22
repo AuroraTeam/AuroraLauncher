@@ -1,4 +1,4 @@
-import { App } from "@root/app"
+import { App } from "@root/LauncherServer"
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 
 type WebSocketClient = Parameters<AbstractRequest["invoke"]>["1"]

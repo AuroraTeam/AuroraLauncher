@@ -1,4 +1,4 @@
-import { App } from "@root/app"
+import { App } from "@root/LauncherServer"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"

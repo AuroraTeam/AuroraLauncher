@@ -1,4 +1,4 @@
-import { LauncherServer } from "@root/app"
+import { LauncherServer } from "@root/LauncherServer"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import { delay, inject, injectable } from "tsyringe"
 

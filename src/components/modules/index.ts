@@ -1,11 +1,11 @@
 import fs from "fs"
 import path from "path"
 
-import { LauncherServer } from "@root/app"
+import { LauncherServer } from "@root/LauncherServer"
 import { AbstractModule, IGetInfo } from "@root/utils"
 import { LogHelper, StorageHelper } from "@root/utils/"
 import chalk from "chalk"
-import { container, injectable, singleton } from "tsyringe"
+import { delay, inject, injectable, singleton } from "tsyringe"
 
 import { LangManager } from "../langs"
 
@@ -14,7 +14,11 @@ import { LangManager } from "../langs"
 export class ModulesManager {
     public static modulesList: Map<IGetInfo, AbstractModule[]> = new Map()
 
-    constructor(private readonly langManager: LangManager) {
+    constructor(
+        private readonly langManager: LangManager,
+        @inject(delay(() => LauncherServer))
+        private readonly app: LauncherServer
+    ) {
         this.loadModules()
     }
 
@@ -65,7 +69,7 @@ export class ModulesManager {
 
             ModulesManager.modulesList.set(
                 Module.getInfo(),
-                new Module().init(container)
+                new Module().init(this.app)
             )
         } catch (error) {
             LogHelper.debug(error.message)

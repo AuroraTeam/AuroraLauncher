@@ -1,4 +1,4 @@
-import { App } from "@root/app"
+import { App } from "@root/LauncherServer"
 import { JsonHelper } from "@root/utils"
 
 import { WebRequest } from "../../../WebRequest"
