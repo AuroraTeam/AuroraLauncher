@@ -1,12 +1,12 @@
-import {
-    AbstractAuthProvider,
-    AbstractAuthProviderConstructor,
-    LogHelper,
-} from "@root/utils"
+import { LogHelper } from "@root/utils"
 import { injectable, singleton } from "tsyringe"
 
 import { ConfigManager } from "../config"
 import { LangManager } from "../langs"
+import {
+    AbstractAuthProvider,
+    AbstractAuthProviderConstructor,
+} from "./authProviders/AbstractAuthProvider"
 import { AcceptAuthProvider } from "./authProviders/AcceptAuthProvider"
 import { DatabaseAuthProvider } from "./authProviders/DatabaseAuthProvider"
 import { JsonAuthProvider } from "./authProviders/JsonAuthProvider"

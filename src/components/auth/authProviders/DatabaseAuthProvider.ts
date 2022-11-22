@@ -1,17 +1,17 @@
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
+import { LogHelper, UUIDHelper } from "@root/utils"
+import { ResponseError } from "aurora-rpc-server"
+import { DataSource, EntitySchema, In } from "typeorm"
+
 import {
     AbstractAuthProvider,
     AbstractAuthProviderConfig,
     AuthResponseData,
     HasJoinedResponseData,
-    LogHelper,
     PrivilegesResponseData,
     ProfileResponseData,
     ProfilesResponseData,
-    UUIDHelper,
-} from "@root/utils"
-import { ResponseError } from "aurora-rpc-server"
-import { DataSource, EntitySchema, In } from "typeorm"
+} from "./AbstractAuthProvider"
 
 export class DatabaseAuthProvider implements AbstractAuthProvider {
     private userRepository

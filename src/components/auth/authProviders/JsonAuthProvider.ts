@@ -1,14 +1,15 @@
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
+import { HttpHelper } from "@root/utils"
+
 import {
     AbstractAuthProvider,
     AbstractAuthProviderConfig,
     AuthResponseData,
     HasJoinedResponseData,
-    HttpHelper,
     PrivilegesResponseData,
     ProfileResponseData,
     ProfilesResponseData,
-} from "@root/utils"
+} from "./AbstractAuthProvider"
 
 export class JsonAuthProvider implements AbstractAuthProvider {
     private config: JsonAuthProviderConfig

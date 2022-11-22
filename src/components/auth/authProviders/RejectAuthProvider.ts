@@ -1,6 +1,10 @@
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
-import { AbstractAuthProvider, AbstractAuthProviderConfig } from "@root/utils"
 import { ResponseError } from "aurora-rpc-server"
+
+import {
+    AbstractAuthProvider,
+    AbstractAuthProviderConfig,
+} from "./AbstractAuthProvider"
 
 export class RejectAuthProvider implements AbstractAuthProvider {
     private message: string

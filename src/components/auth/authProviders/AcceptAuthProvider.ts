@@ -1,13 +1,14 @@
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
 import { UUIDHelper } from "@root/utils"
+import { ResponseError } from "aurora-rpc-server"
+import { v4, v5 } from "uuid"
+
 import {
     AbstractAuthProvider,
     AuthResponseData,
     PrivilegesResponseData,
     ProfilesResponseData,
-} from "@root/utils"
-import { ResponseError } from "aurora-rpc-server"
-import { v4, v5 } from "uuid"
+} from "./AbstractAuthProvider"
 
 export class AcceptAuthProvider implements AbstractAuthProvider {
     private projectID: string

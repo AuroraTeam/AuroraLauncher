@@ -1,5 +1,6 @@
 import { Lang } from "@root/components"
-import { AbstractAuthProviderConfig, JsonHelper } from "@root/utils"
+import { AbstractAuthProviderConfig } from "@root/components/auth/authProviders/AbstractAuthProvider"
+import { JsonHelper } from "@root/utils"
 import { instanceToPlain, plainToInstance } from "class-transformer"
 import { v4 } from "uuid"
 

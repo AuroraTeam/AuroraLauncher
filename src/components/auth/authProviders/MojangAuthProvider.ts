@@ -1,10 +1,11 @@
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
+import { HttpHelper } from "@root/utils"
+
 import {
     AbstractAuthProvider,
     AbstractAuthProviderConfig,
     AuthResponseData,
-    HttpHelper,
-} from "@root/utils"
+} from "./AbstractAuthProvider"
 
 export class MojangAuthProvider implements AbstractAuthProvider {
     private authHost: string

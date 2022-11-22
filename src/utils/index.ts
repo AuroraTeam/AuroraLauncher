@@ -8,7 +8,6 @@ export * from "./helpers/UUIDHelper"
 export * from "./helpers/ValidationHelper"
 export * from "./helpers/ZipHelper"
 
-export * from "./abstracts/AbstractAuthProvider"
 export * from "./abstracts/AbstractCommand"
 
 export * from "./interfaces/LauncherServerModule"
