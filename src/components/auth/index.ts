@@ -1,5 +1,5 @@
 import { LogHelper } from "@root/utils"
-import { injectable, singleton } from "tsyringe"
+import { injectable } from "tsyringe"
 
 import { ConfigManager } from "../config"
 import { LangManager } from "../langs"
@@ -13,26 +13,28 @@ import { JsonAuthProvider } from "./authProviders/JsonAuthProvider"
 import { MojangAuthProvider } from "./authProviders/MojangAuthProvider"
 import { RejectAuthProvider } from "./authProviders/RejectAuthProvider"
 
-@singleton()
 @injectable()
 export class AuthManager {
+    /**
+     * @deprecated
+     */
     private readonly authProvider: AbstractAuthProvider
-    private readonly authProviders: Map<
+    private static readonly authProviders: Map<
         string,
         AbstractAuthProviderConstructor
     > = new Map()
 
-    constructor(
-        private configManager: ConfigManager,
-        private langManager: LangManager
-    ) {
-        this.registerAuthProviders()
-
-        const providerType = configManager.config.auth.type
-        this.authProvider = this.getProvider(providerType)
+    constructor(configManager: ConfigManager, langManager: LangManager) {
+        this.authProvider = AuthManager.getProvider(configManager, langManager)
     }
 
-    private registerAuthProviders(): void {
+    // Почему-то static блоки работают некорректно
+    // TODO Чекнуть позже как можно решить проблемку
+    // static {
+    //     this.registerProviders()
+    // }
+
+    static registerProviders() {
         this.registerProvider("accept", AcceptAuthProvider)
         this.registerProvider("reject", RejectAuthProvider)
         this.registerProvider("mojang", MojangAuthProvider)
@@ -40,10 +42,10 @@ export class AuthManager {
         this.registerProvider("json", JsonAuthProvider)
     }
 
-    private registerProvider(
+    public static registerProvider(
         type: string,
         provider: AbstractAuthProviderConstructor
-    ): void {
+    ) {
         this.authProviders.set(type, provider)
     }
 
@@ -54,14 +56,16 @@ export class AuthManager {
         return this.authProvider
     }
 
-    getProvider(providerType: string): AbstractAuthProvider {
-        if (!this.authProviders.has(providerType)) {
+    static getProvider(configManager: ConfigManager, langManager: LangManager) {
+        const providerType = configManager.config.auth.type
+
+        if (!AuthManager.authProviders.has(providerType)) {
             LogHelper.fatal(
-                this.langManager.getTranslate.AuthManager.invalidProvider
+                langManager.getTranslate.AuthManager.invalidProvider
             )
         }
 
-        const Provider = this.authProviders.get(providerType)
-        return new Provider(this.configManager.config)
+        const Provider = AuthManager.authProviders.get(providerType)
+        return new Provider(configManager.config)
     }
 }

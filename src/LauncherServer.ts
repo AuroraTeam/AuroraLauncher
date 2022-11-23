@@ -14,10 +14,16 @@ import {
     UpdateManager,
     WebManager,
 } from "./components"
+import { AbstractAuthProvider } from "./components/auth/authProviders/AbstractAuthProvider"
 import { LogHelper, StorageHelper } from "./utils"
 
 @singleton()
 export class LauncherServer {
+    private _AuthProvider: AbstractAuthProvider
+    public get AuthProvider(): AbstractAuthProvider {
+        return this._AuthProvider
+    }
+
     private _ConfigManager: ConfigManager
     private _LangManager: LangManager
     private _AuthManager: AuthManager
@@ -43,10 +49,15 @@ export class LauncherServer {
     }
 
     private initialize() {
-        // temp
         this._ConfigManager = container.resolve(ConfigManager)
         this._LangManager = container.resolve(LangManager)
+
+        // Auth
+        AuthManager.registerProviders()
         this._AuthManager = container.resolve(AuthManager)
+        this._AuthProvider = this._AuthManager.getAuthProvider()
+        // this._AuthProvider = AuthManager.getProvider()
+
         this._AuthlibManager = container.resolve(AuthlibManager)
         this._CommandsManager = container.resolve(CommandsManager)
         this._InstancesManager = container.resolve(InstancesManager)
