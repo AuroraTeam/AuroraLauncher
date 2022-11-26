@@ -64,6 +64,7 @@ export class LauncherServer {
         this._ProfilesManager = container.resolve(ProfilesManager)
         this._ModulesManager = container.resolve(ModulesManager)
         this._UpdateManager = container.resolve(UpdateManager)
+        this._WebManager = container.resolve(WebManager)
     }
 
     /**

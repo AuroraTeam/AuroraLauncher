@@ -1,6 +1,7 @@
 import { ConfigManager } from "@root/components/config"
 import { LangManager } from "@root/components/langs"
 import { Server } from "aurora-rpc-server"
+import { injectable } from "tsyringe"
 
 import { WebServerManager } from "../index"
 import { AuthRequest } from "./requests/AuthRequest"
@@ -8,6 +9,7 @@ import { ProfileRequest } from "./requests/ProfileRequest"
 import { ServersRequest } from "./requests/ServersRequest"
 import { UpdatesRequest } from "./requests/UpdatesRequest"
 
+@injectable()
 export class WebManager {
     private webServerManager: WebServerManager
     private webSocketManager: Server
