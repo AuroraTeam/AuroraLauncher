@@ -2,8 +2,12 @@ import fs from "fs"
 import path from "path"
 
 import { LauncherServer } from "@root/LauncherServer"
-import { AbstractModule, IGetInfo } from "@root/utils"
-import { LogHelper, StorageHelper } from "@root/utils/"
+import {
+    LauncherServerModule,
+    LogHelper,
+    ModuleInfo,
+    StorageHelper,
+} from "@root/utils"
 import chalk from "chalk"
 import { delay, inject, injectable, singleton } from "tsyringe"
 
@@ -12,7 +16,8 @@ import { LangManager } from "../langs"
 @singleton()
 @injectable()
 export class ModulesManager {
-    public static modulesList: Map<IGetInfo, AbstractModule[]> = new Map()
+    public static modulesList: Map<ModuleInfo, LauncherServerModule[]> =
+        new Map()
 
     constructor(
         private readonly langManager: LangManager,
