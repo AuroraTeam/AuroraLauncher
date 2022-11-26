@@ -1,13 +1,19 @@
-import { App } from "@root/LauncherServer"
+import { AuthManager } from "@root/components/auth"
 import { JsonHelper } from "@root/utils"
+import { injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
 import { AbstractRequest } from "../../AbstractRequest"
 
+@injectable()
 export class ProfilesRequest extends AbstractRequest {
     method = "POST"
     url = /^\/authlib\/api\/profiles\/minecraft$/
+
+    constructor(private authManager: AuthManager) {
+        super()
+    }
 
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         let data: string[]
@@ -28,6 +34,6 @@ export class ProfilesRequest extends AbstractRequest {
                 "Not more that 10 profile name per call is allowed."
             )
 
-        res.sendJson(await App.AuthManager.getAuthProvider().profiles(data))
+        res.sendJson(await this.authManager.getAuthProvider().profiles(data))
     }
 }

@@ -1,5 +1,7 @@
 import { IncomingMessage, ServerResponse } from "http"
 
+import { container } from "tsyringe"
+
 import { AbstractRequest } from "./requests/AbstractRequest"
 import { ProfilesRequest } from "./requests/authlib/accountsHost/ProfilesRequest"
 import { PrivelegesRequest } from "./requests/authlib/servicesHost/PrivelegesRequest"
@@ -14,12 +16,12 @@ export class WebRequestManager {
     private requests: AbstractRequest[] = []
 
     constructor() {
-        this.registerRequest(new JoinRequest())
-        this.registerRequest(new HasJoinedRequest())
-        this.registerRequest(new ProfileRequest())
-        this.registerRequest(new PrivelegesRequest())
-        this.registerRequest(new ProfilesRequest())
-        this.registerRequest(new InjectorRequest())
+        this.registerRequest(container.resolve(JoinRequest))
+        this.registerRequest(container.resolve(HasJoinedRequest))
+        this.registerRequest(container.resolve(ProfileRequest))
+        this.registerRequest(container.resolve(PrivelegesRequest))
+        this.registerRequest(container.resolve(ProfilesRequest))
+        this.registerRequest(container.resolve(InjectorRequest))
     }
 
     registerRequest(request: AbstractRequest): void {

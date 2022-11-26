@@ -1,13 +1,23 @@
-import { App } from "@root/LauncherServer"
+import { AuthManager } from "@root/components/auth"
+import { AuthlibManager } from "@root/components/authlib"
 import { JsonHelper } from "@root/utils"
+import { injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
 import { AbstractRequest } from "../../AbstractRequest"
 
+@injectable()
 export class HasJoinedRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib\/sessionserver\/session\/minecraft\/hasJoined/
+
+    constructor(
+        private authManager: AuthManager,
+        private authlibManager: AuthlibManager
+    ) {
+        super()
+    }
 
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         const { username, serverId } = req.query
@@ -17,10 +27,9 @@ export class HasJoinedRequest extends AbstractRequest {
 
         let user
         try {
-            user = await App.AuthManager.getAuthProvider().hasJoined(
-                username,
-                serverId
-            )
+            user = await this.authManager
+                .getAuthProvider()
+                .hasJoined(username, serverId)
         } catch (error) {
             return res.sendError(400, error.message)
         }
@@ -54,7 +63,7 @@ export class HasJoinedRequest extends AbstractRequest {
                 {
                     name: "textures",
                     value: texturesValue,
-                    signature: App.AuthlibManager.getSignature(texturesValue),
+                    signature: this.authlibManager.getSignature(texturesValue),
                 },
             ],
         })

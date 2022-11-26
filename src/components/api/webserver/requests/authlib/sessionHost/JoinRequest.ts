@@ -1,5 +1,6 @@
-import { App } from "@root/LauncherServer"
+import { AuthManager } from "@root/components/auth"
 import { JsonHelper } from "@root/utils"
+import { injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
@@ -11,9 +12,15 @@ interface JoinRequestDto {
     serverId: string
 }
 
+@injectable()
 export class JoinRequest extends AbstractRequest {
     method = "POST"
     url = /^\/authlib\/sessionserver\/session\/minecraft\/join$/
+
+    constructor(private authManager: AuthManager) {
+        super()
+    }
+
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         let data: JoinRequestDto
 
@@ -30,11 +37,9 @@ export class JoinRequest extends AbstractRequest {
         )
             return res.sendError(400, "BadRequestException")
 
-        const status = await App.AuthManager.getAuthProvider().join(
-            data.accessToken,
-            data.selectedProfile,
-            data.serverId
-        )
+        const status = await this.authManager
+            .getAuthProvider()
+            .join(data.accessToken, data.selectedProfile, data.serverId)
         if (!status)
             return res.sendError(
                 400,

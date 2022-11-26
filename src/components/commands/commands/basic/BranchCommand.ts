@@ -1,6 +1,5 @@
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
-// import { App } from "@root/app"
 // import prompts from "prompts"
 
 export class BranchCommand extends AbstractCommand {
@@ -36,7 +35,7 @@ export class BranchCommand extends AbstractCommand {
         //     initial: 0
         // }])
 
-        // App.ConfigManager.setProp("branch", response.result)
+        // this.configManager.setProp("branch", response.result)
 
         LogHelper.info("Method not implemented")
     }

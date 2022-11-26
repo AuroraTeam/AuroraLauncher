@@ -1,13 +1,23 @@
-import { App } from "@root/LauncherServer"
+import { AuthManager } from "@root/components/auth"
+import { AuthlibManager } from "@root/components/authlib"
+import { injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
 import { AbstractRequest } from "../../AbstractRequest"
 
+@injectable()
 export class ProfileRequest extends AbstractRequest {
     method = "GET"
     url =
         /^\/authlib\/sessionserver\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
+
+    constructor(
+        private authManager: AuthManager,
+        private authlibManager: AuthlibManager
+    ) {
+        super()
+    }
 
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         const matches = req.raw.url.match(this.url)
@@ -16,7 +26,7 @@ export class ProfileRequest extends AbstractRequest {
 
         let user
         try {
-            user = await App.AuthManager.getAuthProvider().profile(uuid)
+            user = await this.authManager.getAuthProvider().profile(uuid)
         } catch (error) {
             res.raw.statusCode = 204
             res.raw.end()
@@ -58,7 +68,7 @@ export class ProfileRequest extends AbstractRequest {
         data.properties[0].value = texturesValue.toString("base64")
         if (signed)
             data.properties[0].signature =
-                App.AuthlibManager.getSignature(texturesValue)
+                this.authlibManager.getSignature(texturesValue)
         res.sendJson(data)
     }
 }

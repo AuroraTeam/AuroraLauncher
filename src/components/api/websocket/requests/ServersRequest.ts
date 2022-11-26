@@ -1,8 +1,14 @@
-import { App } from "@root/LauncherServer"
+import { ProfilesManager } from "@root/components/profiles"
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
+import { injectable } from "tsyringe"
 
+@injectable()
 export class ServersRequest extends AbstractRequest {
     method = "servers"
+
+    constructor(private profilesManager: ProfilesManager) {
+        super()
+    }
 
     /**
      * It returns a list of servers.
@@ -10,7 +16,7 @@ export class ServersRequest extends AbstractRequest {
      */
     invoke(): ResponseResult {
         const servers: any[] = []
-        App.ProfilesManager.profiles
+        this.profilesManager.profiles
             .sort(
                 (a: { sortIndex: number }, b: { sortIndex: number }) =>
                     a.sortIndex - b.sortIndex

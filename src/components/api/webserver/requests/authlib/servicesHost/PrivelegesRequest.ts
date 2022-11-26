@@ -1,12 +1,18 @@
-import { App } from "@root/LauncherServer"
+import { AuthManager } from "@root/components/auth"
+import { injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
 import { AbstractRequest } from "../../AbstractRequest"
 
+@injectable()
 export class PrivelegesRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib\/minecraftservices\/privileges$/
+
+    constructor(private authManager: AuthManager) {
+        super()
+    }
 
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         const accessToken = req.raw.headers.authorization
@@ -14,9 +20,9 @@ export class PrivelegesRequest extends AbstractRequest {
         if ("string" !== typeof accessToken || accessToken.trim().length === 0)
             return res.sendError()
 
-        const user = await App.AuthManager.getAuthProvider().privileges(
-            accessToken.slice(7)
-        )
+        const user = await this.authManager
+            .getAuthProvider()
+            .privileges(accessToken.slice(7))
 
         res.sendJson({
             privileges: {

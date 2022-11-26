@@ -1,12 +1,14 @@
-import { App } from "@root/LauncherServer"
+import { LangManager } from "@root/components/langs"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
+import { injectable } from "tsyringe"
 
+@injectable()
 export class StatusCommand extends AbstractCommand {
-    constructor() {
+    constructor(langManager: LangManager) {
         super({
             name: "status",
             description:
-                App.LangManager.getTranslate.CommandsManager.commands.basic
+                langManager.getTranslate.CommandsManager.commands.basic
                     .StatusCommand,
             category: Category.BASIC,
         })

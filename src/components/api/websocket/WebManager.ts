@@ -1,7 +1,7 @@
 import { ConfigManager } from "@root/components/config"
 import { LangManager } from "@root/components/langs"
 import { Server } from "aurora-rpc-server"
-import { injectable } from "tsyringe"
+import { container, injectable } from "tsyringe"
 
 import { WebServerManager } from "../index"
 import { AuthRequest } from "./requests/AuthRequest"
@@ -28,9 +28,9 @@ export class WebManager {
     }
 
     private registerRequests(): void {
-        this.webSocketManager.registerRequest(new AuthRequest())
-        this.webSocketManager.registerRequest(new ServersRequest())
-        this.webSocketManager.registerRequest(new ProfileRequest())
-        this.webSocketManager.registerRequest(new UpdatesRequest())
+        this.webSocketManager.registerRequest(container.resolve(AuthRequest))
+        this.webSocketManager.registerRequest(container.resolve(ServersRequest))
+        this.webSocketManager.registerRequest(container.resolve(ProfileRequest))
+        this.webSocketManager.registerRequest(container.resolve(UpdatesRequest))
     }
 }

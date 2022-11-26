@@ -1,11 +1,17 @@
-import { App } from "@root/LauncherServer"
+import { InstancesManager } from "@root/components/instances"
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
+import { injectable } from "tsyringe"
 
+@injectable()
 export class UpdatesRequest extends AbstractRequest {
     method = "updates"
 
+    constructor(private instancesManager: InstancesManager) {
+        super()
+    }
+
     invoke({ type, dir }: UpdatesRequestData): ResponseResult {
-        return App.InstancesManager.hashedDirs[type].get(dir)
+        return this.instancesManager.hashedDirs[type].get(dir)
     }
 }
 

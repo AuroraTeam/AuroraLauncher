@@ -1,18 +1,29 @@
 import { MojangAuthProviderConfig } from "@root/components/auth/authProviders/MojangAuthProvider"
+import { ConfigManager } from "@root/components/config"
+import { ProfilesManager } from "@root/components/profiles"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
-import { App } from "@root/LauncherServer"
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
+import { injectable } from "tsyringe"
 
 // TODO Указание доп.параметров для запуска клиента при использовании различных провайдеров
 // Для работы Authlib
 
+@injectable()
 export class ProfileRequest extends AbstractRequest {
     method = "profile"
 
-    invoke(data: ProfileRequestData): ResponseResult {
-        const config = App.ConfigManager.config.auth as MojangAuthProviderConfig
+    constructor(
+        private configManager: ConfigManager,
+        private profilesManager: ProfilesManager
+    ) {
+        super()
+    }
 
-        const profile = App.ProfilesManager.profiles.find(
+    invoke(data: ProfileRequestData): ResponseResult {
+        const config = this.configManager.config
+            .auth as MojangAuthProviderConfig
+
+        const profile = this.profilesManager.profiles.find(
             (p: ProfileConfig) => p.uuid == data.uuid
         )
         profile.jvmArgs.push(
