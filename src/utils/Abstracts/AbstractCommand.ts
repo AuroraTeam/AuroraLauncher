@@ -1,19 +1,14 @@
 export abstract class AbstractCommand {
-    public readonly info: commandOptions
+    public readonly info: CommandInfo
 
-    protected constructor(options: commandOptions) {
-        this.info = {
-            name: options.name,
-            description: options.description,
-            usage: options.usage,
-            category: options.category,
-        }
+    constructor(info: CommandInfo) {
+        this.info = info
     }
 
     public abstract invoke(...args: string[]): void
 }
 
-export interface commandOptions {
+export interface CommandInfo {
     name: string
     description: string
     usage?: string
