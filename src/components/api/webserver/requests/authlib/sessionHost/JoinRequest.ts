@@ -1,6 +1,6 @@
-import { AuthManager } from "@root/components/auth"
+import { AuthProvider } from "@root/components/auth/providers"
 import { JsonHelper } from "@root/utils"
-import { injectable } from "tsyringe"
+import { inject, injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
@@ -17,7 +17,7 @@ export class JoinRequest extends AbstractRequest {
     method = "POST"
     url = /^\/authlib\/sessionserver\/session\/minecraft\/join$/
 
-    constructor(private authManager: AuthManager) {
+    constructor(@inject("AuthProvider") private authProvider: AuthProvider) {
         super()
     }
 
@@ -37,9 +37,11 @@ export class JoinRequest extends AbstractRequest {
         )
             return res.sendError(400, "BadRequestException")
 
-        const status = await this.authManager
-            .getAuthProvider()
-            .join(data.accessToken, data.selectedProfile, data.serverId)
+        const status = await this.authProvider.join(
+            data.accessToken,
+            data.selectedProfile,
+            data.serverId
+        )
         if (!status)
             return res.sendError(
                 400,

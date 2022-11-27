@@ -1,4 +1,4 @@
-import { AuthManager } from "@root/components/auth"
+import { AuthProvider } from "@root/components/auth/providers"
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
 import { injectable } from "tsyringe"
 
@@ -12,7 +12,7 @@ export interface ExtendedWebSocketClient extends WebSocketClient {
 export class AuthRequest extends AbstractRequest {
     method = "auth"
 
-    constructor(private authManager: AuthManager) {
+    constructor(private authProvider: AuthProvider) {
         super()
     }
 
@@ -27,8 +27,7 @@ export class AuthRequest extends AbstractRequest {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         ws: ExtendedWebSocketClient
     ): Promise<ResponseResult> {
-        const provider = this.authManager.getAuthProvider()
-        const res = await provider.auth(data.login, data.password)
+        const res = await this.authProvider.auth(data.login, data.password)
         ws.isAuthed = true
         return res
     }

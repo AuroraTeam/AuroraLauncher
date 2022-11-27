@@ -2,16 +2,16 @@ import { LauncherServerConfig } from "@root/components/config/utils/LauncherServ
 import { HttpHelper } from "@root/utils"
 
 import {
-    AbstractAuthProvider,
-    AbstractAuthProviderConfig,
+    AuthProvider,
+    AuthProviderConfig,
     AuthResponseData,
     HasJoinedResponseData,
     PrivilegesResponseData,
     ProfileResponseData,
     ProfilesResponseData,
-} from "./AbstractAuthProvider"
+} from "./AuthProvider"
 
-export class JsonAuthProvider implements AbstractAuthProvider {
+export class JsonAuthProvider implements AuthProvider {
     private config: JsonAuthProviderConfig
 
     constructor({ auth }: LauncherServerConfig) {
@@ -68,7 +68,7 @@ export class JsonAuthProvider implements AbstractAuthProvider {
     }
 }
 
-export interface JsonAuthProviderConfig extends AbstractAuthProviderConfig {
+export interface JsonAuthProviderConfig extends AuthProviderConfig {
     authUrl: string
     joinUrl: string
     hasJoinedUrl: string

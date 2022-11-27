@@ -2,12 +2,12 @@ import { LauncherServerConfig } from "@root/components/config/utils/LauncherServ
 import { HttpHelper } from "@root/utils"
 
 import {
-    AbstractAuthProvider,
-    AbstractAuthProviderConfig,
+    AuthProvider,
+    AuthProviderConfig,
     AuthResponseData,
-} from "./AbstractAuthProvider"
+} from "./AuthProvider"
 
-export class MojangAuthProvider implements AbstractAuthProvider {
+export class MojangAuthProvider implements AuthProvider {
     private authHost: string
 
     constructor({ auth }: LauncherServerConfig) {
@@ -57,7 +57,7 @@ export class MojangAuthProvider implements AbstractAuthProvider {
     }
 }
 
-export interface MojangAuthProviderConfig extends AbstractAuthProviderConfig {
+export interface MojangAuthProviderConfig extends AuthProviderConfig {
     authHost: string
     accountHost: string
     sessionHost: string

@@ -1,10 +1,10 @@
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
 
-export interface AbstractAuthProviderConstructor {
-    new (configManager: LauncherServerConfig): AbstractAuthProvider
+export interface AuthProviderConstructor {
+    new (configManager: LauncherServerConfig): AuthProvider
 }
 
-export interface AbstractAuthProvider {
+export interface AuthProvider {
     auth(username: string, password: string): PromiseOr<AuthResponseData>
 
     join(
@@ -25,10 +25,10 @@ export interface AbstractAuthProvider {
     profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[]>
 }
 
-export class AbstractAuthProviderConfig {
+export class AuthProviderConfig {
     type: string
 
-    static getDefaultConfig(): AbstractAuthProviderConfig {
+    static getDefaultConfig(): AuthProviderConfig {
         return { type: "accept" }
     }
 }

@@ -1,4 +1,4 @@
-import { MojangAuthProviderConfig } from "@root/components/auth/authProviders/MojangAuthProvider"
+import { MojangAuthProviderConfig } from "@root/components/auth/providers"
 import { ConfigManager } from "@root/components/config"
 import { ProfilesManager } from "@root/components/profiles"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"

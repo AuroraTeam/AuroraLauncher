@@ -1,6 +1,6 @@
-import { AuthManager } from "@root/components/auth"
+import { AuthProvider } from "@root/components/auth/providers"
 import { AuthlibManager } from "@root/components/authlib"
-import { injectable } from "tsyringe"
+import { inject, injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
@@ -13,7 +13,7 @@ export class ProfileRequest extends AbstractRequest {
         /^\/authlib\/sessionserver\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/
 
     constructor(
-        private authManager: AuthManager,
+        @inject("AuthProvider") private authProvider: AuthProvider,
         private authlibManager: AuthlibManager
     ) {
         super()
@@ -26,7 +26,7 @@ export class ProfileRequest extends AbstractRequest {
 
         let user
         try {
-            user = await this.authManager.getAuthProvider().profile(uuid)
+            user = await this.authProvider.profile(uuid)
         } catch (error) {
             res.raw.statusCode = 204
             res.raw.end()

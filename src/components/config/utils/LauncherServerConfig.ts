@@ -1,5 +1,5 @@
 import { Lang } from "@root/components"
-import { AbstractAuthProviderConfig } from "@root/components/auth/authProviders/AbstractAuthProvider"
+import { AuthProviderConfig } from "@root/components/auth/providers"
 import { JsonHelper } from "@root/utils"
 import { instanceToPlain, plainToInstance } from "class-transformer"
 import { v4 } from "uuid"
@@ -14,7 +14,7 @@ export class LauncherServerConfig {
     branch: branch
     env: Envirovement
     mirrors: string[]
-    auth: AbstractAuthProviderConfig
+    auth: AuthProviderConfig
     api: ApiConfig
 
     static getDefaults(): LauncherServerConfig {
@@ -26,7 +26,7 @@ export class LauncherServerConfig {
         config.branch = "stable"
         config.env = Envirovement.DEV
         config.mirrors = []
-        config.auth = AbstractAuthProviderConfig.getDefaultConfig()
+        config.auth = AuthProviderConfig.getDefaultConfig()
         config.api = ApiConfig.getDefaultConfig()
         return config
     }

@@ -1,6 +1,6 @@
-import { AuthManager } from "@root/components/auth"
+import { AuthProvider } from "@root/components/auth/providers"
 import { JsonHelper } from "@root/utils"
-import { injectable } from "tsyringe"
+import { inject, injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
@@ -11,7 +11,7 @@ export class ProfilesRequest extends AbstractRequest {
     method = "POST"
     url = /^\/authlib\/api\/profiles\/minecraft$/
 
-    constructor(private authManager: AuthManager) {
+    constructor(@inject("AuthProvider") private authProvider: AuthProvider) {
         super()
     }
 
@@ -34,6 +34,6 @@ export class ProfilesRequest extends AbstractRequest {
                 "Not more that 10 profile name per call is allowed."
             )
 
-        res.sendJson(await this.authManager.getAuthProvider().profiles(data))
+        res.sendJson(await this.authProvider.profiles(data))
     }
 }

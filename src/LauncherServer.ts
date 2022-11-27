@@ -14,19 +14,25 @@ import {
     UpdateManager,
     WebManager,
 } from "./components"
-import { AbstractAuthProvider } from "./components/auth/authProviders/AbstractAuthProvider"
+import {
+    AcceptAuthProvider,
+    AuthProvider,
+    DatabaseAuthProvider,
+    JsonAuthProvider,
+    MojangAuthProvider,
+    RejectAuthProvider,
+} from "./components/auth/providers"
 import { LogHelper, StorageHelper } from "./utils"
 
 @singleton()
 export class LauncherServer {
-    private _AuthProvider: AbstractAuthProvider
-    public get AuthProvider(): AbstractAuthProvider {
+    private _AuthProvider: AuthProvider
+    public get AuthProvider(): AuthProvider {
         return this._AuthProvider
     }
 
     private _ConfigManager: ConfigManager
     private _LangManager: LangManager
-    private _AuthManager: AuthManager
     private _CommandsManager: CommandsManager
     private _ModulesManager: ModulesManager
     private _WebManager: WebManager
@@ -53,10 +59,19 @@ export class LauncherServer {
         this._LangManager = container.resolve(LangManager)
 
         // Auth
-        AuthManager.registerProviders()
-        this._AuthManager = container.resolve(AuthManager)
-        this._AuthProvider = this._AuthManager.getAuthProvider()
-        // this._AuthProvider = AuthManager.getProvider()
+        AuthManager.registerProvider("accept", AcceptAuthProvider)
+        AuthManager.registerProvider("reject", RejectAuthProvider)
+        AuthManager.registerProvider("mojang", MojangAuthProvider)
+        AuthManager.registerProvider("db", DatabaseAuthProvider)
+        AuthManager.registerProvider("json", JsonAuthProvider)
+
+        this._AuthProvider = AuthManager.getProvider(
+            this._ConfigManager,
+            this._LangManager
+        )
+        container.register("AuthProvider", { useValue: this._AuthProvider })
+
+        // Other
 
         this._AuthlibManager = container.resolve(AuthlibManager)
         this._CommandsManager = container.resolve(CommandsManager)

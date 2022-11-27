@@ -1,5 +1,5 @@
-import { AuthManager } from "@root/components/auth"
-import { injectable } from "tsyringe"
+import { AuthProvider } from "@root/components/auth/providers"
+import { inject, injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
@@ -10,7 +10,7 @@ export class PrivelegesRequest extends AbstractRequest {
     method = "GET"
     url = /^\/authlib\/minecraftservices\/privileges$/
 
-    constructor(private authManager: AuthManager) {
+    constructor(@inject("AuthProvider") private authProvider: AuthProvider) {
         super()
     }
 
@@ -20,9 +20,7 @@ export class PrivelegesRequest extends AbstractRequest {
         if ("string" !== typeof accessToken || accessToken.trim().length === 0)
             return res.sendError()
 
-        const user = await this.authManager
-            .getAuthProvider()
-            .privileges(accessToken.slice(7))
+        const user = await this.authProvider.privileges(accessToken.slice(7))
 
         res.sendJson({
             privileges: {

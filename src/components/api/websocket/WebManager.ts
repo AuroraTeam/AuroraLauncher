@@ -18,13 +18,10 @@ export class WebManager {
         const { host, port } = configManager.config.api
 
         this.webServerManager = new WebServerManager(configManager, langManager)
+        const { server } = this.webServerManager
 
-        this.webSocketManager = new Server({
-            server: this.webServerManager.server,
-        })
-        this.registerRequests()
-
-        this.webServerManager.server.listen({ host, port })
+        this.webSocketManager = new Server({ server })
+        server.listen({ host, port })
     }
 
     private registerRequests(): void {

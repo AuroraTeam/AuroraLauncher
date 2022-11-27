@@ -1,7 +1,7 @@
-import { AuthManager } from "@root/components/auth"
+import { AuthProvider } from "@root/components/auth/providers"
 import { AuthlibManager } from "@root/components/authlib"
 import { JsonHelper } from "@root/utils"
-import { injectable } from "tsyringe"
+import { inject, injectable } from "tsyringe"
 
 import { WebRequest } from "../../../WebRequest"
 import { WebResponse } from "../../../WebResponse"
@@ -13,7 +13,7 @@ export class HasJoinedRequest extends AbstractRequest {
     url = /^\/authlib\/sessionserver\/session\/minecraft\/hasJoined/
 
     constructor(
-        private authManager: AuthManager,
+        @inject("AuthProvider") private authProvider: AuthProvider,
         private authlibManager: AuthlibManager
     ) {
         super()
@@ -27,9 +27,7 @@ export class HasJoinedRequest extends AbstractRequest {
 
         let user
         try {
-            user = await this.authManager
-                .getAuthProvider()
-                .hasJoined(username, serverId)
+            user = await this.authProvider.hasJoined(username, serverId)
         } catch (error) {
             return res.sendError(400, error.message)
         }

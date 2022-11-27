@@ -4,16 +4,16 @@ import { ResponseError } from "aurora-rpc-server"
 import { DataSource, EntitySchema, In } from "typeorm"
 
 import {
-    AbstractAuthProvider,
-    AbstractAuthProviderConfig,
+    AuthProvider,
+    AuthProviderConfig,
     AuthResponseData,
     HasJoinedResponseData,
     PrivilegesResponseData,
     ProfileResponseData,
     ProfilesResponseData,
-} from "./AbstractAuthProvider"
+} from "./AuthProvider"
 
-export class DatabaseAuthProvider implements AbstractAuthProvider {
+export class DatabaseAuthProvider implements AuthProvider {
     private userRepository
 
     constructor({ auth }: LauncherServerConfig) {
@@ -186,7 +186,7 @@ const getUserEntity = (
     })
 }
 
-export class DatabaseAuthProviderConfig extends AbstractAuthProviderConfig {
+export class DatabaseAuthProviderConfig extends AuthProviderConfig {
     connection: {
         type: AvaliableDataBaseType
         host: string

@@ -4,13 +4,13 @@ import { ResponseError } from "aurora-rpc-server"
 import { v4, v5 } from "uuid"
 
 import {
-    AbstractAuthProvider,
+    AuthProvider,
     AuthResponseData,
     PrivilegesResponseData,
     ProfilesResponseData,
-} from "./AbstractAuthProvider"
+} from "./AuthProvider"
 
-export class AcceptAuthProvider implements AbstractAuthProvider {
+export class AcceptAuthProvider implements AuthProvider {
     private projectID: string
     private sessionsDB: UserData[] = []
 
