@@ -11,29 +11,26 @@ export type Translate = typeof ruTranslate | typeof enTranslate
 @singleton()
 @injectable()
 export class LangManager {
-    private langList: Map<Lang, Translate> = new Map()
+    private langList: Map<Lang, Translate> = new Map([
+        ["ru", ruTranslate],
+        ["en", enTranslate]
+    ])
     private currentLang: Translate
 
     constructor(private readonly configManager: ConfigManager) {
-        this.setLangs()
         const selectedLang = configManager.config.lang
 
         if (!this.langList.has(selectedLang)) {
-            LogHelper.fatal(
-                `Invalid lang settings! Language "${selectedLang}" not found.`
+            LogHelper.error(
+                `Invalid lang settings! Language "${selectedLang}" not found. Reset to default...`
             )
+
+            this.configManager.setProp("lang", "en")
         }
 
         this.currentLang = this.langList.get(selectedLang)
 
         LogHelper.dev(`LangManager init. Selected language: ${selectedLang}`)
-    }
-
-    /**
-     * It sets the language list.
-     */
-    private setLangs(): void {
-        this.langList.set("ru", ruTranslate).set("en", enTranslate)
     }
 
     /**
@@ -45,7 +42,7 @@ export class LangManager {
     }
 
     /**
-     * It Change the current language of the server
+     * It Changes the current language of the server
      * @param {Lang} lang - The language to change to
      * @returns The current language
      */
@@ -57,7 +54,7 @@ export class LangManager {
         this.configManager.setProp("lang", lang)
 
         LogHelper.info(
-            "Language has been changed. A complete change requires a restart LauncherServer"
+            "Language has been changed. A complete changes requires restarting LauncherServer"
         )
     }
 }

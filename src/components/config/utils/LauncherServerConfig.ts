@@ -12,7 +12,7 @@ export class LauncherServerConfig {
     projectName: string
     lang: Lang
     branch: branch
-    env: Envirovement
+    env: Environment
     mirrors: string[]
     auth: AuthProviderConfig
     api: ApiConfig
@@ -24,7 +24,7 @@ export class LauncherServerConfig {
         config.projectName = ""
         config.lang = "ru"
         config.branch = "stable"
-        config.env = Envirovement.DEV
+        config.env = Environment.DEV
         config.mirrors = []
         config.auth = AuthProviderConfig.getDefaultConfig()
         config.api = ApiConfig.getDefaultConfig()
@@ -40,7 +40,7 @@ export class LauncherServerConfig {
     }
 }
 
-export enum Envirovement {
+export enum Environment {
     PRODUCTION = "prod",
     DEBUG = "debug",
     DEV = "dev",

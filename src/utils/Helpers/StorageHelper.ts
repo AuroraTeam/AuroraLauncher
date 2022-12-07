@@ -4,7 +4,7 @@ import { dirname, resolve } from "path"
 
 import { StorageHelper as CoreStorageHelper } from "@auroralauncher/core"
 
-import { SystemHelper } from "./SystemHelper"
+import { SystemHelper } from "@root/utils"
 
 export class StorageHelper extends CoreStorageHelper {
     /* Folders */

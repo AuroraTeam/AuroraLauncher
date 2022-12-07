@@ -6,7 +6,7 @@ import { format } from "util"
 import chalk from "chalk"
 import stripAnsi from "strip-ansi"
 
-import { StorageHelper } from "./StorageHelper"
+import { StorageHelper } from "@root/utils"
 
 export class LogHelper {
     private static readonly isDevEnabled = process.argv.includes("--dev")
@@ -17,7 +17,7 @@ export class LogHelper {
         return new Date()
             .toISOString()
             .slice(0, 19)
-            .replace(/-|:/g, ".")
+            .replace(/[-:]/g, ".")
             .replace("T", "-")
     }
 

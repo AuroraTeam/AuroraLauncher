@@ -1,8 +1,10 @@
 import {
     CommandsManager,
+    ConfigManager,
     LangManager,
     MirrorManager,
     MojangManager,
+    ProfilesManager,
 } from "@root/components"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import { delay, inject, injectable } from "tsyringe"
@@ -10,12 +12,14 @@ import { delay, inject, injectable } from "tsyringe"
 @injectable()
 export class DownloadAssetsCommand extends AbstractCommand {
     constructor(
-        langManager: LangManager,
+        private readonly langManager: LangManager,
+        private readonly profilesManager: ProfilesManager,
+        private readonly configManager: ConfigManager,
         @inject(delay(() => CommandsManager))
         private readonly commandsManager: CommandsManager
     ) {
         super({
-            name: "downloadassets",
+            name: "download_assets",
             description:
                 langManager.getTranslate.CommandsManager.commands.updates
                     .DownloadAssetsCommand,
@@ -32,7 +36,7 @@ export class DownloadAssetsCommand extends AbstractCommand {
         if (!DownloadManager) return
 
         this.commandsManager.console.pause()
-        await new DownloadManager().downloadAssets(assetsVer)
+        await new DownloadManager(this.langManager, this.profilesManager, this.configManager).downloadAssets(assetsVer)
         this.commandsManager.console.resume()
     }
 

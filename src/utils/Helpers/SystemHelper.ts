@@ -8,27 +8,11 @@ export class SystemHelper {
     }
 
     /**
-     * It returns true if the current operating system is Windows
-     * @returns The platform that the code is running on.
+     * Compares platforms
+     * @returns The return value is a boolean.
      */
-    public static isWindows(): boolean {
-        return process.platform === "win32"
-    }
-
-    /**
-     * It returns true if the platform is Mac.
-     * @returns The platform that the application is running on.
-     */
-    public static isMac(): boolean {
-        return process.platform === "darwin"
-    }
-
-    /**
-     * It returns true if the platform is Linux.
-     * @returns The platform of the operating system.
-     */
-    public static isLinux(): boolean {
-        return process.platform === "linux"
+    public static comparePlatforms(platform: availablePlatforms): boolean {
+        return process.platform === platform
     }
 
     /**
@@ -39,3 +23,5 @@ export class SystemHelper {
         return process.pkg !== undefined
     }
 }
+
+type availablePlatforms = "darwin" | "linux" | "win32"

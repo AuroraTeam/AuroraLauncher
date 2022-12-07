@@ -1,9 +1,11 @@
 import {
     CommandsManager,
+    ConfigManager,
     FabricManager,
     LangManager,
     MirrorManager,
     MojangManager,
+    ProfilesManager,
 } from "@root/components/"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import { delay, inject, injectable } from "tsyringe"
@@ -11,7 +13,9 @@ import { delay, inject, injectable } from "tsyringe"
 @injectable()
 export class DownloadClientCommand extends AbstractCommand {
     constructor(
-        langManager: LangManager,
+        private readonly langManager: LangManager,
+        private readonly profilesManager: ProfilesManager,
+        private readonly configManager: ConfigManager,
         @inject(delay(() => CommandsManager))
         private readonly commandsManager: CommandsManager
     ) {
@@ -36,7 +40,7 @@ export class DownloadClientCommand extends AbstractCommand {
         if (!DownloadManager) return
 
         this.commandsManager.console.pause()
-        await new DownloadManager().downloadClient(clientName, instanceName)
+        await new DownloadManager(this.langManager, this.profilesManager, this.configManager).downloadClient(clientName, instanceName)
         this.commandsManager.console.resume()
     }
 
