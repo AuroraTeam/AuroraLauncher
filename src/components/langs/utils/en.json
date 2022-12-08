@@ -3,7 +3,10 @@
         "initEnd": "Initialization end"
     },
     "LangManager": {
-        "strNotFound": "String \"%s\" not found!"
+        "init": "LangManager initialized. Selected language: \"%s\"",
+        "strNotFound": "String \"%s\" not found!",
+        "langNotFound": "Language \"%s\" not found!",
+        "changeLang": "Language has been changed. Full change requires restarting LauncherServer"
     },
     "CommandsManager": {
         "cmdNotFound": "Command \"%s\" not found!",

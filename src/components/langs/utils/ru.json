@@ -3,7 +3,10 @@
         "initEnd": "Инициализация завершена"
     },
     "LangManager": {
-        "strNotFound": "Строка \"%s\" не найдена!"
+        "init": "LangManager инициализирован. Выбранный язык: \"%s\"",
+        "strNotFound": "Строка \"%s\" не найдена!",
+        "langNotFound": "Язык \"%s\" не найден!",
+        "changeLang": "Язык изменен. Для полного изменения требуется перезапуск LauncherServer"
     },
     "CommandsManager": {
         "cmdNotFound": "Команда \"%s\" не найдена!",
