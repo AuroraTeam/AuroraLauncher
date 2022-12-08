@@ -13,7 +13,7 @@ export type Translate = typeof ruTranslate | typeof enTranslate
 export class LangManager {
     private langList: Map<Lang, Translate> = new Map([
         ["ru", ruTranslate],
-        ["en", enTranslate]
+        ["en", enTranslate],
     ])
     private currentLang: Translate
 
@@ -21,7 +21,10 @@ export class LangManager {
         const selectedLang = configManager.config.lang
 
         if (!this.langList.has(selectedLang)) {
-            LogHelper.error("Invalid language settings! Language \"%s\" not found. Reset to default settings...", selectedLang)
+            LogHelper.error(
+                'Invalid language settings! Language "%s" not found. Reset to default settings...',
+                selectedLang
+            )
 
             this.configManager.setProp("lang", "en")
         }
@@ -46,7 +49,10 @@ export class LangManager {
      */
     public changeLang(lang: Lang): void {
         if (!this.langList.has(lang))
-            return LogHelper.error(this.getTranslate.LangManager.langNotFound, lang)
+            return LogHelper.error(
+                this.getTranslate.LangManager.langNotFound,
+                lang
+            )
 
         this.currentLang = this.langList.get(lang)
         this.configManager.setProp("lang", lang)

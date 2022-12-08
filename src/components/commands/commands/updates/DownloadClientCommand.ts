@@ -40,7 +40,11 @@ export class DownloadClientCommand extends AbstractCommand {
         if (!DownloadManager) return
 
         this.commandsManager.console.pause()
-        await new DownloadManager(this.langManager, this.profilesManager, this.configManager).downloadClient(clientName, instanceName)
+        await new DownloadManager(
+            this.langManager,
+            this.profilesManager,
+            this.configManager
+        ).downloadClient(clientName, instanceName)
         this.commandsManager.console.resume()
     }
 

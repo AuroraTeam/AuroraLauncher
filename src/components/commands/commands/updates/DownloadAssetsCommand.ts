@@ -36,7 +36,11 @@ export class DownloadAssetsCommand extends AbstractCommand {
         if (!DownloadManager) return
 
         this.commandsManager.console.pause()
-        await new DownloadManager(this.langManager, this.profilesManager, this.configManager).downloadAssets(assetsVer)
+        await new DownloadManager(
+            this.langManager,
+            this.profilesManager,
+            this.configManager
+        ).downloadAssets(assetsVer)
         this.commandsManager.console.resume()
     }
 

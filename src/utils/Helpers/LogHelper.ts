@@ -3,10 +3,9 @@ import { EOL } from "os"
 import { resolve } from "path"
 import { format } from "util"
 
+import { StorageHelper } from "@root/utils"
 import chalk from "chalk"
 import stripAnsi from "strip-ansi"
-
-import { StorageHelper } from "@root/utils"
 
 export class LogHelper {
     private static readonly isDevEnabled = process.argv.includes("--dev")
