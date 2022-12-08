@@ -19,7 +19,7 @@ export class DownloadAssetsCommand extends AbstractCommand {
         private readonly commandsManager: CommandsManager
     ) {
         super({
-            name: "download_assets",
+            name: "downloadassets",
             description:
                 langManager.getTranslate.CommandsManager.commands.updates
                     .DownloadAssetsCommand,
