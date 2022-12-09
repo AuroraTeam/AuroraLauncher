@@ -32,23 +32,26 @@ export class CommandsManager {
     }
 
     private commandsInit(): void {
-        this.registerCommand(container.resolve(StopCommand))
-        this.registerCommand(container.resolve(AboutCommand))
-        this.registerCommand(container.resolve(HelpCommand))
-        this.registerCommand(container.resolve(DownloadClientCommand))
-        this.registerCommand(container.resolve(DownloadAssetsCommand))
-        this.registerCommand(container.resolve(SyncInstancesCommand))
-        this.registerCommand(container.resolve(SyncProfilesCommand))
-        this.registerCommand(container.resolve(SyncAllCommand))
-        this.registerCommand(container.resolve(LangCommand))
-        this.registerCommand(container.resolve(UpdateCommand))
-        this.registerCommand(container.resolve(BranchCommand))
-        this.registerCommand(container.resolve(ModulesCommand))
-        this.registerCommand(container.resolve(ReloadCommand))
+        this.registerCommands([
+            container.resolve(ReloadCommand),
+            container.resolve(ModulesCommand),
+            container.resolve(BranchCommand),
+            container.resolve(UpdateCommand),
+            container.resolve(LangCommand),
+            container.resolve(SyncAllCommand),
+            container.resolve(SyncProfilesCommand),
+            container.resolve(SyncInstancesCommand),
+            container.resolve(DownloadAssetsCommand),
+            container.resolve(DownloadClientCommand),
+            container.resolve(AboutCommand),
+            container.resolve(StopCommand),
+        ])
     }
 
-    registerCommand(command: AbstractCommand): void {
-        this.commands.set(command.info.name, command)
+    registerCommands(commands: AbstractCommand[]): void {
+        commands.forEach((command: AbstractCommand) => {
+            this.commands.set(command.info.name, command)
+        })
     }
 
     private consoleInit(): void {

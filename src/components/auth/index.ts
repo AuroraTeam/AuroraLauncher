@@ -10,11 +10,12 @@ export class AuthManager {
     private static authProviders: Map<string, AuthProviderConstructor> =
         new Map()
 
-    public static registerProvider(
-        type: string,
-        provider: AuthProviderConstructor
+    public static registerProviders(
+        providers: Record<string, AuthProviderConstructor>
     ) {
-        this.authProviders.set(type, provider)
+        Object.entries(providers).forEach(([providerName, provider]) => {
+            this.authProviders.set(providerName, provider)
+        })
     }
 
     static getProvider(configManager: ConfigManager, langManager: LangManager) {

@@ -59,11 +59,13 @@ export class LauncherServer {
         this._LangManager = container.resolve(LangManager)
 
         // Auth
-        AuthManager.registerProvider("accept", AcceptAuthProvider)
-        AuthManager.registerProvider("reject", RejectAuthProvider)
-        AuthManager.registerProvider("mojang", MojangAuthProvider)
-        AuthManager.registerProvider("db", DatabaseAuthProvider)
-        AuthManager.registerProvider("json", JsonAuthProvider)
+        AuthManager.registerProviders({
+            "json": JsonAuthProvider,
+            "db": DatabaseAuthProvider,
+            "mojang": MojangAuthProvider,
+            "reject": RejectAuthProvider,
+            "accept": AcceptAuthProvider,
+        })
 
         this._AuthProvider = AuthManager.getProvider(
             this._ConfigManager,

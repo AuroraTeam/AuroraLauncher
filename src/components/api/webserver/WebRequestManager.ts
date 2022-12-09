@@ -16,16 +16,19 @@ export class WebRequestManager {
     private requests: AbstractRequest[] = []
 
     constructor() {
-        this.registerRequest(container.resolve(JoinRequest))
-        this.registerRequest(container.resolve(HasJoinedRequest))
-        this.registerRequest(container.resolve(ProfileRequest))
-        this.registerRequest(container.resolve(PrivelegesRequest))
-        this.registerRequest(container.resolve(ProfilesRequest))
-        this.registerRequest(container.resolve(InjectorRequest))
+        this.registerRequests([
+            container.resolve(InjectorRequest),
+            container.resolve(ProfilesRequest),
+            container.resolve(PrivelegesRequest),
+            container.resolve(ProfileRequest),
+            container.resolve(JoinRequest)
+        ])
     }
 
-    registerRequest(request: AbstractRequest): void {
-        this.requests.push(request)
+    registerRequests(requests: AbstractRequest[]): void {
+        requests.forEach(request => {
+            this.requests.push(request)
+        })
     }
 
     async getRequest(req: IncomingMessage, res: ServerResponse) {
