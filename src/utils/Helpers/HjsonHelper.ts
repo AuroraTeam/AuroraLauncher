@@ -18,10 +18,10 @@ export class HjsonHelper {
 
     /**
      * Преобразовать объект / массив в Hjson строку
-     * @param object Пробразуемый объект / массив
+     * @param data Пробразуемый объект / массив
      * @returns Hjson сторка
      */
-    static toHjson(object: HjsonData): string {
-        return stringify(object, { keepWsc: true })
+    static toHjson(data: HjsonData): string {
+        return stringify(data, { keepWsc: true, space: 4 })
     }
 }

@@ -32,11 +32,15 @@ export class LauncherServerConfig {
     }
 
     public toJSON(): string {
-        return JsonHelper.toJson(instanceToPlain(this), true)
+        const object = instanceToPlain(this)
+
+        return JsonHelper.toJson(object, true)
     }
 
     public static fromJSON(json: string): LauncherServerConfig {
-        return plainToInstance(LauncherServerConfig, JSON.parse(json))
+        const data = JsonHelper.fromJson(json)
+
+        return plainToInstance(LauncherServerConfig, data)
     }
 }
 
