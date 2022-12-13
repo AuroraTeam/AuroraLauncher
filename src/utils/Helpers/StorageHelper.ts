@@ -24,7 +24,7 @@ export class StorageHelper extends CoreStorageHelper {
     /* Files */
     static readonly configFile: string = resolve(
         this.storageDir,
-        "LauncherServerConfig.json"
+        "LauncherServerConfig.hjson"
     )
 
     static validate(): void {
