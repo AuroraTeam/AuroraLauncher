@@ -21,12 +21,6 @@ export class StorageHelper extends CoreStorageHelper {
     static readonly authlibDir: string = resolve(this.storageDir, "authlib")
     static readonly logsDir: string = resolve(this.storageDir, "logs")
 
-    /* Files */
-    static readonly configFile: string = resolve(
-        this.storageDir,
-        "LauncherServerConfig.hjson"
-    )
-
     static validate(): void {
         if (!existsSync(this.filesDir)) mkdirSync(this.filesDir)
         if (!existsSync(this.assetsDir)) mkdirSync(this.assetsDir)

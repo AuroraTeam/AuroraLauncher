@@ -5,13 +5,12 @@ import { ConfigManager } from "../config"
 import enTranslate from "./utils/en.json"
 import ruTranslate from "./utils/ru.json"
 
-export type Lang = "ru" | "en"
 export type Translate = typeof ruTranslate | typeof enTranslate
 
 @singleton()
 @injectable()
 export class LangManager {
-    private langList: Map<Lang, Translate> = new Map([
+    private langList: Map<string, Translate> = new Map([
         ["ru", ruTranslate],
         ["en", enTranslate],
     ])
@@ -44,10 +43,10 @@ export class LangManager {
 
     /**
      * It Changes the current language of the LauncherServer
-     * @param {Lang} lang - The language to change to
+     * @param {string} lang - The language to change to
      * @returns The current language
      */
-    public changeLang(lang: Lang): void {
+    public changeLang(lang: string): void {
         if (!this.langList.has(lang))
             return LogHelper.error(
                 this.getTranslate.LangManager.langNotFound,

@@ -1,4 +1,5 @@
 import fs from "fs"
+import { resolve } from "path"
 
 import { LogHelper, StorageHelper } from "@root/utils"
 import { set } from "lodash-es"
@@ -9,9 +10,13 @@ import { LauncherServerConfig } from "./utils/LauncherServerConfig"
 @singleton()
 export class ConfigManager {
     #config: LauncherServerConfig
+    #configFile: string = resolve(
+        StorageHelper.logsDir,
+        "LauncherServerConfig.hjson"
+    )
 
     constructor() {
-        if (fs.existsSync(StorageHelper.configFile)) {
+        if (fs.existsSync(this.#configFile)) {
             LogHelper.info("Loading configuration")
 
             this.load()
@@ -54,7 +59,7 @@ export class ConfigManager {
     private load(): void {
         try {
             this.#config = LauncherServerConfig.fromString(
-                fs.readFileSync(StorageHelper.configFile).toString()
+                fs.readFileSync(this.#configFile).toString()
             )
         } catch (e) {
             if (e instanceof SyntaxError) {
@@ -71,6 +76,6 @@ export class ConfigManager {
      * It saves the config file
      */
     private save(): void {
-        fs.writeFileSync(StorageHelper.configFile, this.#config.toString())
+        fs.writeFileSync(this.#configFile, this.#config.toString())
     }
 }
