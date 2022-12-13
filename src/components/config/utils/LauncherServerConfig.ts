@@ -1,12 +1,12 @@
 import { Lang } from "@root/components"
 import { AuthProviderConfig } from "@root/components/auth/providers"
-import { JsonHelper } from "@root/utils"
+import { HjsonCommented, HjsonHelper } from "@root/utils"
 import { instanceToPlain, plainToInstance } from "class-transformer"
 import { v4 } from "uuid"
 
 import { ApiConfig } from "./ApiConfig"
 
-export class LauncherServerConfig {
+export class LauncherServerConfig extends HjsonCommented {
     configVersion: number
     projectID: string
     projectName: string
@@ -31,16 +31,22 @@ export class LauncherServerConfig {
         return config
     }
 
-    public toJSON(): string {
+    public toString(): string {
         const object = instanceToPlain(this)
 
-        return JsonHelper.toJson(object, true)
+        HjsonHelper.defineComments(this, object)
+
+        return HjsonHelper.toHjson(object)
     }
 
-    public static fromJSON(json: string): LauncherServerConfig {
-        const data = JsonHelper.fromJson(json)
+    public static fromString(json: string): LauncherServerConfig {
+        const data = HjsonHelper.fromHjson<LauncherServerConfig>(json)
 
-        return plainToInstance(LauncherServerConfig, data)
+        const _class = plainToInstance(LauncherServerConfig, data)
+
+        HjsonHelper.defineComments(data, _class)
+
+        return _class
     }
 }
 

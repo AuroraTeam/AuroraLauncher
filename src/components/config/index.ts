@@ -53,7 +53,7 @@ export class ConfigManager {
      */
     private load(): void {
         try {
-            this.#config = LauncherServerConfig.fromJSON(
+            this.#config = LauncherServerConfig.fromString(
                 fs.readFileSync(StorageHelper.configFile).toString()
             )
         } catch (e) {
@@ -71,6 +71,6 @@ export class ConfigManager {
      * It saves the config file
      */
     private save(): void {
-        fs.writeFileSync(StorageHelper.configFile, this.#config.toJSON())
+        fs.writeFileSync(StorageHelper.configFile, this.#config.toString())
     }
 }

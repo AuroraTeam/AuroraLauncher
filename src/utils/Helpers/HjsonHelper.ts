@@ -12,7 +12,7 @@ export class HjsonHelper {
      * @param string Hjson строка
      * @returns `Object | Array`
      */
-    static fromHjson<T>(string: string): T {
+    static fromHjson<T extends HjsonCommented>(string: string): T {
         return parse(string, { keepWsc: true })
     }
 
@@ -24,4 +24,15 @@ export class HjsonHelper {
     static toHjson(data: HjsonData): string {
         return stringify(data, { keepWsc: true, space: 4 })
     }
+
+    static defineComments(from: HjsonCommented, to: HjsonCommented) {
+        Object.defineProperty(to, "__COMMENTS__", {
+            enumerable: false,
+            value: from.__COMMENTS__,
+        })
+    }
+}
+
+export abstract class HjsonCommented {
+    __COMMENTS__?: any
 }
