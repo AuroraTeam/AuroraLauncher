@@ -3,7 +3,8 @@ import { rm } from "fs/promises"
 import { dirname, resolve } from "path"
 
 import { StorageHelper as CoreStorageHelper } from "@auroralauncher/core"
-import { SystemHelper } from "@root/utils"
+
+import { SystemHelper } from "./SystemHelper"
 
 export class StorageHelper extends CoreStorageHelper {
     /* Folders */
