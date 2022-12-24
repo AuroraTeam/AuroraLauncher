@@ -227,11 +227,12 @@ export class MojangManager {
                 disallow: [] as string[],
             }
 
-            if (lib.rules !== undefined) {
+            if (lib.rules) {
                 lib.rules.forEach(
                     (rule: { action: "allow" | "disallow"; os: any }) => {
-                        if (rule.os !== undefined)
+                        if (rule.os) {
                             rules[rule.action].push(rule.os.name)
+                        }
                     }
                 )
 
@@ -243,13 +244,13 @@ export class MojangManager {
                     return
             }
 
-            if (lib.downloads.artifact !== undefined) {
+            if (lib.downloads.artifact) {
                 filteredData.libraries.add(lib.downloads.artifact.path)
             }
 
             // Natives
-            if (lib.natives !== undefined) {
-                const natives = <any[]>Object.values(lib.natives)
+            if (lib.natives) {
+                const natives = Object.values(lib.natives) as string[];
 
                 // Ещё один костыль для lwjgl
                 if (
@@ -261,8 +262,9 @@ export class MojangManager {
 
                 natives.forEach((native) => {
                     const nativeData = lib.downloads.classifiers[native]
-                    if (nativeData === undefined) return
-                    filteredData.natives.add(nativeData.path)
+                    if (nativeData) {
+                        filteredData.natives.add(nativeData.path)
+                    }
                 })
             }
         })

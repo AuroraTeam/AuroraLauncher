@@ -47,7 +47,7 @@ export class LogHelper {
 
     public static fatal(msg: any, ...args: any[]): void {
         this.log(LogLevel.FATAL, msg, ...args)
-        process.exit(1)
+        process.abort()
     }
 
     public static info(msg: any, ...args: any[]): void {
