@@ -1,4 +1,3 @@
-import { Lang } from "@root/components"
 import { AuthProviderConfig } from "@root/components/auth/providers"
 import { HjsonCommented, HjsonHelper } from "@root/utils"
 import { instanceToPlain, plainToInstance } from "class-transformer"
@@ -10,7 +9,7 @@ export class LauncherServerConfig extends HjsonCommented {
     configVersion: number
     projectID: string
     projectName: string
-    lang: Lang
+    lang: string
     branch: branch
     env: Environment
     mirrors: string[]

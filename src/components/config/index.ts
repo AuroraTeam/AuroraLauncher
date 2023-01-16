@@ -11,7 +11,7 @@ import { LauncherServerConfig } from "./utils/LauncherServerConfig"
 export class ConfigManager {
     #config: LauncherServerConfig
     #configFile: string = resolve(
-        StorageHelper.logsDir,
+        StorageHelper.storageDir,
         "LauncherServerConfig.hjson"
     )
 
