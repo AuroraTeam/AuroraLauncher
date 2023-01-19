@@ -8,6 +8,7 @@ import { injectable, singleton } from "tsyringe"
 import { LangManager } from "../langs"
 
 type HashesMap = Map<string, HashedFile[]>
+type totalDirs = "assets" | "libraries" | "instances"
 
 @singleton()
 @injectable()
@@ -33,7 +34,8 @@ export class InstancesManager {
 
             if (folders.length === 0)
                 return LogHelper.info(
-                    this.langManager.getTranslate.InstancesManager.syncSkip
+                    this.langManager.getTranslate.InstancesManager.syncSkip,
+                    dir.charAt(0).toUpperCase() + dir.slice(1)
                 )
 
             LogHelper.info(this.langManager.getTranslate.InstancesManager.sync)
@@ -86,5 +88,3 @@ export type HashedFile = {
     hashsum: string
     size: number
 }
-
-type totalDirs = "assets" | "libraries" | "instances"

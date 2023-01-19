@@ -106,7 +106,7 @@
         "sync": "Синхронизация папки instances",
         "syncTime": "Папка \"%s\" - %dms",
         "syncEnd": "Синхронизация завершена",
-        "syncSkip": "Папка instances пуста. Синхронизация пропущена"
+        "syncSkip": "Папка %s пуста. Синхронизация пропущена"
     },
     "ProgressHelper": {
         "loading": "{bar} {percentage}%",

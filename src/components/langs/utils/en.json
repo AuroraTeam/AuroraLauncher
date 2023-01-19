@@ -106,7 +106,7 @@
         "sync": "Syncing instances dir",
         "syncTime": "Syncing \"%s\" - %dms",
         "syncEnd": "Syncing instances dir end",
-        "syncSkip": "Instances dir empty. Skip sync"
+        "syncSkip": "%s dir empty. Skip sync"
     },
     "ProgressHelper": {
         "loading": "{bar} {percentage}%",
