@@ -60,11 +60,11 @@ export class LauncherServer {
 
         // Auth
         AuthManager.registerProviders({
-            "json": JsonAuthProvider,
-            "db": DatabaseAuthProvider,
-            "mojang": MojangAuthProvider,
-            "reject": RejectAuthProvider,
-            "accept": AcceptAuthProvider,
+            json: JsonAuthProvider,
+            db: DatabaseAuthProvider,
+            mojang: MojangAuthProvider,
+            reject: RejectAuthProvider,
+            accept: AcceptAuthProvider,
         })
 
         this._AuthProvider = AuthManager.getProvider(

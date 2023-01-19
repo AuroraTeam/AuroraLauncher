@@ -21,12 +21,12 @@ export class WebRequestManager {
             container.resolve(ProfilesRequest),
             container.resolve(PrivelegesRequest),
             container.resolve(ProfileRequest),
-            container.resolve(JoinRequest)
+            container.resolve(JoinRequest),
         ])
     }
 
     registerRequests(requests: AbstractRequest[]): void {
-        requests.forEach(request => {
+        requests.forEach((request) => {
             this.requests.push(request)
         })
     }

@@ -250,7 +250,7 @@ export class MojangManager {
 
             // Natives
             if (lib.natives) {
-                const natives = Object.values(lib.natives) as string[];
+                const natives = Object.values(lib.natives) as string[]
 
                 // Ещё один костыль для lwjgl
                 if (

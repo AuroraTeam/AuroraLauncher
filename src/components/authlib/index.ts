@@ -21,6 +21,7 @@ export class AuthlibManager {
         } else {
             this.generateKeys()
         }
+
         this.setKeys()
     }
 
@@ -56,6 +57,7 @@ export class AuthlibManager {
         LogHelper.info(
             this.langManager.getTranslate.AuthlibManager.privateKeySaved
         )
+
         fs.writeFileSync(this.publicKeyPath, keys.publicKey)
         LogHelper.info(
             this.langManager.getTranslate.AuthlibManager.privateKeySaved

@@ -42,8 +42,8 @@ export class DatabaseAuthProvider implements AuthProvider {
 
         const userData = {
             username,
-            userUUID: <string>user.userUUID,
-            accessToken: <string>user.accessToken,
+            userUUID: user.userUUID as string,
+            accessToken: user.accessToken as string,
         }
 
         await this.userRepository.update(user, {
@@ -81,9 +81,9 @@ export class DatabaseAuthProvider implements AuthProvider {
         }
 
         return {
-            userUUID: <string>user.userUUID,
-            skinUrl: <string>user.skinUrl,
-            capeUrl: <string>user.capeUrl,
+            userUUID: user.userUUID as string,
+            skinUrl: user.skinUrl as string,
+            capeUrl: user.capeUrl as string,
         }
     }
 
@@ -92,9 +92,9 @@ export class DatabaseAuthProvider implements AuthProvider {
         if (!user) throw new ResponseError("User not found", 100)
 
         return {
-            username: <string>user.username,
-            skinUrl: <string>user.skinUrl,
-            capeUrl: <string>user.capeUrl,
+            username: user.username as string,
+            skinUrl: user.skinUrl as string,
+            capeUrl: user.capeUrl as string,
         }
     }
 
@@ -102,10 +102,10 @@ export class DatabaseAuthProvider implements AuthProvider {
         const user = await this.userRepository.findOneBy({ accessToken })
 
         return {
-            onlineChat: <boolean>user.onlineChat,
-            multiplayerServer: <boolean>user.multiplayerServer,
-            multiplayerRealms: <boolean>user.multiplayerRealms,
-            telemetry: <boolean>user.telemetry,
+            onlineChat: user.onlineChat as boolean,
+            multiplayerServer: user.multiplayerServer as boolean,
+            multiplayerRealms: user.multiplayerRealms as boolean,
+            telemetry: user.telemetry as boolean,
         }
     }
 
@@ -113,8 +113,8 @@ export class DatabaseAuthProvider implements AuthProvider {
         return [
             ...(await this.userRepository.findBy({ userUUID: In(userUUIDs) })),
         ].map((user) => ({
-            id: <string>user.userUUID,
-            name: <string>user.username,
+            id: user.userUUID as string,
+            name: user.username as string,
         }))
     }
 }

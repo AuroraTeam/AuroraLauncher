@@ -51,6 +51,7 @@ export class UpdateManager {
 
     public async installUpdate() {
         const latestVersion = await this.checkUpdate()
+
         if (!latestVersion) return
 
         LogHelper.info(this.langManager.getTranslate.UpdateManager.updating)
@@ -82,7 +83,7 @@ export class UpdateManager {
             )
         }
         const latestVersion =
-            versionsData[<"stable" | "dev">this.configManager.config.branch]
+            versionsData[this.configManager.config.branch as "stable" | "dev"]
 
         if (!this.needUpdate(latestVersion))
             return LogHelper.info(

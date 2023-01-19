@@ -1,7 +1,8 @@
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 
 export class ModulesCommand extends AbstractCommand {
-    constructor() { // private readonly modulesManager: ModulesManager
+    constructor() {
+        // private readonly modulesManager: ModulesManager
         super({
             name: "modules",
             description: "Outputs list of all loaded modules",
