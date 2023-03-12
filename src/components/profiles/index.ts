@@ -10,7 +10,7 @@ import { ProfileConfig } from "./utils/ProfileConfig";
 @singleton()
 @injectable()
 export class ProfilesManager {
-    private profiles: ProfileConfig[] = [];
+    profiles: ProfileConfig[] = [];
     constructor(private readonly langManager: LangManager) {
         this.loadProfiles();
     }
@@ -27,8 +27,8 @@ export class ProfilesManager {
 
         LogHelper.info(this.langManager.getTranslate.ProfilesManager.sync);
 
-        files.forEach(async (file) => {
-            if (!file.endsWith(".json")) return;
+        for (const file of files) {
+            if (!file.endsWith(".json")) continue;
 
             try {
                 const data = await fs.readFile(
@@ -47,7 +47,8 @@ export class ProfilesManager {
                     LogHelper.debug(e);
                 }
             }
-        });
+        }
+
         LogHelper.info(this.langManager.getTranslate.ProfilesManager.syncEnd);
     }
 

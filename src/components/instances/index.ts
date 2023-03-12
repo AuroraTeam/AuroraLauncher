@@ -19,7 +19,7 @@ type TotalDirs = "assets" | "libraries" | "instances";
 @singleton()
 @injectable()
 export class InstancesManager {
-    private readonly hashedDirs: Record<TotalDirs, HashesMap> = {
+    readonly hashedDirs: Record<TotalDirs, HashesMap> = {
         assets: new Map(),
         libraries: new Map(),
         instances: new Map(),
@@ -30,7 +30,7 @@ export class InstancesManager {
     }
 
     private async hashDirs(totalDirs: TotalDirs[]): Promise<void> {
-        totalDirs.forEach(async (dir) => {
+        for (const dir of totalDirs) {
             const dirPath = join(StorageHelper.filesDir, dir);
             const folders = await fs.readdir(dirPath, { withFileTypes: true });
             const dirs = folders.filter((folder) => folder.isDirectory());
@@ -40,12 +40,12 @@ export class InstancesManager {
                     this.langManager.getTranslate.InstancesManager.syncSkip,
                     `${dir.charAt(0).toUpperCase()}${dir.slice(1)}`
                 );
-                return;
+                continue;
             }
 
             LogHelper.info(this.langManager.getTranslate.InstancesManager.sync);
 
-            dirs.forEach(async ({ name }) => {
+            for (const { name } of dirs) {
                 const startTime = Date.now();
 
                 this.hashedDirs[dir].set(
@@ -58,8 +58,8 @@ export class InstancesManager {
                     name,
                     Date.now() - startTime
                 );
-            });
-        });
+            }
+        }
 
         LogHelper.info(this.langManager.getTranslate.InstancesManager.syncEnd);
     }

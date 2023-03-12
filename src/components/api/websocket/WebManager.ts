@@ -4,10 +4,12 @@ import { Server } from "aurora-rpc-server";
 import { container, injectable } from "tsyringe";
 
 import { WebServerManager } from "../index";
-import { AuthRequest } from "./requests/AuthRequest";
-import { ProfileRequest } from "./requests/ProfileRequest";
-import { ServersRequest } from "./requests/ServersRequest";
-import { UpdatesRequest } from "./requests/UpdatesRequest";
+import {
+    AuthRequest,
+    ProfileRequest,
+    ServersRequest,
+    UpdatesRequest,
+} from "./requests";
 
 @injectable()
 export class WebManager {
@@ -21,24 +23,21 @@ export class WebManager {
             configManager,
             langManager
         );
-        const { server } = this.webServerManager;
+        this.webSocketManager = new Server({
+            server: this.webServerManager.server,
+        });
 
-        this.webSocketManager = new Server({ server });
         this.registerRequests();
 
-        server.listen({ host, port });
+        this.webServerManager.server.listen({ host, port });
     }
 
     private registerRequests(): void {
-        this.webSocketManager.registerRequest(container.resolve(AuthRequest));
-        this.webSocketManager.registerRequest(
-            container.resolve(ServersRequest)
-        );
-        this.webSocketManager.registerRequest(
-            container.resolve(ProfileRequest)
-        );
-        this.webSocketManager.registerRequest(
-            container.resolve(UpdatesRequest)
-        );
+        [
+            container.resolve(AuthRequest),
+            container.resolve(ProfileRequest),
+            container.resolve(ServersRequest),
+            container.resolve(UpdatesRequest),
+        ].forEach((request) => this.webSocketManager.registerRequest(request));
     }
 }
