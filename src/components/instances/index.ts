@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import fs from "fs";
+import fs from "fs/promises";
 import { join } from "path";
 
 import { LogHelper, StorageHelper } from "@root/utils";
@@ -7,45 +7,50 @@ import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
 
+type HashedFile = {
+    path: string;
+    hashsum: string;
+    size: number;
+};
+
 type HashesMap = Map<string, HashedFile[]>;
-type totalDirs = "assets" | "libraries" | "instances";
+type TotalDirs = "assets" | "libraries" | "instances";
 
 @singleton()
 @injectable()
 export class InstancesManager {
-    hashedDirs = {
-        assets: new Map() as HashesMap,
-        libraries: new Map() as HashesMap,
-        instances: new Map() as HashesMap,
+    private readonly hashedDirs: Record<TotalDirs, HashesMap> = {
+        assets: new Map(),
+        libraries: new Map(),
+        instances: new Map(),
     };
 
     constructor(private readonly langManager: LangManager) {
         this.hashDirs(["assets", "libraries", "instances"]);
     }
 
-    // TODO move to constructor?
-    hashDirs(totalDirs: totalDirs[]): void {
-        totalDirs.forEach((dir) => {
-            const folders = fs
-                .readdirSync(join(StorageHelper.filesDir, dir), {
-                    withFileTypes: true,
-                })
-                .filter((folder) => folder.isDirectory());
+    private async hashDirs(totalDirs: TotalDirs[]): Promise<void> {
+        totalDirs.forEach(async (dir) => {
+            const dirPath = join(StorageHelper.filesDir, dir);
+            const folders = await fs.readdir(dirPath, { withFileTypes: true });
+            const dirs = folders.filter((folder) => folder.isDirectory());
 
-            if (folders.length === 0)
-                return LogHelper.info(
+            if (dirs.length === 0) {
+                LogHelper.info(
                     this.langManager.getTranslate.InstancesManager.syncSkip,
-                    dir.charAt(0).toUpperCase() + dir.slice(1)
+                    `${dir.charAt(0).toUpperCase()}${dir.slice(1)}`
                 );
+                return;
+            }
 
             LogHelper.info(this.langManager.getTranslate.InstancesManager.sync);
 
-            folders.forEach(({ name }) => {
+            dirs.forEach(async ({ name }) => {
                 const startTime = Date.now();
 
                 this.hashedDirs[dir].set(
                     name,
-                    this.hashDir(join(StorageHelper.filesDir, dir, name))
+                    await this.hashDir(join(StorageHelper.filesDir, dir, name))
                 );
 
                 LogHelper.info(
@@ -59,32 +64,33 @@ export class InstancesManager {
         LogHelper.info(this.langManager.getTranslate.InstancesManager.syncEnd);
     }
 
-    hashDir(dir: string, arrayOfFiles: HashedFile[] = []): HashedFile[] {
-        fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
-            const file = join(dir, entry.name);
+    private async hashDir(
+        dirPath: string,
+        arrayOfFiles: HashedFile[] = []
+    ): Promise<HashedFile[]> {
+        const entries = await fs.readdir(dirPath, { withFileTypes: true });
+
+        for (const entry of entries) {
+            const entryPath = join(dirPath, entry.name);
             if (entry.isDirectory()) {
-                arrayOfFiles.concat(this.hashDir(file, arrayOfFiles));
+                arrayOfFiles = await this.hashDir(entryPath, arrayOfFiles);
             } else {
-                arrayOfFiles.push(this.hashFile(file));
+                arrayOfFiles.push(await this.hashFile(entryPath));
             }
-        });
+        }
+
         return arrayOfFiles;
     }
 
-    hashFile(path: string): HashedFile {
+    private async hashFile(path: string): Promise<HashedFile> {
+        const data = await fs.readFile(path);
+        const size = (await fs.stat(path)).size;
+        const hashsum = crypto.createHash("sha1").update(data).digest("hex");
+
         return {
             path: path.replace(StorageHelper.instancesDir, ""),
-            size: fs.statSync(path).size,
-            hashsum: crypto
-                .createHash("sha1")
-                .update(fs.readFileSync(path))
-                .digest("hex"),
+            hashsum,
+            size,
         };
     }
 }
-
-export type HashedFile = {
-    path: string;
-    hashsum: string;
-    size: number;
-};
