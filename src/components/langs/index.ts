@@ -17,14 +17,13 @@ export class LangManager {
     private currentLang: Translate
 
     constructor(private readonly configManager: ConfigManager) {
-        const selectedLang = configManager.config.lang
+        const selectedLang = configManager.config.lang;
 
         if (!this.langList.has(selectedLang)) {
             LogHelper.error(
                 'Invalid language settings! Language "%s" not found. Reset to default settings...',
                 selectedLang
             )
-
             this.configManager.setProp("lang", "en")
         }
 
@@ -34,24 +33,26 @@ export class LangManager {
     }
 
     /**
-     * It returns translate for selected language
-     * @returns The translate
+     * Возвращает перевод для текущего языка
+     * @returns Перевод
      */
     get getTranslate(): Translate {
         return this.currentLang
     }
 
     /**
-     * It Changes the current language of the LauncherServer
-     * @param {string} lang - The language to change to
-     * @returns The current language
+     * Изменяет текущий язык
+     * @param {string} lang - Язык для изменения
      */
     public changeLang(lang: string): void {
-        if (!this.langList.has(lang))
-            return LogHelper.error(
+        if (!this.langList.has(lang)) {
+            LogHelper.error(
                 this.getTranslate.LangManager.langNotFound,
                 lang
             )
+            return;
+        }
+            
 
         this.currentLang = this.langList.get(lang)
         this.configManager.setProp("lang", lang)

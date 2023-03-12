@@ -1,8 +1,8 @@
-import fs from "fs"
+import fs from "fs/promises"
 import path from "path"
+import { injectable, singleton } from "tsyringe"
 
 import { LogHelper, StorageHelper } from "@root/utils"
-import { injectable, singleton } from "tsyringe"
 
 import { LangManager } from "../langs"
 import { ProfileConfig } from "./utils/ProfileConfig"
@@ -10,39 +10,31 @@ import { ProfileConfig } from "./utils/ProfileConfig"
 @singleton()
 @injectable()
 export class ProfilesManager {
-    profiles: ProfileConfig[] = []
-
+private profiles: ProfileConfig[] = []
     constructor(private readonly langManager: LangManager) {
         this.loadProfiles()
     }
 
-    /**
-     * It upload the profile to the launcher's memory
-     */
-    loadProfiles(): void {
-        const files = fs.readdirSync(StorageHelper.profilesDir)
+    async loadProfiles(): Promise<void> {
+        const files = await fs.readdir(StorageHelper.profilesDir)
 
-        if (files.length === 0)
-            return LogHelper.info(
-                this.langManager.getTranslate.ProfilesManager.syncSkip
-            )
+        if (files.length === 0) {
+            LogHelper.info(this.langManager.getTranslate.ProfilesManager.syncSkip)
+            return
+        }
 
         LogHelper.info(this.langManager.getTranslate.ProfilesManager.sync)
 
-        files.forEach((file) => {
+        files.forEach(async file => {
             if (!file.endsWith(".json")) return
 
-            const data = fs
-                .readFileSync(path.resolve(StorageHelper.profilesDir, file))
-                .toString()
-
             try {
+                const data = await fs.readFile(path.resolve(StorageHelper.profilesDir, file), "utf-8")
                 this.profiles.push(ProfileConfig.fromJSON(data))
             } catch (e) {
                 if (e instanceof SyntaxError) {
                     LogHelper.error(
-                        this.langManager.getTranslate.ProfilesManager
-                            .loadingErr,
+                        this.langManager.getTranslate.ProfilesManager.loadingErr,
                         file
                     )
                 } else {
@@ -53,47 +45,31 @@ export class ProfilesManager {
         LogHelper.info(this.langManager.getTranslate.ProfilesManager.syncEnd)
     }
 
-    /**
-     * It reload the profiles in the memory of the server launcher
-     */
-    reloadProfiles(): void {
+    async reloadProfiles(): Promise<void> {
         this.profiles = []
-        this.loadProfiles()
+        await this.loadProfiles()
     }
 
-    /**
-     * It creates a new profile, adds it to the list of profiles, and writes it to the file system
-     * @param {ProfileConfig} parameters - ProfileConfig
-     * @returns The uuid of the profile
-     */
-    createProfile(parameters: ProfileConfig): string {
+    async createProfile(parameters: ProfileConfig): Promise<string> {
         const profile = new ProfileConfig(parameters)
         this.profiles.push(profile)
-        fs.writeFileSync(
-            path.resolve(
-                StorageHelper.profilesDir,
-                `${profile.clientDir}.json`
-            ),
+        await fs.writeFile(
+            path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
             profile.toJSON()
         )
         return profile.uuid
     }
 
-    /**
-     * It takes a uuid and a ProfileConfig object, finds the profile with the given uuid, and then
-     * updates the profile with the given ProfileConfig object
-     * @param {string} uuid - The UUID of the profile you want to edit.
-     * @param {ProfileConfig} parameters - ProfileConfig
-     */
-    editProfile(uuid: string, parameters: ProfileConfig): void {
+    async editProfile(uuid: string, parameters: ProfileConfig): Promise<void> {
         const profile = this.profiles.find((p) => p.uuid === uuid)
         Object.assign(profile, parameters)
-        fs.writeFileSync(
-            path.resolve(
-                StorageHelper.profilesDir,
-                `${profile.clientDir}.json`
-            ),
+        await fs.writeFile(
+            path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
             profile.toJSON()
         )
+    }
+
+    getProfiles(): ProfileConfig[] {
+        return this.profiles
     }
 }
