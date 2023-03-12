@@ -31,13 +31,17 @@ export class DownloadClientCommand extends AbstractCommand {
 
     async invoke(...args: string[]): Promise<void> {
         const [clientName, instanceName, sourceType = "mojang"] = args
-        if (!clientName)
+        if (!clientName) {
             return LogHelper.error("Укажите название/версию клиента!")
-        if (!instanceName)
+        }
+        if (!instanceName) {
             return LogHelper.error("Укажите название папки для инстанции!")
+        }
 
         const DownloadManager = this.getDownloadManager(sourceType)
-        if (!DownloadManager) return
+        if (!DownloadManager) {
+            return LogHelper.error(`Неизвестный тип источника: ${sourceType}`)
+        }
 
         this.commandsManager.console.pause()
         await new DownloadManager(
@@ -57,8 +61,7 @@ export class DownloadClientCommand extends AbstractCommand {
             case "mojang":
                 return MojangManager
             default:
-                LogHelper.error(`Неизвестный тип источника: ${sourceType}`)
-                return
+                return null
         }
     }
 }

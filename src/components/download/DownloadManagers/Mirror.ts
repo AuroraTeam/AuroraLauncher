@@ -15,8 +15,10 @@ import {
 } from "@root/utils"
 import { injectable } from "tsyringe"
 
+import { IDownloadManager } from "./IDownloadManager"
+
 @injectable()
-export class MirrorManager {
+export class MirrorManager implements IDownloadManager {
     constructor(
         private langManager: LangManager,
         private profilesManager: ProfilesManager,

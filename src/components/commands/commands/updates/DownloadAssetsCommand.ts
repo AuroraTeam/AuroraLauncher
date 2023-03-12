@@ -33,7 +33,9 @@ export class DownloadAssetsCommand extends AbstractCommand {
         if (!assetsVer) return LogHelper.error("Укажите версию ассетов!")
 
         const DownloadManager = this.getDownloadManager(sourceType)
-        if (!DownloadManager) return
+        if (!DownloadManager) {
+            return LogHelper.error(`Неизвестный тип источника: ${sourceType}`)
+        }
 
         this.commandsManager.console.pause()
         await new DownloadManager(
@@ -51,8 +53,7 @@ export class DownloadAssetsCommand extends AbstractCommand {
             case "mojang":
                 return MojangManager
             default:
-                LogHelper.error(`Неизвестный тип источника: ${sourceType}`)
-                return
+                return null
         }
     }
 }

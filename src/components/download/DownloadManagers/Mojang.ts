@@ -14,9 +14,10 @@ import {
     ZipHelper,
 } from "@root/utils"
 import { injectable } from "tsyringe"
+import { IDownloadManager } from "./IDownloadManager"
 
 @injectable()
-export class MojangManager {
+export class MojangManager implements IDownloadManager {
     clientsLink = "https://libraries.minecraft.net/"
     assetsLink = "https://resources.download.minecraft.net/"
     versionManifestLink =
