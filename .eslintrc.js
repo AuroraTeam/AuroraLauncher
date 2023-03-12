@@ -12,6 +12,7 @@ module.exports = {
     plugins: ["@typescript-eslint", "node"],
     rules: {
         "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-empty-function": "off",
         "node/no-sync": "warn", // TODO Set to error
         "node/prefer-promises/fs": "warn", // TODO Set to error
     },

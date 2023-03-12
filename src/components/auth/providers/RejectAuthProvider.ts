@@ -4,36 +4,23 @@ import { ResponseError } from "aurora-rpc-server"
 import { AuthProvider, AuthProviderConfig } from "./AuthProvider"
 
 export class RejectAuthProvider implements AuthProvider {
-    private message: string
+    private message: string;
 
     constructor({ auth }: LauncherServerConfig) {
-        this.message =
-            (<RejectAuthProviderConfig>auth).message || "Auth rejected"
+        const { message = "Auth rejected" } = auth as RejectAuthProviderConfig;
+        this.message = message;
     }
 
-    auth(): any {
-        throw new ResponseError(this.message, 110)
+    auth(): never {
+        throw new ResponseError(this.message, 110);
     }
 
-    join(): any {
-        return // Doesn't need implementation
-    }
-
-    hasJoined(): any {
-        return // Doesn't need implementation
-    }
-
-    profile(): any {
-        return // Doesn't need implementation
-    }
-
-    privileges(): any {
-        return // Doesn't need implementation
-    }
-
-    profiles(): any {
-        return // Doesn't need implementation
-    }
+    // These methods don't need implementation
+    join(): void {}
+    hasJoined(): void {}
+    profile(): void {}
+    privileges(): void {}
+    profiles(): void {}
 }
 
 interface RejectAuthProviderConfig extends AuthProviderConfig {

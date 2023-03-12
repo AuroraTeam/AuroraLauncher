@@ -5,31 +5,31 @@ export interface AuthProviderConstructor {
 }
 
 export interface AuthProvider {
-    auth(username: string, password: string): PromiseOr<AuthResponseData>
+    auth(username: string, password: string): PromiseOr<AuthResponseData | void>
 
     join(
         accessToken: string,
         userUUID: string,
         serverID: string
-    ): PromiseOr<boolean>
+    ): PromiseOr<boolean | void>
 
     hasJoined(
         username: string,
         serverID: string
-    ): PromiseOr<HasJoinedResponseData>
+    ): PromiseOr<HasJoinedResponseData | void>
 
-    profile(userUUID: string): PromiseOr<ProfileResponseData>
+    profile(userUUID: string): PromiseOr<ProfileResponseData | void>
 
-    privileges(accessToken: string): PromiseOr<PrivilegesResponseData>
+    privileges(accessToken: string): PromiseOr<PrivilegesResponseData | void>
 
-    profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[]>
+    profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[] | void>
 }
 
 export class AuthProviderConfig {
     type: string
 
     static getDefaultConfig(): AuthProviderConfig {
-        return { type: "accept" }
+        return { type: "reject" }
     }
 }
 

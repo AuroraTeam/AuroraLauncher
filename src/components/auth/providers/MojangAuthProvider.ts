@@ -27,7 +27,7 @@ export class MojangAuthProvider implements AuthProvider {
                 username,
                 password,
             }
-        )
+        );
 
         return {
             username: result.selectedProfile.name,
@@ -36,25 +36,12 @@ export class MojangAuthProvider implements AuthProvider {
         }
     }
 
-    join(): any {
-        return // Doesn't need implementation
-    }
-
-    hasJoined(): any {
-        return // Doesn't need implementation
-    }
-
-    profile(): any {
-        return // Doesn't need implementation
-    }
-
-    privileges(): any {
-        return // Doesn't need implementation
-    }
-
-    profiles(): any {
-        return // Doesn't need implementation
-    }
+    // These methods don't need implementation
+    join(): void {}
+    hasJoined(): void {}
+    profile(): void {}
+    privileges(): void {}
+    profiles(): void {}
 }
 
 export interface MojangAuthProviderConfig extends AuthProviderConfig {
