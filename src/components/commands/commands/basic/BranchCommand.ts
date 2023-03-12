@@ -1,4 +1,4 @@
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
+import { AbstractCommand, Category, LogHelper } from "@root/utils";
 
 // import prompts from "prompts"
 
@@ -8,7 +8,7 @@ export class BranchCommand extends AbstractCommand {
             name: "branch",
             description: "Branch selection",
             category: Category.BASIC,
-        })
+        });
     }
 
     async invoke(): Promise<void> {
@@ -37,6 +37,6 @@ export class BranchCommand extends AbstractCommand {
 
         // this.configManager.setProp("branch", response.result)
 
-        LogHelper.info("Method not implemented")
+        LogHelper.info("Method not implemented");
     }
 }

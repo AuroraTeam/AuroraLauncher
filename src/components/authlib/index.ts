@@ -1,40 +1,40 @@
-import crypto from "crypto"
-import fs from "fs"
-import { resolve } from "path"
+import crypto from "crypto";
+import fs from "fs";
+import { resolve } from "path";
 
-import { LogHelper, StorageHelper } from "@root/utils"
-import { injectable, singleton } from "tsyringe"
+import { LogHelper, StorageHelper } from "@root/utils";
+import { injectable, singleton } from "tsyringe";
 
-import { LangManager } from "../langs"
+import { LangManager } from "../langs";
 
 @singleton()
 @injectable()
 export class AuthlibManager {
-    private publicKeyPath = resolve(StorageHelper.authlibDir, "public.pem")
-    private privateKeyPath = resolve(StorageHelper.authlibDir, "private.pem")
-    private privateKey: Buffer
-    private publicKey: string
+    private publicKeyPath = resolve(StorageHelper.authlibDir, "public.pem");
+    private privateKeyPath = resolve(StorageHelper.authlibDir, "private.pem");
+    private privateKey: Buffer;
+    private publicKey: string;
 
     constructor(private readonly langManager: LangManager) {
         if (this.keysExists()) {
-            LogHelper.info(langManager.getTranslate.AuthlibManager.keysExists)
+            LogHelper.info(langManager.getTranslate.AuthlibManager.keysExists);
         } else {
-            this.generateKeys()
+            this.generateKeys();
         }
 
-        this.setKeys()
+        this.setKeys();
     }
 
     private keysExists() {
         return (
             fs.existsSync(this.privateKeyPath) &&
             fs.existsSync(this.publicKeyPath)
-        )
+        );
     }
 
     private setKeys(): void {
-        this.privateKey = fs.readFileSync(this.privateKeyPath)
-        this.publicKey = fs.readFileSync(this.publicKeyPath).toString()
+        this.privateKey = fs.readFileSync(this.privateKeyPath);
+        this.publicKey = fs.readFileSync(this.publicKeyPath).toString();
     }
 
     /**
@@ -51,17 +51,17 @@ export class AuthlibManager {
                 type: "pkcs8",
                 format: "pem",
             },
-        })
+        });
 
-        fs.writeFileSync(this.privateKeyPath, keys.privateKey)
+        fs.writeFileSync(this.privateKeyPath, keys.privateKey);
         LogHelper.info(
             this.langManager.getTranslate.AuthlibManager.privateKeySaved
-        )
+        );
 
-        fs.writeFileSync(this.publicKeyPath, keys.publicKey)
+        fs.writeFileSync(this.publicKeyPath, keys.publicKey);
         LogHelper.info(
             this.langManager.getTranslate.AuthlibManager.privateKeySaved
-        )
+        );
     }
 
     /**
@@ -70,13 +70,13 @@ export class AuthlibManager {
      * @returns The signature of the data.
      */
     public getSignature(data: string): string {
-        const sign = crypto.createSign("sha1")
-        sign.update(data)
-        sign.end()
-        return sign.sign(this.privateKey, "base64")
+        const sign = crypto.createSign("sha1");
+        sign.update(data);
+        sign.end();
+        return sign.sign(this.privateKey, "base64");
     }
 
     public getPublicKey(): string {
-        return this.publicKey
+        return this.publicKey;
     }
 }

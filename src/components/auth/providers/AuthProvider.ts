@@ -1,64 +1,67 @@
-import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 
 export interface AuthProviderConstructor {
-    new (configManager: LauncherServerConfig): AuthProvider
+    new (configManager: LauncherServerConfig): AuthProvider;
 }
 
 export interface AuthProvider {
-    auth(username: string, password: string): PromiseOr<AuthResponseData | void>
+    auth(
+        username: string,
+        password: string
+    ): PromiseOr<AuthResponseData | void>;
 
     join(
         accessToken: string,
         userUUID: string,
         serverID: string
-    ): PromiseOr<boolean | void>
+    ): PromiseOr<boolean | void>;
 
     hasJoined(
         username: string,
         serverID: string
-    ): PromiseOr<HasJoinedResponseData | void>
+    ): PromiseOr<HasJoinedResponseData | void>;
 
-    profile(userUUID: string): PromiseOr<ProfileResponseData | void>
+    profile(userUUID: string): PromiseOr<ProfileResponseData | void>;
 
-    privileges(accessToken: string): PromiseOr<PrivilegesResponseData | void>
+    privileges(accessToken: string): PromiseOr<PrivilegesResponseData | void>;
 
-    profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[] | void>
+    profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[] | void>;
 }
 
 export class AuthProviderConfig {
-    type: string
+    type: string;
 
     static getDefaultConfig(): AuthProviderConfig {
-        return { type: "accept" }
+        return { type: "accept" };
     }
 }
 
 export interface AuthResponseData {
-    username: string
-    userUUID: string
-    accessToken: string
+    username: string;
+    userUUID: string;
+    accessToken: string;
 }
 
 export interface HasJoinedResponseData {
-    userUUID: string
-    skinUrl?: string
-    capeUrl?: string
+    userUUID: string;
+    skinUrl?: string;
+    capeUrl?: string;
 }
 
 export interface ProfileResponseData {
-    username: string
-    skinUrl?: string
-    capeUrl?: string
+    username: string;
+    skinUrl?: string;
+    capeUrl?: string;
 }
 
 export interface PrivilegesResponseData {
-    onlineChat: boolean
-    multiplayerServer: boolean
-    multiplayerRealms: boolean
-    telemetry: boolean
+    onlineChat: boolean;
+    multiplayerServer: boolean;
+    multiplayerRealms: boolean;
+    telemetry: boolean;
 }
 
 export interface ProfilesResponseData {
-    id: string
-    name: string
+    id: string;
+    name: string;
 }

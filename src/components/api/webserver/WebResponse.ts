@@ -1,12 +1,12 @@
-import { ServerResponse } from "http"
+import { ServerResponse } from "http";
 
-import { JsonHelper } from "@auroralauncher/core"
+import { JsonHelper } from "@auroralauncher/core";
 
 export class WebResponse {
-    raw: ServerResponse
+    raw: ServerResponse;
 
     constructor(response: ServerResponse) {
-        this.raw = response
+        this.raw = response;
     }
 
     /**
@@ -16,9 +16,9 @@ export class WebResponse {
      * @param {string} [errorMessage] - The message that will be displayed to the user.
      */
     public sendError(code = 400, error?: string, errorMessage?: string): void {
-        this.raw.statusCode = code
-        if (error) this.sendJson({ error, errorMessage })
-        else this.raw.end()
+        this.raw.statusCode = code;
+        if (error) this.sendJson({ error, errorMessage });
+        else this.raw.end();
     }
 
     /**
@@ -26,7 +26,7 @@ export class WebResponse {
      * @param {object} data - The data to be sent.
      */
     public sendJson(data: object): void {
-        this.raw.setHeader("Content-Type", "application/json; charset=utf-8")
-        this.raw.end(JsonHelper.toJson(data))
+        this.raw.setHeader("Content-Type", "application/json; charset=utf-8");
+        this.raw.end(JsonHelper.toJson(data));
     }
 }

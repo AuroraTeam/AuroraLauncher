@@ -1,15 +1,15 @@
-import { IncomingMessage } from "http"
+import { IncomingMessage } from "http";
 
-import { parse } from "fast-querystring"
-import getRawBody from "raw-body"
+import { parse } from "fast-querystring";
+import getRawBody from "raw-body";
 
 export class WebRequest {
-    raw: IncomingMessage
-    query: ReturnType<typeof parse>
+    raw: IncomingMessage;
+    query: ReturnType<typeof parse>;
 
     constructor(request: IncomingMessage) {
-        this.raw = request
-        this.query = parse(this.raw.url.split("?")[1])
+        this.raw = request;
+        this.query = parse(this.raw.url.split("?")[1]);
     }
 
     /**
@@ -18,6 +18,9 @@ export class WebRequest {
      * @returns A promise that resolves to a string.
      */
     public async getRawBody() {
-        return await getRawBody(this.raw, { limit: "100kb", encoding: "utf-8" })
+        return await getRawBody(this.raw, {
+            limit: "100kb",
+            encoding: "utf-8",
+        });
     }
 }

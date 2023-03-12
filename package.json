@@ -27,7 +27,7 @@
         "build:prod": "node build.mjs --sources-content=false --minify",
         "build:bin": "pkg dist/app.js -t node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist --compress GZip",
         "clean": "rimraf dist",
-        "prettier": "prettier --config .prettierrc.json --write src",
+        "prettier": "prettier --write src",
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
         "start": "node ."

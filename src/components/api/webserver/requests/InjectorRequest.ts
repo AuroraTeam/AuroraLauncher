@@ -1,21 +1,21 @@
-import { AuthlibManager } from "@root/components/authlib"
-import { ConfigManager } from "@root/components/config"
-import { injectable } from "tsyringe"
+import { AuthlibManager } from "@root/components/authlib";
+import { ConfigManager } from "@root/components/config";
+import { injectable } from "tsyringe";
 
-import { WebRequest } from "../WebRequest"
-import { WebResponse } from "../WebResponse"
-import { AbstractRequest } from "./AbstractRequest"
+import { WebRequest } from "../WebRequest";
+import { WebResponse } from "../WebResponse";
+import { AbstractRequest } from "./AbstractRequest";
 
 @injectable()
 export class InjectorRequest extends AbstractRequest {
-    method = "GET"
-    url = /^\/authlib$/
+    method = "GET";
+    url = /^\/authlib$/;
 
     constructor(
         private configManager: ConfigManager,
         private authlibManager: AuthlibManager
     ) {
-        super()
+        super();
     }
 
     async emit(_: WebRequest, res: WebResponse): Promise<void> {
@@ -30,6 +30,6 @@ export class InjectorRequest extends AbstractRequest {
             },
             skinDomains: this.configManager.config.api.injector.skinDomains,
             signaturePublickey: this.authlibManager.getPublicKey(),
-        })
+        });
     }
 }

@@ -1,6 +1,6 @@
-import { UpdateManager } from "@root/components/update"
-import { AbstractCommand, Category } from "@root/utils"
-import { injectable } from "tsyringe"
+import { UpdateManager } from "@root/components/update";
+import { AbstractCommand, Category } from "@root/utils";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class UpdateCommand extends AbstractCommand {
@@ -9,10 +9,10 @@ export class UpdateCommand extends AbstractCommand {
             name: "update",
             description: "Update LauncherServer",
             category: Category.BASIC,
-        })
+        });
     }
 
     invoke(): void {
-        this.updateManager.installUpdate()
+        this.updateManager.installUpdate();
     }
 }

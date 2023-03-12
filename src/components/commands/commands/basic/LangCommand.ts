@@ -1,6 +1,6 @@
-import { Lang, LangManager } from "@root/components"
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
-import { injectable } from "tsyringe"
+import { Lang, LangManager } from "@root/components";
+import { AbstractCommand, Category, LogHelper } from "@root/utils";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class LangCommand extends AbstractCommand {
@@ -12,11 +12,11 @@ export class LangCommand extends AbstractCommand {
                     .LangCommand,
             category: Category.BASIC,
             usage: "<lang> (ru|en)",
-        })
+        });
     }
 
     invoke(...[lang]: [lang: Lang]): void {
-        if (!lang) return LogHelper.error("Укажите язык!")
-        this.langManager.changeLang(lang)
+        if (!lang) return LogHelper.error("Укажите язык!");
+        this.langManager.changeLang(lang);
     }
 }

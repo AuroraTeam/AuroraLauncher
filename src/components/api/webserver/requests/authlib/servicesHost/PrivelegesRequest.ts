@@ -1,26 +1,26 @@
-import { AuthProvider } from "@root/components/auth/providers"
-import { inject, injectable } from "tsyringe"
+import { AuthProvider } from "@root/components/auth/providers";
+import { inject, injectable } from "tsyringe";
 
-import { WebRequest } from "../../../WebRequest"
-import { WebResponse } from "../../../WebResponse"
-import { AbstractRequest } from "../../AbstractRequest"
+import { WebRequest } from "../../../WebRequest";
+import { WebResponse } from "../../../WebResponse";
+import { AbstractRequest } from "../../AbstractRequest";
 
 @injectable()
 export class PrivelegesRequest extends AbstractRequest {
-    method = "GET"
-    url = /^\/authlib\/minecraftservices\/privileges$/
+    method = "GET";
+    url = /^\/authlib\/minecraftservices\/privileges$/;
 
     constructor(@inject("AuthProvider") private authProvider: AuthProvider) {
-        super()
+        super();
     }
 
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
-        const accessToken = req.raw.headers.authorization
+        const accessToken = req.raw.headers.authorization;
 
         if ("string" !== typeof accessToken || accessToken.trim().length === 0)
-            return res.sendError()
+            return res.sendError();
 
-        const user = await this.authProvider.privileges(accessToken.slice(7))
+        const user = await this.authProvider.privileges(accessToken.slice(7));
 
         res.sendJson({
             privileges: {
@@ -37,6 +37,6 @@ export class PrivelegesRequest extends AbstractRequest {
                     enabled: user.telemetry,
                 },
             },
-        })
+        });
     }
 }

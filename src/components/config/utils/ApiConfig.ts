@@ -1,20 +1,20 @@
 export class ApiConfig {
     addresses: {
-        web: string
-        websocket: string
-    }
-    host: string
-    port: number
-    useSSL: boolean
+        web: string;
+        websocket: string;
+    };
+    host: string;
+    port: number;
+    useSSL: boolean;
     ssl: {
-        cert: string
-        key: string
-    }
-    disableListing: boolean
-    hideListing: boolean
+        cert: string;
+        key: string;
+    };
+    disableListing: boolean;
+    hideListing: boolean;
     injector: {
-        skinDomains: string[]
-    }
+        skinDomains: string[];
+    };
 
     static getDefaultConfig(): ApiConfig {
         return {
@@ -34,6 +34,6 @@ export class ApiConfig {
             injector: {
                 skinDomains: [],
             },
-        }
+        };
     }
 }

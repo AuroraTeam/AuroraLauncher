@@ -1,7 +1,7 @@
-import chalk from "chalk"
-import { container, singleton } from "tsyringe"
+import chalk from "chalk";
+import { container, singleton } from "tsyringe";
 
-import { version } from "../package.json"
+import { version } from "../package.json";
 import {
     AuthManager,
     AuthlibManager,
@@ -13,7 +13,7 @@ import {
     ProfilesManager,
     UpdateManager,
     WebManager,
-} from "./components"
+} from "./components";
 import {
     AcceptAuthProvider,
     AuthProvider,
@@ -21,7 +21,7 @@ import {
     JsonAuthProvider,
     MojangAuthProvider,
     RejectAuthProvider,
-} from "./components/auth/providers"
+} from "./components/auth/providers";
 import {
     AboutCommand,
     BranchCommand,
@@ -36,42 +36,42 @@ import {
     SyncInstancesCommand,
     SyncProfilesCommand,
     UpdateCommand,
-} from "./components/commands/commands"
-import { LogHelper, StorageHelper } from "./utils"
+} from "./components/commands/commands";
+import { LogHelper, StorageHelper } from "./utils";
 
 @singleton()
 export class LauncherServer {
-    private _AuthProvider: AuthProvider
+    private _AuthProvider: AuthProvider;
     public get AuthProvider(): AuthProvider {
-        return this._AuthProvider
+        return this._AuthProvider;
     }
 
-    private _ConfigManager: ConfigManager
-    private _LangManager: LangManager
-    private _CommandsManager: CommandsManager
-    private _ModulesManager: ModulesManager
-    private _WebManager: WebManager
-    private _InstancesManager: InstancesManager
-    private _UpdateManager: UpdateManager
-    private _ProfilesManager: ProfilesManager
-    private _AuthlibManager: AuthlibManager
+    private _ConfigManager: ConfigManager;
+    private _LangManager: LangManager;
+    private _CommandsManager: CommandsManager;
+    private _ModulesManager: ModulesManager;
+    private _WebManager: WebManager;
+    private _InstancesManager: InstancesManager;
+    private _UpdateManager: UpdateManager;
+    private _ProfilesManager: ProfilesManager;
+    private _AuthlibManager: AuthlibManager;
 
     /**
      * It initializes the LauncherServer.
      */
     constructor() {
-        StorageHelper.validate()
-        this.printVersion()
+        StorageHelper.validate();
+        this.printVersion();
 
-        LogHelper.info("Initialization start")
-        this.initialize()
+        LogHelper.info("Initialization start");
+        this.initialize();
 
-        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd)
+        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd);
     }
 
     private initialize() {
-        this._ConfigManager = container.resolve(ConfigManager)
-        this._LangManager = container.resolve(LangManager)
+        this._ConfigManager = container.resolve(ConfigManager);
+        this._LangManager = container.resolve(LangManager);
 
         // Auth
         AuthManager.registerProviders({
@@ -80,19 +80,19 @@ export class LauncherServer {
             mojang: MojangAuthProvider,
             reject: RejectAuthProvider,
             accept: AcceptAuthProvider,
-        })
+        });
 
         this._AuthProvider = AuthManager.getProvider(
             this._ConfigManager,
             this._LangManager
-        )
-        container.register("AuthProvider", { useValue: this._AuthProvider })
+        );
+        container.register("AuthProvider", { useValue: this._AuthProvider });
 
         // Other
 
-        this._AuthlibManager = container.resolve(AuthlibManager)
+        this._AuthlibManager = container.resolve(AuthlibManager);
 
-        this._CommandsManager = container.resolve(CommandsManager)
+        this._CommandsManager = container.resolve(CommandsManager);
         this._CommandsManager.registerCommands([
             container.resolve(HelpCommand),
             container.resolve(ReloadCommand),
@@ -107,22 +107,22 @@ export class LauncherServer {
             container.resolve(DownloadClientCommand),
             container.resolve(AboutCommand),
             container.resolve(StopCommand),
-        ])
+        ]);
 
-        this._InstancesManager = container.resolve(InstancesManager)
-        this._ProfilesManager = container.resolve(ProfilesManager)
-        this._ModulesManager = container.resolve(ModulesManager)
-        this._UpdateManager = container.resolve(UpdateManager)
-        this._WebManager = container.resolve(WebManager)
+        this._InstancesManager = container.resolve(InstancesManager);
+        this._ProfilesManager = container.resolve(ProfilesManager);
+        this._ModulesManager = container.resolve(ModulesManager);
+        this._UpdateManager = container.resolve(UpdateManager);
+        this._WebManager = container.resolve(WebManager);
     }
 
     /**
      * It reload the LauncherServer.
      */
     public reload() {
-        LogHelper.info("Reload LaunchServer")
-        container.clearInstances()
-        this.initialize()
+        LogHelper.info("Reload LaunchServer");
+        container.clearInstances();
+        this.initialize();
     }
 
     private printVersion() {
@@ -139,6 +139,6 @@ export class LauncherServer {
                     chalk.green("\nDocumentation page: ") +
                     chalk.blue("https://docs.aurora-launcher.ru/")
             )
-        )
+        );
     }
 }

@@ -4,7 +4,7 @@ export class SystemHelper {
      * @returns The platform that the code is running on.
      */
     public static getPlatform(): NodeJS.Platform {
-        return process.platform
+        return process.platform;
     }
 
     /**
@@ -12,7 +12,7 @@ export class SystemHelper {
      * @returns The return value is a boolean.
      */
     public static comparePlatforms(platform: availablePlatforms): boolean {
-        return process.platform === platform
+        return process.platform === platform;
     }
 
     /**
@@ -20,8 +20,8 @@ export class SystemHelper {
      * @returns The return value is a boolean.
      */
     public static isStandalone(): boolean {
-        return process.pkg !== undefined
+        return process.pkg !== undefined;
     }
 }
 
-type availablePlatforms = "darwin" | "linux" | "win32"
+type availablePlatforms = "darwin" | "linux" | "win32";

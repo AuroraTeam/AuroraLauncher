@@ -1,1 +1,1 @@
-export { JsonHelper } from "@auroralauncher/core"
+export { JsonHelper } from "@auroralauncher/core";

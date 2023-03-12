@@ -1,41 +1,41 @@
-import { JsonHelper } from "@root/utils"
-import { instanceToPlain, plainToInstance } from "class-transformer"
-import { merge } from "lodash-es"
-import { v4 } from "uuid"
+import { JsonHelper } from "@root/utils";
+import { instanceToPlain, plainToInstance } from "class-transformer";
+import { merge } from "lodash-es";
+import { v4 } from "uuid";
 
-import { ProfileServerConfig } from "./ProfileServerConfig"
+import { ProfileServerConfig } from "./ProfileServerConfig";
 
 export class ProfileConfig {
     //Don`t touch
-    configVersion: number
+    configVersion: number;
 
     // Profile information
-    uuid: string
-    sortIndex: number
-    servers: ProfileServerConfig[]
+    uuid: string;
+    sortIndex: number;
+    servers: ProfileServerConfig[];
 
     // Client
-    version: string
-    clientDir: string
+    version: string;
+    clientDir: string;
 
     // Assets
-    assetsIndex: string
-    assetsDir: string
+    assetsIndex: string;
+    assetsDir: string;
 
     // Updates
-    update: string[]
-    updateVerify: string[]
-    updateExclusions: string[]
+    update: string[];
+    updateVerify: string[];
+    updateExclusions: string[];
     // updateOptional: ProfileOptional[]
 
     // Launch client
-    mainClass: string
-    classPath: string[]
-    jvmArgs: string[]
-    clientArgs: string[]
+    mainClass: string;
+    classPath: string[];
+    jvmArgs: string[];
+    clientArgs: string[];
 
     constructor(config: ProfileConfig) {
-        merge(this, ProfileConfig.defaults, config)
+        merge(this, ProfileConfig.defaults, config);
     }
 
     private static readonly defaults = {
@@ -61,20 +61,20 @@ export class ProfileConfig {
         classPath: ["libraries", "minecraft.jar"],
         jvmArgs: [] as string[],
         clientArgs: [] as string[],
-    }
+    };
 
     toObject() {
-        return instanceToPlain(this)
+        return instanceToPlain(this);
     }
 
     public toJSON(): string {
-        return JsonHelper.toJson(this.toObject(), true)
+        return JsonHelper.toJson(this.toObject(), true);
     }
 
     public static fromJSON(json: string): ProfileConfig {
         return plainToInstance(
             ProfileConfig,
             JsonHelper.fromJson<ProfileConfig>(json)
-        )
+        );
     }
 }

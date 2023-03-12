@@ -1,33 +1,33 @@
-import { LogHelper } from "@root/utils"
-import { injectable } from "tsyringe"
+import { LogHelper } from "@root/utils";
+import { injectable } from "tsyringe";
 
-import { ConfigManager } from "../config"
-import { LangManager } from "../langs"
-import { AuthProviderConstructor } from "./providers/AuthProvider"
+import { ConfigManager } from "../config";
+import { LangManager } from "../langs";
+import { AuthProviderConstructor } from "./providers/AuthProvider";
 
 @injectable()
 export class AuthManager {
     private static authProviders: Map<string, AuthProviderConstructor> =
-        new Map()
+        new Map();
 
     public static registerProviders(
         providers: Record<string, AuthProviderConstructor>
     ) {
         Object.entries(providers).forEach(([providerName, provider]) => {
-            this.authProviders.set(providerName, provider)
-        })
+            this.authProviders.set(providerName, provider);
+        });
     }
 
     static getProvider(configManager: ConfigManager, langManager: LangManager) {
-        const providerType = configManager.config.auth.type
+        const providerType = configManager.config.auth.type;
 
         if (!AuthManager.authProviders.has(providerType)) {
             LogHelper.fatal(
                 langManager.getTranslate.AuthManager.invalidProvider
-            )
+            );
         }
 
-        const Provider = AuthManager.authProviders.get(providerType)
-        return new Provider(configManager.config)
+        const Provider = AuthManager.authProviders.get(providerType);
+        return new Provider(configManager.config);
     }
 }

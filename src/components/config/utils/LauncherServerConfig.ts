@@ -1,51 +1,51 @@
-import { AuthProviderConfig } from "@root/components/auth/providers"
-import { HjsonCommented, HjsonHelper } from "@root/utils"
-import { instanceToPlain, plainToInstance } from "class-transformer"
-import { v4 } from "uuid"
+import { AuthProviderConfig } from "@root/components/auth/providers";
+import { HjsonCommented, HjsonHelper } from "@root/utils";
+import { instanceToPlain, plainToInstance } from "class-transformer";
+import { v4 } from "uuid";
 
-import { ApiConfig } from "./ApiConfig"
+import { ApiConfig } from "./ApiConfig";
 
 export class LauncherServerConfig extends HjsonCommented {
-    configVersion: number
-    projectID: string
-    projectName: string
-    lang: string
-    branch: branch
-    env: Environment
-    mirrors: string[]
-    auth: AuthProviderConfig
-    api: ApiConfig
+    configVersion: number;
+    projectID: string;
+    projectName: string;
+    lang: string;
+    branch: branch;
+    env: Environment;
+    mirrors: string[];
+    auth: AuthProviderConfig;
+    api: ApiConfig;
 
     static getDefaults(): LauncherServerConfig {
-        const config = new LauncherServerConfig()
-        config.configVersion = 0
-        config.projectID = v4()
-        config.projectName = ""
-        config.lang = "ru"
-        config.branch = "stable"
-        config.env = Environment.DEV
-        config.mirrors = []
-        config.auth = AuthProviderConfig.getDefaultConfig()
-        config.api = ApiConfig.getDefaultConfig()
-        return config
+        const config = new LauncherServerConfig();
+        config.configVersion = 0;
+        config.projectID = v4();
+        config.projectName = "";
+        config.lang = "ru";
+        config.branch = "stable";
+        config.env = Environment.DEV;
+        config.mirrors = [];
+        config.auth = AuthProviderConfig.getDefaultConfig();
+        config.api = ApiConfig.getDefaultConfig();
+        return config;
     }
 
     public toString(): string {
-        const object = instanceToPlain(this)
+        const object = instanceToPlain(this);
 
-        HjsonHelper.defineComments(this, object)
+        HjsonHelper.defineComments(this, object);
 
-        return HjsonHelper.toHjson(object)
+        return HjsonHelper.toHjson(object);
     }
 
     public static fromString(json: string): LauncherServerConfig {
-        const data = HjsonHelper.fromHjson<LauncherServerConfig>(json)
+        const data = HjsonHelper.fromHjson<LauncherServerConfig>(json);
 
-        const _class = plainToInstance(LauncherServerConfig, data)
+        const _class = plainToInstance(LauncherServerConfig, data);
 
-        HjsonHelper.defineComments(data, _class)
+        HjsonHelper.defineComments(data, _class);
 
-        return _class
+        return _class;
     }
 }
 
@@ -55,4 +55,4 @@ export enum Environment {
     DEV = "dev",
 }
 
-type branch = "stable" | "latest" | "dev"
+type branch = "stable" | "latest" | "dev";

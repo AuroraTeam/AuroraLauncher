@@ -1,6 +1,6 @@
-import { LauncherServer } from "@root/LauncherServer"
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
-import { delay, inject, injectable } from "tsyringe"
+import { LauncherServer } from "@root/LauncherServer";
+import { AbstractCommand, Category, LogHelper } from "@root/utils";
+import { delay, inject, injectable } from "tsyringe";
 
 @injectable()
 export class ReloadCommand extends AbstractCommand {
@@ -12,11 +12,11 @@ export class ReloadCommand extends AbstractCommand {
             name: "reload",
             description: "Restarts LauncherServer",
             category: Category.BASIC,
-        })
+        });
     }
 
     invoke(): void {
-        LogHelper.info("LauncherServer restarts...")
-        this.launcherServer.reload()
+        LogHelper.info("LauncherServer restarts...");
+        this.launcherServer.reload();
     }
 }

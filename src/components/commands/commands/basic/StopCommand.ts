@@ -1,6 +1,6 @@
-import { LangManager } from "@root/components/langs"
-import { AbstractCommand, Category } from "@root/utils"
-import { injectable } from "tsyringe"
+import { LangManager } from "@root/components/langs";
+import { AbstractCommand, Category } from "@root/utils";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class StopCommand extends AbstractCommand {
@@ -11,10 +11,10 @@ export class StopCommand extends AbstractCommand {
                 langManager.getTranslate.CommandsManager.commands.basic
                     .StopCommand,
             category: Category.BASIC,
-        })
+        });
     }
 
     invoke(): void {
-        process.exit(0)
+        process.exit(0);
     }
 }

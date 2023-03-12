@@ -1,4 +1,4 @@
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
+import { AbstractCommand, Category, LogHelper } from "@root/utils";
 
 export class ModulesCommand extends AbstractCommand {
     constructor() {
@@ -7,12 +7,12 @@ export class ModulesCommand extends AbstractCommand {
             name: "modules",
             description: "Outputs list of all loaded modules",
             category: Category.BASIC,
-        })
+        });
     }
 
     invoke(): void {
         // TODO Rework
-        LogHelper.warn("rework")
+        LogHelper.warn("rework");
         // this.modulesManager.listModules()
     }
 }

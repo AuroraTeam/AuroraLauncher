@@ -1,9 +1,9 @@
-import { statSync } from "fs"
-import { extname } from "path"
+import { statSync } from "fs";
+import { extname } from "path";
 
-import AdmZip from "adm-zip"
+import AdmZip from "adm-zip";
 
-import { ProgressHelper } from "./ProgressHelper"
+import { ProgressHelper } from "./ProgressHelper";
 
 export class ZipHelper {
     /**
@@ -17,10 +17,10 @@ export class ZipHelper {
         destDir: string,
         whitelist: string[] = []
     ): void {
-        const zip = new AdmZip(archive)
-        const stat = statSync(archive)
-        const progress = ProgressHelper.getLoadingProgressBar()
-        progress.start(stat.size, 0)
+        const zip = new AdmZip(archive);
+        const stat = statSync(archive);
+        const progress = ProgressHelper.getLoadingProgressBar();
+        progress.start(stat.size, 0);
 
         zip.getEntries().forEach((entry) => {
             if (
@@ -28,11 +28,11 @@ export class ZipHelper {
                 (whitelist.length > 0 &&
                     !whitelist.includes(extname(entry.entryName)))
             )
-                return
+                return;
 
-            progress.increment(entry.header.compressedSize)
-            zip.extractEntryTo(entry, destDir)
-        })
-        progress.stop()
+            progress.increment(entry.header.compressedSize);
+            zip.extractEntryTo(entry, destDir);
+        });
+        progress.stop();
     }
 }

@@ -1,9 +1,9 @@
-import { LangManager } from "@root/components/langs"
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
-import chalk from "chalk"
-import { injectable } from "tsyringe"
+import { LangManager } from "@root/components/langs";
+import { AbstractCommand, Category, LogHelper } from "@root/utils";
+import chalk from "chalk";
+import { injectable } from "tsyringe";
 
-import { version } from "../../../../../package.json"
+import { version } from "../../../../../package.json";
 
 @injectable()
 export class AboutCommand extends AbstractCommand {
@@ -14,7 +14,7 @@ export class AboutCommand extends AbstractCommand {
                 langManager.getTranslate.CommandsManager.commands.basic
                     .AboutCommand,
             category: Category.BASIC,
-        })
+        });
     }
 
     invoke(): void {
@@ -25,18 +25,18 @@ export class AboutCommand extends AbstractCommand {
                     "v" +
                     chalk.yellow(version)
             )
-        )
+        );
 
         LogHelper.info(
             "Source code: " +
                 chalk.blue("https://github.com/AuroraTeam/LauncherServer")
-        )
+        );
         LogHelper.info(
             "Documentation: " + chalk.blue("https://docs.aurora-launcher.ru")
-        )
+        );
         LogHelper.info(
             "Discord channel: " +
                 chalk.blue("https://discord.aurora-launcher.ru")
-        )
+        );
     }
 }

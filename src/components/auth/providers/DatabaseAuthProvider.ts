@@ -1,7 +1,7 @@
-import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
-import { LogHelper, UUIDHelper } from "@root/utils"
-import { ResponseError } from "aurora-rpc-server"
-import { DataSource, EntitySchema, In } from "typeorm"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
+import { LogHelper, UUIDHelper } from "@root/utils";
+import { ResponseError } from "aurora-rpc-server";
+import { DataSource, EntitySchema, In } from "typeorm";
 
 import {
     AuthProvider,
@@ -11,44 +11,44 @@ import {
     PrivilegesResponseData,
     ProfileResponseData,
     ProfilesResponseData,
-} from "./AuthProvider"
+} from "./AuthProvider";
 
 export class DatabaseAuthProvider implements AuthProvider {
-    private userRepository
+    private userRepository;
 
     constructor({ auth }: LauncherServerConfig) {
-        const config = <DatabaseAuthProviderConfig>auth
+        const config = <DatabaseAuthProviderConfig>auth;
 
         if (!config.properties.tableName) {
-            LogHelper.fatal("tableName not defined")
+            LogHelper.fatal("tableName not defined");
         }
-        const UserEntity = getUserEntity(config.properties)
+        const UserEntity = getUserEntity(config.properties);
 
         const connection = new DataSource({
             ...config.connection,
             entities: [UserEntity],
-        })
+        });
 
-        connection.initialize().catch((error) => LogHelper.fatal(error))
+        connection.initialize().catch((error) => LogHelper.fatal(error));
 
-        this.userRepository = connection.getRepository(UserEntity)
+        this.userRepository = connection.getRepository(UserEntity);
     }
 
     async auth(username: string): Promise<AuthResponseData> {
-        const user = await this.userRepository.findOneBy({ username })
-        if (!user) throw new ResponseError("User not found", 100)
+        const user = await this.userRepository.findOneBy({ username });
+        if (!user) throw new ResponseError("User not found", 100);
 
         const userData = {
             username,
             userUUID: user.userUUID as string,
             accessToken: user.accessToken as string,
-        }
+        };
 
         await this.userRepository.update(user, {
             accessToken: userData.accessToken,
-        })
+        });
 
-        return userData
+        return userData;
     }
 
     async join(
@@ -59,52 +59,52 @@ export class DatabaseAuthProvider implements AuthProvider {
         const user = await this.userRepository.findOneBy({
             accessToken: accessToken,
             userUUID: UUIDHelper.getWithDashes(userUUID),
-        })
-        if (!user) return false
+        });
+        if (!user) return false;
 
-        user.serverID = serverID
-        await this.userRepository.save(user)
+        user.serverID = serverID;
+        await this.userRepository.save(user);
 
-        return true
+        return true;
     }
 
     async hasJoined(
         username: string,
         serverID: string
     ): Promise<HasJoinedResponseData> {
-        const user = await this.userRepository.findOneBy({ username })
-        if (!user) throw new ResponseError("User not found", 100)
+        const user = await this.userRepository.findOneBy({ username });
+        if (!user) throw new ResponseError("User not found", 100);
         if (user.serverID !== serverID) {
-            throw new ResponseError("Invalid serverId", 101)
+            throw new ResponseError("Invalid serverId", 101);
         }
 
         return {
             userUUID: user.userUUID as string,
             skinUrl: user.skinUrl as string,
             capeUrl: user.capeUrl as string,
-        }
+        };
     }
 
     async profile(userUUID: string): Promise<ProfileResponseData> {
-        const user = await this.userRepository.findOneBy({ userUUID })
-        if (!user) throw new ResponseError("User not found", 100)
+        const user = await this.userRepository.findOneBy({ userUUID });
+        if (!user) throw new ResponseError("User not found", 100);
 
         return {
             username: user.username as string,
             skinUrl: user.skinUrl as string,
             capeUrl: user.capeUrl as string,
-        }
+        };
     }
 
     async privileges(accessToken: string): Promise<PrivilegesResponseData> {
-        const user = await this.userRepository.findOneBy({ accessToken })
+        const user = await this.userRepository.findOneBy({ accessToken });
 
         return {
             onlineChat: user.onlineChat as boolean,
             multiplayerServer: user.multiplayerServer as boolean,
             multiplayerRealms: user.multiplayerRealms as boolean,
             telemetry: user.telemetry as boolean,
-        }
+        };
     }
 
     async profiles(userUUIDs: string[]): Promise<ProfilesResponseData[]> {
@@ -113,7 +113,7 @@ export class DatabaseAuthProvider implements AuthProvider {
         ].map((user) => ({
             id: user.userUUID as string,
             name: user.username as string,
-        }))
+        }));
     }
 }
 
@@ -181,32 +181,32 @@ const getUserEntity = (
                 name: properties.telemetryColumn,
             },
         },
-    })
-}
+    });
+};
 
 export class DatabaseAuthProviderConfig extends AuthProviderConfig {
     connection: {
-        type: AvaliableDataBaseType
-        host: string
-        port: number
-        user: string
-        password: string
-        database: string
-    }
+        type: AvaliableDataBaseType;
+        host: string;
+        port: number;
+        user: string;
+        password: string;
+        database: string;
+    };
     properties: {
-        tableName: string
-        uuidColumn: string
-        usernameColumn: string
-        passwordColumn: string
-        accessTokenColumn: string
-        serverIdColumn: string
-        skinUrlColumn: string
-        capeUrlColumn: string
-        onlineChatColumn: string
-        multiplayerServerColumn: string
-        multiplayerRealmsColumn: string
-        telemetryColumn: string
-    }
+        tableName: string;
+        uuidColumn: string;
+        usernameColumn: string;
+        passwordColumn: string;
+        accessTokenColumn: string;
+        serverIdColumn: string;
+        skinUrlColumn: string;
+        capeUrlColumn: string;
+        onlineChatColumn: string;
+        multiplayerServerColumn: string;
+        multiplayerRealmsColumn: string;
+        telemetryColumn: string;
+    };
 }
 
 // type AvaliableDataBaseType = DatabaseType
@@ -218,4 +218,4 @@ type AvaliableDataBaseType =
     | "oracle"
     | "mssql"
     | "mongodb"
-    | "better-sqlite3"
+    | "better-sqlite3";

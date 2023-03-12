@@ -1,21 +1,21 @@
-import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
-import { UUIDHelper } from "@root/utils"
-import { ResponseError } from "aurora-rpc-server"
-import { v4, v5 } from "uuid"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
+import { UUIDHelper } from "@root/utils";
+import { ResponseError } from "aurora-rpc-server";
+import { v4, v5 } from "uuid";
 
 import {
     AuthProvider,
     AuthResponseData,
     PrivilegesResponseData,
     ProfilesResponseData,
-} from "./AuthProvider"
+} from "./AuthProvider";
 
 export class AcceptAuthProvider implements AuthProvider {
-    private projectID: string
-    private sessionsDB: UserData[] = []
+    private projectID: string;
+    private sessionsDB: UserData[] = [];
 
     constructor({ projectID }: LauncherServerConfig) {
-        this.projectID = projectID
+        this.projectID = projectID;
     }
 
     auth(username: string): AuthResponseData {
@@ -23,21 +23,21 @@ export class AcceptAuthProvider implements AuthProvider {
             username,
             userUUID: v5(username, this.projectID),
             accessToken: v4(),
-        }
+        };
 
         const userIndex = this.sessionsDB.findIndex(
             (user) => user.username === username
-        )
+        );
         if (userIndex) {
-            this.sessionsDB.splice(userIndex, 1)
+            this.sessionsDB.splice(userIndex, 1);
         }
 
         this.sessionsDB.push({
             ...data,
             serverId: undefined,
-        })
+        });
 
-        return data
+        return data;
     }
 
     join(accessToken: string, userUUID: string, serverId: string): boolean {
@@ -45,27 +45,27 @@ export class AcceptAuthProvider implements AuthProvider {
             (user) =>
                 user.accessToken === accessToken &&
                 user.userUUID === UUIDHelper.getWithDashes(userUUID)
-        )
-        if (!user) return false
+        );
+        if (!user) return false;
 
-        user.serverId = serverId
-        return true
+        user.serverId = serverId;
+        return true;
     }
 
     hasJoined(username: string, serverId: string): UserData {
-        const user = this.sessionsDB.find((user) => user.username === username)
-        if (!user) throw new ResponseError("User not found", 100)
+        const user = this.sessionsDB.find((user) => user.username === username);
+        if (!user) throw new ResponseError("User not found", 100);
 
         if (user.serverId !== serverId) {
-            throw new ResponseError("Invalid serverId", 101)
+            throw new ResponseError("Invalid serverId", 101);
         }
-        return user
+        return user;
     }
 
     profile(userUUID: string): UserData {
-        const user = this.sessionsDB.find((e) => e.userUUID === userUUID)
-        if (!user) throw new ResponseError("User not found", 100)
-        return user
+        const user = this.sessionsDB.find((e) => e.userUUID === userUUID);
+        if (!user) throw new ResponseError("User not found", 100);
+        return user;
     }
 
     privileges(): PrivilegesResponseData {
@@ -74,7 +74,7 @@ export class AcceptAuthProvider implements AuthProvider {
             multiplayerServer: true,
             multiplayerRealms: true,
             telemetry: false,
-        }
+        };
     }
 
     profiles(userUUIDs: string[]): ProfilesResponseData[] {
@@ -83,13 +83,13 @@ export class AcceptAuthProvider implements AuthProvider {
             .map((user) => ({
                 id: user.userUUID,
                 name: user.username,
-            }))
+            }));
     }
 }
 
 interface UserData {
-    username: string
-    userUUID: string
-    accessToken: string
-    serverId: string
+    username: string;
+    userUUID: string;
+    accessToken: string;
+    serverId: string;
 }

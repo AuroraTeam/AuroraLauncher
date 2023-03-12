@@ -1,14 +1,14 @@
-import crypto from "crypto"
-import fs from "fs"
-import { join } from "path"
+import crypto from "crypto";
+import fs from "fs";
+import { join } from "path";
 
-import { LogHelper, StorageHelper } from "@root/utils"
-import { injectable, singleton } from "tsyringe"
+import { LogHelper, StorageHelper } from "@root/utils";
+import { injectable, singleton } from "tsyringe";
 
-import { LangManager } from "../langs"
+import { LangManager } from "../langs";
 
-type HashesMap = Map<string, HashedFile[]>
-type totalDirs = "assets" | "libraries" | "instances"
+type HashesMap = Map<string, HashedFile[]>;
+type totalDirs = "assets" | "libraries" | "instances";
 
 @singleton()
 @injectable()
@@ -17,10 +17,10 @@ export class InstancesManager {
         assets: new Map() as HashesMap,
         libraries: new Map() as HashesMap,
         instances: new Map() as HashesMap,
-    }
+    };
 
     constructor(private readonly langManager: LangManager) {
-        this.hashDirs(["assets", "libraries", "instances"])
+        this.hashDirs(["assets", "libraries", "instances"]);
     }
 
     // TODO move to constructor?
@@ -30,45 +30,45 @@ export class InstancesManager {
                 .readdirSync(join(StorageHelper.filesDir, dir), {
                     withFileTypes: true,
                 })
-                .filter((folder) => folder.isDirectory())
+                .filter((folder) => folder.isDirectory());
 
             if (folders.length === 0)
                 return LogHelper.info(
                     this.langManager.getTranslate.InstancesManager.syncSkip,
                     dir.charAt(0).toUpperCase() + dir.slice(1)
-                )
+                );
 
-            LogHelper.info(this.langManager.getTranslate.InstancesManager.sync)
+            LogHelper.info(this.langManager.getTranslate.InstancesManager.sync);
 
             folders.forEach(({ name }) => {
-                const startTime = Date.now()
+                const startTime = Date.now();
 
                 this.hashedDirs[dir].set(
                     name,
                     this.hashDir(join(StorageHelper.filesDir, dir, name))
-                )
+                );
 
                 LogHelper.info(
                     this.langManager.getTranslate.InstancesManager.syncTime,
                     name,
                     Date.now() - startTime
-                )
-            })
-        })
+                );
+            });
+        });
 
-        LogHelper.info(this.langManager.getTranslate.InstancesManager.syncEnd)
+        LogHelper.info(this.langManager.getTranslate.InstancesManager.syncEnd);
     }
 
     hashDir(dir: string, arrayOfFiles: HashedFile[] = []): HashedFile[] {
         fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
-            const file = join(dir, entry.name)
+            const file = join(dir, entry.name);
             if (entry.isDirectory()) {
-                arrayOfFiles.concat(this.hashDir(file, arrayOfFiles))
+                arrayOfFiles.concat(this.hashDir(file, arrayOfFiles));
             } else {
-                arrayOfFiles.push(this.hashFile(file))
+                arrayOfFiles.push(this.hashFile(file));
             }
-        })
-        return arrayOfFiles
+        });
+        return arrayOfFiles;
     }
 
     hashFile(path: string): HashedFile {
@@ -79,12 +79,12 @@ export class InstancesManager {
                 .createHash("sha1")
                 .update(fs.readFileSync(path))
                 .digest("hex"),
-        }
+        };
     }
 }
 
 export type HashedFile = {
-    path: string
-    hashsum: string
-    size: number
-}
+    path: string;
+    hashsum: string;
+    size: number;
+};

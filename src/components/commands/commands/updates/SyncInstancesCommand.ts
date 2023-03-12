@@ -1,6 +1,6 @@
-import { InstancesManager, LangManager } from "@root/components"
-import { AbstractCommand, Category } from "@root/utils"
-import { injectable } from "tsyringe"
+import { InstancesManager, LangManager } from "@root/components";
+import { AbstractCommand, Category } from "@root/utils";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class SyncInstancesCommand extends AbstractCommand {
@@ -14,10 +14,10 @@ export class SyncInstancesCommand extends AbstractCommand {
                 langManager.getTranslate.CommandsManager.commands.updates
                     .SyncUpdatesCommand,
             category: Category.UPDATES,
-        })
+        });
     }
 
     invoke(): void {
-        this.instancesManager.hashInstancesDir("instances")
+        this.instancesManager.hashInstancesDir("instances");
     }
 }

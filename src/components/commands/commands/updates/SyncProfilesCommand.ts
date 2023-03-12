@@ -1,6 +1,6 @@
-import { LangManager, ProfilesManager } from "@root/components"
-import { AbstractCommand, Category } from "@root/utils"
-import { injectable } from "tsyringe"
+import { LangManager, ProfilesManager } from "@root/components";
+import { AbstractCommand, Category } from "@root/utils";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class SyncProfilesCommand extends AbstractCommand {
@@ -14,10 +14,10 @@ export class SyncProfilesCommand extends AbstractCommand {
                 langManager.getTranslate.CommandsManager.commands.updates
                     .SyncProfilesCommand,
             category: Category.UPDATES,
-        })
+        });
     }
 
     invoke(): void {
-        this.profilesManager.reloadProfiles()
+        this.profilesManager.reloadProfiles();
     }
 }

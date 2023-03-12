@@ -1,7 +1,7 @@
-import { parse, stringify } from "hjson"
+import { parse, stringify } from "hjson";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type HjsonData = Record<string, any> | any[]
+export type HjsonData = Record<string, any> | any[];
 
 /**
  * Класс хелпер для работы с Hjson
@@ -13,7 +13,7 @@ export class HjsonHelper {
      * @returns `Object | Array`
      */
     static fromHjson<T extends HjsonCommented>(string: string): T {
-        return parse(string, { keepWsc: true })
+        return parse(string, { keepWsc: true });
     }
 
     /**
@@ -22,17 +22,17 @@ export class HjsonHelper {
      * @returns Hjson сторка
      */
     static toHjson(data: HjsonData): string {
-        return stringify(data, { keepWsc: true, space: 4 })
+        return stringify(data, { keepWsc: true, space: 4 });
     }
 
     static defineComments(from: HjsonCommented, to: HjsonCommented) {
         Object.defineProperty(to, "__COMMENTS__", {
             enumerable: false,
             value: from.__COMMENTS__,
-        })
+        });
     }
 }
 
 export abstract class HjsonCommented {
-    __COMMENTS__?: any
+    __COMMENTS__?: any;
 }

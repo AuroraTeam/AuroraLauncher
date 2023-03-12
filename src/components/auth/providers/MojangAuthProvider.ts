@@ -1,19 +1,19 @@
-import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig"
-import { HttpHelper } from "@root/utils"
+import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
+import { HttpHelper } from "@root/utils";
 
 import {
     AuthProvider,
     AuthProviderConfig,
     AuthResponseData,
-} from "./AuthProvider"
+} from "./AuthProvider";
 
 export class MojangAuthProvider implements AuthProvider {
-    private authHost: string
+    private authHost: string;
 
     constructor({ auth }: LauncherServerConfig) {
         this.authHost =
             (<MojangAuthProviderConfig>auth).authHost ||
-            "https://authserver.mojang.com"
+            "https://authserver.mojang.com";
     }
 
     async auth(username: string, password: string): Promise<AuthResponseData> {
@@ -27,13 +27,13 @@ export class MojangAuthProvider implements AuthProvider {
                 username,
                 password,
             }
-        )
+        );
 
         return {
             username: result.selectedProfile.name,
             userUUID: result.selectedProfile.id,
             accessToken: result.accessToken,
-        }
+        };
     }
 
     // These methods don't need implementation
@@ -45,31 +45,31 @@ export class MojangAuthProvider implements AuthProvider {
 }
 
 export interface MojangAuthProviderConfig extends AuthProviderConfig {
-    authHost: string
-    accountHost: string
-    sessionHost: string
-    servicesHost: string
+    authHost: string;
+    accountHost: string;
+    sessionHost: string;
+    servicesHost: string;
 }
 
 interface AuthenticateResponse {
     user: {
-        username: string
+        username: string;
         properties: {
-            name: string
-            value: string
-        }[]
-        id: string
-    }
-    clientToken: string
-    accessToken: string
+            name: string;
+            value: string;
+        }[];
+        id: string;
+    };
+    clientToken: string;
+    accessToken: string;
     availableProfiles: [
         {
-            name: string
-            id: string
+            name: string;
+            id: string;
         }
-    ]
+    ];
     selectedProfile: {
-        name: string
-        id: string
-    }
+        name: string;
+        id: string;
+    };
 }

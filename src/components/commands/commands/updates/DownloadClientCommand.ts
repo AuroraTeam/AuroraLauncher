@@ -6,9 +6,9 @@ import {
     MirrorManager,
     MojangManager,
     ProfilesManager,
-} from "@root/components/"
-import { AbstractCommand, Category, LogHelper } from "@root/utils"
-import { injectable } from "tsyringe"
+} from "@root/components/";
+import { AbstractCommand, Category, LogHelper } from "@root/utils";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class DownloadClientCommand extends AbstractCommand {
@@ -25,7 +25,7 @@ export class DownloadClientCommand extends AbstractCommand {
                     .DownloadClientCommand,
             category: Category.UPDATES,
             usage: "<version> <instance name> <?source type>",
-        })
+        });
     }
 
     async invoke(
@@ -34,36 +34,36 @@ export class DownloadClientCommand extends AbstractCommand {
         sourceType = "mojang"
     ): Promise<void> {
         if (!gameVersion) {
-            return LogHelper.error("Укажите название/версию клиента!")
+            return LogHelper.error("Укажите название/версию клиента!");
         }
         if (!instanceName) {
-            return LogHelper.error("Укажите название папки для инстанции!")
+            return LogHelper.error("Укажите название папки для инстанции!");
         }
 
-        const DownloadManager = this.getDownloadManager(sourceType)
+        const DownloadManager = this.getDownloadManager(sourceType);
         if (!DownloadManager) {
-            return LogHelper.error(`Неизвестный тип источника: ${sourceType}`)
+            return LogHelper.error(`Неизвестный тип источника: ${sourceType}`);
         }
 
-        this.commandsManager.console.pause()
+        this.commandsManager.console.pause();
         await new DownloadManager(
             this.langManager,
             this.profilesManager,
             this.configManager
-        ).downloadClient(gameVersion, instanceName)
-        this.commandsManager.console.resume()
+        ).downloadClient(gameVersion, instanceName);
+        this.commandsManager.console.resume();
     }
 
     private getDownloadManager(sourceType: string) {
         switch (sourceType) {
             case "mirror":
-                return MirrorManager
+                return MirrorManager;
             case "fabric":
-                return FabricManager
+                return FabricManager;
             case "mojang":
-                return MojangManager
+                return MojangManager;
             default:
-                return null
+                return null;
         }
     }
 }

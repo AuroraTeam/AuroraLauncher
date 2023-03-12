@@ -1,13 +1,13 @@
-import { ProfilesManager } from "@root/components/profiles"
-import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
-import { injectable } from "tsyringe"
+import { ProfilesManager } from "@root/components/profiles";
+import { AbstractRequest, ResponseResult } from "aurora-rpc-server";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class ServersRequest extends AbstractRequest {
-    method = "servers"
+    method = "servers";
 
     constructor(private profilesManager: ProfilesManager) {
-        super()
+        super();
     }
 
     /**
@@ -15,7 +15,7 @@ export class ServersRequest extends AbstractRequest {
      * @returns An array of objects.
      */
     invoke(): ResponseResult {
-        const servers: any[] = []
+        const servers: any[] = [];
         this.profilesManager.profiles
             .sort(
                 (a: { sortIndex: number }, b: { sortIndex: number }) =>
@@ -28,10 +28,10 @@ export class ServersRequest extends AbstractRequest {
                         port: s.port,
                         title: s.title,
                         profileUUID: p.uuid,
-                    })
-                })
-            })
+                    });
+                });
+            });
 
-        return servers
+        return servers;
     }
 }

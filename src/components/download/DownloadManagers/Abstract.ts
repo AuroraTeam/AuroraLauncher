@@ -1,6 +1,6 @@
-import { ConfigManager } from "@root/components/config"
-import { LangManager } from "@root/components/langs"
-import { ProfilesManager } from "@root/components/profiles"
+import { ConfigManager } from "@root/components/config";
+import { LangManager } from "@root/components/langs";
+import { ProfilesManager } from "@root/components/profiles";
 
 export abstract class AbstractDownloadManager {
     constructor(
@@ -17,17 +17,17 @@ export abstract class AbstractDownloadManager {
     abstract downloadClient(
         gameVersion: string,
         instanceName: string
-    ): Promise<any>
+    ): Promise<any>;
 
     /**
      * Скачивание библиотек
      * @param gameVersion - Версия игры
      */
-    abstract downloadLibraries(gameVersion: string): Promise<any>
+    abstract downloadLibraries(gameVersion: string): Promise<any>;
 
     /**
      * Скачивание ассетов
      * @param gameVersion - Версия игры
      */
-    abstract downloadAssets(gameVersion: string): Promise<any>
+    abstract downloadAssets(gameVersion: string): Promise<any>;
 }

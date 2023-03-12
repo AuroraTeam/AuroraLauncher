@@ -2,9 +2,9 @@ import {
     InstancesManager,
     LangManager,
     ProfilesManager,
-} from "@root/components"
-import { AbstractCommand, Category } from "@root/utils"
-import { injectable } from "tsyringe"
+} from "@root/components";
+import { AbstractCommand, Category } from "@root/utils";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class SyncAllCommand extends AbstractCommand {
@@ -19,11 +19,11 @@ export class SyncAllCommand extends AbstractCommand {
                 langManager.getTranslate.CommandsManager.commands.updates
                     .SyncAllCommand,
             category: Category.UPDATES,
-        })
+        });
     }
 
     invoke(): void {
-        this.profilesManager.reloadProfiles()
-        this.instancesManager.hashInstancesDir("instances")
+        this.profilesManager.reloadProfiles();
+        this.instancesManager.hashInstancesDir("instances");
     }
 }
