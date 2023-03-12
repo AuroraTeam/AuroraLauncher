@@ -1,66 +1,49 @@
-import fs from "fs";
 import { mkdir } from "fs/promises";
-import path from "path";
-import { URL } from "url";
+import path, { resolve } from "path";
 
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
-import {
-    HttpHelper,
-    JsonHelper,
-    LogHelper,
-    StorageHelper,
-    ZipHelper,
-} from "@root/utils";
+import { HttpHelper, LogHelper, StorageHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { AbstractDownloadManager } from "./Abstract";
+import { Client, VersionManifest } from "./IMojang";
 
 @injectable()
 export class MojangManager extends AbstractDownloadManager {
-    clientsLink = "https://libraries.minecraft.net/";
-    assetsLink = "https://resources.download.minecraft.net/";
     versionManifestLink =
-        "https://launchermeta.mojang.com/mc/game/version_manifest.json";
-
-    downloadLibraries(gameVersion: string): Promise<any> {
-        throw new Error("Method not implemented.");
-    }
+        "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
     /**
      * Скачивание клиента с зеркала Mojang
-     * @param clientVer - Версия клиента
-     * @param instanceName - Название истанции
-     * @param modloader
+     * @param gameVersion - Версия игры
+     * @param instanceName - Название сборки
      */
     async downloadClient(
-        clientVer: string,
-        instanceName: string,
-        modloader = false
+        gameVersion: string,
+        instanceName: string
     ): Promise<any> {
-        const version: any = await this.getVersionInfo(clientVer);
-        if (version === undefined) return;
+        const version = await this.getClientInfo(gameVersion);
+        if (!version) return;
 
-        const client: any = version.downloads.client;
-        const libraries: any[] = version.libraries;
+        const clientDirPath = resolve(StorageHelper.clientsDir, instanceName);
 
-        // Client
-        const clientDir = path.resolve(
-            StorageHelper.instancesDir,
-            instanceName
-        );
-        if (fs.existsSync(clientDir))
+        try {
+            await mkdir(clientDirPath);
+        } catch (err) {
             return LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.dirExist
             );
-        fs.mkdirSync(clientDir);
+        }
+
+        LogHelper.info(
+            this.langManager.getTranslate.DownloadManager.MojangManager.client
+                .download
+        );
+
         try {
-            LogHelper.info(
-                this.langManager.getTranslate.DownloadManager.MojangManager
-                    .client.download
-            );
             await HttpHelper.downloadFile(
-                new URL(client.url),
-                path.resolve(clientDir, "minecraft.jar")
+                version.downloads.client.url,
+                path.resolve(clientDirPath, "minecraft.jar")
             );
         } catch (error) {
             LogHelper.error(
@@ -71,80 +54,14 @@ export class MojangManager extends AbstractDownloadManager {
             return;
         }
 
-        // Libraries
-        const librariesDir = path.resolve(
-            StorageHelper.librariesDir,
-            clientVer
-        );
-        if (!fs.existsSync(librariesDir)) fs.mkdirSync(librariesDir);
-
         LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MojangManager
-                .libraries.download
+            this.langManager.getTranslate.DownloadManager.MojangManager.client
+                .success
         );
-        const librariesList = this.librariesParse(libraries);
 
-        try {
-            await HttpHelper.downloadFiles(
-                librariesList.libraries,
-                this.clientsLink,
-                librariesDir
-            );
-        } catch (error) {
-            LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager
-                    .libraries.downloadErr
-            );
-            LogHelper.debug(error);
-            return;
-        }
-
-        // Natives
-        const nativesDir = path.resolve(clientDir, "natives");
-        await mkdir(nativesDir);
-
-        const tempDir = StorageHelper.getTmpPath();
-        await mkdir(tempDir);
-
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MojangManager.natives
-                .download
-        );
-        try {
-            await HttpHelper.downloadFiles(
-                librariesList.natives,
-                this.clientsLink,
-                tempDir,
-                (filePath) => {
-                    ZipHelper.unzipArchive(filePath, nativesDir, [
-                        ".dll",
-                        ".so",
-                        ".dylib",
-                        ".jnilib",
-                    ]);
-                }
-            );
-        } catch (error) {
-            LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager
-                    .natives.downloadErr
-            );
-            LogHelper.debug(error);
-            return;
-        } finally {
-            await StorageHelper.rmdirRecursive(tempDir).catch();
-        }
-
-        if (!modloader) {
-            LogHelper.info(
-                this.langManager.getTranslate.DownloadManager.MojangManager
-                    .client.success
-            );
-        }
-
-        //Profiles
+        // TODO REWORK PROFILES
         return this.profilesManager.createProfile({
-            version: clientVer,
+            version: gameVersion,
             clientDir: instanceName,
             mainClass: version.mainClass,
             assetsDir: `assets${version.assets}`,
@@ -157,184 +74,43 @@ export class MojangManager extends AbstractDownloadManager {
         } as ProfileConfig);
     }
 
-    /**
-     * Скачивание клиена с зеркала Mojang
-     * @param assetsVer - Версия клиента
-     */
-    async downloadAssets(assetsVer: string): Promise<void> {
-        const version: any = await this.getVersionInfo(assetsVer);
-        if (version === undefined) return;
-
-        const assetsDir = path.resolve(StorageHelper.assetsDir, assetsVer);
-        if (fs.existsSync(assetsDir))
-            return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.dirExist
-            );
-        fs.mkdirSync(assetsDir);
-
-        const assetsFile = await HttpHelper.getResource(
-            new URL(version.assetIndex.url)
-        );
-        fs.mkdirSync(path.resolve(assetsDir, "indexes"));
-        fs.writeFileSync(
-            path.resolve(assetsDir, `indexes/${version.assets}.json`),
-            assetsFile
-        );
-
-        const { objects: assetsData } = JsonHelper.fromJson<any>(assetsFile);
-        const assetsHashes: Set<string> = new Set();
-        for (const key in assetsData) {
-            const hash = assetsData[key].hash;
-            assetsHashes.add(`${hash.slice(0, 2)}/${hash}`);
-        }
-
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MojangManager.assets
-                .download
-        );
+    async getVersionsInfo(): Promise<VersionManifest | void> {
         try {
-            await HttpHelper.downloadFiles(
-                assetsHashes,
-                this.assetsLink,
-                path.resolve(assetsDir, "objects")
+            return await HttpHelper.getResourceFromJson<VersionManifest>(
+                this.versionManifestLink
             );
-        } catch (error) {
-            LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager
-                    .assets.downloadErr
-            );
-            LogHelper.debug(error);
-            return;
-        }
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MojangManager.assets
-                .success
-        );
-    }
-
-    // TODO Отрефакторить этот прикол
-    /**
-     * Получить список библиотек и нативных файлов для скачивания
-     * @param libraries Объект со списком библиотек и нативных файлов
-     */
-    librariesParse(libraries: any[]): {
-        libraries: Set<string>;
-        natives: Set<string>;
-    } {
-        const filteredData = {
-            libraries: new Set() as Set<string>,
-            natives: new Set() as Set<string>,
-        };
-
-        libraries.forEach((lib) => {
-            const rules = {
-                allow: [] as string[],
-                disallow: [] as string[],
-            };
-
-            if (lib.rules) {
-                lib.rules.forEach(
-                    (rule: { action: "allow" | "disallow"; os: any }) => {
-                        if (rule.os) {
-                            rules[rule.action].push(rule.os.name);
-                        }
-                    }
-                );
-
-                // Игнорируем ненужные либы lwjgl
-                if (
-                    (lib.name as string).includes("lwjgl") &&
-                    rules.disallow.includes("osx")
-                )
-                    return;
-            }
-
-            if (lib.downloads.artifact) {
-                filteredData.libraries.add(lib.downloads.artifact.path);
-            }
-
-            // Natives
-            if (lib.natives) {
-                const natives = Object.values(lib.natives) as string[];
-
-                // Ещё один костыль для lwjgl
-                if (
-                    (lib.name as string).includes("lwjgl") &&
-                    rules.allow.includes("osx")
-                ) {
-                    natives.push("natives-linux", "natives-windows");
-                }
-
-                natives.forEach((native) => {
-                    const nativeData = lib.downloads.classifiers[native];
-                    if (nativeData) {
-                        filteredData.natives.add(nativeData.path);
-                    }
-                });
-            }
-        });
-
-        return filteredData;
-    }
-
-    async getVersionInfo(version: string): Promise<any> {
-        let versionsData;
-        try {
-            versionsData = await HttpHelper.getResource(
-                new URL(this.versionManifestLink)
-            );
-        } catch (error) {
-            LogHelper.debug(error);
-            LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager.info
-                    .unavailableSite
-            );
-            return;
-        }
-
-        let versions: any[];
-        try {
-            versions = JsonHelper.fromJson<any>(versionsData).versions;
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MojangManager.info
                     .errVerParsing
             );
-            return;
         }
+    }
 
-        const _version = versions.find((v: any) => v.id === version);
-        if (_version === undefined) {
-            LogHelper.error(
+    async getClientInfo(gameVersion: string) {
+        const versionInfo = await this.getVersionsInfo();
+        if (!versionInfo) return;
+
+        const version = versionInfo.versions.find(
+            ({ id }) => id === gameVersion
+        );
+        if (!version) {
+            return LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MojangManager.info
                     .verNotFound,
-                version
+                gameVersion
             );
-            return;
-        }
-
-        let clientData;
-        try {
-            clientData = await HttpHelper.getResource(new URL(_version.url));
-        } catch (error) {
-            LogHelper.debug(error);
-            LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager.info
-                    .clientDataNotFound
-            );
-            return;
         }
 
         try {
-            return JsonHelper.fromJson(clientData);
+            return await HttpHelper.getResourceFromJson<Client>(version.url);
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MojangManager.info
                     .errClientParsing
             );
-            return;
         }
     }
 }

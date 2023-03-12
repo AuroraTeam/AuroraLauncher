@@ -8,7 +8,6 @@ export * from "./basic/StatusCommand";
 export * from "./basic/StopCommand";
 export * from "./basic/UpdateCommand";
 
-export * from "./updates/DownloadAssetsCommand";
 export * from "./updates/DownloadClientCommand";
 export * from "./updates/SyncAllCommand";
 export * from "./updates/SyncProfilesCommand";

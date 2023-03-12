@@ -12,7 +12,7 @@ import { ProfileConfig } from "./utils/ProfileConfig";
 export class ProfilesManager {
     profiles: ProfileConfig[] = [];
     constructor(private readonly langManager: LangManager) {
-        this.loadProfiles();
+        // this.loadProfiles();
     }
 
     async loadProfiles(): Promise<void> {

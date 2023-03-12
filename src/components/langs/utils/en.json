@@ -37,26 +37,9 @@
                 "downloadErr": "Error downloading the client!",
                 "success": "Client successfully downloaded!"
             },
-            "libraries": {
-                "download": "Libraries downloading, please wait...",
-                "downloadErr": "Error downloading the libraries!",
-                "success": "Libraries successfully downloaded!"
-            },
-            "natives": {
-                "download": "Natives downloading, please wait...",
-                "downloadErr": "Error downloading the natives!",
-                "success": "Natives successfully downloaded!"
-            },
-            "assets": {
-                "download": "Assets downloading, please wait...",
-                "downloadErr": "Assets downloading the client!",
-                "success": "Assets successfully downloaded!"
-            },
             "info": {
-                "unavailableSite": "MojangMC website is temporarily unavailable!",
                 "errVerParsing": "Error in parsing version data",
                 "verNotFound": "Version %s not found",
-                "clientDataNotFound": "Client data not found",
                 "errClientParsing": "Error in parsing client data"
             }
         },
@@ -67,10 +50,8 @@
                 "success": "Libraries downloaded successfully!"
             },
             "info": {
-                "unavailableSite": "FabricMC website is temporarily unavailable!",
                 "errJsonParsing": "Error in parsing Json data",
                 "verNotFound": "Fabric version %s not found",
-                "clientDataNotFound": "Client data not found",
                 "errClientParsing": "Error in parsing client data"
             }
         },
@@ -81,15 +62,8 @@
                 "downloadErr": "Error downloading client!",
                 "unpacking": "Client loaded, unpacking ...",
                 "unpackingErr": "Error unpacking client!",
+                "profileErr": "Error loading the profile!",
                 "success": "Client loaded successfully!"
-            },
-            "assets": {
-                "notFound": "No assets found!",
-                "download": "Assets found, loading ...",
-                "downloadErr": "Error downloading assets!",
-                "unpacking": "Assets loaded, unpacking ...",
-                "unpackingErr": "Error unpacking assets!",
-                "success": "Assets loaded successfully!"
             }
         }
     },
@@ -103,11 +77,11 @@
         "downloadingLatestVer": "Downloading latest version of current branch...",
         "downloadEnd": "Download complete! Please restart LauncherServer."
     },
-    "InstancesManager": {
+    "ClientsManager": {
         "sync": "Syncing instances dir",
         "syncTime": "Syncing \"%s\" - %dms",
         "syncEnd": "Syncing instances dir end",
-        "syncSkip": "%s dir empty. Skip sync"
+        "syncSkip": "Instances dir is empty. Skip sync"
     },
     "ProgressHelper": {
         "loading": "{bar} {percentage}%",

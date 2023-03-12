@@ -1,4 +1,4 @@
-import { InstancesManager, LangManager } from "@root/components";
+import { ClientsManager, LangManager } from "@root/components";
 import { AbstractCommand, Category } from "@root/utils";
 import { injectable } from "tsyringe";
 
@@ -6,7 +6,7 @@ import { injectable } from "tsyringe";
 export class SyncInstancesCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
-        private readonly instancesManager: InstancesManager
+        private readonly instancesManager: ClientsManager
     ) {
         super({
             name: "syncinstances",

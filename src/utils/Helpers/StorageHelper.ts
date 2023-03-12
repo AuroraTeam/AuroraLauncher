@@ -11,25 +11,24 @@ export class StorageHelper extends CoreStorageHelper {
     static readonly storageDir: string = SystemHelper.isStandalone()
         ? dirname(process.execPath)
         : __dirname;
-    static readonly filesDir: string = resolve(this.storageDir, "files");
-    static readonly assetsDir: string = resolve(this.filesDir, "assets");
-    static readonly librariesDir: string = resolve(this.filesDir, "libraries");
-    static readonly instancesDir: string = resolve(this.filesDir, "instances");
-    static readonly profilesDir: string = resolve(this.storageDir, "profiles");
+    static readonly clientsDir: string = resolve(this.storageDir, "clients");
     static readonly modulesDir: string = resolve(this.storageDir, "modules");
-    // static readonly runtimeDir: string = resolve(this.storageDir, "runtime") // TODO auto download
     static readonly authlibDir: string = resolve(this.storageDir, "authlib");
     static readonly logsDir: string = resolve(this.storageDir, "logs");
 
-    static validate(): void {
-        if (!existsSync(this.filesDir)) mkdirSync(this.filesDir);
-        if (!existsSync(this.assetsDir)) mkdirSync(this.assetsDir);
-        if (!existsSync(this.librariesDir)) mkdirSync(this.librariesDir);
-        if (!existsSync(this.instancesDir)) mkdirSync(this.instancesDir);
-        if (!existsSync(this.profilesDir)) mkdirSync(this.profilesDir);
-        if (!existsSync(this.modulesDir)) mkdirSync(this.modulesDir);
-        if (!existsSync(this.authlibDir)) mkdirSync(this.authlibDir);
-        if (!existsSync(this.logsDir)) mkdirSync(this.logsDir);
+    static validate() {
+        const foldersToCreate: PathLike[] = [
+            this.clientsDir,
+            this.modulesDir,
+            this.authlibDir,
+            this.logsDir,
+        ];
+
+        for (const folder of foldersToCreate) {
+            if (!existsSync(folder)) {
+                mkdirSync(folder);
+            }
+        }
     }
 
     static rmdirRecursive(path: PathLike) {

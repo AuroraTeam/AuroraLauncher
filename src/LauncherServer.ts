@@ -5,9 +5,9 @@ import { version } from "../package.json";
 import {
     AuthManager,
     AuthlibManager,
+    ClientsManager,
     CommandsManager,
     ConfigManager,
-    InstancesManager,
     LangManager,
     ModulesManager,
     ProfilesManager,
@@ -25,7 +25,6 @@ import {
 import {
     AboutCommand,
     BranchCommand,
-    DownloadAssetsCommand,
     DownloadClientCommand,
     HelpCommand,
     LangCommand,
@@ -51,7 +50,7 @@ export class LauncherServer {
     private _CommandsManager: CommandsManager;
     private _ModulesManager: ModulesManager;
     private _WebManager: WebManager;
-    private _InstancesManager: InstancesManager;
+    private _ClientsManager: ClientsManager;
     private _UpdateManager: UpdateManager;
     private _ProfilesManager: ProfilesManager;
     private _AuthlibManager: AuthlibManager;
@@ -61,15 +60,16 @@ export class LauncherServer {
      */
     constructor() {
         StorageHelper.validate();
+
         this.printVersion();
 
         LogHelper.info("Initialization start");
-        this.initialize();
+        this.init();
 
         LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd);
     }
 
-    private initialize() {
+    private init() {
         this._ConfigManager = container.resolve(ConfigManager);
         this._LangManager = container.resolve(LangManager);
 
@@ -103,13 +103,12 @@ export class LauncherServer {
             container.resolve(SyncAllCommand),
             container.resolve(SyncProfilesCommand),
             container.resolve(SyncInstancesCommand),
-            container.resolve(DownloadAssetsCommand),
             container.resolve(DownloadClientCommand),
             container.resolve(AboutCommand),
             container.resolve(StopCommand),
         ]);
 
-        this._InstancesManager = container.resolve(InstancesManager);
+        this._ClientsManager = container.resolve(ClientsManager);
         this._ProfilesManager = container.resolve(ProfilesManager);
         this._ModulesManager = container.resolve(ModulesManager);
         this._UpdateManager = container.resolve(UpdateManager);
@@ -122,7 +121,7 @@ export class LauncherServer {
     public reload() {
         LogHelper.info("Reload LaunchServer");
         container.clearInstances();
-        this.initialize();
+        this.init();
     }
 
     private printVersion() {

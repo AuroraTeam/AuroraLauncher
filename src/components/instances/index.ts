@@ -13,55 +13,45 @@ type HashedFile = {
     size: number;
 };
 
-type HashesMap = Map<string, HashedFile[]>;
-type TotalDirs = "assets" | "libraries" | "instances";
-
 @singleton()
 @injectable()
-export class InstancesManager {
-    readonly hashedDirs: Record<TotalDirs, HashesMap> = {
-        assets: new Map(),
-        libraries: new Map(),
-        instances: new Map(),
-    };
+export class ClientsManager {
+    readonly hashedInstances = new Map<string, HashedFile[]>();
 
     constructor(private readonly langManager: LangManager) {
-        this.hashDirs(["assets", "libraries", "instances"]);
+        // this.hashInstances();
     }
 
-    private async hashDirs(totalDirs: TotalDirs[]): Promise<void> {
-        for (const dir of totalDirs) {
-            const dirPath = join(StorageHelper.filesDir, dir);
-            const folders = await fs.readdir(dirPath, { withFileTypes: true });
-            const dirs = folders.filter((folder) => folder.isDirectory());
+    private async hashInstances(): Promise<void> {
+        const folders = await fs.readdir(StorageHelper.clientsDir, {
+            withFileTypes: true,
+        });
+        const dirs = folders.filter((folder) => folder.isDirectory());
 
-            if (dirs.length === 0) {
-                LogHelper.info(
-                    this.langManager.getTranslate.InstancesManager.syncSkip,
-                    `${dir.charAt(0).toUpperCase()}${dir.slice(1)}`
-                );
-                continue;
-            }
-
-            LogHelper.info(this.langManager.getTranslate.InstancesManager.sync);
-
-            for (const { name } of dirs) {
-                const startTime = Date.now();
-
-                this.hashedDirs[dir].set(
-                    name,
-                    await this.hashDir(join(StorageHelper.filesDir, dir, name))
-                );
-
-                LogHelper.info(
-                    this.langManager.getTranslate.InstancesManager.syncTime,
-                    name,
-                    Date.now() - startTime
-                );
-            }
+        if (dirs.length === 0) {
+            return LogHelper.info(
+                this.langManager.getTranslate.ClientsManager.syncSkip
+            );
         }
 
-        LogHelper.info(this.langManager.getTranslate.InstancesManager.syncEnd);
+        LogHelper.info(this.langManager.getTranslate.ClientsManager.sync);
+
+        for (const { name } of dirs) {
+            const startTime = Date.now();
+
+            this.hashedInstances.set(
+                name,
+                await this.hashDir(join(StorageHelper.clientsDir, name))
+            );
+
+            LogHelper.info(
+                this.langManager.getTranslate.ClientsManager.syncTime,
+                name,
+                Date.now() - startTime
+            );
+        }
+
+        LogHelper.info(this.langManager.getTranslate.ClientsManager.syncEnd);
     }
 
     private async hashDir(
@@ -88,7 +78,7 @@ export class InstancesManager {
         const hashsum = crypto.createHash("sha1").update(data).digest("hex");
 
         return {
-            path: path.replace(StorageHelper.instancesDir, ""),
+            path: path.replace(StorageHelper.clientsDir, ""),
             hashsum,
             size,
         };

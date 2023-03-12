@@ -18,16 +18,4 @@ export abstract class AbstractDownloadManager {
         gameVersion: string,
         instanceName: string
     ): Promise<any>;
-
-    /**
-     * Скачивание библиотек
-     * @param gameVersion - Версия игры
-     */
-    abstract downloadLibraries(gameVersion: string): Promise<any>;
-
-    /**
-     * Скачивание ассетов
-     * @param gameVersion - Версия игры
-     */
-    abstract downloadAssets(gameVersion: string): Promise<any>;
 }

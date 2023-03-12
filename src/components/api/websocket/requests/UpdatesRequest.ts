@@ -1,4 +1,4 @@
-import { InstancesManager } from "@root/components/instances";
+import { ClientsManager } from "@root/components/instances";
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server";
 import { injectable } from "tsyringe";
 
@@ -6,7 +6,7 @@ import { injectable } from "tsyringe";
 export class UpdatesRequest extends AbstractRequest {
     method = "updates";
 
-    constructor(private instancesManager: InstancesManager) {
+    constructor(private instancesManager: ClientsManager) {
         super();
     }
 

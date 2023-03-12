@@ -1,8 +1,4 @@
-import {
-    InstancesManager,
-    LangManager,
-    ProfilesManager,
-} from "@root/components";
+import { ClientsManager, LangManager, ProfilesManager } from "@root/components";
 import { AbstractCommand, Category } from "@root/utils";
 import { injectable } from "tsyringe";
 
@@ -11,7 +7,7 @@ export class SyncAllCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
         private readonly profilesManager: ProfilesManager,
-        private readonly instancesManager: InstancesManager
+        private readonly instancesManager: ClientsManager
     ) {
         super({
             name: "syncall",
