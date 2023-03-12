@@ -22,6 +22,21 @@ import {
     MojangAuthProvider,
     RejectAuthProvider,
 } from "./components/auth/providers"
+import {
+    AboutCommand,
+    BranchCommand,
+    DownloadAssetsCommand,
+    DownloadClientCommand,
+    HelpCommand,
+    LangCommand,
+    ModulesCommand,
+    ReloadCommand,
+    StopCommand,
+    SyncAllCommand,
+    SyncInstancesCommand,
+    SyncProfilesCommand,
+    UpdateCommand,
+} from "./components/commands/commands"
 import { LogHelper, StorageHelper } from "./utils"
 
 @singleton()
@@ -76,7 +91,24 @@ export class LauncherServer {
         // Other
 
         this._AuthlibManager = container.resolve(AuthlibManager)
+
         this._CommandsManager = container.resolve(CommandsManager)
+        this._CommandsManager.registerCommands([
+            container.resolve(HelpCommand),
+            container.resolve(ReloadCommand),
+            container.resolve(ModulesCommand),
+            container.resolve(BranchCommand),
+            container.resolve(UpdateCommand),
+            container.resolve(LangCommand),
+            container.resolve(SyncAllCommand),
+            container.resolve(SyncProfilesCommand),
+            container.resolve(SyncInstancesCommand),
+            container.resolve(DownloadAssetsCommand),
+            container.resolve(DownloadClientCommand),
+            container.resolve(AboutCommand),
+            container.resolve(StopCommand),
+        ])
+
         this._InstancesManager = container.resolve(InstancesManager)
         this._ProfilesManager = container.resolve(ProfilesManager)
         this._ModulesManager = container.resolve(ModulesManager)

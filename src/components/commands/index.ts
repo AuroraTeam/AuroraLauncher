@@ -1,24 +1,9 @@
 import ReadLine from "readline"
 
 import { AbstractCommand, LogHelper } from "@root/utils"
-import { container, injectable, singleton } from "tsyringe"
+import { injectable, singleton } from "tsyringe"
 
 import { LangManager } from "../langs"
-import {
-    AboutCommand,
-    BranchCommand,
-    DownloadAssetsCommand,
-    DownloadClientCommand,
-    HelpCommand,
-    LangCommand,
-    ModulesCommand,
-    ReloadCommand,
-    StopCommand,
-    SyncAllCommand,
-    SyncInstancesCommand,
-    SyncProfilesCommand,
-    UpdateCommand,
-} from "./commands"
 
 @singleton()
 @injectable()
@@ -27,26 +12,7 @@ export class CommandsManager {
     console: ReadLine.Interface
 
     constructor(private readonly langManager: LangManager) {
-        this.commandsInit()
         this.consoleInit()
-    }
-
-    private commandsInit(): void {
-        this.registerCommands([
-            container.resolve(HelpCommand),
-            container.resolve(ReloadCommand),
-            container.resolve(ModulesCommand),
-            container.resolve(BranchCommand),
-            container.resolve(UpdateCommand),
-            container.resolve(LangCommand),
-            container.resolve(SyncAllCommand),
-            container.resolve(SyncProfilesCommand),
-            container.resolve(SyncInstancesCommand),
-            container.resolve(DownloadAssetsCommand),
-            container.resolve(DownloadClientCommand),
-            container.resolve(AboutCommand),
-            container.resolve(StopCommand),
-        ])
     }
 
     registerCommands(commands: AbstractCommand[]): void {
