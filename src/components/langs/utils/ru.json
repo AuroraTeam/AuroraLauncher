@@ -22,6 +22,7 @@
             "updates": {
                 "DownloadAssetsCommand": "Загрузить ассеты",
                 "DownloadClientCommand": "Загрузить клиент",
+                "DownloadLibrariesCommand": "Загрузить библиотеки",
                 "SyncAllCommand": "Синхронизировать папки updates & profiles",
                 "SyncProfilesCommand": "Синхронизировать папку profiles",
                 "SyncUpdatesCommand": "Синхронизировать папку updates"

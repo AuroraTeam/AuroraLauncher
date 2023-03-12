@@ -7,7 +7,7 @@ import {
     ProfilesManager,
 } from "@root/components"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
-import { delay, inject, injectable } from "tsyringe"
+import { injectable } from "tsyringe"
 
 @injectable()
 export class DownloadAssetsCommand extends AbstractCommand {
@@ -15,7 +15,6 @@ export class DownloadAssetsCommand extends AbstractCommand {
         private readonly langManager: LangManager,
         private readonly profilesManager: ProfilesManager,
         private readonly configManager: ConfigManager,
-        @inject(delay(() => CommandsManager))
         private readonly commandsManager: CommandsManager
     ) {
         super({
@@ -24,13 +23,12 @@ export class DownloadAssetsCommand extends AbstractCommand {
                 langManager.getTranslate.CommandsManager.commands.updates
                     .DownloadAssetsCommand,
             category: Category.UPDATES,
-            usage: "<version> <folder name> <?source type>",
+            usage: "<version> <?source type>",
         })
     }
 
-    async invoke(...args: string[]): Promise<void> {
-        const [assetsVer, sourceType = "mojang"] = args
-        if (!assetsVer) return LogHelper.error("Укажите версию ассетов!")
+    async invoke(gameVersion?: string, sourceType = "mojang"): Promise<void> {
+        if (!gameVersion) return LogHelper.error("Укажите версию ассетов!")
 
         const DownloadManager = this.getDownloadManager(sourceType)
         if (!DownloadManager) {
@@ -42,7 +40,7 @@ export class DownloadAssetsCommand extends AbstractCommand {
             this.langManager,
             this.profilesManager,
             this.configManager
-        ).downloadAssets(assetsVer)
+        ).downloadAssets(gameVersion)
         this.commandsManager.console.resume()
     }
 

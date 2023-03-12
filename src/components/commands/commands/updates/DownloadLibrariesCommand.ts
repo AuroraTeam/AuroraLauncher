@@ -1,17 +1,16 @@
 import {
     CommandsManager,
     ConfigManager,
-    FabricManager,
     LangManager,
     MirrorManager,
     MojangManager,
     ProfilesManager,
-} from "@root/components/"
+} from "@root/components"
 import { AbstractCommand, Category, LogHelper } from "@root/utils"
 import { injectable } from "tsyringe"
 
 @injectable()
-export class DownloadClientCommand extends AbstractCommand {
+export class DownloadLibrariesCommand extends AbstractCommand {
     constructor(
         private readonly langManager: LangManager,
         private readonly profilesManager: ProfilesManager,
@@ -19,26 +18,17 @@ export class DownloadClientCommand extends AbstractCommand {
         private readonly commandsManager: CommandsManager
     ) {
         super({
-            name: "downloadclient",
+            name: "downloadlibs",
             description:
                 langManager.getTranslate.CommandsManager.commands.updates
-                    .DownloadClientCommand,
+                    .DownloadLibrariesCommand,
             category: Category.UPDATES,
-            usage: "<version> <instance name> <?source type>",
+            usage: "<version> <?source type>",
         })
     }
 
-    async invoke(
-        gameVersion?: string,
-        instanceName?: string,
-        sourceType = "mojang"
-    ): Promise<void> {
-        if (!gameVersion) {
-            return LogHelper.error("Укажите название/версию клиента!")
-        }
-        if (!instanceName) {
-            return LogHelper.error("Укажите название папки для инстанции!")
-        }
+    async invoke(gameVersion?: string, sourceType = "mojang"): Promise<void> {
+        if (!gameVersion) return LogHelper.error("Укажите версию библиотек!")
 
         const DownloadManager = this.getDownloadManager(sourceType)
         if (!DownloadManager) {
@@ -50,7 +40,7 @@ export class DownloadClientCommand extends AbstractCommand {
             this.langManager,
             this.profilesManager,
             this.configManager
-        ).downloadClient(gameVersion, instanceName)
+        ).downloadLibraries(gameVersion)
         this.commandsManager.console.resume()
     }
 
@@ -58,8 +48,6 @@ export class DownloadClientCommand extends AbstractCommand {
         switch (sourceType) {
             case "mirror":
                 return MirrorManager
-            case "fabric":
-                return FabricManager
             case "mojang":
                 return MojangManager
             default:

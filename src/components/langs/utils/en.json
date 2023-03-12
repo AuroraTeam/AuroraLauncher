@@ -20,8 +20,9 @@
                 "StopCommand": "Turns off the LauncherServer"
             },
             "updates": {
-                "DownloadAssetsCommand": "Download Assets",
+                "DownloadAssetsCommand": "Download assets",
                 "DownloadClientCommand": "Download client",
+                "DownloadLibrariesCommand": "Download libraries",
                 "SyncAllCommand": "Synchronise updates & profiles folders",
                 "SyncProfilesCommand": "Synchronise profiles folder",
                 "SyncUpdatesCommand": "Synchronise updates folder"

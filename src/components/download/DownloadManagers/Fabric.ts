@@ -1,8 +1,6 @@
 import path from "path"
 import { URL } from "url"
 
-import { LangManager } from "@root/components/langs"
-import { ProfilesManager } from "@root/components/profiles"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
 import { HttpHelper, JsonHelper, LogHelper, StorageHelper } from "@root/utils"
 import { injectable } from "tsyringe"
@@ -12,10 +10,6 @@ import { MojangManager } from "./Mojang"
 @injectable()
 export class FabricManager extends MojangManager {
     fabricLink = "https://maven.fabricmc.net/"
-
-    constructor(langManager: LangManager, profilesManager: ProfilesManager) {
-        super(langManager, profilesManager)
-    }
 
     /**
      * Скачивание клиента с зеркала Mojang + Fabric

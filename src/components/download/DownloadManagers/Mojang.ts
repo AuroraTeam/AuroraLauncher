@@ -3,8 +3,6 @@ import { mkdir } from "fs/promises"
 import path from "path"
 import { URL } from "url"
 
-import { LangManager } from "@root/components/langs"
-import { ProfilesManager } from "@root/components/profiles"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
 import {
     HttpHelper,
@@ -14,19 +12,19 @@ import {
     ZipHelper,
 } from "@root/utils"
 import { injectable } from "tsyringe"
-import { IDownloadManager } from "./IDownloadManager"
+
+import { AbstractDownloadManager } from "./Abstract"
 
 @injectable()
-export class MojangManager implements IDownloadManager {
+export class MojangManager extends AbstractDownloadManager {
     clientsLink = "https://libraries.minecraft.net/"
     assetsLink = "https://resources.download.minecraft.net/"
     versionManifestLink =
         "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 
-    constructor(
-        protected langManager: LangManager,
-        protected profilesManager: ProfilesManager
-    ) {}
+    downloadLibraries(gameVersion: string): Promise<any> {
+        throw new Error("Method not implemented.")
+    }
 
     /**
      * Скачивание клиента с зеркала Mojang

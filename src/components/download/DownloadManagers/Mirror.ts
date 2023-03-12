@@ -2,9 +2,6 @@ import fs from "fs"
 import path from "path"
 import { URL } from "url"
 
-import { ConfigManager } from "@root/components/config"
-import { LangManager } from "@root/components/langs"
-import { ProfilesManager } from "@root/components/profiles"
 import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig"
 import {
     HttpHelper,
@@ -15,15 +12,13 @@ import {
 } from "@root/utils"
 import { injectable } from "tsyringe"
 
-import { IDownloadManager } from "./IDownloadManager"
+import { AbstractDownloadManager } from "./Abstract"
 
 @injectable()
-export class MirrorManager implements IDownloadManager {
-    constructor(
-        private langManager: LangManager,
-        private profilesManager: ProfilesManager,
-        private configManager: ConfigManager
-    ) {}
+export class MirrorManager extends AbstractDownloadManager {
+    downloadLibraries(gameVersion: string): Promise<any> {
+        throw new Error("Method not implemented.")
+    }
 
     /**
      * Скачивание клиена с зеркала
