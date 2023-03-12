@@ -33,6 +33,7 @@ export class CommandsManager {
 
     private commandsInit(): void {
         this.registerCommands([
+            container.resolve(HelpCommand),
             container.resolve(ReloadCommand),
             container.resolve(ModulesCommand),
             container.resolve(BranchCommand),

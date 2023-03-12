@@ -21,6 +21,8 @@ export class WebManager {
         const { server } = this.webServerManager
 
         this.webSocketManager = new Server({ server })
+        this.registerRequests()
+
         server.listen({ host, port })
     }
 

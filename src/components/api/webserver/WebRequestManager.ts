@@ -22,6 +22,7 @@ export class WebRequestManager {
             container.resolve(PrivelegesRequest),
             container.resolve(ProfileRequest),
             container.resolve(JoinRequest),
+            container.resolve(HasJoinedRequest),
         ])
     }
 

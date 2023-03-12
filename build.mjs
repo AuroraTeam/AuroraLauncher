@@ -9,6 +9,7 @@ await build({
     platform: "node",
     target: "node18",
     bundle: true,
+    sourcemap: true,
     plugins: [esbuildDecorators()],
     entryPoints: ["src/app.ts"],
     outdir: "dist",

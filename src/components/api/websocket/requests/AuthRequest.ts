@@ -1,6 +1,6 @@
 import { AuthProvider } from "@root/components/auth/providers"
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server"
-import { injectable } from "tsyringe"
+import { inject, injectable } from "tsyringe"
 
 type WebSocketClient = Parameters<AbstractRequest["invoke"]>["1"]
 
@@ -12,7 +12,7 @@ export interface ExtendedWebSocketClient extends WebSocketClient {
 export class AuthRequest extends AbstractRequest {
     method = "auth"
 
-    constructor(private authProvider: AuthProvider) {
+    constructor(@inject("AuthProvider") private authProvider: AuthProvider) {
         super()
     }
 
