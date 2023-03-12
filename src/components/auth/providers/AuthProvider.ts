@@ -29,7 +29,7 @@ export class AuthProviderConfig {
     type: string
 
     static getDefaultConfig(): AuthProviderConfig {
-        return { type: "reject" }
+        return { type: "accept" }
     }
 }
 
