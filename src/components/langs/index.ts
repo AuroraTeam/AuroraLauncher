@@ -17,7 +17,7 @@ export class LangManager {
     private currentLang: Translate
 
     constructor(private readonly configManager: ConfigManager) {
-        const selectedLang = configManager.config.lang;
+        const selectedLang = configManager.config.lang
 
         if (!this.langList.has(selectedLang)) {
             LogHelper.error(
@@ -46,13 +46,9 @@ export class LangManager {
      */
     public changeLang(lang: string): void {
         if (!this.langList.has(lang)) {
-            LogHelper.error(
-                this.getTranslate.LangManager.langNotFound,
-                lang
-            )
-            return;
+            LogHelper.error(this.getTranslate.LangManager.langNotFound, lang)
+            return
         }
-            
 
         this.currentLang = this.langList.get(lang)
         this.configManager.setProp("lang", lang)

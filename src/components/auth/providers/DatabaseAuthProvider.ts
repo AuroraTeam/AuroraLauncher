@@ -29,7 +29,7 @@ export class DatabaseAuthProvider implements AuthProvider {
             entities: [UserEntity],
         })
 
-        connection.initialize().catch(error => LogHelper.fatal(error));
+        connection.initialize().catch((error) => LogHelper.fatal(error))
 
         this.userRepository = connection.getRepository(UserEntity)
     }

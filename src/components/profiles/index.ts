@@ -1,8 +1,8 @@
 import fs from "fs/promises"
 import path from "path"
-import { injectable, singleton } from "tsyringe"
 
 import { LogHelper, StorageHelper } from "@root/utils"
+import { injectable, singleton } from "tsyringe"
 
 import { LangManager } from "../langs"
 import { ProfileConfig } from "./utils/ProfileConfig"
@@ -10,7 +10,7 @@ import { ProfileConfig } from "./utils/ProfileConfig"
 @singleton()
 @injectable()
 export class ProfilesManager {
-private profiles: ProfileConfig[] = []
+    private profiles: ProfileConfig[] = []
     constructor(private readonly langManager: LangManager) {
         this.loadProfiles()
     }
@@ -19,22 +19,28 @@ private profiles: ProfileConfig[] = []
         const files = await fs.readdir(StorageHelper.profilesDir)
 
         if (files.length === 0) {
-            LogHelper.info(this.langManager.getTranslate.ProfilesManager.syncSkip)
+            LogHelper.info(
+                this.langManager.getTranslate.ProfilesManager.syncSkip
+            )
             return
         }
 
         LogHelper.info(this.langManager.getTranslate.ProfilesManager.sync)
 
-        files.forEach(async file => {
+        files.forEach(async (file) => {
             if (!file.endsWith(".json")) return
 
             try {
-                const data = await fs.readFile(path.resolve(StorageHelper.profilesDir, file), "utf-8")
+                const data = await fs.readFile(
+                    path.resolve(StorageHelper.profilesDir, file),
+                    "utf-8"
+                )
                 this.profiles.push(ProfileConfig.fromJSON(data))
             } catch (e) {
                 if (e instanceof SyntaxError) {
                     LogHelper.error(
-                        this.langManager.getTranslate.ProfilesManager.loadingErr,
+                        this.langManager.getTranslate.ProfilesManager
+                            .loadingErr,
                         file
                     )
                 } else {
@@ -54,7 +60,10 @@ private profiles: ProfileConfig[] = []
         const profile = new ProfileConfig(parameters)
         this.profiles.push(profile)
         await fs.writeFile(
-            path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
+            path.resolve(
+                StorageHelper.profilesDir,
+                `${profile.clientDir}.json`
+            ),
             profile.toJSON()
         )
         return profile.uuid
@@ -64,7 +73,10 @@ private profiles: ProfileConfig[] = []
         const profile = this.profiles.find((p) => p.uuid === uuid)
         Object.assign(profile, parameters)
         await fs.writeFile(
-            path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
+            path.resolve(
+                StorageHelper.profilesDir,
+                `${profile.clientDir}.json`
+            ),
             profile.toJSON()
         )
     }

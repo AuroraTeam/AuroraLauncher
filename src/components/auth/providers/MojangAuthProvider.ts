@@ -27,7 +27,7 @@ export class MojangAuthProvider implements AuthProvider {
                 username,
                 password,
             }
-        );
+        )
 
         return {
             username: result.selectedProfile.name,
