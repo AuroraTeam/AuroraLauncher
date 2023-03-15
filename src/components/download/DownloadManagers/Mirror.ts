@@ -12,7 +12,7 @@ import {
 } from "@root/utils";
 import { injectable } from "tsyringe";
 
-import { AbstractDownloadManager } from "./Abstract";
+import { AbstractDownloadManager } from "./AbstractManager";
 
 @injectable()
 export class MirrorManager extends AbstractDownloadManager {

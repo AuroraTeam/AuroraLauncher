@@ -2,7 +2,7 @@ import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
 import { HttpHelper, LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
-import { ClientMeta, VersionMeta } from "./IFabric";
+import { ClientMeta, VersionMeta } from "../interfaces/IFabric";
 import { MojangManager } from "./Mojang";
 
 @injectable()

@@ -5,13 +5,12 @@ import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
 import { HttpHelper, LogHelper, StorageHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
-import { AbstractDownloadManager } from "./Abstract";
-import { Client, VersionManifest } from "./IMojang";
+import { AbstractDownloadManager } from "./AbstractManager";
+import { Client, VersionManifest } from "../interfaces/IMojang";
 
 @injectable()
 export class MojangManager extends AbstractDownloadManager {
-    versionManifestLink =
-        "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
+    versionManifestLink = new URL("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json");
 
     /**
      * Скачивание клиента с зеркала Mojang
@@ -42,7 +41,7 @@ export class MojangManager extends AbstractDownloadManager {
 
         try {
             await HttpHelper.downloadFile(
-                version.downloads.client.url,
+                new URL(version.downloads.client.url),
                 path.resolve(clientDirPath, "minecraft.jar")
             );
         } catch (error) {
@@ -104,7 +103,7 @@ export class MojangManager extends AbstractDownloadManager {
         }
 
         try {
-            return await HttpHelper.getResourceFromJson<Client>(version.url);
+            return await HttpHelper.getResourceFromJson<Client>(new URL(version.url));
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
