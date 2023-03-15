@@ -55,6 +55,18 @@
                 "errClientParsing": "Error in parsing client data"
             }
         },
+        "ForgeManager": {
+            "client": {
+                "download": "Downloading Forge libraries, please wait...",
+                "downloadErr": "Error downloading Forge libraries!",
+                "success": "Libraries downloaded successfully!"
+            },
+            "info": {
+                "errJsonParsing": "Error parsing Json data",
+                "verNotFound": "Forge version %s not found",
+                "errClientParsing": "Error parsing client data"
+            }
+        },
         "MirrorManager": {
             "client": {
                 "notFound": "Client not found!",

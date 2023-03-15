@@ -41,7 +41,7 @@ export class MojangManager extends AbstractDownloadManager {
 
         try {
             await HttpHelper.downloadFile(
-                new URL(version.downloads.client.url),
+                version.downloads.client.url,
                 path.resolve(clientDirPath, "minecraft.jar")
             );
         } catch (error) {
@@ -103,7 +103,7 @@ export class MojangManager extends AbstractDownloadManager {
         }
 
         try {
-            return await HttpHelper.getResourceFromJson<Client>(new URL(version.url));
+            return await HttpHelper.getResourceFromJson<Client>(version.url);
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(

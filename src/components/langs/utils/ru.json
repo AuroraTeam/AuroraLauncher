@@ -55,6 +55,18 @@
                 "errClientParsing": "Ошибка при разборе данных клиента"
             }
         },
+        "ForgeManager": {
+            "client": {
+                "download": "Загрузка библиотек Forge, пожалуйста, подождите...",
+                "downloadErr": "Ошибка при загрузке библиотек Forge!",
+                "success": "Библиотеки успешно загружены!"
+            },
+            "info": {
+                "errJsonParsing": "Ошибка при разборе данных Json",
+                "verNotFound": "Версия Forge %s не найдена",
+                "errClientParsing": "Ошибка при разборе данных клиента"
+            }
+        },
         "MirrorManager": {
             "client": {
                 "notFound": "Клиент не найден!",
