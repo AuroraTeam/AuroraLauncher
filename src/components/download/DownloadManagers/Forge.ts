@@ -5,7 +5,6 @@ import { injectable } from "tsyringe";
 import { ClientMeta, Loader, Library } from "../interfaces/IForge";
 import { MojangManager } from "./Mojang";
 
-
 //TODO TEST XD
 @injectable()
 export class ForgeManager extends MojangManager {
