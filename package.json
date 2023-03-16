@@ -22,7 +22,7 @@
     ],
     "main": "dist/app.js",
     "scripts": {
-        "dev": "concurrently -i -n build,app -c blue.bold,yellow.bold \"nodemon -- --dev\" \"npm:build:dev\"",
+        "dev": "concurrently -i -n build,app -c blue.bold,yellow.bold \"nodemon -- --dev\" \"npm:build:dev -- --watch\"",
         "build:dev": "node build.mjs",
         "build:prod": "node build.mjs --sources-content=false --minify",
         "build:bin": "pkg dist/app.js -t node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist --compress GZip",
@@ -46,7 +46,7 @@
         "@typescript-eslint/eslint-plugin": "^5.55.0",
         "@typescript-eslint/parser": "^5.55.0",
         "concurrently": "^7.6.0",
-        "esbuild": "^0.17.11",
+        "esbuild": "^0.14.54",
         "eslint": "^8.36.0",
         "eslint-plugin-node": "^11.1.0",
         "import-sort-style-module": "^6.0.0",

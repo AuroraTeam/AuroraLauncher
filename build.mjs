@@ -1,9 +1,11 @@
-import { esbuildDecorators } from "@anatine/esbuild-decorators"
-import esbuild from "esbuild"
+import { esbuildDecorators } from "@anatine/esbuild-decorators";
+import { build } from "esbuild";
+import minimist from "minimist";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { _, ...buildArgs } = minimist(process.argv.slice(2));
 
-const context = await esbuild.context({
+await build({
     platform: "node",
     target: "node18",
     bundle: true,
@@ -11,6 +13,5 @@ const context = await esbuild.context({
     plugins: [esbuildDecorators()],
     entryPoints: ["src/app.ts"],
     outdir: "dist",
-})
-
-await context.watch()
+    ...buildArgs,
+});
