@@ -1,7 +1,5 @@
-import chalk from "chalk";
 import { container, singleton } from "tsyringe";
 
-import { version } from "../package.json";
 import {
     AuthManager,
     AuthlibManager,
@@ -61,7 +59,7 @@ export class LauncherServer {
     constructor() {
         StorageHelper.validate();
 
-        this.printVersion();
+        LogHelper.printVersion();
 
         LogHelper.info("Initialization start");
         this.init();
@@ -122,22 +120,5 @@ export class LauncherServer {
         LogHelper.info("Reload LaunchServer");
         container.clearInstances();
         this.init();
-    }
-
-    private printVersion() {
-        LogHelper.raw(
-            chalk.bold(
-                chalk.cyan("AuroraLauncher ") +
-                    chalk.green("LauncherServer ") +
-                    chalk.yellow(`v${version}`) +
-                    chalk.green(
-                        `\nCopyright (C) 2020 - ${new Date().getFullYear()} `
-                    ) +
-                    chalk.blue("AuroraTeam (https://github.com/AuroraTeam)") +
-                    chalk.green("\nLicensed under the MIT License") +
-                    chalk.green("\nDocumentation page: ") +
-                    chalk.blue("https://docs.aurora-launcher.ru/")
-            )
-        );
     }
 }

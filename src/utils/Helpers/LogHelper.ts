@@ -6,6 +6,7 @@ import { format } from "util";
 import chalk from "chalk";
 import stripAnsi from "strip-ansi";
 
+import { version } from "../../../package.json";
 import { StorageHelper } from "./StorageHelper";
 
 export class LogHelper {
@@ -92,6 +93,23 @@ export class LogHelper {
 
     private static saveLog(message: string) {
         this.logFileStream.write(message);
+    }
+
+    public static printVersion() {
+        LogHelper.raw(
+            chalk.bold(
+                chalk.cyan("AuroraLauncher ") +
+                    chalk.green("LauncherServer ") +
+                    chalk.yellow(`v${version}`) +
+                    chalk.green(
+                        `\nCopyright (C) 2020 - ${new Date().getFullYear()} `
+                    ) +
+                    chalk.blue("AuroraTeam (https://github.com/AuroraTeam)") +
+                    chalk.green("\nLicensed under the MIT License") +
+                    chalk.green("\nDocumentation page: ") +
+                    chalk.blue("https://docs.aurora-launcher.ru/")
+            )
+        );
     }
 }
 
