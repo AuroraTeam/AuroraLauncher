@@ -1,15 +1,9 @@
 import { ConfigManager } from "@root/components/config";
 import { LangManager } from "@root/components/langs";
-import { Server } from "aurora-rpc-server";
-import { container, injectable } from "tsyringe";
+import { AbstractRequest, Server } from "aurora-rpc-server";
+import { injectable } from "tsyringe";
 
 import { WebServerManager } from "../index";
-import {
-    AuthRequest,
-    ProfileRequest,
-    ServersRequest,
-    UpdatesRequest,
-} from "./requests";
 
 @injectable()
 export class WebManager {
@@ -27,17 +21,12 @@ export class WebManager {
             server: this.webServerManager.server,
         });
 
-        this.registerRequests();
-
         this.webServerManager.server.listen({ host, port });
     }
 
-    private registerRequests(): void {
-        [
-            container.resolve(AuthRequest),
-            container.resolve(ProfileRequest),
-            container.resolve(ServersRequest),
-            container.resolve(UpdatesRequest),
-        ].forEach((request) => this.webSocketManager.registerRequest(request));
+    public registerRequests(requests: AbstractRequest[]): void {
+        requests.forEach((request) =>
+            this.webSocketManager.registerRequest(request)
+        );
     }
 }

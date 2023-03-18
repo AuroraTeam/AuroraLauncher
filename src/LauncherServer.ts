@@ -13,6 +13,12 @@ import {
     WebManager,
 } from "./components";
 import {
+    AuthRequest,
+    ProfileRequest,
+    ServersRequest,
+    UpdatesRequest,
+} from "./components/api/websocket/requests";
+import {
     AcceptAuthProvider,
     AuthProvider,
     DatabaseAuthProvider,
@@ -111,6 +117,13 @@ export class LauncherServer {
         this._ModulesManager = container.resolve(ModulesManager);
         this._UpdateManager = container.resolve(UpdateManager);
         this._WebManager = container.resolve(WebManager);
+
+        this._WebManager.registerRequests([
+            container.resolve(AuthRequest),
+            container.resolve(ProfileRequest),
+            container.resolve(ServersRequest),
+            container.resolve(UpdatesRequest),
+        ]);
     }
 
     /**
