@@ -1,20 +1,20 @@
 import { HttpHelper, LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
-import { ClientMeta, VersionMeta } from "../interfaces/IFabric";
+import { ClientMeta, VersionMeta } from "../interfaces/IQuilt";
 import { MojangManager } from "./Mojang";
 
 @injectable()
-export class FabricManager extends MojangManager {
-    fabricMetaLink = "https://meta.fabricmc.net/v2/versions/loader/";
+export class QuiltManager extends MojangManager {
+    fabricMetaLink = "https://meta.quiltmc.org/v3/versions/loader/";
 
     /**
-     * Скачивание клиента с зеркала Mojang + Fabric
+     * Скачивание клиента с зеркала Mojang + Quilt
      * @param clientVer - Версия клиента
      * @param instanceName - Название инстанции
      */
     async downloadClient(clientVer: string, instanceName: string) {
-        const fabricVersion = await this.getFabricClientInfo(clientVer);
+        const fabricVersion = await this.getQuiltClientInfo(clientVer);
         if (!fabricVersion) return;
 
         const profileUUID = await super.downloadClient(clientVer, instanceName);
@@ -31,12 +31,12 @@ export class FabricManager extends MojangManager {
             ],
         }));
         LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.FabricManager.client
+            this.langManager.getTranslate.DownloadManager.QuiltManager.client
                 .success
         );
     }
 
-    getFabricVersions(version: string): Promise<void | VersionMeta[]> {
+    getQuiltVersions(version: string): Promise<void | VersionMeta[]> {
         try {
             return HttpHelper.getResourceFromJson(
                 `${this.fabricMetaLink}${version}`
@@ -44,33 +44,26 @@ export class FabricManager extends MojangManager {
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.FabricManager.info
+                this.langManager.getTranslate.DownloadManager.QuiltManager.info
                     .errJsonParsing
             );
         }
     }
 
-    async getFabricClientInfo(version: string) {
-        const loaders = await this.getFabricVersions(version);
+    async getQuiltClientInfo(version: string) {
+        const loaders = await this.getQuiltVersions(version);
         if (!loaders) return;
 
-        const stableLoader = loaders.find(({ loader }) => loader.stable);
-        if (!stableLoader) {
-            return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.FabricManager.info
-                    .verNotFound,
-                version
-            );
-        }
+        const { loader } = loaders[0];
 
         try {
             return await HttpHelper.getResourceFromJson<ClientMeta>(
-                `${this.fabricMetaLink}${version}/${stableLoader.loader.version}/profile/json`
+                `${this.fabricMetaLink}${version}/${loader.version}/profile/json`
             );
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.FabricManager.info
+                this.langManager.getTranslate.DownloadManager.QuiltManager.info
                     .errClientParsing
             );
         }

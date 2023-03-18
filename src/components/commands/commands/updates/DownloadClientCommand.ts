@@ -6,6 +6,7 @@ import {
     MirrorManager,
     MojangManager,
     ProfilesManager,
+    QuiltManager,
 } from "@root/components/";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
@@ -62,6 +63,8 @@ export class DownloadClientCommand extends AbstractCommand {
                 return FabricManager;
             case "mojang":
                 return MojangManager;
+            case "quilt":
+                return QuiltManager;
             default:
                 return null;
         }

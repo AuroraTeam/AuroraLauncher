@@ -55,6 +55,17 @@
                 "errClientParsing": "Ошибка при разборе данных клиента"
             }
         },
+        "QuiltManager": {
+            "client": {
+                "download": "Загрузка библиотек Quilt, пожалуйста, подождите...",
+                "downloadErr": "Ошибка при загрузке библиотек Quilt!",
+                "success": "Библиотеки успешно загружен!"
+            },
+            "info": {
+                "errJsonParsing": "Ошибка при разборе данных Json",
+                "errClientParsing": "Ошибка при разборе данных клиента"
+            }
+        },
         "ForgeManager": {
             "client": {
                 "download": "Загрузка библиотек Forge, пожалуйста, подождите...",

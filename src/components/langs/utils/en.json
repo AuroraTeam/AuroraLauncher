@@ -55,6 +55,17 @@
                 "errClientParsing": "Error in parsing client data"
             }
         },
+        "QuiltManager": {
+            "client": {
+                "download": "Downloading Quilt libraries, please wait...",
+                "downloadErr": "Error downloaded Quilt libraries!",
+                "success": "Libraries downloaded successfully!"
+            },
+            "info": {
+                "errJsonParsing": "Error in parsing Json data",
+                "errClientParsing": "Error in parsing client data"
+            }
+        },
         "ForgeManager": {
             "client": {
                 "download": "Downloading Forge libraries, please wait...",
