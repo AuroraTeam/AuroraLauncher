@@ -1,14 +1,14 @@
-import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
 import { HttpHelper, LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
-import { ClientMeta, Loader, Library } from "../interfaces/IForge";
+import { ClientMeta, Loader } from "../interfaces/IForge";
 import { MojangManager } from "./Mojang";
 
 //TODO TEST XD
 @injectable()
 export class ForgeManager extends MojangManager {
-    forgeLink = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/";
+    forgeLink =
+        "https://files.minecraftforge.net/maven/net/minecraftforge/forge/";
     forgeMetaLink = "https://meta.minecraftforge.net/v3/versions/";
 
     /**
@@ -23,19 +23,13 @@ export class ForgeManager extends MojangManager {
         const profileUUID = await super.downloadClient(clientVer, instanceName);
         if (!profileUUID) return;
 
-        // TODO REWORK PROFILES
-        this.profilesManager.editProfile(profileUUID, {
+        this.profilesManager.editProfile(profileUUID, (profile) => ({
             mainClass: forgeVersion.mainClass,
-            libraries: forgeVersion.libraries.map((library: Library) => ({
-                name: library.name,
-                url: library.url,
-                serverreq: library.serverreq,
-                clientreq: library.clientreq,
-                checksums: library.checksums,
-                size: library.size,
-                comment: library.comment,
-            })),
-        } as unknown as ProfileConfig);
+            libraries: [
+                ...profile.libraries,
+                ...forgeVersion.libraries.map(({ url }) => ({ url })),
+            ],
+        }));
 
         LogHelper.info(
             this.langManager.getTranslate.DownloadManager.ForgeManager.client

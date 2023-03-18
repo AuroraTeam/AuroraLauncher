@@ -1,16 +1,17 @@
 import { mkdir } from "fs/promises";
 import path, { resolve } from "path";
 
-import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
 import { HttpHelper, LogHelper, StorageHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
-import { AbstractDownloadManager } from "./AbstractManager";
 import { Client, VersionManifest } from "../interfaces/IMojang";
+import { AbstractDownloadManager } from "./AbstractManager";
 
 @injectable()
 export class MojangManager extends AbstractDownloadManager {
-    versionManifestLink = new URL("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json");
+    versionManifestLink = new URL(
+        "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
+    );
 
     /**
      * Скачивание клиента с зеркала Mojang
@@ -58,19 +59,22 @@ export class MojangManager extends AbstractDownloadManager {
                 .success
         );
 
-        // TODO REWORK PROFILES
         return this.profilesManager.createProfile({
             version: gameVersion,
             clientDir: instanceName,
-            mainClass: version.mainClass,
-            assetsDir: `assets${version.assets}`,
             assetsIndex: version.assets,
+            libraries: version.libraries.map((lib) => ({
+                url: lib.downloads.artifact.url,
+            })),
             servers: [
                 {
+                    ip: "127.0.0.1",
+                    port: 25565,
                     title: instanceName,
+                    whiteListType: "null",
                 },
             ],
-        } as ProfileConfig);
+        });
     }
 
     async getVersionsInfo(): Promise<VersionManifest | void> {

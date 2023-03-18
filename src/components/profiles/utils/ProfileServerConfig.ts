@@ -1,6 +1,6 @@
 export interface ProfileServerConfig {
     ip: string;
-    port: string;
+    port: number;
     title: string;
 
     // Whitelist

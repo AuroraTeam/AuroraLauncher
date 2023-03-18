@@ -1,4 +1,3 @@
-import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
 import { HttpHelper, LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
@@ -22,10 +21,13 @@ export class FabricManager extends MojangManager {
         const profileUUID = await super.downloadClient(clientVer, instanceName);
         if (!profileUUID) return;
 
-        // TODO REWORK PROFILES
-        this.profilesManager.editProfile(profileUUID, {
+        this.profilesManager.editProfile(profileUUID, (profile) => ({
             mainClass: fabricVersion.mainClass,
-        } as ProfileConfig);
+            libraries: [
+                ...profile.libraries,
+                ...fabricVersion.libraries.map(({ url }) => ({ url })),
+            ],
+        }));
         LogHelper.info(
             this.langManager.getTranslate.DownloadManager.FabricManager.client
                 .success

@@ -5,7 +5,43 @@ import { v4 } from "uuid";
 
 import { ProfileServerConfig } from "./ProfileServerConfig";
 
-export class ProfileConfig {
+export type IProfileConfig = Required<IPartialProfileConfig>;
+
+export interface IPartialProfileConfig {
+    //Don`t touch
+    configVersion?: number;
+
+    // Profile information
+    uuid?: string;
+    sortIndex?: number;
+    servers?: ProfileServerConfig[];
+
+    // Client
+    version: string;
+    clientDir: string;
+
+    // Assets
+    assetsIndex: string;
+    libraries: Library[];
+
+    // Updates
+    update?: string[];
+    updateVerify?: string[];
+    updateExclusions?: string[];
+    // updateOptional: ProfileOptional[]
+
+    // Launch client
+    mainClass?: string;
+    gameJar?: string;
+    jvmArgs?: string[];
+    clientArgs?: string[];
+}
+
+interface Library {
+    url: string;
+}
+
+export class ProfileConfig implements IProfileConfig {
     //Don`t touch
     configVersion: number;
 
@@ -20,7 +56,7 @@ export class ProfileConfig {
 
     // Assets
     assetsIndex: string;
-    assetsDir: string;
+    libraries: Library[];
 
     // Updates
     update: string[];
@@ -30,48 +66,48 @@ export class ProfileConfig {
 
     // Launch client
     mainClass: string;
-    classPath: string[];
+    gameJar: string;
     jvmArgs: string[];
     clientArgs: string[];
 
-    constructor(config: ProfileConfig) {
+    constructor(config: IPartialProfileConfig) {
         merge(this, ProfileConfig.defaults, config);
     }
 
-    private static readonly defaults = {
+    private static readonly defaults: IProfileConfig = {
         configVersion: 0,
         uuid: v4(),
         servers: [
             {
                 ip: "127.0.0.1",
-                port: "25565",
-                title: "clientTitle",
+                port: 25565,
+                title: "",
                 whiteListType: "null",
             },
         ],
         sortIndex: 0,
-        version: "1.16.5",
-        clientDir: "clientDir",
-        assetsIndex: "1.16.5",
-        assetsDir: "assetsDir",
-        update: [] as string[],
-        updateVerify: [] as string[],
-        updateExclusions: [] as string[],
+        version: "",
+        clientDir: "",
+        assetsIndex: "",
+        update: [],
+        updateVerify: [],
+        updateExclusions: [],
         mainClass: "net.minecraft.client.main.Main",
-        classPath: ["libraries", "minecraft.jar"],
-        jvmArgs: [] as string[],
-        clientArgs: [] as string[],
+        gameJar: "minecraft.jar",
+        libraries: [],
+        jvmArgs: [],
+        clientArgs: [],
     };
 
     toObject() {
         return instanceToPlain(this);
     }
 
-    public toJSON(): string {
+    public toJSON() {
         return JsonHelper.toJson(this.toObject(), true);
     }
 
-    public static fromJSON(json: string): ProfileConfig {
+    public static fromJSON(json: string) {
         return plainToInstance(
             ProfileConfig,
             JsonHelper.fromJson<ProfileConfig>(json)

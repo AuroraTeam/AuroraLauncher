@@ -12,6 +12,7 @@ export class StorageHelper extends CoreStorageHelper {
         ? dirname(process.execPath)
         : __dirname;
     static readonly clientsDir: string = resolve(this.storageDir, "clients");
+    static readonly profilesDir: string = resolve(this.storageDir, "profiles");
     static readonly modulesDir: string = resolve(this.storageDir, "modules");
     static readonly authlibDir: string = resolve(this.storageDir, "authlib");
     static readonly logsDir: string = resolve(this.storageDir, "logs");
@@ -19,6 +20,7 @@ export class StorageHelper extends CoreStorageHelper {
     static validate() {
         const foldersToCreate: PathLike[] = [
             this.clientsDir,
+            this.profilesDir,
             this.modulesDir,
             this.authlibDir,
             this.logsDir,

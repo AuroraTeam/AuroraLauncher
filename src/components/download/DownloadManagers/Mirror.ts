@@ -2,7 +2,7 @@ import { mkdir, readFile } from "fs/promises";
 import { resolve } from "path";
 import { URL } from "url";
 
-import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
+import { IPartialProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
 import {
     HttpHelper,
     JsonHelper,
@@ -92,7 +92,7 @@ export class MirrorManager extends AbstractDownloadManager {
 
         let profile;
         try {
-            profile = await JsonHelper.fromJson<ProfileConfig>(
+            profile = JsonHelper.fromJson<IPartialProfileConfig>(
                 (
                     await readFile(resolve(clientDirPath, "profile.json"))
                 ).toString()
@@ -111,11 +111,11 @@ export class MirrorManager extends AbstractDownloadManager {
                 {
                     title: instanceName,
                     ip: "127.0.0.1",
-                    port: "25565",
+                    port: 25565,
                     whiteListType: "null",
                 },
             ],
-        } as ProfileConfig);
+        });
         LogHelper.info(
             this.langManager.getTranslate.DownloadManager.MirrorManager.client
                 .success

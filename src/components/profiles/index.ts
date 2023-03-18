@@ -5,14 +5,14 @@ import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
-import { ProfileConfig } from "./utils/ProfileConfig";
+import { IPartialProfileConfig, ProfileConfig } from "./utils/ProfileConfig";
 
 @singleton()
 @injectable()
 export class ProfilesManager {
     profiles: ProfileConfig[] = [];
     constructor(private readonly langManager: LangManager) {
-        // this.loadProfiles();
+        this.loadProfiles();
     }
 
     async loadProfiles(): Promise<void> {
@@ -57,7 +57,7 @@ export class ProfilesManager {
         await this.loadProfiles();
     }
 
-    async createProfile(parameters: ProfileConfig): Promise<string> {
+    async createProfile(parameters: IPartialProfileConfig): Promise<string> {
         const profile = new ProfileConfig(parameters);
         this.profiles.push(profile);
         await fs.writeFile(
@@ -70,9 +70,19 @@ export class ProfilesManager {
         return profile.uuid;
     }
 
-    async editProfile(uuid: string, parameters: ProfileConfig): Promise<void> {
+    async editProfile(
+        uuid: string,
+        parameters:
+            | IPartialProfileConfig
+            | ((profile: ProfileConfig) => Partial<ProfileConfig>)
+    ): Promise<void> {
         const profile = this.profiles.find((p) => p.uuid === uuid);
-        Object.assign(profile, parameters);
+
+        if (typeof parameters === "object") {
+            Object.assign(profile, parameters);
+        } else {
+            Object.assign(profile, parameters(profile));
+        }
         await fs.writeFile(
             path.resolve(
                 StorageHelper.profilesDir,
