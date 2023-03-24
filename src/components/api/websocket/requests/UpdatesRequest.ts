@@ -10,12 +10,11 @@ export class UpdatesRequest extends AbstractRequest {
         super();
     }
 
-    invoke({ type, dir }: UpdatesRequestData): ResponseResult {
-        return this.instancesManager.hashedDirs[type].get(dir);
+    invoke({ client }: UpdatesRequestData): ResponseResult {
+        return this.instancesManager.hashedInstances.get(client);
     }
 }
 
 interface UpdatesRequestData {
-    type: "assets" | "libraries" | "instances";
-    dir: string;
+    client: string;
 }

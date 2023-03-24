@@ -1,7 +1,6 @@
 import { MojangAuthProviderConfig } from "@root/components/auth/providers";
 import { ConfigManager } from "@root/components/config";
 import { ProfilesManager } from "@root/components/profiles";
-import { ProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server";
 import { injectable } from "tsyringe";
 
@@ -19,12 +18,12 @@ export class ProfileRequest extends AbstractRequest {
         super();
     }
 
-    invoke(data: ProfileRequestData): ResponseResult {
+    invoke({ uuid }: ProfileRequestData): ResponseResult {
         const config = this.configManager.config
             .auth as MojangAuthProviderConfig;
 
         const profile = this.profilesManager.profiles.find(
-            (p: ProfileConfig) => p.uuid == data.uuid
+            (p) => p.uuid == uuid
         );
         profile.jvmArgs.push(
             `-Dminecraft.api.auth.host=${

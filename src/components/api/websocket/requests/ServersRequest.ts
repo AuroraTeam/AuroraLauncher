@@ -16,18 +16,16 @@ export class ServersRequest extends AbstractRequest {
      */
     invoke(): ResponseResult {
         const servers: any[] = [];
+
         this.profilesManager.profiles
-            .sort(
-                (a: { sortIndex: number }, b: { sortIndex: number }) =>
-                    a.sortIndex - b.sortIndex
-            )
-            .forEach((p: { servers: any[]; uuid: any }) => {
-                p.servers.forEach((s) => {
+            .sort((a, b) => a.sortIndex - b.sortIndex)
+            .forEach((profile) => {
+                profile.servers.forEach(({ ip, port, title }) => {
                     servers.push({
-                        ip: s.ip,
-                        port: s.port,
-                        title: s.title,
-                        profileUUID: p.uuid,
+                        ip,
+                        port,
+                        title,
+                        profileUUID: profile.uuid,
                     });
                 });
             });
