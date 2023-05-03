@@ -10,11 +10,11 @@ export class UpdatesRequest extends AbstractRequest {
         super();
     }
 
-    invoke({ client }: UpdatesRequestData): ResponseResult {
-        return this.instancesManager.hashedInstances.get(client);
+    invoke({ dir }: UpdatesRequestData): ResponseResult {
+        return { hashes: this.instancesManager.hashedInstances.get(dir) };
     }
 }
 
 interface UpdatesRequestData {
-    client: string;
+    dir: string;
 }

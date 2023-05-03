@@ -19,7 +19,7 @@ export class ClientsManager {
     readonly hashedInstances = new Map<string, HashedFile[]>();
 
     constructor(private readonly langManager: LangManager) {
-        // this.hashInstances();
+        this.hashInstances();
     }
 
     private async hashInstances(): Promise<void> {
