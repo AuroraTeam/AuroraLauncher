@@ -1,0 +1,85 @@
+name: Release Build
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get version value, set to env
+        run: echo "PACKAGE_VERSION=v$(awk -F\" '/"version":/ {print $4}' package.json)" >> $GITHUB_ENV
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.PACKAGE_VERSION }}
+          release_name: Aurora Launcher ${{ env.PACKAGE_VERSION }}
+
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: release
+
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            build_os: 'linux'
+          - os: windows-latest
+            build_os: 'win32'
+          - os: macos-latest
+            build_os: 'darwin'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 14
+
+      - name: Download dependencies
+        run: npm ci
+
+      - name: Build Launcher
+        run: npm run build
+
+      - name: Copy package.json
+        run: cp src/package.json build/package.json
+
+      - name: Pack Launcher
+        run: npm run pack
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          name: Launcher ${{ matrix.build_os }}
+          path: aurora-launcher-${{ matrix.build_os }}-x64
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Create release archive
+        uses: papeloto/action-zip@v1
+        with:
+          files: aurora-launcher-${{ matrix.build_os }}-x64
+          dest: ${{ matrix.build_os }}.zip
+
+      - name: Upload release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: ./${{ matrix.build_os }}.zip
+          asset_name: Launcher_${{ matrix.os }}.zip
+          asset_content_type: application/zip

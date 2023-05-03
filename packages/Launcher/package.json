@@ -1,0 +1,77 @@
+{
+    "name": "aurora-launcher",
+    "version": "0.1.0-dev",
+    "description": "Launcher for Minecraft",
+    "main": "build/main/index.js",
+    "private": true,
+    "scripts": {
+        "dev": "concurrently -i -n electron,main,preload,renderer -c cyan.bold,blue.bold,yellow.bold,magenta.bold \"npm:start:dev\" \"npm:build:main -- --watch --sourcemap=inline\" \"npm:build:preload -- --watch --sourcemap=inline\" \"vite\"",
+        "build": "concurrently -n main,preload,renderer -c blue.bold,yellow.bold,magenta.bold \"npm:build:main\" \"npm:build:preload\" \"npm:build:renderer\" --kill-others-on-fail",
+        "build:main": "esbuild src/main/index.ts --platform=node --bundle --outdir=build/main --external:electron --loader:.png=file",
+        "build:preload": "esbuild src/preload/index.ts --format=iife --platform=node --bundle --outdir=build/preload --external:electron",
+        "build:renderer": "tsc && vite build",
+        "start:dev": "cross-env DEV=true nodemon --watch src --ext ts,tsx --ignore 'src/renderer' --exec electron .",
+        "start:prod": "electron .",
+        "clean": "rimraf build aurora-launcher-win32-x64",
+        "prettier": "prettier --config .prettierrc.json --write src",
+        "lint": "eslint src --ext .ts,.tsx",
+        "lint:fix": "npm run lint -- --fix",
+        "pack": "electron-packager build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AuroraTeam/Launcher.git"
+    },
+    "author": "AuroraTeam",
+    "contributors": [
+        "JoCat (https://github.com/JoCat)"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/AuroraTeam/Launcher/issues"
+    },
+    "homepage": "https://github.com/AuroraTeam/Launcher#readme",
+    "devDependencies": {
+        "@types/react": "^18.0.18",
+        "@types/react-dom": "^18.0.6",
+        "@types/semver": "^7.3.8",
+        "@types/ws": "^8.5.3",
+        "@typescript-eslint/eslint-plugin": "^5.36.1",
+        "@typescript-eslint/parser": "^5.36.1",
+        "@vitejs/plugin-react": "^2.0.1",
+        "concurrently": "^7.1.0",
+        "cross-env": "^7.0.3",
+        "electron": "^21.2.2",
+        "electron-devtools-installer": "^3.2.0",
+        "electron-packager": "^17.1.1",
+        "esbuild": "^0.15.5",
+        "eslint": "^8.13.0",
+        "eslint-plugin-react": "^7.31.1",
+        "import-sort-style-module": "^6.0.0",
+        "nodemon": "^2.0.15",
+        "prettier": "^2.7.1",
+        "prettier-plugin-import-sort": "^0.0.7",
+        "rimraf": "^3.0.2",
+        "sass": "^1.55.0",
+        "source-map-support": "^0.5.21",
+        "typescript": "^4.6.3",
+        "vite": "^3.0.9"
+    },
+    "dependencies": {
+        "@auroralauncher/core": "^0.5.0",
+        "aurora-api": "^0.2.0-beta.5",
+        "p-map": "^5.3.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.3.0",
+        "recoil": "^0.7.5",
+        "semver": "^7.3.5",
+        "skinview3d": "^3.0.0-alpha.1"
+    },
+    "importSort": {
+        ".tsx, .ts": {
+            "style": "module",
+            "parser": "typescript"
+        }
+    }
+}
