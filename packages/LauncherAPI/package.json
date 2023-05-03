@@ -1,5 +1,5 @@
 {
-    "name": "aurora-api",
+    "name": "@aurora-launcher/api",
     "version": "0.2.0-beta.5",
     "description": "JS/TS API implementation for Aurora Launcher",
     "main": "./dist/aurora-api-node.cjs",

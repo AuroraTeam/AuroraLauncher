@@ -1,5 +1,5 @@
 {
-    "name": "@auroralauncher/launcher",
+    "name": "@aurora-launcher/launcher",
     "version": "0.1.0-dev",
     "description": "Launcher for Minecraft",
     "main": "build/main/index.js",
@@ -58,8 +58,8 @@
         "vite": "^3.0.9"
     },
     "dependencies": {
-        "@auroralauncher/core": "^0.5.0",
-        "aurora-api": "^0.2.0-beta.5",
+        "@aurora-launcher/core": "^0.5.0",
+        "@aurora-launcher/api": "^0.2.0-beta.5",
         "p-map": "^5.3.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
