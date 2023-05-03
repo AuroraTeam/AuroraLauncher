@@ -1,5 +1,5 @@
 {
-    "name": "aurora-launcher",
+    "name": "@auroralauncher/launcher",
     "version": "0.1.0-dev",
     "description": "Launcher for Minecraft",
     "main": "build/main/index.js",

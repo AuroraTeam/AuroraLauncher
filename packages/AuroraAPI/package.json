@@ -1,0 +1,54 @@
+{
+    "name": "aurora-api",
+    "version": "0.2.0-beta.5",
+    "description": "JS/TS API implementation for Aurora Launcher",
+    "main": "./dist/aurora-api-node.cjs",
+    "browser": "./dist/aurora-api-web.js",
+    "types": "./dist/types/index.d.ts",
+    "exports": {
+        "browser": "./dist/aurora-api-web.js",
+        "import": "./dist/aurora-api-node.mjs",
+        "require": "./dist/aurora-api-node.cjs"
+    },
+    "scripts": {
+        "test": "node example/node-example.js",
+        "build": "rimraf dist && node build.js && tsc --emitDeclarationOnly",
+        "prepublishOnly": "npm run build",
+        "release": "npm publish .",
+        "prettier": "prettier --write src"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AuroraTeam/AuroraAPI.git"
+    },
+    "author": "AuroraTeam",
+    "contributors": [
+        "JoCat (https://github.com/JoCat)"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/AuroraTeam/AuroraAPI/issues"
+    },
+    "homepage": "https://github.com/AuroraTeam/AuroraAPI#readme",
+    "dependencies": {
+        "aurora-rpc-client": "^0.1.2"
+    },
+    "devDependencies": {
+        "@types/ws": "^8.5.3",
+        "esbuild": "^0.14.38",
+        "import-sort-style-module": "^6.0.0",
+        "prettier": "^2.4.0",
+        "prettier-plugin-import-sort": "0.0.7",
+        "rimraf": "^3.0.2",
+        "typescript": "^4.4.3"
+    },
+    "directories": {
+        "example": "example"
+    },
+    "importSort": {
+        ".js, .jsx, .ts, .tsx": {
+            "style": "module",
+            "parser": "typescript"
+        }
+    }
+}
