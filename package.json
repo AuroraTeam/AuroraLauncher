@@ -1,5 +1,5 @@
 {
-    "name": "auroralauncher",
+    "name": "aurora-launcher",
     "private": true,
     "workspaces": [
         "packages/*"
