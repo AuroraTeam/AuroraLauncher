@@ -2,7 +2,7 @@ import { PathLike, existsSync, mkdirSync } from "fs";
 import { rm } from "fs/promises";
 import { dirname, resolve } from "path";
 
-import { StorageHelper as CoreStorageHelper } from "@auroralauncher/core";
+import { StorageHelper as CoreStorageHelper } from "@aurora-launcher/core";
 
 import { SystemHelper } from "./SystemHelper";
 

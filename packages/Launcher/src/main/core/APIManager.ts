@@ -1,5 +1,5 @@
+import { AuroraAPI } from '@aurora-launcher/api';
 import { api as apiConfig } from '@config';
-import { AuroraAPI } from 'aurora-api';
 import { ipcMain } from 'electron';
 
 import {

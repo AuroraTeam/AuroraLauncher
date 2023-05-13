@@ -1,6 +1,6 @@
 import { ServerResponse } from "http";
 
-import { JsonHelper } from "@auroralauncher/core";
+import { JsonHelper } from "@aurora-launcher/core";
 
 export class WebResponse {
     raw: ServerResponse;

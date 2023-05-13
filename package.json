@@ -3,5 +3,12 @@
     "private": true,
     "workspaces": [
         "packages/*"
-    ]
+    ],
+    "scripts": {
+        "dev": "concurrently -n server,launcher \"npm:dev -w packages/LauncherServer\" \"npm:dev -w packages/Launcher\"",
+        "build:libs": "npm run build -w packages/LauncherAPI -w packages/LauncherCore"
+    },
+    "devDependencies": {
+        "concurrently": "^8.0.1"
+    }
 }

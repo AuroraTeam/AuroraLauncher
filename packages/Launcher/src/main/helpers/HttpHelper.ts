@@ -1,1 +1,1 @@
-export { HttpHelper } from '@auroralauncher/core';
+export { HttpHelper } from '@aurora-launcher/core';
