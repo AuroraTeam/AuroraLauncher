@@ -41,7 +41,8 @@
         "dist"
     ],
     "devDependencies": {
-        "@tsconfig/node-lts-strictest": "^18.12.1",
+        "@tsconfig/node18": "^2.0.1",
+        "@tsconfig/strictest": "^2.0.1",
         "@types/node": "^18.15.0",
         "@typescript-eslint/eslint-plugin": "^5.41.0",
         "@typescript-eslint/parser": "^5.41.0",
@@ -50,7 +51,7 @@
         "prettier": "^2.5.1",
         "prettier-plugin-import-sort": "0.0.7",
         "tsup": "^6.6.3",
-        "typescript": "^4.5.5"
+        "typescript": "^5.0.4"
     },
     "dependencies": {
         "got": "^12.6.0",
