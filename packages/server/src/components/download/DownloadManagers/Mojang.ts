@@ -25,59 +25,65 @@ export class MojangManager extends AbstractDownloadManager {
         const version = await this.getClientInfo(gameVersion);
         if (!version) return;
 
-        const clientDirPath = resolve(StorageHelper.clientsDir, instanceName);
+        // resolveAssets()
+        // resolveClient()
+        // resolvelibraries()
+        // resolveNatives()
 
-        try {
-            await mkdir(clientDirPath);
-        } catch (err) {
-            return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.dirExist
-            );
-        }
+        // const clientDirPath = resolve(StorageHelper.clientsDir, instanceName);
 
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MojangManager.client
-                .download
-        );
+        // try {
+        //     await mkdir(clientDirPath);
+        // } catch (err) {
+        //     return LogHelper.error(
+        //         this.langManager.getTranslate.DownloadManager.dirExist
+        //     );
+        // }
 
-        try {
-            await HttpHelper.downloadFile(
-                version.downloads.client.url,
-                path.resolve(clientDirPath, "minecraft.jar")
-            );
-        } catch (error) {
-            LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager
-                    .client.downloadErr
-            );
-            LogHelper.debug(error);
-            return;
-        }
+        // LogHelper.info(
+        //     this.langManager.getTranslate.DownloadManager.MojangManager.client
+        //         .download
+        // );
 
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MojangManager.client
-                .success
-        );
+        // try {
+        //     await HttpHelper.downloadFile(
+        //         version.downloads.client.url,
+        //         path.resolve(clientDirPath, "minecraft.jar")
+        //     );
+        // } catch (error) {
+        //     LogHelper.error(
+        //         this.langManager.getTranslate.DownloadManager.MojangManager
+        //             .client.downloadErr
+        //     );
+        //     LogHelper.debug(error);
+        //     return;
+        // }
 
-        return this.profilesManager.createProfile({
-            version: gameVersion,
-            clientDir: instanceName,
-            assetsIndex: version.assets,
-            libraries: version.libraries.map((lib) => ({
-                url: lib.downloads.artifact.url,
-            })),
-            servers: [
-                {
-                    ip: "127.0.0.1",
-                    port: 25565,
-                    title: instanceName,
-                    whiteListType: "null",
-                },
-            ],
-        });
+        // LogHelper.info(
+        //     this.langManager.getTranslate.DownloadManager.MojangManager.client
+        //         .success
+        // );
+
+        // return this.profilesManager.createProfile({
+        //     version: gameVersion,
+        //     clientDir: instanceName,
+        //     assetsIndex: version.assets,
+        //     // libraries: version.libraries.map((lib) => ({
+        //     //     url: lib.downloads.artifact.url,
+        //     // })),
+        //     libraries: version.libraries as any,
+        //     servers: [
+        //         {
+        //             ip: "127.0.0.1",
+        //             port: 25565,
+        //             title: instanceName,
+        //             whiteListType: "null",
+        //         },
+        //     ],
+        // });
     }
 
-    async getVersionsInfo(): Promise<VersionManifest | void> {
+    async getVersionsInfo() {
         try {
             return await HttpHelper.getResourceFromJson<VersionManifest>(
                 this.versionManifestLink
