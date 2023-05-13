@@ -11,6 +11,7 @@
         "require": "./dist/index.js"
     },
     "scripts": {
+        "dev": "tsup --watch",
         "build": "tsup",
         "prettier": "prettier --write src",
         "lint": "eslint . --ext .ts",

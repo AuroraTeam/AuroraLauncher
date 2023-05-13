@@ -11,6 +11,7 @@
         "require": "./dist/aurora-api-node.cjs"
     },
     "scripts": {
+        "dev": "node build.js --watch && tsc --emitDeclarationOnly --watch",
         "test": "node example/node-example.js",
         "build": "rimraf dist && node build.js && tsc --emitDeclarationOnly",
         "prepublishOnly": "npm run build",

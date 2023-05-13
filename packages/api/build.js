@@ -1,5 +1,7 @@
 const { build } = require("esbuild")
 
+const watchFlag = process.argv[2] === "--watch"
+
 ;(async () => {
     console.log("Build...")
     console.time("Build successfully")
@@ -27,6 +29,7 @@ const { build } = require("esbuild")
                 sourcemap: true,
                 format: "esm",
                 platform: "node",
+                watch: watchFlag,
                 ...config,
             }).catch(() => process.exit(1))
         })
