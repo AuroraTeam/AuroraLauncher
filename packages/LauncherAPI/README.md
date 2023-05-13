@@ -1,9 +1,9 @@
-# AuroraAPI
+#  AuroraLauncherAPI (@aurora-launcher/api)
 
-[![npm](https://img.shields.io/npm/v/aurora-api?style=flat-square)](https://www.npmjs.com/package/aurora-api)
+<!-- [![npm](https://img.shields.io/npm/v/aurora-api?style=flat-square)](https://www.npmjs.com/package/aurora-api)
 [![GitHub license](https://img.shields.io/github/license/AuroraTeam/AuroraAPI?style=flat-square)](https://github.com/AuroraTeam/AuroraAPI/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/AuroraTeam/AuroraAPI?style=flat-square)](https://github.com/AuroraTeam/AuroraAPI/issues)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) -->
 
 Реализация JS / TS API для [Aurora Launcher](https://github.com/AuroraTeam/Launcher)
 
@@ -12,10 +12,10 @@
 Используя npm:
 
 ```bash
-npm i aurora-api
+npm i @aurora-launcher/api
 ```
 
-Используя jsDelivr CDN:
+<!-- Используя jsDelivr CDN:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/aurora-api/dist/aurora-api.min.js"></script>
@@ -25,13 +25,13 @@ npm i aurora-api
 
 ```html
 <script src="https://unpkg.com/aurora-api/dist/aurora-api.min.js"></script>
-```
+``` -->
 
 ## Пример использования (Node.js)
 
 ```js
 // Подключение класса API
-const { AuroraAPI } = require('aurora-api');
+const { AuroraAPI } = require('@aurora-launcher/api');
 
 // Инициализация класса API и создание подключения к вебсокету
 const api = new AuroraAPI('ws://localhost:1370/ws');
@@ -80,7 +80,7 @@ api.ready() // Ожидание подключения к сокету лаун�
 
 Также библиотека поддерживает работу с TypeScript
 
-Более подробные примеры использования можно найти [здесь](https://github.com/AuroraTeam/AuroraAPI/tree/master/example)
+<!-- Более подробные примеры использования можно найти [здесь](https://github.com/AuroraTeam/AuroraAPI/tree/master/example) -->
 
 ## Методы и параметры
 
