@@ -1,23 +1,22 @@
-import { Client, Response, ResponseError } from "aurora-rpc-client"
+import { APIError, Client, Response, ResponseError } from "aurora-rpc-client"
 
 import { AuthResponseData } from "../types/AuthResponse"
 import { ProfileResponseData } from "../types/ProfileResponse"
 import { ServersResponseData } from "../types/ServersResponse"
 import { UpdatesResponseData } from "../types/UpdatesResponse"
-import { APIError } from "./APIError"
 
 export class AuroraAPI {
-    #clientInstance: Client
+    #clientInstance = new Client()
     #url?: string
 
     constructor(url?: string) {
         this.#url = url
-        this.#clientInstance = new Client()
     }
 
     public async connect(url?: string) {
         const _url = url || this.#url
-        if (!_url) return
+        // TODO move to aurora-rpc-client
+        if (!_url) throw new Error("Url not defined")
 
         return await this.#clientInstance.connect(_url)
     }
