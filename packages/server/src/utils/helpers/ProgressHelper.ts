@@ -24,7 +24,7 @@ export class ProgressHelper {
         return this.getMultiProgress(this.downloadFormatter);
     }
 
-    private static getProgress(
+    public static getProgress(
         format: string | GenericFormatter,
         barsize = this.barsize
     ): SingleBar {

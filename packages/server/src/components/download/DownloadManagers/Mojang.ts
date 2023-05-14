@@ -1,17 +1,30 @@
-import { mkdir } from "fs/promises";
+import { access, mkdir, writeFile } from "fs/promises";
 import path, { resolve } from "path";
 
-import { HttpHelper, LogHelper, StorageHelper } from "@root/utils";
+import {
+    HttpHelper,
+    JsonHelper,
+    LogHelper,
+    ProgressHelper,
+    StorageHelper,
+} from "@root/utils";
+import { SingleBar } from "cli-progress";
 import { injectable } from "tsyringe";
 
-import { Client, VersionManifest } from "../interfaces/IMojang";
+import {
+    AssetIndex,
+    Assets,
+    Client,
+    Downloads,
+    VersionManifest,
+} from "../interfaces/IMojang";
 import { AbstractDownloadManager } from "./AbstractManager";
 
 @injectable()
 export class MojangManager extends AbstractDownloadManager {
-    versionManifestLink = new URL(
-        "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
-    );
+    #versionManifestLink =
+        "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
+    #assetsLink = "https://resources.download.minecraft.net/";
 
     /**
      * Скачивание клиента с зеркала Mojang
@@ -22,47 +35,18 @@ export class MojangManager extends AbstractDownloadManager {
         gameVersion: string,
         instanceName: string
     ): Promise<any> {
-        const version = await this.getClientInfo(gameVersion);
+        const version = await this.#getClientInfo(gameVersion);
         if (!version) return;
 
-        // resolveAssets()
-        // resolveClient()
-        // resolvelibraries()
-        // resolveNatives()
+        if (
+            !(await this.#resolveClient(instanceName, version.downloads.client))
+        ) {
+            return;
+        }
+        if (!(await this.#resolveAssets(version.assetIndex))) return;
 
-        // const clientDirPath = resolve(StorageHelper.clientsDir, instanceName);
-
-        // try {
-        //     await mkdir(clientDirPath);
-        // } catch (err) {
-        //     return LogHelper.error(
-        //         this.langManager.getTranslate.DownloadManager.dirExist
-        //     );
-        // }
-
-        // LogHelper.info(
-        //     this.langManager.getTranslate.DownloadManager.MojangManager.client
-        //         .download
-        // );
-
-        // try {
-        //     await HttpHelper.downloadFile(
-        //         version.downloads.client.url,
-        //         path.resolve(clientDirPath, "minecraft.jar")
-        //     );
-        // } catch (error) {
-        //     LogHelper.error(
-        //         this.langManager.getTranslate.DownloadManager.MojangManager
-        //             .client.downloadErr
-        //     );
-        //     LogHelper.debug(error);
-        //     return;
-        // }
-
-        // LogHelper.info(
-        //     this.langManager.getTranslate.DownloadManager.MojangManager.client
-        //         .success
-        // );
+        // await resolvelibraries()
+        // await resolveNatives()
 
         // return this.profilesManager.createProfile({
         //     version: gameVersion,
@@ -83,10 +67,124 @@ export class MojangManager extends AbstractDownloadManager {
         // });
     }
 
-    async getVersionsInfo() {
+    async #resolveClient(instanceName: string, client: Downloads) {
+        const clientDirPath = resolve(StorageHelper.clientsDir, instanceName);
+
+        try {
+            await mkdir(clientDirPath);
+        } catch (err) {
+            return LogHelper.error(
+                this.langManager.getTranslate.DownloadManager.dirExist
+            );
+        }
+
+        LogHelper.info(
+            this.langManager.getTranslate.DownloadManager.MojangManager.client
+                .download
+        );
+
+        const progressBar = ProgressHelper.getDownloadProgressBar();
+        progressBar.start(client.size, 0, { filename: "minecraft.jar" });
+
+        try {
+            await HttpHelper.downloadFile(
+                client.url,
+                path.resolve(clientDirPath, "minecraft.jar"),
+                {
+                    onProgress: (progress) => {
+                        progressBar.update(progress.transferred);
+                    },
+                }
+            );
+        } catch (error) {
+            LogHelper.debug(error);
+            return LogHelper.error(
+                this.langManager.getTranslate.DownloadManager.MojangManager
+                    .client.downloadErr
+            );
+        } finally {
+            progressBar.stop();
+        }
+
+        LogHelper.info(
+            this.langManager.getTranslate.DownloadManager.MojangManager.client
+                .success
+        );
+        return true;
+    }
+
+    async #resolveAssets(assetIndex: AssetIndex) {
+        const indexPath = resolve(
+            StorageHelper.assetsIndexesDir,
+            `${assetIndex.id}.json`
+        );
+
+        try {
+            await access(indexPath);
+            return LogHelper.info("Assets already downloaded");
+        } catch {
+            // Файл не существует (либо нет доступа)
+        }
+
+        const assetsFile = await HttpHelper.getResource(assetIndex.url);
+        await writeFile(indexPath, assetsFile);
+
+        const { objects } = JsonHelper.fromJson<Assets>(assetsFile);
+
+        const assetsHashes = Object.values(objects)
+            .sort((a, b) => b.size - a.size)
+            .map(({ hash }) => `${hash.slice(0, 2)}/${hash}`);
+
+        const progressBar = ProgressHelper.getProgress(
+            "{bar} {percentage}% {value}/{total}",
+            40
+        );
+        progressBar.start(assetsHashes.length, 0);
+
+        // LogHelper.info(
+        //     this.langManager.getTranslate.DownloadManager.MojangManager.assets
+        //         .download
+        // );
+        LogHelper.info("Downloading assets");
+        try {
+            await HttpHelper.downloadFiles(
+                assetsHashes,
+                this.#assetsLink,
+                StorageHelper.assetsObjectsDir,
+                {
+                    afterDownload() {
+                        progressBar.increment();
+                    },
+                }
+            );
+        } catch (error) {
+            // LogHelper.error(
+            //     this.langManager.getTranslate.DownloadManager.MojangManager
+            //         .assets.downloadErr
+            // );
+            LogHelper.info("Downloading assets failed");
+            LogHelper.debug(error);
+            return;
+        } finally {
+            progressBar.stop();
+        }
+        // LogHelper.info(
+        //     this.langManager.getTranslate.DownloadManager.MojangManager.assets
+        //         .success
+        // );
+        LogHelper.info("Assets downloaded");
+
+        return true;
+    }
+
+    #resolvelibraries() {}
+
+    #resolveNatives() {}
+
+    async #getVersionsInfo() {
         try {
             return await HttpHelper.getResourceFromJson<VersionManifest>(
-                this.versionManifestLink
+                this.#versionManifestLink
             );
         } catch (error) {
             LogHelper.debug(error);
@@ -97,8 +195,8 @@ export class MojangManager extends AbstractDownloadManager {
         }
     }
 
-    async getClientInfo(gameVersion: string) {
-        const versionInfo = await this.getVersionsInfo();
+    async #getClientInfo(gameVersion: string) {
+        const versionInfo = await this.#getVersionsInfo();
         if (!versionInfo) return;
 
         const version = versionInfo.versions.find(

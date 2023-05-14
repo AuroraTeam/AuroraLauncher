@@ -13,6 +13,14 @@ export class StorageHelper extends CoreStorageHelper {
         : __dirname;
     static readonly clientsDir: string = resolve(this.storageDir, "clients");
     static readonly assetsDir: string = resolve(this.storageDir, "assets");
+    static readonly assetsIndexesDir: string = resolve(
+        this.assetsDir,
+        "indexes"
+    );
+    static readonly assetsObjectsDir: string = resolve(
+        this.assetsDir,
+        "objects"
+    );
     static readonly librariesDir: string = resolve(
         this.storageDir,
         "libraries"
@@ -27,6 +35,8 @@ export class StorageHelper extends CoreStorageHelper {
         const foldersToCreate: PathLike[] = [
             this.clientsDir,
             this.assetsDir,
+            this.assetsIndexesDir,
+            this.assetsObjectsDir,
             this.librariesDir,
             this.nativesDir,
             this.profilesDir,

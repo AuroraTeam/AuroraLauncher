@@ -22,9 +22,9 @@
     ],
     "main": "dist/app.js",
     "scripts": {
-        "dev": "concurrently -i -n build,app -c blue.bold,yellow.bold \"nodemon -- --dev\" \"npm:build:dev -- --watch\"",
-        "build:dev": "node build.mjs",
-        "build:prod": "node build.mjs --sources-content=false --minify",
+        "dev": "node scripts/dev.mjs",
+        "build:dev": "node scripts/build.mjs",
+        "build:prod": "node scripts/build.mjs --sources-content=false --minify",
         "build:bin": "pkg dist/app.js -t node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist --compress GZip",
         "clean": "rimraf dist",
         "prettier": "prettier --write src",
