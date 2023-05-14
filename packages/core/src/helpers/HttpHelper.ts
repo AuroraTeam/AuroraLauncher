@@ -75,10 +75,13 @@ export class HttpHelper {
     public static downloadFile(
         url: string | URL,
         filePath: string | null,
-        options?: { onProgress?: onProgressFunction; saveToTempFile?: boolean }
+        options: {
+            onProgress?: onProgressFunction
+            saveToTempFile?: boolean
+        } = {
+            saveToTempFile: false,
+        }
     ) {
-        options = { saveToTempFile: false, ...options }
-
         if (options.saveToTempFile) filePath = StorageHelper.getTmpPath()
         if (filePath === null) throw new Error("File path not found")
 
@@ -95,22 +98,29 @@ export class HttpHelper {
         urls: Iterable<string>,
         site: string,
         dirName: string,
-        // TODO options?
-        callback?: (filePath: string) => void,
-        onProgress?: onProgressFunction
+        options: {
+            beforeDownload?: (fileName: string) => void
+            afterDownload?: (filePath: string, fileName: string) => void
+            onProgress?: (progress: Progress, fileName: string) => void
+        } = {}
     ) {
         await pMap(
             urls,
             async (fileName) => {
                 const filePath = resolve(dirName, fileName)
-                await mkdir(dirname(filePath), { recursive: true })
+
+                if (options.beforeDownload) options.beforeDownload(fileName)
 
                 await this.download(
                     new URL(fileName, site),
                     filePath,
-                    onProgress
+                    (progress) =>
+                        options.onProgress &&
+                        options.onProgress(progress, fileName)
                 )
-                if (callback) callback(filePath)
+
+                if (options.afterDownload)
+                    options.afterDownload(filePath, fileName)
             },
             { concurrency: this.concurrency }
         )
@@ -123,11 +133,13 @@ export class HttpHelper {
      * @param onProgress - коллбэк, в который передаётся текущий прогресс загрузки, если объявлен
      * @returns Promise, который вернёт название файла, в случае успеха
      */
-    private static download(
+    private static async download(
         url: string | URL,
         filePath: string,
         onProgress?: onProgressFunction
     ): Promise<string> {
+        await mkdir(dirname(filePath), { recursive: true })
+
         return new Promise((resolve, reject) => {
             const fileStream = got.stream(url, { throwHttpErrors: false })
 
