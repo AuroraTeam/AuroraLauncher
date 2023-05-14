@@ -3,7 +3,7 @@
 /**
  * For clients list
  */
-export interface VersionManifest {
+export interface VersionsManifest {
     versions: Version[];
 }
 
@@ -20,61 +20,22 @@ export enum Type {
     Snapshot = "snapshot",
 }
 
-export interface Client {
-    arguments: Arguments;
+/**
+ * For client
+ */
+export interface VersionProfile {
     assetIndex: AssetIndex;
     assets: string;
-    complianceLevel: number;
-    downloads: ClientDownloads;
+    downloads: VersionProfileDownloads;
     id: string;
     javaVersion: JavaVersion;
     libraries: Library[];
     logging: Logging;
     mainClass: string;
-    minimumLauncherVersion: number;
-    releaseTime: Date;
-    time: Date;
-    type: string;
-}
-
-export interface Arguments {
-    game: Array<GameClass | string>;
-    jvm: Array<JvmClass | string>;
-}
-
-export interface GameClass {
-    rules: GameRule[];
-    value: string[] | string;
-}
-
-export interface GameRule {
-    action: Action;
-    features: Features;
 }
 
 export enum Action {
     Allow = "allow",
-}
-
-export interface Features {
-    is_demo_user?: boolean;
-    has_custom_resolution?: boolean;
-}
-
-export interface JvmClass {
-    rules: JvmRule[];
-    value: string[] | string;
-}
-
-export interface JvmRule {
-    action: Action;
-    os: Purpleos;
-}
-
-export interface Purpleos {
-    name?: Name;
-    version?: string;
-    arch?: string;
 }
 
 export enum Name {
@@ -91,21 +52,17 @@ export interface AssetIndex {
     url: string;
 }
 
-export interface ClientDownloads {
-    client: Downloads;
-    client_mappings: Downloads;
-    server: Downloads;
-    server_mappings: Downloads;
+export interface VersionProfileDownloads {
+    client: Client;
 }
 
-export interface Downloads {
+export interface Client {
     sha1: string;
     size: number;
     url: string;
 }
 
 export interface JavaVersion {
-    component: string;
     majorVersion: number;
 }
 
@@ -128,10 +85,10 @@ export interface Artifact {
 
 export interface LibraryRule {
     action: Action;
-    os: Fluffyos;
+    os: OS;
 }
 
-export interface Fluffyos {
+export interface OS {
     name: Name;
 }
 

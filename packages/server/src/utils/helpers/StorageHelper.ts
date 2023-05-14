@@ -25,7 +25,6 @@ export class StorageHelper extends CoreStorageHelper {
         this.storageDir,
         "libraries"
     );
-    static readonly nativesDir: string = resolve(this.storageDir, "natives");
     static readonly profilesDir: string = resolve(this.storageDir, "profiles");
     static readonly modulesDir: string = resolve(this.storageDir, "modules");
     static readonly authlibDir: string = resolve(this.storageDir, "authlib");
@@ -38,7 +37,6 @@ export class StorageHelper extends CoreStorageHelper {
             this.assetsIndexesDir,
             this.assetsObjectsDir,
             this.librariesDir,
-            this.nativesDir,
             this.profilesDir,
             this.modulesDir,
             this.authlibDir,

@@ -8,15 +8,14 @@ import {
     ProgressHelper,
     StorageHelper,
 } from "@root/utils";
-import { SingleBar } from "cli-progress";
 import { injectable } from "tsyringe";
 
 import {
     AssetIndex,
     Assets,
     Client,
-    Downloads,
-    VersionManifest,
+    VersionProfile,
+    VersionsManifest,
 } from "../interfaces/IMojang";
 import { AbstractDownloadManager } from "./AbstractManager";
 
@@ -35,7 +34,7 @@ export class MojangManager extends AbstractDownloadManager {
         gameVersion: string,
         instanceName: string
     ): Promise<any> {
-        const version = await this.#getClientInfo(gameVersion);
+        const version = await this.#getVersionInfo(gameVersion);
         if (!version) return;
 
         if (
@@ -46,7 +45,6 @@ export class MojangManager extends AbstractDownloadManager {
         if (!(await this.#resolveAssets(version.assetIndex))) return;
 
         // await resolvelibraries()
-        // await resolveNatives()
 
         // return this.profilesManager.createProfile({
         //     version: gameVersion,
@@ -67,7 +65,7 @@ export class MojangManager extends AbstractDownloadManager {
         // });
     }
 
-    async #resolveClient(instanceName: string, client: Downloads) {
+    async #resolveClient(instanceName: string, client: Client) {
         const clientDirPath = resolve(StorageHelper.clientsDir, instanceName);
 
         try {
@@ -179,11 +177,9 @@ export class MojangManager extends AbstractDownloadManager {
 
     #resolvelibraries() {}
 
-    #resolveNatives() {}
-
-    async #getVersionsInfo() {
+    async #getVersions() {
         try {
-            return await HttpHelper.getResourceFromJson<VersionManifest>(
+            return await HttpHelper.getResourceFromJson<VersionsManifest>(
                 this.#versionManifestLink
             );
         } catch (error) {
@@ -195,13 +191,14 @@ export class MojangManager extends AbstractDownloadManager {
         }
     }
 
-    async #getClientInfo(gameVersion: string) {
-        const versionInfo = await this.#getVersionsInfo();
+    async #getVersionInfo(gameVersion: string) {
+        const versionInfo = await this.#getVersions();
         if (!versionInfo) return;
 
         const version = versionInfo.versions.find(
             ({ id }) => id === gameVersion
         );
+
         if (!version) {
             return LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MojangManager.info
@@ -211,7 +208,9 @@ export class MojangManager extends AbstractDownloadManager {
         }
 
         try {
-            return await HttpHelper.getResourceFromJson<Client>(version.url);
+            return await HttpHelper.getResourceFromJson<VersionProfile>(
+                version.url
+            );
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
