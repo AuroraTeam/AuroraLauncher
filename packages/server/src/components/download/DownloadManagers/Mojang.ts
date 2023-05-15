@@ -30,6 +30,7 @@ export class MojangManager extends AbstractDownloadManager {
     #versionManifestLink =
         "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
     #assetsLink = "https://resources.download.minecraft.net/";
+    #librariesLink = "https://libraries.minecraft.net/";
 
     /**
      * Скачивание клиента с зеркала Mojang
@@ -51,25 +52,21 @@ export class MojangManager extends AbstractDownloadManager {
         if (!(await this.#resolveAssets(version.assetIndex))) return;
 
         const libraries = await this.#resolveLibraries(version.libraries);
-        if (!libraries) return;
 
-        // return this.profilesManager.createProfile({
-        //     version: gameVersion,
-        //     clientDir: instanceName,
-        //     assetsIndex: version.assets,
-        //     // libraries: version.libraries.map((lib) => ({
-        //     //     url: lib.downloads.artifact.url,
-        //     // })),
-        //     libraries: version.libraries as any,
-        //     servers: [
-        //         {
-        //             ip: "127.0.0.1",
-        //             port: 25565,
-        //             title: instanceName,
-        //             whiteListType: "null",
-        //         },
-        //     ],
-        // });
+        return this.profilesManager.createProfile({
+            version: gameVersion,
+            clientDir: instanceName,
+            assetsIndex: version.assets,
+            libraries: libraries,
+            servers: [
+                {
+                    ip: "127.0.0.1",
+                    port: 25565,
+                    title: instanceName,
+                    whiteListType: "null",
+                },
+            ],
+        });
     }
 
     async #resolveClient(instanceName: string, client: Client) {
@@ -130,6 +127,7 @@ export class MojangManager extends AbstractDownloadManager {
         } catch {
             // Файл не существует (либо нет доступа)
         }
+        LogHelper.info("Downloading assets");
 
         const assetsFile = await HttpHelper.getResource(assetIndex.url);
         await writeFile(indexPath, assetsFile);
@@ -150,7 +148,6 @@ export class MojangManager extends AbstractDownloadManager {
         //     this.langManager.getTranslate.DownloadManager.MojangManager.assets
         //         .download
         // );
-        LogHelper.info("Downloading assets");
         try {
             await HttpHelper.downloadFiles(
                 assetsHashes,
@@ -182,7 +179,7 @@ export class MojangManager extends AbstractDownloadManager {
         return true;
     }
 
-    #resolveLibraries(libraries: Library[]): ProfileLibrary[] {
+    async #resolveLibraries(libraries: Library[]) {
         const librariesList = libraries
             .map((library) => {
                 if (library.natives) {
@@ -197,7 +194,32 @@ export class MojangManager extends AbstractDownloadManager {
             })
             .flat();
 
-        // download
+        const progressBar = ProgressHelper.getProgress(
+            "{bar} {percentage}% {value}/{total}",
+            40
+        );
+        progressBar.start(librariesList.length, 0);
+
+        LogHelper.info("Downloading libraries");
+        try {
+            await HttpHelper.downloadFiles(
+                librariesList.map((l) => l.path),
+                this.#librariesLink,
+                StorageHelper.librariesDir,
+                {
+                    afterDownload() {
+                        progressBar.increment();
+                    },
+                }
+            );
+        } catch (error) {
+            LogHelper.info("Downloading libraries failed");
+            LogHelper.debug(error);
+            return;
+        } finally {
+            progressBar.stop();
+        }
+        LogHelper.info("Libraries downloaded");
 
         return librariesList;
     }
@@ -223,7 +245,7 @@ export class MojangManager extends AbstractDownloadManager {
             const artifact = library.downloads.classifiers[nativeIndex];
 
             const { path, sha1 } = artifact;
-            let arch; // TODO line 249
+            let arch; // TODO resolveRulesForNatives "x-${arch}"
 
             return {
                 path,
