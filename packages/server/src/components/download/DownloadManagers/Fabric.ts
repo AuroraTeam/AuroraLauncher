@@ -36,6 +36,15 @@ export class FabricManager extends MojangManager {
         );
     }
 
+    // TODO!!!!!
+    protected resolveFabricQuiltLibrary(library) {
+        return {
+            path: this.getLibPath(library.name),
+            sha1: "", // TODO!!!!!
+            type: "library",
+        };
+    }
+
     getFabricVersions(version: string): Promise<void | VersionMeta[]> {
         try {
             return HttpHelper.getResourceFromJson(

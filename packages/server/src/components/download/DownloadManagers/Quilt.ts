@@ -2,10 +2,10 @@ import { HttpHelper, LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { ClientMeta, VersionMeta } from "../interfaces/IQuilt";
-import { MojangManager } from "./Mojang";
+import { FabricManager } from "./Fabric";
 
 @injectable()
-export class QuiltManager extends MojangManager {
+export class QuiltManager extends FabricManager {
     fabricMetaLink = "https://meta.quiltmc.org/v3/versions/loader/";
 
     /**

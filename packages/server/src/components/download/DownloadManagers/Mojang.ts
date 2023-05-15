@@ -1,6 +1,7 @@
 import { access, mkdir, writeFile } from "fs/promises";
 import path, { resolve } from "path";
 
+import { ProfileLibrary } from "@root/components/profiles/utils/ProfileConfig";
 import {
     HttpHelper,
     JsonHelper,
@@ -11,9 +12,14 @@ import {
 import { injectable } from "tsyringe";
 
 import {
+    Action,
     AssetIndex,
     Assets,
+    Classifiers,
     Client,
+    Library,
+    Name,
+    Type,
     VersionProfile,
     VersionsManifest,
 } from "../interfaces/IMojang";
@@ -44,7 +50,8 @@ export class MojangManager extends AbstractDownloadManager {
         }
         if (!(await this.#resolveAssets(version.assetIndex))) return;
 
-        // await resolvelibraries()
+        const libraries = await this.#resolveLibraries(version.libraries);
+        if (!libraries) return;
 
         // return this.profilesManager.createProfile({
         //     version: gameVersion,
@@ -175,7 +182,89 @@ export class MojangManager extends AbstractDownloadManager {
         return true;
     }
 
-    #resolvelibraries() {}
+    #resolveLibraries(libraries: Library[]): ProfileLibrary[] {
+        const librariesList = libraries
+            .map((library) => {
+                if (library.natives) {
+                    return this.#resolveOldNative(library);
+                }
+
+                if (library.name.includes("natives")) {
+                    return this.#resolveNewNative(library);
+                }
+
+                return this.#resolveLibrary(library);
+            })
+            .flat();
+
+        // download
+
+        return librariesList;
+    }
+
+    #resolveNewNative(library: Library): ProfileLibrary {
+        const { os, arch } = library.name.match(
+            /natives-(?<os>\w+)(?:-(?<arch>\w+))?/
+        ).groups;
+
+        const { path, sha1 } = library.downloads.artifact;
+        return {
+            path,
+            sha1,
+            type: "native",
+            rules: [{ action: Action.Allow, os: { name: <Name>os, arch } }],
+        };
+    }
+
+    #resolveOldNative(library: Library): ProfileLibrary[] {
+        const downloads = this.#resolveRulesForNatives(library);
+
+        return downloads.map(([os, nativeIndex]) => {
+            const artifact = library.downloads.classifiers[nativeIndex];
+
+            const { path, sha1 } = artifact;
+            let arch; // TODO line 249
+
+            return {
+                path,
+                sha1,
+                type: "native",
+                rules: [
+                    {
+                        action: Action.Allow,
+                        os: { name: <Name>os, arch },
+                    },
+                ],
+            };
+        });
+    }
+
+    #resolveLibrary(library: Library): ProfileLibrary {
+        const { path, sha1 } = library.downloads.artifact;
+        return { path, sha1, type: "library", rules: library.rules };
+    }
+
+    #resolveRulesForNatives(library: Library) {
+        // TODO "natives": {"windows": "natives-windows-${arch}"}
+
+        if (!library.rules) {
+            return Object.entries(library.natives);
+        }
+
+        const res: [string, keyof Classifiers][] = [];
+        library.rules.forEach((rule) => {
+            if (rule.action === Action.Allow) {
+                if (rule.os) {
+                    res.push([rule.os.name, library.natives[rule.os.name]]);
+                } else {
+                    res.push(...Object.entries(library.natives));
+                }
+            } else {
+                res.filter(([os]) => os !== rule.os.name);
+            }
+        });
+        return res;
+    }
 
     async #getVersions() {
         try {
@@ -195,9 +284,9 @@ export class MojangManager extends AbstractDownloadManager {
         const versionInfo = await this.#getVersions();
         if (!versionInfo) return;
 
-        const version = versionInfo.versions.find(
-            ({ id }) => id === gameVersion
-        );
+        const version = versionInfo.versions
+            .filter(({ type }) => type === Type.Release)
+            .find(({ id }) => id === gameVersion);
 
         if (!version) {
             return LogHelper.error(

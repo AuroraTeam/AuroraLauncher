@@ -30,12 +30,13 @@ export interface VersionProfile {
     id: string;
     javaVersion: JavaVersion;
     libraries: Library[];
-    logging: Logging;
     mainClass: string;
+    logging?: Logging;
 }
 
 export enum Action {
     Allow = "allow",
+    Disallow = "disallow",
 }
 
 export enum Name {
@@ -70,10 +71,13 @@ export interface Library {
     downloads: LibraryDownloads;
     name: string;
     rules?: LibraryRule[];
+    extract?: Extract;
+    natives?: Natives;
 }
 
 export interface LibraryDownloads {
-    artifact: Artifact;
+    artifact?: Artifact;
+    classifiers?: Classifiers;
 }
 
 export interface Artifact {
@@ -83,13 +87,29 @@ export interface Artifact {
     url: string;
 }
 
+export interface Classifiers {
+    "natives-linux"?: Artifact;
+    "natives-osx"?: Artifact;
+    "natives-windows"?: Artifact;
+    "natives-macos"?: Artifact;
+}
+
+export interface Extract {
+    exclude: string[];
+}
+
+export type Natives = {
+    [x in Name]?: keyof Classifiers;
+};
+
 export interface LibraryRule {
     action: Action;
-    os: OS;
+    os?: OS;
 }
 
 export interface OS {
     name: Name;
+    version?: string;
 }
 
 export interface Logging {

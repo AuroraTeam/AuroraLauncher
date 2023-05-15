@@ -22,7 +22,7 @@ export interface IPartialProfileConfig {
 
     // Assets
     assetsIndex: string;
-    libraries: Library[];
+    libraries: ProfileLibrary[];
 
     // Updates
     update?: string[];
@@ -37,8 +37,33 @@ export interface IPartialProfileConfig {
     clientArgs?: string[];
 }
 
-interface Library {
-    url: string;
+export interface ProfileLibrary {
+    path: string;
+    sha1: string;
+    type: "library" | "native";
+    rules?: LibraryRule[];
+}
+
+export interface LibraryRule {
+    action: Action;
+    os?: OS;
+}
+
+export interface OS {
+    name: Name;
+    arch?: string;
+    version?: string;
+}
+
+export enum Action {
+    Allow = "allow",
+    Disallow = "disallow",
+}
+
+export enum Name {
+    Linux = "linux",
+    Osx = "osx",
+    Windows = "windows",
 }
 
 export class ProfileConfig implements IProfileConfig {
@@ -56,7 +81,7 @@ export class ProfileConfig implements IProfileConfig {
 
     // Assets
     assetsIndex: string;
-    libraries: Library[];
+    libraries: ProfileLibrary[];
 
     // Updates
     update: string[];
