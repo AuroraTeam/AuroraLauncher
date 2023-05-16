@@ -36,7 +36,7 @@ import {
     ReloadCommand,
     StopCommand,
     SyncAllCommand,
-    SyncInstancesCommand,
+    SyncClientsCommand,
     SyncProfilesCommand,
     UpdateCommand,
 } from "./components/commands/commands";
@@ -106,7 +106,7 @@ export class LauncherServer {
             container.resolve(LangCommand),
             container.resolve(SyncAllCommand),
             container.resolve(SyncProfilesCommand),
-            container.resolve(SyncInstancesCommand),
+            container.resolve(SyncClientsCommand),
             container.resolve(DownloadClientCommand),
             container.resolve(AboutCommand),
             container.resolve(StopCommand),

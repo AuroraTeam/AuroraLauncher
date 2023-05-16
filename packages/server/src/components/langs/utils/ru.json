@@ -101,10 +101,10 @@
         "downloadEnd": "Загрузка завершена! Пожалуйста, перезапустите LauncherServer."
     },
     "ClientsManager": {
-        "sync": "Синхронизация папки instances",
+        "sync": "Синхронизация папки clients",
         "syncTime": "Папка \"%s\" - %dms",
         "syncEnd": "Синхронизация завершена",
-        "syncSkip": "Папка instances пуста. Синхронизация пропущена"
+        "syncSkip": "Папка clients пуста. Синхронизация пропущена"
     },
     "ProgressHelper": {
         "loading": "{bar} {percentage}%",

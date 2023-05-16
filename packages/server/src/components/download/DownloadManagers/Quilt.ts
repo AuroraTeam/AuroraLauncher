@@ -11,13 +11,13 @@ export class QuiltManager extends FabricLikeManager {
     /**
      * Скачивание клиента с зеркала Mojang + Quilt
      * @param clientVer - Версия клиента
-     * @param instanceName - Название инстанции
+     * @param clientName - Название клиента
      */
-    async downloadClient(clientVer: string, instanceName: string) {
+    async downloadClient(clientVer: string, clientName: string) {
         const quiltVersion = await this.getQuiltClientInfo(clientVer);
         if (!quiltVersion) return;
 
-        const profileUUID = await super.downloadClient(clientVer, instanceName);
+        const profileUUID = await super.downloadClient(clientVer, clientName);
         if (!profileUUID) return;
 
         const libraries = await this.resolveLibraries(

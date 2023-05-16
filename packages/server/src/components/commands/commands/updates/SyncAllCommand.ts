@@ -7,7 +7,7 @@ export class SyncAllCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
         private readonly profilesManager: ProfilesManager,
-        private readonly instancesManager: ClientsManager
+        private readonly clientsManager: ClientsManager
     ) {
         super({
             name: "syncall",
@@ -20,6 +20,6 @@ export class SyncAllCommand extends AbstractCommand {
 
     invoke(): void {
         this.profilesManager.reloadProfiles();
-        this.instancesManager.hashInstancesDir("instances");
+        this.clientsManager.hashClients();
     }
 }

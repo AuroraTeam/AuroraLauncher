@@ -25,20 +25,20 @@ export class DownloadClientCommand extends AbstractCommand {
                 langManager.getTranslate.CommandsManager.commands.updates
                     .DownloadClientCommand,
             category: Category.UPDATES,
-            usage: "<version> <instance name> <?source type>",
+            usage: "<version> <client name> <?source type>",
         });
     }
 
     async invoke(
         gameVersion?: string,
-        instanceName?: string,
+        clientName?: string,
         sourceType = "mojang"
     ): Promise<void> {
         if (!gameVersion) {
             return LogHelper.error("Укажите название/версию клиента!");
         }
-        if (!instanceName) {
-            return LogHelper.error("Укажите название папки для инстанции!");
+        if (!clientName) {
+            return LogHelper.error("Укажите название папки для клиента!");
         }
 
         const DownloadManager = this.getDownloadManager(sourceType);
@@ -51,7 +51,7 @@ export class DownloadClientCommand extends AbstractCommand {
             this.langManager,
             this.profilesManager,
             this.configManager
-        ).downloadClient(gameVersion, instanceName);
+        ).downloadClient(gameVersion, clientName);
         this.commandsManager.console.resume();
     }
 

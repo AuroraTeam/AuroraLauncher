@@ -1,4 +1,4 @@
-import { ClientsManager } from "@root/components/instances";
+import { ClientsManager } from "@root/components/clients";
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server";
 import { injectable } from "tsyringe";
 
@@ -6,12 +6,12 @@ import { injectable } from "tsyringe";
 export class UpdatesRequest extends AbstractRequest {
     method = "updates";
 
-    constructor(private instancesManager: ClientsManager) {
+    constructor(private clientsManager: ClientsManager) {
         super();
     }
 
     invoke({ dir }: UpdatesRequestData): ResponseResult {
-        return { hashes: this.instancesManager.hashedInstances.get(dir) };
+        return { hashes: this.clientsManager.hashedClients.get(dir) };
     }
 }
 

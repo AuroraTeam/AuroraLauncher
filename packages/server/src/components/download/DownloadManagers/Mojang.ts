@@ -35,17 +35,17 @@ export class MojangManager extends AbstractDownloadManager {
     /**
      * Скачивание клиента с зеркала Mojang
      * @param gameVersion - Версия игры
-     * @param instanceName - Название сборки
+     * @param clientName - Название сборки
      */
     async downloadClient(
         gameVersion: string,
-        instanceName: string
+        clientName: string
     ): Promise<any> {
         const version = await this.#getVersionInfo(gameVersion);
         if (!version) return;
 
         if (
-            !(await this.#resolveClient(instanceName, version.downloads.client))
+            !(await this.#resolveClient(clientName, version.downloads.client))
         ) {
             return;
         }
@@ -56,22 +56,22 @@ export class MojangManager extends AbstractDownloadManager {
 
         return this.profilesManager.createProfile({
             version: gameVersion,
-            clientDir: instanceName,
+            clientDir: clientName,
             assetsIndex: version.assets,
             libraries: libraries,
             servers: [
                 {
                     ip: "127.0.0.1",
                     port: 25565,
-                    title: instanceName,
+                    title: clientName,
                     whiteListType: "null",
                 },
             ],
         });
     }
 
-    async #resolveClient(instanceName: string, client: Client) {
-        const clientDirPath = resolve(StorageHelper.clientsDir, instanceName);
+    async #resolveClient(clientName: string, client: Client) {
+        const clientDirPath = resolve(StorageHelper.clientsDir, clientName);
 
         try {
             await mkdir(clientDirPath);

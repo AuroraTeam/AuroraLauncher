@@ -3,13 +3,13 @@ import { AbstractCommand, Category } from "@root/utils";
 import { injectable } from "tsyringe";
 
 @injectable()
-export class SyncInstancesCommand extends AbstractCommand {
+export class SyncClientsCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
-        private readonly instancesManager: ClientsManager
+        private readonly clientsManager: ClientsManager
     ) {
         super({
-            name: "syncinstances",
+            name: "syncclients",
             description:
                 langManager.getTranslate.CommandsManager.commands.updates
                     .SyncUpdatesCommand,
@@ -18,6 +18,6 @@ export class SyncInstancesCommand extends AbstractCommand {
     }
 
     invoke(): void {
-        this.instancesManager.hashInstancesDir("instances");
+        this.clientsManager.hashClients();
     }
 }

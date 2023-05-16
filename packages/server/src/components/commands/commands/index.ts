@@ -11,4 +11,4 @@ export * from "./basic/UpdateCommand";
 export * from "./updates/DownloadClientCommand";
 export * from "./updates/SyncAllCommand";
 export * from "./updates/SyncProfilesCommand";
-export * from "./updates/SyncInstancesCommand";
+export * from "./updates/SyncClientsCommand";

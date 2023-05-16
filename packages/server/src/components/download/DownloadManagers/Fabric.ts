@@ -11,13 +11,13 @@ export class FabricManager extends FabricLikeManager {
     /**
      * Скачивание клиента с зеркала Mojang + Fabric
      * @param clientVer - Версия клиента
-     * @param instanceName - Название инстанции
+     * @param clientName - Название клиента
      */
-    async downloadClient(clientVer: string, instanceName: string) {
+    async downloadClient(clientVer: string, clientName: string) {
         const fabricVersion = await this.getFabricClientInfo(clientVer);
         if (!fabricVersion) return;
 
-        const profileUUID = await super.downloadClient(clientVer, instanceName);
+        const profileUUID = await super.downloadClient(clientVer, clientName);
         if (!profileUUID) return;
 
         const libraries = await this.resolveLibraries(

@@ -12,11 +12,11 @@ export abstract class AbstractDownloadManager {
     /**
      * Скачивание клиента
      * @param gameVersion - Версия игры
-     * @param instanceName - Название сборки
+     * @param clientName - Название сборки
      */
     public abstract downloadClient(
         gameVersion: string,
-        instanceName: string
+        clientName: string
     ): Promise<any>;
 
     protected getLibPath(name: string): string {

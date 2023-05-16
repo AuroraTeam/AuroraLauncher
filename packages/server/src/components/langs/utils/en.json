@@ -101,10 +101,10 @@
         "downloadEnd": "Download complete! Please restart LauncherServer."
     },
     "ClientsManager": {
-        "sync": "Syncing instances dir",
+        "sync": "Syncing clients dir",
         "syncTime": "Syncing \"%s\" - %dms",
-        "syncEnd": "Syncing instances dir end",
-        "syncSkip": "Instances dir is empty. Skip sync"
+        "syncEnd": "Syncing clients dir end",
+        "syncSkip": "Clients dir is empty. Skip sync"
     },
     "ProgressHelper": {
         "loading": "{bar} {percentage}%",

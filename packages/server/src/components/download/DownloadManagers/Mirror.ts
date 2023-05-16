@@ -18,16 +18,13 @@ import { AbstractDownloadManager } from "./AbstractManager";
 export class MirrorManager extends AbstractDownloadManager {
     /**
      * Скачивание клиена с зеркала
-     * @param clientName - Название архива с файлами клиента
-     * @param instanceName - Название инстанции
+     * @param fileName - Название архива с файлами клиента
+     * @param clientName - Название клиента
      */
-    async downloadClient(
-        clientName: string,
-        instanceName: string
-    ): Promise<void> {
+    async downloadClient(fileName: string, clientName: string): Promise<void> {
         const mirrors: string[] = this.configManager.config.mirrors;
 
-        const clientDirPath = resolve(StorageHelper.clientsDir, instanceName);
+        const clientDirPath = resolve(StorageHelper.clientsDir, clientName);
 
         try {
             await mkdir(clientDirPath);
@@ -38,9 +35,7 @@ export class MirrorManager extends AbstractDownloadManager {
         }
 
         const mirror = mirrors.find(async (mirror) => {
-            await HttpHelper.existsResource(
-                new URL(`${clientName}.zip`, mirror)
-            );
+            await HttpHelper.existsResource(new URL(`${fileName}.zip`, mirror));
         });
 
         if (!mirror) {
@@ -58,7 +53,7 @@ export class MirrorManager extends AbstractDownloadManager {
         let client: string;
         try {
             client = await HttpHelper.downloadFile(
-                new URL(`${clientName}.zip`, mirror),
+                new URL(`${fileName}.zip`, mirror),
                 null,
                 { saveToTempFile: true }
             );
@@ -106,10 +101,10 @@ export class MirrorManager extends AbstractDownloadManager {
 
         this.profilesManager.createProfile({
             ...profile,
-            clientDir: instanceName,
+            clientDir: clientName,
             servers: [
                 {
-                    title: instanceName,
+                    title: clientName,
                     ip: "127.0.0.1",
                     port: 25565,
                     whiteListType: "null",

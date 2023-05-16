@@ -14,13 +14,13 @@ type HashedFile = {
 @singleton()
 @injectable()
 export class ClientsManager {
-    readonly hashedInstances = new Map<string, HashedFile[]>();
+    readonly hashedClients = new Map<string, HashedFile[]>();
 
     constructor(private readonly langManager: LangManager) {
-        this.hashInstances();
+        this.hashClients();
     }
 
-    private async hashInstances(): Promise<void> {
+    async hashClients(): Promise<void> {
         const folders = await fs.readdir(StorageHelper.clientsDir, {
             withFileTypes: true,
         });
@@ -37,7 +37,7 @@ export class ClientsManager {
         for (const { name } of dirs) {
             const startTime = Date.now();
 
-            this.hashedInstances.set(
+            this.hashedClients.set(
                 name,
                 await this.hashDir(join(StorageHelper.clientsDir, name))
             );

@@ -14,13 +14,13 @@ export class ForgeManager extends MojangManager {
     /**
      * Скачивание клиента с зеркала Mojang + Forge
      * @param clientVer - Версия клиента
-     * @param instanceName - Название инстанции
+     * @param clientName - Название клиента
      */
-    async downloadClient(clientVer: string, instanceName: string) {
+    async downloadClient(clientVer: string, clientName: string) {
         const forgeVersion = await this.getForgeClientInfo(clientVer);
         if (!forgeVersion) return;
 
-        const profileUUID = await super.downloadClient(clientVer, instanceName);
+        const profileUUID = await super.downloadClient(clientVer, clientName);
         if (!profileUUID) return;
 
         this.profilesManager.editProfile(profileUUID, (profile) => ({

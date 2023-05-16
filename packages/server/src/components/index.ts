@@ -2,7 +2,7 @@ export * from "./update";
 export * from "./profiles";
 export * from "./modules";
 export * from "./langs";
-export * from "./instances";
+export * from "./clients";
 export * from "./download";
 export * from "./config";
 export * from "./commands";
