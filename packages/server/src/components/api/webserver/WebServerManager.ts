@@ -82,10 +82,10 @@ export class WebServerManager {
         url = url.replace(/\/{2,}/g, "/").slice(6);
         if (url.at(-1) === "/") url = url.slice(0, -1);
 
-        const path = join(StorageHelper.instancesDir, url);
+        const path = join(StorageHelper.gameFilesDir, url);
 
         // Защита от выхода из директории
-        if (!path.startsWith(StorageHelper.instancesDir)) {
+        if (!path.startsWith(StorageHelper.gameFilesDir)) {
             return res.writeHead(400).end();
         }
 
@@ -112,13 +112,15 @@ export class WebServerManager {
             const dirListing = await readdir(path);
 
             if (url.length !== 0) dirListing.unshift("..");
-            res.write("<style>*{font-family:monospace}</style>");
-
-            res.end(
+            res.write(
+                "<!DOCTYPE html><html><head><style>*{font-family:monospace;font-size:14px}</style></head><body>"
+            );
+            res.write(
                 dirListing
                     .map((el) => `<a href="/files${url}/${el}">${el}</a>`)
                     .join("<br>")
             );
+            res.end("</body></html>");
         } catch (error) {
             LogHelper.warn(error);
             res.writeHead(500).end();

@@ -4,7 +4,7 @@ import { window as windowConfig } from '@config';
 import { BrowserWindow, app, ipcMain } from 'electron';
 import installExtension, {
     REACT_DEVELOPER_TOOLS,
-} from 'electron-devtools-installer';
+} from 'electron-extension-installer';
 
 import { WINDOW_CLOSE_EVENT, WINDOW_HIDE_EVENT } from '../../common/channels';
 import logo from '../../renderer/runtime/assets/images/logo.png';
@@ -25,7 +25,9 @@ export class LauncherWindow {
             this.mainWindow = this.createMainWindow();
             if (isDev) {
                 installExtension(REACT_DEVELOPER_TOOLS, {
-                    loadExtensionOptions: { allowFileAccess: true },
+                    loadExtensionOptions: {
+                        allowFileAccess: true,
+                    },
                 })
                     .then((name: any) =>
                         console.log(`Added Extension: ${name}`)

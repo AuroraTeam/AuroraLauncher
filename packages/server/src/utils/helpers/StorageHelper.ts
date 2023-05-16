@@ -11,8 +11,12 @@ export class StorageHelper extends CoreStorageHelper {
     static readonly storageDir: string = SystemHelper.isStandalone()
         ? dirname(process.execPath)
         : __dirname;
-    static readonly clientsDir: string = resolve(this.storageDir, "clients");
-    static readonly assetsDir: string = resolve(this.storageDir, "assets");
+    static readonly gameFilesDir: string = resolve(
+        this.storageDir,
+        "gameFiles"
+    );
+    static readonly clientsDir: string = resolve(this.gameFilesDir, "clients");
+    static readonly assetsDir: string = resolve(this.gameFilesDir, "assets");
     static readonly assetsIndexesDir: string = resolve(
         this.assetsDir,
         "indexes"
@@ -22,7 +26,7 @@ export class StorageHelper extends CoreStorageHelper {
         "objects"
     );
     static readonly librariesDir: string = resolve(
-        this.storageDir,
+        this.gameFilesDir,
         "libraries"
     );
     static readonly profilesDir: string = resolve(this.storageDir, "profiles");
@@ -32,6 +36,7 @@ export class StorageHelper extends CoreStorageHelper {
 
     static validate() {
         const foldersToCreate: PathLike[] = [
+            this.gameFilesDir,
             this.clientsDir,
             this.assetsDir,
             this.assetsIndexesDir,
