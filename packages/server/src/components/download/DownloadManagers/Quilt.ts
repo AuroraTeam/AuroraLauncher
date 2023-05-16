@@ -2,11 +2,11 @@ import { HttpHelper, LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { ClientMeta, VersionMeta } from "../interfaces/IQuilt";
-import { FabricManager } from "./Fabric";
+import { FabricLikeManager } from "./FabricLike";
 
 @injectable()
-export class QuiltManager extends FabricManager {
-    fabricMetaLink = "https://meta.quiltmc.org/v3/versions/loader/";
+export class QuiltManager extends FabricLikeManager {
+    quiltMetaLink = "https://meta.quiltmc.org/v3/versions/loader/";
 
     /**
      * Скачивание клиента с зеркала Mojang + Quilt
@@ -14,21 +14,21 @@ export class QuiltManager extends FabricManager {
      * @param instanceName - Название инстанции
      */
     async downloadClient(clientVer: string, instanceName: string) {
-        const fabricVersion = await this.getQuiltClientInfo(clientVer);
-        if (!fabricVersion) return;
+        const quiltVersion = await this.getQuiltClientInfo(clientVer);
+        if (!quiltVersion) return;
 
         const profileUUID = await super.downloadClient(clientVer, instanceName);
         if (!profileUUID) return;
 
+        const libraries = await this.resolveLibraries(
+            quiltVersion.libraries,
+            "Quilt"
+        );
+        if (!libraries) return;
+
         this.profilesManager.editProfile(profileUUID, (profile) => ({
-            mainClass: fabricVersion.mainClass,
-            libraries: [
-                ...profile.libraries,
-                ...fabricVersion.libraries.map((lib) => {
-                    const path = this.getLibPath(lib.name);
-                    return { url: new URL(path, lib.url).toString() };
-                }),
-            ],
+            mainClass: quiltVersion.mainClass,
+            libraries: [...profile.libraries, ...libraries],
         }));
         LogHelper.info(
             this.langManager.getTranslate.DownloadManager.QuiltManager.client
@@ -39,7 +39,7 @@ export class QuiltManager extends FabricManager {
     getQuiltVersions(version: string): Promise<void | VersionMeta[]> {
         try {
             return HttpHelper.getResourceFromJson(
-                `${this.fabricMetaLink}${version}`
+                `${this.quiltMetaLink}${version}`
             );
         } catch (error) {
             LogHelper.debug(error);
@@ -58,7 +58,7 @@ export class QuiltManager extends FabricManager {
 
         try {
             return await HttpHelper.getResourceFromJson<ClientMeta>(
-                `${this.fabricMetaLink}${version}/${loader.version}/profile/json`
+                `${this.quiltMetaLink}${version}/${loader.version}/profile/json`
             );
         } catch (error) {
             LogHelper.debug(error);

@@ -10,6 +10,11 @@ import { JsonData, JsonHelper, StorageHelper } from "."
 
 type onProgressFunction = (progress: Progress) => void
 
+export interface SavedFile {
+    path: string
+    url: string
+}
+
 export class HttpHelper {
     private static concurrency = 4
 
@@ -95,32 +100,19 @@ export class HttpHelper {
      * @param dirName - папка в которую будут сохранены все файлы
      */
     public static async downloadFiles(
-        urls: Iterable<string>,
-        site: string,
+        filesList: SavedFile[],
         dirName: string,
         options: {
-            beforeDownload?: (fileName: string) => void
-            afterDownload?: (filePath: string, fileName: string) => void
-            onProgress?: (progress: Progress, fileName: string) => void
+            onProgress?: onProgressFunction
+            afterDownload?: () => void
         } = {}
     ) {
         await pMap(
-            urls,
-            async (fileName) => {
-                const filePath = resolve(dirName, fileName)
-
-                if (options.beforeDownload) options.beforeDownload(fileName)
-
-                await this.download(
-                    new URL(fileName, site),
-                    filePath,
-                    (progress) =>
-                        options.onProgress &&
-                        options.onProgress(progress, fileName)
-                )
-
-                if (options.afterDownload)
-                    options.afterDownload(filePath, fileName)
+            filesList,
+            async (file) => {
+                const filePath = resolve(dirName, file.path)
+                await this.download(file.url, filePath, options.onProgress)
+                if (options.afterDownload) options.afterDownload()
             },
             { concurrency: this.concurrency }
         )

@@ -52,6 +52,7 @@ export class MojangManager extends AbstractDownloadManager {
         if (!(await this.#resolveAssets(version.assetIndex))) return;
 
         const libraries = await this.#resolveLibraries(version.libraries);
+        if (!libraries) return;
 
         return this.profilesManager.createProfile({
             version: gameVersion,
@@ -123,7 +124,8 @@ export class MojangManager extends AbstractDownloadManager {
 
         try {
             await access(indexPath);
-            return LogHelper.info("Assets already downloaded");
+            LogHelper.info("Assets already downloaded");
+            return true;
         } catch {
             // Файл не существует (либо нет доступа)
         }
@@ -150,8 +152,10 @@ export class MojangManager extends AbstractDownloadManager {
         // );
         try {
             await HttpHelper.downloadFiles(
-                assetsHashes,
-                this.#assetsLink,
+                assetsHashes.map((hash) => ({
+                    path: hash,
+                    url: `${this.#assetsLink}${hash}`,
+                })),
                 StorageHelper.assetsObjectsDir,
                 {
                     afterDownload() {
@@ -194,17 +198,19 @@ export class MojangManager extends AbstractDownloadManager {
             })
             .flat();
 
+        LogHelper.info("Downloading libraries");
         const progressBar = ProgressHelper.getProgress(
             "{bar} {percentage}% {value}/{total}",
             40
         );
         progressBar.start(librariesList.length, 0);
 
-        LogHelper.info("Downloading libraries");
         try {
             await HttpHelper.downloadFiles(
-                librariesList.map((l) => l.path),
-                this.#librariesLink,
+                librariesList.map((l) => ({
+                    path: l.path,
+                    url: `${this.#librariesLink}${l.path}`,
+                })),
                 StorageHelper.librariesDir,
                 {
                     afterDownload() {

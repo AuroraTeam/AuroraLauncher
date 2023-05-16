@@ -7,6 +7,7 @@ export * from "./helpers/SystemHelper";
 export * from "./helpers/UUIDHelper";
 export * from "./helpers/ZipHelper";
 export * from "./helpers/HjsonHelper";
+export * from "./helpers/HashHelper";
 
 export * from "./abstracts/AbstractCommand";
 

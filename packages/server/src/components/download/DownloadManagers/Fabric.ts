@@ -2,10 +2,10 @@ import { HttpHelper, LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { ClientMeta, VersionMeta } from "../interfaces/IFabric";
-import { MojangManager } from "./Mojang";
+import { FabricLikeManager } from "./FabricLike";
 
 @injectable()
-export class FabricManager extends MojangManager {
+export class FabricManager extends FabricLikeManager {
     fabricMetaLink = "https://meta.fabricmc.net/v2/versions/loader/";
 
     /**
@@ -20,29 +20,20 @@ export class FabricManager extends MojangManager {
         const profileUUID = await super.downloadClient(clientVer, instanceName);
         if (!profileUUID) return;
 
+        const libraries = await this.resolveLibraries(
+            fabricVersion.libraries,
+            "Fabric"
+        );
+        if (!libraries) return;
+
         this.profilesManager.editProfile(profileUUID, (profile) => ({
             mainClass: fabricVersion.mainClass,
-            libraries: [
-                ...profile.libraries,
-                ...fabricVersion.libraries.map((lib) => {
-                    const path = this.getLibPath(lib.name);
-                    return { url: new URL(path, lib.url).toString() };
-                }),
-            ],
+            libraries: [...profile.libraries, ...libraries],
         }));
         LogHelper.info(
             this.langManager.getTranslate.DownloadManager.FabricManager.client
                 .success
         );
-    }
-
-    // TODO!!!!!
-    protected resolveFabricQuiltLibrary(library) {
-        return {
-            path: this.getLibPath(library.name),
-            sha1: "", // TODO!!!!!
-            type: "library",
-        };
     }
 
     getFabricVersions(version: string): Promise<void | VersionMeta[]> {

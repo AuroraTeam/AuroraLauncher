@@ -1,8 +1,7 @@
-import crypto from "crypto";
 import fs from "fs/promises";
 import { join } from "path";
 
-import { LogHelper, StorageHelper } from "@root/utils";
+import { HashHelper, LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
@@ -10,7 +9,6 @@ import { LangManager } from "../langs";
 type HashedFile = {
     path: string;
     hashsum: string;
-    size: number;
 };
 
 @singleton()
@@ -72,15 +70,10 @@ export class ClientsManager {
         return arrayOfFiles;
     }
 
-    private async hashFile(path: string): Promise<HashedFile> {
-        const data = await fs.readFile(path);
-        const size = (await fs.stat(path)).size;
-        const hashsum = crypto.createHash("sha1").update(data).digest("hex");
-
+    async hashFile(path: string): Promise<HashedFile> {
         return {
             path: path.replace(StorageHelper.clientsDir, ""),
-            hashsum,
-            size,
+            hashsum: await HashHelper.getSHA1fromFile(path),
         };
     }
 }
