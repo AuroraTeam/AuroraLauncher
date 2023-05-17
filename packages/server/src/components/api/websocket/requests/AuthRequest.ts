@@ -1,4 +1,4 @@
-import { AuthProvider } from "@root/components/auth/providers";
+import type { AuthProvider } from "@root/components/auth/providers";
 import { AbstractRequest, ResponseResult } from "aurora-rpc-server";
 import { inject, injectable } from "tsyringe";
 

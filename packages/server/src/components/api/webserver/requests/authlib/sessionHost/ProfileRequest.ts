@@ -1,4 +1,4 @@
-import { AuthProvider } from "@root/components/auth/providers";
+import type { AuthProvider } from "@root/components/auth/providers";
 import { AuthlibManager } from "@root/components/authlib";
 import { inject, injectable } from "tsyringe";
 
