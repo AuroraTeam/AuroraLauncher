@@ -1,14 +1,14 @@
 import { esbuildDecorators } from "@aurora-launcher/esbuild-decorators";
-import { build } from "esbuild";
+import { context } from "esbuild";
 import minimist from "minimist";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { _, ...buildArgs } = minimist(process.argv.slice(2));
+const { _, watch, ...args } = minimist(process.argv.slice(2));
 
 console.log("Build...");
 console.time("Build successfully");
 
-await build({
+const ctx = await context({
     platform: "node",
     target: "node18",
     bundle: true,
@@ -16,7 +16,13 @@ await build({
     plugins: [esbuildDecorators()],
     entryPoints: ["src/app.ts"],
     outdir: "dist",
-    ...buildArgs,
-});
-
+    ...args,
+}).catch(() => process.exit(1));
 console.timeEnd("Build successfully");
+
+if (watch) {
+    console.log("Watching...");
+    await ctx.watch();
+} else {
+    ctx.dispose();
+}

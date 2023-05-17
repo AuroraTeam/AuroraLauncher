@@ -46,7 +46,7 @@
         "@typescript-eslint/eslint-plugin": "^5.55.0",
         "@typescript-eslint/parser": "^5.55.0",
         "concurrently": "^8.0.1",
-        "esbuild": "^0.14.54",
+        "esbuild": "^0.17.19",
         "eslint": "^8.36.0",
         "eslint-plugin-node": "^11.1.0",
         "import-sort-style-module": "^6.0.0",
