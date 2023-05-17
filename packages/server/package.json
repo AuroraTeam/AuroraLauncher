@@ -33,7 +33,7 @@
         "start": "node ."
     },
     "devDependencies": {
-        "@anatine/esbuild-decorators": "^0.2.19",
+        "@aurora-launcher/esbuild-decorators": "^0.0.1",
         "@types/adm-zip": "^0.5.0",
         "@types/cli-progress": "^3.11.0",
         "@types/hjson": "^2.4.3",
