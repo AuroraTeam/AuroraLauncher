@@ -1,1 +1,2 @@
-export { AuroraAPI } from "./classes/AuroraAPI"
+export * from "./classes/AuroraAPI"
+export * from "./classes/APIError"

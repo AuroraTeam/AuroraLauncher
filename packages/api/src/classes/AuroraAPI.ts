@@ -1,24 +1,20 @@
-import { APIError, Client, Response, ResponseError } from "aurora-rpc-client"
+import { Client, Response, ResponseError } from "aurora-rpc-client"
 
 import { AuthResponseData } from "../types/AuthResponse"
 import { ProfileResponseData } from "../types/ProfileResponse"
 import { ServersResponseData } from "../types/ServersResponse"
 import { UpdatesResponseData } from "../types/UpdatesResponse"
+import { APIError } from "./APIError"
 
 export class AuroraAPI {
-    #clientInstance = new Client()
-    #url?: string
+    #clientInstance
 
     constructor(url?: string) {
-        this.#url = url
+        this.#clientInstance = new Client(url)
     }
 
-    public async connect(url?: string) {
-        const _url = url || this.#url
-        // TODO move to aurora-rpc-client
-        if (!_url) throw new Error("Url not defined")
-
-        return await this.#clientInstance.connect(_url)
+    public connect(url?: string) {
+        return this.#clientInstance.connect(url)
     }
 
     public close(code?: number, data?: string) {
@@ -26,19 +22,19 @@ export class AuroraAPI {
     }
 
     public async auth(login: string, password: string) {
-        return <AuthResponseData>await this.#getRequest("auth", { login, password })
+        return await this.#getRequest<AuthResponseData>("auth", { login, password })
     }
 
     public async getServers() {
-        return <ServersResponseData>await this.#getRequest("servers")
+        return await this.#getRequest<ServersResponseData>("servers")
     }
 
     public async getProfile(uuid: string) {
-        return <ProfileResponseData>await this.#getRequest("profile", { uuid })
+        return await this.#getRequest<ProfileResponseData>("profile", { uuid })
     }
 
     public async getUpdates(dir: string) {
-        return <UpdatesResponseData>await this.#getRequest("updates", { dir })
+        return await this.#getRequest<UpdatesResponseData>("updates", { dir })
     }
 
     async #getRequest<T extends Response["result"]>(method: string, payload?: any): Promise<T> {
