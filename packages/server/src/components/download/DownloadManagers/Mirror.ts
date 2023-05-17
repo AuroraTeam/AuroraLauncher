@@ -2,7 +2,7 @@ import { mkdir, readFile } from "fs/promises";
 import { resolve } from "path";
 import { URL } from "url";
 
-import { IPartialProfileConfig } from "@root/components/profiles/utils/ProfileConfig";
+import { PartialProfileConfig } from "@aurora-launcher/core";
 import {
     HttpHelper,
     JsonHelper,
@@ -87,7 +87,7 @@ export class MirrorManager extends AbstractDownloadManager {
 
         let profile;
         try {
-            profile = JsonHelper.fromJson<IPartialProfileConfig>(
+            profile = JsonHelper.fromJson<PartialProfileConfig>(
                 (
                     await readFile(resolve(clientDirPath, "profile.json"))
                 ).toString()

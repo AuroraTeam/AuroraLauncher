@@ -8,7 +8,7 @@ import { LangManager } from "../langs";
 
 type HashedFile = {
     path: string;
-    hashsum: string;
+    sha1: string;
 };
 
 @singleton()
@@ -52,16 +52,15 @@ export class ClientsManager {
         LogHelper.info(this.langManager.getTranslate.ClientsManager.syncEnd);
     }
 
-    private async hashDir(
-        dirPath: string,
-        arrayOfFiles: HashedFile[] = []
-    ): Promise<HashedFile[]> {
+    private async hashDir(dirPath: string): Promise<HashedFile[]> {
         const entries = await fs.readdir(dirPath, { withFileTypes: true });
+
+        const arrayOfFiles: HashedFile[] = [];
 
         for (const entry of entries) {
             const entryPath = join(dirPath, entry.name);
             if (entry.isDirectory()) {
-                arrayOfFiles = await this.hashDir(entryPath, arrayOfFiles);
+                arrayOfFiles.concat(await this.hashDir(entryPath));
             } else {
                 arrayOfFiles.push(await this.hashFile(entryPath));
             }
@@ -73,7 +72,7 @@ export class ClientsManager {
     async hashFile(path: string): Promise<HashedFile> {
         return {
             path: path.replace(StorageHelper.clientsDir, ""),
-            hashsum: await HashHelper.getSHA1fromFile(path),
+            sha1: await HashHelper.getSHA1fromFile(path),
         };
     }
 }

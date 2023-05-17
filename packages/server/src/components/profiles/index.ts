@@ -1,11 +1,12 @@
 import fs from "fs/promises";
 import path from "path";
 
+import { PartialProfileConfig } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
-import { IPartialProfileConfig, ProfileConfig } from "./utils/ProfileConfig";
+import { ProfileConfig } from "./utils/ProfileConfig";
 
 @singleton()
 @injectable()
@@ -57,7 +58,7 @@ export class ProfilesManager {
         await this.loadProfiles();
     }
 
-    async createProfile(parameters: IPartialProfileConfig): Promise<string> {
+    async createProfile(parameters: PartialProfileConfig): Promise<string> {
         const profile = new ProfileConfig(parameters);
         this.profiles.push(profile);
         await fs.writeFile(
@@ -73,7 +74,7 @@ export class ProfilesManager {
     async editProfile(
         uuid: string,
         parameters:
-            | IPartialProfileConfig
+            | PartialProfileConfig
             | ((profile: ProfileConfig) => Partial<ProfileConfig>)
     ): Promise<void> {
         const profile = this.profiles.find((p) => p.uuid === uuid);

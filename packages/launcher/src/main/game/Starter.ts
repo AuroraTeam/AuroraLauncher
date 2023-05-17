@@ -2,6 +2,7 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import { delimiter, join } from 'path';
 
+import { ClientArguments } from '@aurora-launcher/core';
 import { IpcMainEvent, ipcMain } from 'electron';
 import { Launcher } from 'main/core/Launcher';
 import { LogHelper } from 'main/helpers/LogHelper';
@@ -9,7 +10,6 @@ import { StorageHelper } from 'main/helpers/StorageHelper';
 import { coerce, gte, lte } from 'semver';
 
 import { GAME_START_EVENT } from '../../common/channels';
-import { ClientArgs } from './IClientArgs';
 import { Updater } from './Updater';
 
 export class Starter {
@@ -19,13 +19,14 @@ export class Starter {
         );
     }
 
-    static async startGame(
+    private static async startGame(
         event: IpcMainEvent,
-        clientArgs: ClientArgs
+        clientArgs: ClientArguments
     ): Promise<void> {
         try {
-            await Updater.checkClient(event, clientArgs);
-        } catch (_) {
+            await Updater.validateClient(clientArgs);
+        } catch (error) {
+            LogHelper.debug(error);
             event.reply('stopGame');
             return;
         }
@@ -34,18 +35,18 @@ export class Starter {
 
     static async start(
         event: IpcMainEvent,
-        clientArgs: ClientArgs
+        clientArgs: ClientArguments
     ): Promise<void> {
         const clientDir = join(StorageHelper.clientsDir, clientArgs.clientDir);
-        const assetsDir = join(StorageHelper.assetsDir, clientArgs.assetsDir);
+        const assetsDir = join(StorageHelper.assetsDir);
 
         const clientVersion = coerce(clientArgs.version);
         if (clientVersion === null) {
             Launcher.window.sendEvent(
                 'textToConsole',
-                'invalig client version'
+                'Invalig client version'
             );
-            LogHelper.error('invalig client version');
+            LogHelper.error('Invalig client version');
             return;
         }
 
@@ -135,7 +136,7 @@ export class Starter {
 
     static gameLauncher(
         gameArgs: string[],
-        clientArgs: ClientArgs,
+        clientArgs: ClientArguments,
         clientVersion: string
     ): void {
         gameArgs.push('--username', clientArgs.username);

@@ -1,22 +1,17 @@
 import { existsSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 
+import { ClientArguments } from '@aurora-launcher/core';
 import { api as apiConfig } from '@config';
-import { IpcMainEvent } from 'electron/main';
 import { Launcher } from 'main/core/Launcher';
 import { HttpHelper } from 'main/helpers/HttpHelper';
 import { LogHelper } from 'main/helpers/LogHelper';
 import { StorageHelper } from 'main/helpers/StorageHelper';
 import pMap from 'p-map';
 
-import { ClientArgs } from './IClientArgs';
-
 export class Updater {
-    static async checkClient(
-        _: IpcMainEvent,
-        clientArgs: ClientArgs
-    ): Promise<void> {
-        await this.hash(clientArgs.clientDir);
+    static validateClient(clientArgs: ClientArguments) {
+        return this.hash(clientArgs.clientDir);
     }
 
     static async hash(dir: string): Promise<void> {

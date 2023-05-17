@@ -2,7 +2,7 @@ import { Response } from "aurora-rpc-client"
 
 export interface HashedFile {
     path: string
-    hashsum: string
+    sha1: string
 }
 
 export interface UpdatesResponseData {
