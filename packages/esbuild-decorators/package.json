@@ -1,0 +1,16 @@
+{
+    "name": "@aurora-launcher/esbuild-decorators",
+    "version": "0.0.1",
+    "main": "index.js",
+    "type": "module",
+    "author": "AuroraTeam",
+    "license": "MIT",
+    "importSort": {
+        ".js": {
+            "style": "module"
+        }
+    },
+    "dependencies": {
+        "@swc/core": "^1.3.58"
+    }
+}
