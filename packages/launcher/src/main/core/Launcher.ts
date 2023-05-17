@@ -6,8 +6,8 @@ import { APIManager } from './APIManager';
 import { LauncherWindow } from './LauncherWindow';
 
 export class Launcher {
-    public static readonly window = new LauncherWindow();
-    public static readonly api = new APIManager();
+    readonly window = new LauncherWindow();
+    readonly api = new APIManager();
 
     constructor() {
         Starter.setHandler();

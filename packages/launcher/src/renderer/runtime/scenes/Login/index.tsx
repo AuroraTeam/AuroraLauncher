@@ -35,7 +35,7 @@ export default function Login() {
         console.log(auth);
 
         if (auth instanceof Error) {
-            console.log(auth);
+            console.error(auth);
             showModal('Ошибка авторизации', auth.message);
             return;
         }
@@ -45,7 +45,6 @@ export default function Login() {
         localStorage.setItem('username', auth.username); // @deprecated
         localStorage.setItem('userUUID', auth.userUUID); // @deprecated
         localStorage.setItem('accessToken', auth.accessToken); // @deprecated
-        // this.$router.push('server-list');
         navigate('ServersList');
     };
 
