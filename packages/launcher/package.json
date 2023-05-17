@@ -7,8 +7,8 @@
     "scripts": {
         "dev": "concurrently -i -n electron,main,preload,renderer -c cyan.bold,blue.bold,yellow.bold,magenta.bold \"npm:start:dev\" \"npm:build:main -- --watch --sourcemap=inline\" \"npm:build:preload -- --watch --sourcemap=inline\" \"vite\"",
         "build": "concurrently -n main,preload,renderer -c blue.bold,yellow.bold,magenta.bold \"npm:build:main\" \"npm:build:preload\" \"npm:build:renderer\" --kill-others-on-fail",
-        "build:main": "esbuild src/main/index.ts --platform=node --bundle --outdir=build/main --external:electron --loader:.png=file",
-        "build:preload": "esbuild src/preload/index.ts --format=iife --platform=node --bundle --outdir=build/preload --external:electron",
+        "build:main": "node build.mjs",
+        "build:preload": "esbuild src/preload/index.ts --platform=node --bundle --outdir=build/preload --external:electron --format=iife",
         "build:renderer": "tsc && vite build",
         "start:dev": "cross-env DEV=true nodemon --watch src --ext ts,tsx --ignore 'src/renderer' --exec electron .",
         "start:prod": "electron .",
@@ -32,6 +32,7 @@
     },
     "homepage": "https://github.com/AuroraTeam/Launcher#readme",
     "devDependencies": {
+        "@aurora-launcher/esbuild-decorators": "^0.0.1",
         "@types/react": "^18.0.18",
         "@types/react-dom": "^18.0.6",
         "@types/semver": "^7.3.8",
@@ -48,12 +49,12 @@
         "eslint": "^8.13.0",
         "eslint-plugin-react": "^7.31.1",
         "import-sort-style-module": "^6.0.0",
+        "minimist": "^1.2.8",
         "nodemon": "^2.0.15",
         "prettier": "^2.7.1",
         "prettier-plugin-import-sort": "^0.0.7",
         "rimraf": "^5.0.0",
         "sass": "^1.55.0",
-        "source-map-support": "^0.5.21",
         "typescript": "^5.0.4",
         "vite": "^4.3.7"
     },
@@ -65,11 +66,13 @@
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.3.0",
         "recoil": "^0.7.5",
+        "reflect-metadata": "^0.1.13",
         "semver": "^7.3.5",
-        "skinview3d": "^3.0.0-alpha.1"
+        "skinview3d": "^3.0.0-alpha.1",
+        "typedi": "^0.10.0"
     },
     "importSort": {
-        ".tsx, .ts": {
+        ".tsx, .ts, .mjs": {
             "style": "module",
             "parser": "typescript"
         }

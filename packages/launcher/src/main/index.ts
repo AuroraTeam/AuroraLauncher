@@ -1,4 +1,4 @@
-import 'source-map-support/register';
+import 'reflect-metadata';
 
 import { Launcher } from './core/Launcher';
 
