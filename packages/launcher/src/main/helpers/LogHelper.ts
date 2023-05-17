@@ -1,15 +1,18 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { appendFileSync } from 'fs';
+import { createWriteStream } from 'fs';
+import { EOL } from 'os';
 import { format } from 'util';
 
 import { StorageHelper } from './StorageHelper';
-
-// TODO Replace logger with winston / pino ?
 
 export class LogHelper {
     static readonly isDevEnabled = process.argv.includes('--dev');
     static readonly isDebugEnabled =
         process.argv.includes('--debug') || process.argv.includes('--dev');
+
+    private static readonly logFileStream = createWriteStream(
+        StorageHelper.logFile,
+        { flags: 'a' }
+    );
 
     static debug(msg: any, ...args: any): void {
         if (!this.isDebugEnabled) return;
@@ -44,23 +47,14 @@ export class LogHelper {
 
     private static log(level: LogLevel, msg: any, ...args: any) {
         if (level === LogLevel.RAW) return this.rawLog(msg, ...args);
-
-        const date = new Date().toLocaleString('ru', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
-
+        const date = new Date().toLocaleString();
         this.rawLog(`${date} [${level.toUpperCase()}] ${msg}`, ...args);
     }
 
     private static rawLog(msg: any, ...args: any) {
-        const massage = format(msg, ...args);
-        console.log(massage);
-        appendFileSync(StorageHelper.logFile, massage + '\n');
+        const message = format(msg, ...args) + EOL;
+        process.stdout.write(message);
+        this.logFileStream.write(message);
     }
 }
 
