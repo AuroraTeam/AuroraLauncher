@@ -4,22 +4,27 @@ import { delimiter, join } from 'path';
 
 import { ClientArguments } from '@aurora-launcher/core';
 import { IpcMainEvent, ipcMain } from 'electron';
-import { Launcher } from 'main/core/Launcher';
+import { IHandleable } from 'main/core/IHandleable';
+import { LauncherWindow } from 'main/core/LauncherWindow';
 import { LogHelper } from 'main/helpers/LogHelper';
 import { StorageHelper } from 'main/helpers/StorageHelper';
 import { coerce, gte, lte } from 'semver';
+import { Service } from 'typedi';
 
 import { GAME_START_EVENT } from '../../common/channels';
 import { Updater } from './Updater';
 
-export class Starter {
-    static setHandler(): void {
+@Service()
+export class Starter implements IHandleable {
+    constructor(private window: LauncherWindow) {}
+
+    initHandlers(): void {
         ipcMain.on(GAME_START_EVENT, (event, clientArgs) =>
-            Starter.startGame(event, clientArgs)
+            this.startGame(event, clientArgs)
         );
     }
 
-    private static async startGame(
+    private async startGame(
         event: IpcMainEvent,
         clientArgs: ClientArguments
     ): Promise<void> {
@@ -33,7 +38,7 @@ export class Starter {
         await this.start(event, clientArgs);
     }
 
-    static async start(
+    async start(
         event: IpcMainEvent,
         clientArgs: ClientArguments
     ): Promise<void> {
@@ -42,10 +47,7 @@ export class Starter {
 
         const clientVersion = coerce(clientArgs.version);
         if (clientVersion === null) {
-            Launcher.window.sendEvent(
-                'textToConsole',
-                'Invalig client version'
-            );
+            this.window.sendEvent('textToConsole', 'Invalig client version');
             LogHelper.error('Invalig client version');
             return;
         }
@@ -77,7 +79,7 @@ export class Starter {
                 }
             });
         } else {
-            Launcher.window.sendEvent('textToConsole', 'classPath is empty');
+            this.window.sendEvent('textToConsole', 'classPath is empty');
             LogHelper.error('classPath is empty');
             return;
         }
@@ -108,12 +110,12 @@ export class Starter {
         });
 
         gameProccess.stdout.on('data', (data: Buffer) => {
-            Launcher.window.sendEvent('textToConsole', data.toString());
+            this.window.sendEvent('textToConsole', data.toString());
             LogHelper.info(data.toString());
         });
 
         gameProccess.stderr.on('data', (data: Buffer) => {
-            Launcher.window.sendEvent('textToConsole', data.toString());
+            this.window.sendEvent('textToConsole', data.toString());
             LogHelper.error(data.toString());
         });
 
@@ -123,7 +125,7 @@ export class Starter {
         });
     }
 
-    private static scanDir(dir: string, list: string[] = []): string[] {
+    private scanDir(dir: string, list: string[] = []): string[] {
         if (fs.statSync(dir).isDirectory()) {
             for (const fdir of fs.readdirSync(dir)) {
                 this.scanDir(join(dir, fdir), list);
@@ -134,7 +136,7 @@ export class Starter {
         return list;
     }
 
-    static gameLauncher(
+    private gameLauncher(
         gameArgs: string[],
         clientArgs: ClientArguments,
         clientVersion: string

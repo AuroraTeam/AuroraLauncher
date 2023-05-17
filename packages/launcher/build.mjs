@@ -11,10 +11,13 @@ console.time('Build successfully');
 const ctx = await context({
     entryPoints: ['src/main/index.ts'],
     bundle: true,
+    sourcemap: true,
     platform: 'node',
+    target: 'node18',
     format: 'cjs',
     outdir: 'build/main',
     external: ['electron'],
+    keepNames: true,
     loader: {
         '.png': 'file',
     },

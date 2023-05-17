@@ -5,19 +5,21 @@ import { BrowserWindow, app, ipcMain } from 'electron';
 import installExtension, {
     REACT_DEVELOPER_TOOLS,
 } from 'electron-extension-installer';
+import { Service } from 'typedi';
 
 import { WINDOW_CLOSE_EVENT, WINDOW_HIDE_EVENT } from '../../common/channels';
 import logo from '../../renderer/runtime/assets/images/logo.png';
 
 const isDev = process.env.DEV === 'true';
 
+@Service()
 export class LauncherWindow {
     private mainWindow?: BrowserWindow;
 
     /**
      * Launcher initialization
      */
-    constructor() {
+    createWindow() {
         // This method will be called when Electron has finished
         // initialization and is ready to create browser windows.
         // Some APIs can only be used after this event occurs.

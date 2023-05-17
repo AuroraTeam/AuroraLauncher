@@ -1,17 +1,30 @@
 import { Starter } from 'main/game/Starter';
+import { Service } from 'typedi';
 
 import { LogHelper } from '../helpers/LogHelper';
 import { StorageHelper } from '../helpers/StorageHelper';
 import { APIManager } from './APIManager';
+import { AuthorizationService } from './AuthorizationService';
 import { LauncherWindow } from './LauncherWindow';
 
+@Service()
 export class Launcher {
-    readonly window = new LauncherWindow();
-    readonly api = new APIManager();
+    constructor(
+        window: LauncherWindow,
+        apiManager: APIManager,
+        authorizationService: AuthorizationService,
 
-    constructor() {
-        Starter.setHandler();
+        starter: Starter
+    ) {
         StorageHelper.createMissing();
+
+        // TODO REMOVE
+        apiManager.initHandlers();
+
+        authorizationService.initHandlers();
+        starter.initHandlers();
+
+        window.createWindow();
         LogHelper.info('Launcher started');
     }
 }

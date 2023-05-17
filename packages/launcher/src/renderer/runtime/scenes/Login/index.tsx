@@ -31,20 +31,18 @@ export default function Login() {
         //         'Ошибка ввода',
         //         'Пароль должен быть не менее 8-ми символов'
         //     );
-        const auth = await launcherAPI.auth(login, password);
-        console.log(auth);
 
-        if (auth instanceof Error) {
-            console.error(auth);
-            showModal('Ошибка авторизации', auth.message);
+        let username;
+        try {
+            username = await launcherAPI.auth(login, password);
+        } catch (error) {
+            console.error(error);
+            showModal('Ошибка авторизации', (error as Error).message);
             return;
         }
 
-        setTitlebarUserText(auth.username);
+        setTitlebarUserText(username);
         showTitlebarUser();
-        localStorage.setItem('username', auth.username); // @deprecated
-        localStorage.setItem('userUUID', auth.userUUID); // @deprecated
-        localStorage.setItem('accessToken', auth.accessToken); // @deprecated
         navigate('ServersList');
     };
 

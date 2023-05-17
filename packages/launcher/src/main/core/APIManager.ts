@@ -1,17 +1,19 @@
 import { AuroraAPI } from '@aurora-launcher/api';
 import { api as apiConfig } from '@config';
 import { ipcMain } from 'electron';
+import { Service } from 'typedi';
 
 import {
-    API_AUTH_HANDLER,
     API_GET_PROFILE_HANDLER,
     API_GET_SERVERS_HANDLER,
     API_GET_STATUS_HANDLER,
 } from '../../common/channels';
+import { IHandleable } from './IHandleable';
 
 // TODO Подумать над реализацией корректной обработки запросов и отлова ошибок
 
-export class APIManager {
+@Service()
+export class APIManager implements IHandleable {
     private api = new AuroraAPI(apiConfig.ws || 'ws://localhost:1370');
     private tryConnect = false;
     private failedСonnection = false;
@@ -25,14 +27,9 @@ export class APIManager {
             .finally(() => {
                 this.tryConnect = true;
             });
-
-        this.initMethods();
     }
 
-    private initMethods() {
-        ipcMain.handle(API_AUTH_HANDLER, (_, login: string, password: string) =>
-            this.errorHandler(() => this.api.auth(login, password))
-        );
+    initHandlers() {
         ipcMain.handle(API_GET_STATUS_HANDLER, () => this.getStatus());
         ipcMain.handle(API_GET_SERVERS_HANDLER, () =>
             this.errorHandler(() => this.api.getServers())
@@ -58,5 +55,9 @@ export class APIManager {
 
     public getUpdates(dir: string) {
         return this.api.getUpdates(dir);
+    }
+
+    public auth(login: string, password: string) {
+        return this.api.auth(login, password);
     }
 }
