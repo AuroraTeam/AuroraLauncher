@@ -10,21 +10,26 @@ import { LauncherWindow } from './LauncherWindow';
 @Service()
 export class Launcher {
     constructor(
-        window: LauncherWindow,
-        apiManager: APIManager,
-        authorizationService: AuthorizationService,
+        private window: LauncherWindow,
+        private apiManager: APIManager,
+        private authorizationService: AuthorizationService,
 
-        starter: Starter
+        private starter: Starter
     ) {
+        this.init();
+    }
+
+    async init() {
         StorageHelper.createMissing();
 
         // TODO REMOVE
-        apiManager.initHandlers();
+        this.apiManager.initHandlers();
+        await this.apiManager.initConnection();
 
-        authorizationService.initHandlers();
-        starter.initHandlers();
+        this.authorizationService.initHandlers();
+        this.starter.initHandlers();
 
-        window.createWindow();
+        this.window.createWindow();
         LogHelper.info('Launcher started');
     }
 }

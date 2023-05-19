@@ -1,4 +1,4 @@
-import { Client, Response, ResponseError } from "aurora-rpc-client"
+import { Client, Events, Response, ResponseError } from "aurora-rpc-client"
 
 import { AuthResponseData } from "../types/AuthResponse"
 import { ProfileResponseData } from "../types/ProfileResponse"
@@ -9,12 +9,12 @@ import { APIError } from "./APIError"
 export class AuroraAPI {
     #clientInstance
 
-    constructor(url?: string) {
-        this.#clientInstance = new Client(url)
+    constructor(url?: string, events?: Events) {
+        this.#clientInstance = new Client(url, events)
     }
 
-    public connect(url?: string) {
-        return this.#clientInstance.connect(url)
+    public connect(url?: string, events?: Events) {
+        return this.#clientInstance.connect(url, events)
     }
 
     public close(code?: number, data?: string) {

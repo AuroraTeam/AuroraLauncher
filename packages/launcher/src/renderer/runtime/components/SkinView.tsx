@@ -15,9 +15,8 @@ export default function SkinView() {
             enableControls: false,
         });
 
-        skinViewer.camera.position.x = -25;
-        skinViewer.camera.position.y = 18;
-        skinViewer.camera.position.z = 46;
+        skinViewer.camera.position.x = -20;
+        skinViewer.camera.position.y = 20;
         skinViewer.zoom = 0.8;
 
         skinViewer.animation = new WalkingAnimation();

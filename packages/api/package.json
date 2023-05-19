@@ -11,7 +11,7 @@
         "require": "./dist/aurora-api-node.cjs"
     },
     "scripts": {
-        "dev": "node build.mjs --watch && tsc --emitDeclarationOnly --watch",
+        "dev": "concurrently -r \"node build.mjs --watch\" \"tsc --emitDeclarationOnly --watch\"",
         "test": "node example/node-example.js",
         "build": "rimraf dist && node build.mjs && tsc --emitDeclarationOnly",
         "prepublishOnly": "npm run build",
@@ -32,10 +32,11 @@
     },
     "homepage": "https://github.com/AuroraTeam/AuroraAPI#readme",
     "dependencies": {
-        "aurora-rpc-client": "^0.2.0"
+        "aurora-rpc-client": "^0.3.0"
     },
     "devDependencies": {
         "@types/ws": "^8.5.3",
+        "concurrently": "^8.0.1",
         "esbuild": "^0.17.19",
         "import-sort-style-module": "^6.0.0",
         "prettier": "^2.4.0",

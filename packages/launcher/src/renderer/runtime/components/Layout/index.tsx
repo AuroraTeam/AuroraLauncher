@@ -11,27 +11,10 @@ export default function Layout() {
     const { showModal } = useModal();
 
     useEffect(() => {
-        launcherAPI.api.getStatus().then((status) => {
-            console.log(status);
+        launcherAPI.api.hasConnected().then((connected) => {
+            if (connected) return setInactive(false);
 
-            switch (status) {
-                case 'connected':
-                    setInactive(false);
-                    break;
-                case 'connecting':
-                    // TODO ?
-                    showModal(
-                        'Неожиданная ошибка',
-                        <>
-                            Если вы увидели эту ошибку, сообщите разработчику
-                            <br />
-                            прикрепив скриншот окна лаунчера
-                        </>
-                    );
-                    break;
-                case 'failure':
-                    showModal('Ошибка подключения!', 'Сервер недоступен');
-            }
+            showModal('Ошибка подключения!', 'Сервер недоступен');
         });
     }, []);
 
