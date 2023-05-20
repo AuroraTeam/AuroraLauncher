@@ -62,15 +62,7 @@ export function ServerPanel() {
     return (
         <div className={classes.window}>
             <div className={classes.info}>
-                <div className={classes.server}>
-                    <div className={classes.title}>{selectedServer.title}</div>
-                    <div className={classes.buttons}>
-                        <button onClick={startGame} disabled={gameStarted}>
-                            Играть
-                        </button>
-                        <button>Настройки</button>
-                    </div>
-                </div>
+                <div className={classes.title}>{selectedServer.title}</div>
                 <div className={classes.status}>
                     <div className={classes.gamers}>
                         Игроков
@@ -83,6 +75,12 @@ export function ServerPanel() {
                         <div className={classes.total}>из 100</div>
                     </div>
                 </div>
+            </div>
+            <div className={classes.buttons}>
+                <button onClick={startGame} disabled={gameStarted}>
+                    Играть
+                </button>
+                <button>Настройки</button>
             </div>
             <If state={showProgress}>
                 <>

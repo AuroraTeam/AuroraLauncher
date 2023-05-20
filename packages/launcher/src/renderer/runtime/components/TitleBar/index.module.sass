@@ -1,14 +1,13 @@
 .titlebar,
-.left,
-.right,
+.titlebar > div,
 .user
     display: flex
     align-items: center
 
 .titlebar
     padding: 8px
-    font-size: 16px
     -webkit-app-region: drag
+    justify-content: space-between
     background: rgba(0, 0, 0, 0.4)
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25)
     button
@@ -16,10 +15,10 @@
         cursor: pointer
         height: 24px
         filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))
-.right
-    margin-left: auto
 .back
     margin-right: 13px
+    &:hover path
+        fill: #ddd
 .hide
     &:hover path
         fill: #2f80ed
@@ -27,8 +26,6 @@
     margin-left: 7px
     &:hover path
         fill: #eb5757
-.title
-    margin-right: auto
 .user
     margin-right: 27px
 .username

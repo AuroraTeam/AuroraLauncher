@@ -6,26 +6,29 @@ import { useModal } from '../../components/Modal/hooks';
 import { useTitlebar } from '../../components/TitleBar/hooks';
 import classes from './index.module.sass';
 
+interface AuthData {
+    [k: string]: string;
+    login: string;
+    password: string;
+}
+
 export default function Login() {
     const { showModal } = useModal();
     const { setTitlebarUserText, showTitlebarUser } = useTitlebar();
     const navigate = useNavigate();
 
-    const auth = async (event: FormEvent) => {
+    const auth = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const formData = new FormData(event.target as HTMLFormElement);
-        const { login, password } = Object.fromEntries(formData) as Record<
-            string,
-            string
-        >;
+        const formData = new FormData(event.currentTarget);
+        const { login, password } = Object.fromEntries(formData) as AuthData;
 
         // Валидацию можно делать как хошш))
-        // if (login.length < 3)
-        //     return showModal(
-        //         'Ошибка ввода',
-        //         'Логин должен быть не менее 3-ёх символов'
-        //     );
+        if (login.length < 3)
+            return showModal(
+                'Ошибка ввода',
+                'Логин должен быть не менее 3-ёх символов'
+            );
         // if (password.length < 8)
         //     return showModal(
         //         'Ошибка ввода',
