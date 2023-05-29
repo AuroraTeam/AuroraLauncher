@@ -1,7 +1,7 @@
 import { access, mkdir, writeFile } from "fs/promises";
 import path, { resolve } from "path";
 
-import { ProfileLibrary } from "@root/components/profiles/utils/ProfileConfig";
+import { ProfileLibrary } from "@aurora-launcher/core";
 import {
     HttpHelper,
     JsonHelper,
