@@ -1,18 +1,19 @@
 import { createWriteStream } from "fs"
 import { mkdir, rm } from "fs/promises"
-import { dirname, resolve } from "path"
+import { dirname } from "path"
 import { URL } from "url"
 
 import got, { Progress } from "got"
 import pMap from "p-map"
 
-import { JsonData, JsonHelper, StorageHelper } from "."
+import { HashHelper, JsonData, JsonHelper, StorageHelper } from "."
 
 type onProgressFunction = (progress: Progress) => void
 
-export interface SavedFile {
-    path: string
-    url: string
+export interface File {
+    sourceUrl: string
+    destinationPath: string
+    sha1?: string
 }
 
 export class HttpHelper {
@@ -95,13 +96,13 @@ export class HttpHelper {
 
     /**
      * Скачивание файлов
-     * @param urls - итерируемый объект, содержащий ссылки на файлы (без домена)
-     * @param site - домен сайта, с которого будут качаться файлы
-     * @param dirName - папка в которую будут сохранены все файлы
+     * @param filesList - список файлов
+     * @param options - список опций:
+     * @param options.onProgress - коллбэк, в который передаётся текущий прогресс загрузки, если объявлен
+     * @param options.saveToTempFile - сохранять во временный файл, по умолчанию `false`
      */
     public static async downloadFiles(
-        filesList: SavedFile[],
-        dirName: string,
+        filesList: File[],
         options: {
             onProgress?: onProgressFunction
             afterDownload?: () => void
@@ -110,8 +111,16 @@ export class HttpHelper {
         await pMap(
             filesList,
             async (file) => {
-                const filePath = resolve(dirName, file.path)
-                await this.download(file.url, filePath, options.onProgress)
+                if (await this.verifyFileHash(file)) {
+                    if (options.afterDownload) options.afterDownload()
+                    return
+                }
+
+                await this.download(
+                    file.sourceUrl,
+                    file.destinationPath,
+                    options.onProgress
+                )
                 if (options.afterDownload) options.afterDownload()
             },
             { concurrency: this.concurrency }
@@ -151,5 +160,18 @@ export class HttpHelper {
 
             file.once("close", () => resolve(filePath))
         })
+    }
+
+    private static async verifyFileHash(file: File) {
+        if (!file.sha1) return false
+
+        let currentHash
+        try {
+            currentHash = await HashHelper.getSHA1fromFile(file.destinationPath)
+        } catch (error) {
+            return false
+        }
+
+        return file.sha1 === currentHash
     }
 }
