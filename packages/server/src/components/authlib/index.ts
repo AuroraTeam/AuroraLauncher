@@ -1,5 +1,5 @@
-import crypto from "crypto";
-import fs from "fs";
+import { createSign, generateKeyPairSync } from "crypto";
+import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
 import { LogHelper, StorageHelper } from "@root/utils";
@@ -16,32 +16,25 @@ export class AuthlibManager {
     private publicKey: string;
 
     constructor(private readonly langManager: LangManager) {
-        if (this.keysExists()) {
+        try {
+            this.readAndSetKeys();
             LogHelper.info(langManager.getTranslate.AuthlibManager.keysExists);
-        } else {
+        } catch (error) {
             this.generateKeys();
+            this.readAndSetKeys();
         }
-
-        this.setKeys();
     }
 
-    private keysExists() {
-        return (
-            fs.existsSync(this.privateKeyPath) &&
-            fs.existsSync(this.publicKeyPath)
-        );
-    }
-
-    private setKeys(): void {
-        this.privateKey = fs.readFileSync(this.privateKeyPath);
-        this.publicKey = fs.readFileSync(this.publicKeyPath).toString();
+    private readAndSetKeys() {
+        this.privateKey = readFileSync(this.privateKeyPath);
+        this.publicKey = readFileSync(this.publicKeyPath).toString();
     }
 
     /**
      * It generates a pair of RSA keys, saves them to the file system.
      */
-    private generateKeys(): void {
-        const keys = crypto.generateKeyPairSync("rsa", {
+    private generateKeys() {
+        const keys = generateKeyPairSync("rsa", {
             modulusLength: 4096,
             publicKeyEncoding: {
                 type: "spki",
@@ -53,12 +46,12 @@ export class AuthlibManager {
             },
         });
 
-        fs.writeFileSync(this.privateKeyPath, keys.privateKey);
+        writeFileSync(this.privateKeyPath, keys.privateKey);
         LogHelper.info(
             this.langManager.getTranslate.AuthlibManager.privateKeySaved
         );
 
-        fs.writeFileSync(this.publicKeyPath, keys.publicKey);
+        writeFileSync(this.publicKeyPath, keys.publicKey);
         LogHelper.info(
             this.langManager.getTranslate.AuthlibManager.privateKeySaved
         );
@@ -70,9 +63,7 @@ export class AuthlibManager {
      * @returns The signature of the data.
      */
     public getSignature(data: string): string {
-        const sign = crypto.createSign("sha1");
-        sign.update(data);
-        sign.end();
+        const sign = createSign("sha1").end(data);
         return sign.sign(this.privateKey, "base64");
     }
 
