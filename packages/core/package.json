@@ -54,7 +54,7 @@
         "typescript": "^5.0.4"
     },
     "dependencies": {
-        "got": "^12.6.0",
+        "got": "^12.6.1",
         "p-map": "^6.0.0"
     }
 }
