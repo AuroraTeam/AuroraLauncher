@@ -1,4 +1,4 @@
-import { access, mkdir, writeFile } from "fs/promises";
+import { mkdir, writeFile } from "fs/promises";
 import path, { resolve } from "path";
 
 import { ProfileLibrary } from "@aurora-launcher/core";
@@ -122,13 +122,6 @@ export class MojangManager extends AbstractDownloadManager {
             `${assetIndex.id}.json`
         );
 
-        try {
-            await access(indexPath);
-            LogHelper.info("Assets already downloaded");
-            return true;
-        } catch {
-            // Файл не существует (либо нет доступа)
-        }
         LogHelper.info("Downloading assets");
 
         const assetsFile = await HttpHelper.getResource(assetIndex.url);
@@ -138,7 +131,7 @@ export class MojangManager extends AbstractDownloadManager {
 
         const assetsHashes = Object.values(objects)
             .sort((a, b) => b.size - a.size)
-            .map(({ hash }) => `${hash.slice(0, 2)}/${hash}`);
+            .map(({ hash }) => ({ hash, path: `${hash.slice(0, 2)}/${hash}` }));
 
         const progressBar = ProgressHelper.getProgress(
             "{bar} {percentage}% {value}/{total}",
@@ -152,11 +145,14 @@ export class MojangManager extends AbstractDownloadManager {
         // );
         try {
             await HttpHelper.downloadFiles(
-                assetsHashes.map((hash) => ({
-                    path: hash,
-                    url: `${this.#assetsLink}${hash}`,
+                assetsHashes.map((asset) => ({
+                    destinationPath: resolve(
+                        StorageHelper.assetsObjectsDir,
+                        asset.path
+                    ),
+                    sourceUrl: `${this.#assetsLink}${asset.path}`,
+                    sha1: asset.hash,
                 })),
-                StorageHelper.assetsObjectsDir,
                 {
                     afterDownload() {
                         progressBar.increment();
@@ -207,11 +203,14 @@ export class MojangManager extends AbstractDownloadManager {
 
         try {
             await HttpHelper.downloadFiles(
-                librariesList.map((l) => ({
-                    path: l.path,
-                    url: `${this.#librariesLink}${l.path}`,
+                librariesList.map((library) => ({
+                    destinationPath: resolve(
+                        StorageHelper.librariesDir,
+                        library.path
+                    ),
+                    sourceUrl: `${this.#librariesLink}${library.path}`,
+                    sha1: library.sha1,
                 })),
-                StorageHelper.librariesDir,
                 {
                     afterDownload() {
                         progressBar.increment();

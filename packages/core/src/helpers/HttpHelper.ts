@@ -1,5 +1,4 @@
-import { createWriteStream } from "fs"
-import { mkdir, rm } from "fs/promises"
+import { mkdir, writeFile } from "fs/promises"
 import { dirname } from "path"
 import { URL } from "url"
 
@@ -141,25 +140,16 @@ export class HttpHelper {
     ): Promise<string> {
         await mkdir(dirname(filePath), { recursive: true })
 
-        return new Promise((resolve, reject) => {
-            const fileStream = got.stream(url, { throwHttpErrors: false })
+        const req = got(url)
 
-            if (onProgress !== undefined) {
-                fileStream.on("data", () =>
-                    onProgress(fileStream.downloadProgress)
-                )
-            }
+        if (onProgress) {
+            req.on("downloadProgress", onProgress)
+        }
 
-            fileStream.once("error", async (err) => {
-                await rm(filePath)
-                reject(err)
-            })
+        const buffer = await req.buffer()
+        await writeFile(filePath, buffer)
 
-            const file = createWriteStream(filePath)
-            fileStream.pipe(file)
-
-            file.once("close", () => resolve(filePath))
-        })
+        return filePath
     }
 
     private static async verifyFileHash(file: File) {

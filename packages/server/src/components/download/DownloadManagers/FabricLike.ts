@@ -32,11 +32,13 @@ export class FabricLikeManager extends MojangManager {
 
         try {
             await HttpHelper.downloadFiles(
-                librariesList.map((l) => ({
-                    path: l.path,
-                    url: `${l.url}${l.path}`,
+                librariesList.map((library) => ({
+                    destinationPath: resolve(
+                        StorageHelper.librariesDir,
+                        library.path
+                    ),
+                    sourceUrl: `${library.url}${library.path}`,
                 })),
-                StorageHelper.librariesDir,
                 {
                     afterDownload() {
                         progressBar.increment();
