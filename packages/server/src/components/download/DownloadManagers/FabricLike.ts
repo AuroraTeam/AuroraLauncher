@@ -1,6 +1,6 @@
 import { resolve } from "path";
 
-import { ProfileLibrary } from "@root/components/profiles/utils/ProfileConfig";
+import { ProfileLibrary } from "@aurora-launcher/core";
 import {
     HashHelper,
     HttpHelper,
