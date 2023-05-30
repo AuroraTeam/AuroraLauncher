@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Roboto:wght@300;400;700&display=swap')
+
+body
+    background-image: url('../images/background.png')
+    font-family: 'Comfortaa', cursive
+    color: #fff
+    margin: 0
+
+main
+    height: calc(100vh - 40px)
+
+*
+    box-sizing: border-box
+    user-select: none
+
+button
+    font-family: 'Comfortaa', cursive
+    background-color: transparent
+    padding: 0
+    border: 0
+    outline: 0
+    &:hover
+        cursor: pointer
+
+/*
+ * Кастомизация скролла
+ * Пример кода взят отсюда
+ * https://www.cssscript.com/best-custom-scrollbar-javascript-libraries/
+ */
+
+/* width */
+::-webkit-scrollbar
+    width: 3px
+    height: 3px
+
+/* Handle */
+::-webkit-scrollbar-thumb
+    background: rgba(41, 41, 41, 0.9)
+    border-radius: 1px
+
+::-webkit-scrollbar-corner
+    display: none
+
+[disabled]
+    opacity: 0.75

@@ -1,0 +1,140 @@
+{
+    "LauncherServer": {
+        "initEnd": "Initialization end"
+    },
+    "LangManager": {
+        "init": "LangManager initialized. Selected language: \"%s\"",
+        "strNotFound": "String \"%s\" not found!",
+        "langNotFound": "Language \"%s\" not found!",
+        "changeLang": "Language has been changed. Full change requires restarting LauncherServer"
+    },
+    "CommandsManager": {
+        "cmdNotFound": "Command \"%s\" not found!",
+        "invokeCmd": "Invoke %s command",
+        "commands": {
+            "basic": {
+                "AboutCommand": "Displays product information",
+                "HelpCommand": "Displays a list of commands",
+                "LangCommand": "Switches the language in use",
+                "StatusCommand": "Displays server status",
+                "StopCommand": "Turns off the LauncherServer"
+            },
+            "updates": {
+                "DownloadAssetsCommand": "Download assets",
+                "DownloadClientCommand": "Download client",
+                "DownloadLibrariesCommand": "Download libraries",
+                "SyncAllCommand": "Synchronise updates & profiles folders",
+                "SyncProfilesCommand": "Synchronise profiles folder",
+                "SyncUpdatesCommand": "Synchronise updates folder"
+            }
+        }
+    },
+    "DownloadManager": {
+        "dirExist": "A folder with this name already exists!",
+        "MojangManager": {
+            "client": {
+                "download": "Client downloading, please wait...",
+                "downloadErr": "Error downloading the client!",
+                "success": "Client successfully downloaded!"
+            },
+            "info": {
+                "errVerParsing": "Error in parsing version data",
+                "verNotFound": "Version %s not found",
+                "errClientParsing": "Error in parsing client data"
+            }
+        },
+        "FabricManager": {
+            "client": {
+                "download": "Downloading Fabric libraries, please wait...",
+                "downloadErr": "Error downloaded Fabric libraries!",
+                "success": "Libraries downloaded successfully!"
+            },
+            "info": {
+                "errJsonParsing": "Error in parsing Json data",
+                "verNotFound": "Fabric version %s not found",
+                "errClientParsing": "Error in parsing client data"
+            }
+        },
+        "QuiltManager": {
+            "client": {
+                "download": "Downloading Quilt libraries, please wait...",
+                "downloadErr": "Error downloaded Quilt libraries!",
+                "success": "Libraries downloaded successfully!"
+            },
+            "info": {
+                "errJsonParsing": "Error in parsing Json data",
+                "errClientParsing": "Error in parsing client data"
+            }
+        },
+        "ForgeManager": {
+            "client": {
+                "download": "Downloading Forge libraries, please wait...",
+                "downloadErr": "Error downloading Forge libraries!",
+                "success": "Libraries downloaded successfully!"
+            },
+            "info": {
+                "errJsonParsing": "Error parsing Json data",
+                "verNotFound": "Forge version %s not found",
+                "errClientParsing": "Error parsing client data"
+            }
+        },
+        "MirrorManager": {
+            "client": {
+                "notFound": "Client not found!",
+                "download": "Client found, downloading ...",
+                "downloadErr": "Error downloading client!",
+                "unpacking": "Client loaded, unpacking ...",
+                "unpackingErr": "Error unpacking client!",
+                "profileErr": "Error loading the profile!",
+                "success": "Client loaded successfully!"
+            }
+        }
+    },
+    "UpdateManager": {
+        "check": "Checking for new version...",
+        "checkEnd": "No updates available",
+        "checkErr": "Can't find version data",
+        "newUpdateAvaliable": "New version available: %s",
+        "newUpdate": "The latest LauncherServer version is %s, but you have %s. The latest version was built on %s",
+        "updating": "Updating LauncherServer...",
+        "downloadingLatestVer": "Downloading latest version of current branch...",
+        "downloadEnd": "Download complete! Please restart LauncherServer."
+    },
+    "ClientsManager": {
+        "sync": "Syncing clients dir",
+        "syncTime": "Syncing \"%s\" - %dms",
+        "syncEnd": "Syncing clients dir end",
+        "syncSkip": "Clients dir is empty. Skip sync"
+    },
+    "ProgressHelper": {
+        "loading": "{bar} {percentage}%",
+        "download": "{bar} {percentage}% | Remaining: {eta_formatted} | Speed: {speed}/s | {value_formatted}/{total_formatted} | {filename}"
+    },
+    "ProfilesManager": {
+        "sync": "Syncing profiles dir",
+        "syncEnd": "Syncing profiles dir end",
+        "syncSkip": "Profiles dir empty. Skip sync",
+        "loadingErr": "Json syntax broken. Try fix or delete file profiles/%s"
+    },
+    "AuthManager": {
+        "invalidProvider": "Invalid provider %s in the auth config"
+    },
+    "AuthlibManager": {
+        "keysExists": "Keys exists, skip generate",
+        "privateKeySaved": "Private key saved",
+        "publicKeySaved": "Public key saved"
+    },
+    "WebSocketManager": {
+        "certNotFound": "Certificate file not found",
+        "keyNotFound": "Key file not found"
+    },
+    "ModulesManager": {
+        "loadingStart": "Modules loading start...",
+        "loadingEnd": "Modules loading ended. Total time: %d ms.",
+        "loadingSkip": "Modules folder empty. Skip loading",
+        "loadingErr": "An error occurred while loading modules",
+        "downloadModuleDependencies": "Not all dependencies are installed for %s module, installing...",
+        "buildModule": "%s module not builded, building...",
+        "moduleLoadingErr": "An error occurred when trying to load the %s module."
+    }
+}

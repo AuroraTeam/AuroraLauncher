@@ -1,77 +1,14 @@
 {
-    "name": "auroralauncher-launcherserver",
-    "version": "0.0.3-dev",
-    "description": "LauncherServer for AuroraLauncher",
-    "keywords": [
-        "minecraft",
-        "launcher"
+    "name": "aurora-launcher",
+    "private": true,
+    "workspaces": [
+        "packages/*"
     ],
-    "homepage": "https://aurora-launcher.ru",
-    "bugs": {
-        "url": "https://github.com/AuroraTeam/LauncherServer/issues"
-    },
-    "repository": "github:aurorateam/launcherserver",
-    "license": "GPL-3.0",
-    "author": "AuroraTeam",
-    "contributors": [
-        "JoCat (https://github.com/JoCat)",
-        "LoomeL (https://github.com/LoomeL)",
-        "FIXxp (https://github.com/FIXxp)"
-    ],
-    "main": "dist/LauncherServer.js",
     "scripts": {
-        "build:dev": "esbuild src/LauncherServer.ts --platform=node --target=node16 --bundle --outdir=dist --sourcemap",
-        "build:prod": "esbuild src/LauncherServer.ts --platform=node --target=node16 --bundle --outdir=dist --sourcemap=inline --minify",
-        "build:bin": "pkg dist/LauncherServer.js -t node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist --compress GZip",
-        "clean": "rimraf dist",
-        "prettier": "prettier --config .prettierrc.json --write src",
-        "lint": "eslint . --ext .ts",
-        "lint:fix": "eslint . --ext .ts --fix",
-        "start": "node ."
+        "dev": "concurrently -i -n server,launcher,core,api \"npm:dev -w packages/server\" \"npm:dev -w packages/launcher\" \"npm:dev -w packages/core\" \"npm:dev -w packages/api\"",
+        "build:libs": "npm run build -w packages/api -w packages/core"
     },
     "devDependencies": {
-        "@types/adm-zip": "^0.4.34",
-        "@types/cli-progress": "^3.9.2",
-        "@types/lodash": "^4.14.172",
-        "@types/node": "^16.11.26",
-        "@types/rimraf": "^3.0.2",
-        "@types/semver": "^7.3.8",
-        "@types/uuid": "^8.3.1",
-        "@types/ws": "^8.5.3",
-        "@typescript-eslint/eslint-plugin": "^5.16.0",
-        "@typescript-eslint/parser": "^5.16.0",
-        "esbuild": "^0.14.28",
-        "eslint": "^8.12.0",
-        "import-sort-style-module": "^6.0.0",
-        "pkg": "^5.5.2",
-        "prettier": "^2.4.0",
-        "prettier-plugin-import-sort": "0.0.7",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.4.3"
-    },
-    "dependencies": {
-        "@auroralauncher/core": "^0.3.0",
-        "adm-zip": "^0.5.6",
-        "chalk": "^5.0.1",
-        "class-transformer": "^0.5.1",
-        "cli-progress": "^3.9.1",
-        "lodash": "^4.17.21",
-        "p-map": "^5.1.0",
-        "raw-body": "^2.4.1",
-        "reflect-metadata": "^0.1.13",
-        "semver": "^7.3.5",
-        "strip-ansi": "^7.0.1",
-        "uuid": "^8.3.2",
-        "ws": "^8.5.0"
-    },
-    "optionalDependencies": {
-        "bufferutil": "^4.0.3",
-        "utf-8-validate": "^5.0.4"
-    },
-    "importSort": {
-        ".ts": {
-            "style": "module",
-            "parser": "typescript"
-        }
+        "concurrently": "^8.0.1"
     }
 }

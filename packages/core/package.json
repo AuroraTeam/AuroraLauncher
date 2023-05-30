@@ -1,0 +1,60 @@
+{
+    "name": "@aurora-launcher/core",
+    "version": "0.10.0",
+    "description": "Base library for Aurora Launcher",
+    "type": "commonjs",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js"
+    },
+    "scripts": {
+        "dev": "tsup --watch",
+        "build": "tsup",
+        "prettier": "prettier --write src",
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "npm run lint -- --fix",
+        "prepublishOnly": "npm run build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AuroraTeam/LauncherCore.git"
+    },
+    "author": "AuroraTeam",
+    "contributors": [
+        "JoCat (https://github.com/JoCat)"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/AuroraTeam/LauncherCore/issues"
+    },
+    "homepage": "https://github.com/AuroraTeam/LauncherCore#readme",
+    "importSort": {
+        ".js, .ts": {
+            "style": "module",
+            "parser": "typescript"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "devDependencies": {
+        "@tsconfig/node18": "^2.0.1",
+        "@tsconfig/strictest": "^2.0.1",
+        "@types/node": "^18.15.0",
+        "@typescript-eslint/eslint-plugin": "^5.41.0",
+        "@typescript-eslint/parser": "^5.41.0",
+        "eslint": "^8.8.0",
+        "import-sort-style-module": "^6.0.0",
+        "prettier": "^2.5.1",
+        "prettier-plugin-import-sort": "0.0.7",
+        "tsup": "^6.6.3",
+        "typescript": "^5.0.4"
+    },
+    "dependencies": {
+        "got": "^12.6.1",
+        "p-map": "^6.0.0"
+    }
+}
