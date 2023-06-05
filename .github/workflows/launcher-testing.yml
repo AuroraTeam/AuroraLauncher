@@ -1,4 +1,4 @@
-name: Testing Build
+name: Launcher - Testing Build
 
 on:
   push:
@@ -12,11 +12,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            build_os: 'linux'
+            build_os: "linux"
           - os: windows-latest
-            build_os: 'win32'
+            build_os: "win32"
           - os: macos-latest
-            build_os: 'darwin'
+            build_os: "darwin"
 
     steps:
       - uses: actions/checkout@v2

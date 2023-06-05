@@ -1,14 +1,11 @@
 import { esbuildDecorators } from "@aurora-launcher/esbuild-decorators";
-import { context } from "esbuild";
+import { build, context } from "esbuild";
 import minimist from "minimist";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { _, watch, ...args } = minimist(process.argv.slice(2));
 
-console.log("Build...");
-console.time("Build successfully");
-
-const ctx = await context({
+const options = {
     platform: "node",
     target: "node18",
     bundle: true,
@@ -17,12 +14,14 @@ const ctx = await context({
     entryPoints: ["src/app.ts"],
     outdir: "dist",
     ...args,
-}).catch(() => process.exit(1));
-console.timeEnd("Build successfully");
+};
 
 if (watch) {
-    console.log("Watching...");
+    const ctx = await context(options).catch(() => process.exit(1));
     await ctx.watch();
 } else {
-    ctx.dispose();
+    console.log("Build...");
+    console.time("Build successfully");
+    await build(options).catch(() => process.exit(1));
+    console.timeEnd("Build successfully");
 }

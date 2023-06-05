@@ -1,0 +1,32 @@
+name: LaunchServer - Testing Build
+
+on:
+  push:
+    branches: [testing]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Download dependencies
+        run: npm i
+
+      - name: Build LauncherServer
+        run: |
+          npm run build:libs
+          npm run build:dev -w packages/server
+          npm run build:bin -w packages/server
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: LauncherServer Testing
+          path: packages/server/dist
