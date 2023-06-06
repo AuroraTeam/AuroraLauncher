@@ -1,14 +1,15 @@
-export interface LauncherServerModule {
+export interface ILauncherServerModule {
     name: string;
     version: string;
     description: string;
     author: string;
+    dependencies: Record<string, string>;
 
-    getInfo(): ModuleInfo;
+    getInfo(): IModuleInfo;
     init(): void;
 }
 
-export interface ModuleInfo {
+export interface IModuleInfo {
     name: string;
     version: string;
     description: string;
