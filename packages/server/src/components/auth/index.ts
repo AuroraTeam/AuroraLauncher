@@ -17,7 +17,7 @@ export class AuthManager {
         providers: Record<string, AuthProviderConstructor>
     ): void {
         Object.entries(providers).forEach(([providerName, provider]) => {
-            this.authProviders.set(providerName, provider); 
+            this.authProviders.set(providerName, provider);
         });
     }
 
