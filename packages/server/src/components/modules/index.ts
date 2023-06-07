@@ -3,6 +3,7 @@ import path from "path";
 
 import { LauncherServer } from "@root/LauncherServer";
 import {
+    IDependencies,
     ILauncherServerModule,
     IModuleInfo,
     LogHelper,
@@ -17,19 +18,27 @@ import { LangManager } from "../langs";
 @singleton()
 @injectable()
 export class ModulesManager {
-    private static readonly modulesList = new Map<
+    private static readonly modulesList: Map<
         IModuleInfo,
         ILauncherServerModule[]
-    >();
+    > = new Map();
     private readonly moduleQueue: string[] = [];
-    private readonly pendingDependencies: Map<string, string> = new Map();
+    private readonly pendingDependencies: Map<string, IDependencies> =
+        new Map();
 
     constructor(
         private readonly langManager: LangManager,
         @inject(delay(() => LauncherServer))
         private readonly app: LauncherServer
     ) {
-        this.loadModules()
+        const startTime = Date.now();
+
+        this.loadModules().then(() => {
+            LogHelper.info(
+                this.langManager.getTranslate.ModulesManager.loadingEnd,
+                Date.now() - startTime
+            );
+        });
     }
 
     /**
@@ -40,7 +49,6 @@ export class ModulesManager {
             LogHelper.info(
                 this.langManager.getTranslate.ModulesManager.loadingStart
             );
-            const startTime = Date.now();
 
             const files = await fs.readdir(StorageHelper.modulesDir, {
                 withFileTypes: true,
@@ -58,11 +66,6 @@ export class ModulesManager {
 
             this.moduleQueue.push(...moduleFiles);
             await this.processModuleQueue();
-
-            LogHelper.info(
-                this.langManager.getTranslate.ModulesManager.loadingEnd,
-                Date.now() - startTime
-            );
         } catch (error) {
             LogHelper.debug(error.message);
             LogHelper.error(
@@ -82,6 +85,8 @@ export class ModulesManager {
                 await this.loadModule(moduleName);
             }
         }
+
+        await this.checkPendingDependencies();
     }
 
     /**
@@ -90,6 +95,11 @@ export class ModulesManager {
      */
     private async loadModule(moduleName: string): Promise<void> {
         try {
+            if (this.hasModule(moduleName)) {
+                LogHelper.debug(`Модуль "${moduleName}" уже загружен.`);
+                return;
+            }
+
             const modulePath = path.resolve(
                 StorageHelper.modulesDir,
                 moduleName
@@ -99,27 +109,29 @@ export class ModulesManager {
 
             if (!this.isValidModule(module)) {
                 //TODO: LOG
-                return LogHelper.dev("invalid");
-            }
-
-            const dependencies = module.getInfo().dependencies || {};
-            if (!this.areDependenciesLoaded(dependencies)) {
-                this.pendingDependencies.set(
-                    moduleName,
-                    JSON.stringify(dependencies)
-                );
+                LogHelper.dev("invalid");
                 return;
             }
 
+            const dependencies = module.getInfo().dependencies || {};
+
+            if (Object.keys(dependencies).length > 0) {
+                if (!this.areDependenciesLoaded(dependencies)) {
+                    this.pendingDependencies.set(moduleName, dependencies);
+                    return;
+                }
+
+                if (!this.verifyDependencyVersions(moduleName, dependencies)) {
+                    return;
+                }
+            }
+
             if (!ModulesManager.modulesList.has(module.getInfo())) {
-                this.verifyDependencyVersions(moduleName, dependencies);
                 ModulesManager.modulesList.set(
                     module.getInfo(),
                     new module().init(this.app)
                 );
             }
-
-            this.checkPendingDependencies();
         } catch (error) {
             LogHelper.debug(error.message);
             LogHelper.error(
@@ -137,12 +149,21 @@ export class ModulesManager {
     private areDependenciesLoaded(
         dependencies: Record<string, string>
     ): boolean {
-        for (const dependency in dependencies) {
-            if (!this.isDependencyLoaded(dependency)) {
-                return false;
-            }
-        }
-        return true;
+        const unloadedDependencies = this.getUnloadedDependencies(dependencies);
+        return unloadedDependencies.length === 0;
+    }
+
+    /**
+     * Получает список незагруженных зависимостей
+     * @param {Record<string, string>} dependencies - Зависимости модуля
+     * @returns {string[]} Массив незагруженных зависимостей
+     */
+    private getUnloadedDependencies(
+        dependencies: Record<string, string>
+    ): string[] {
+        return Object.keys(dependencies).filter(
+            (dependency) => !this.isDependencyLoaded(dependency)
+        );
     }
 
     /**
@@ -153,12 +174,7 @@ export class ModulesManager {
     private isDependencyLoaded(dependency: string): boolean {
         const [dependencyName] = dependency.split("@");
 
-        for (const [moduleInfo] of ModulesManager.modulesList) {
-            if (moduleInfo.name === dependencyName) {
-                return true;
-            }
-        }
-        return false;
+        return this.hasModule(dependencyName)
     }
 
     /**
@@ -177,7 +193,7 @@ export class ModulesManager {
             "description" in moduleInfo &&
             "author" in moduleInfo &&
             typeof module.prototype.init === "function"
-        )
+        );
     }
 
     /**
@@ -188,41 +204,46 @@ export class ModulesManager {
     private verifyDependencyVersions(
         moduleName: string,
         dependencies: Record<string, string>
-    ): void {
-        for (const dependency in dependencies) {
-            const [dependencyName, dependencyRange] = dependency.split("@");
+    ): boolean {
+        for (const [dependency, dependencyRange] of Object.entries(
+            dependencies
+        )) {
+            const [dependencyName] = dependency.split("@");
 
             for (const [moduleInfo] of ModulesManager.modulesList) {
                 if (moduleInfo.name === dependencyName) {
                     const dependencyVersion = moduleInfo.version;
 
                     if (!satisfies(dependencyVersion, dependencyRange)) {
-                        return LogHelper.error(
-                            `Модуль "${moduleName}" требует версию "${dependency}" ${dependencyRange}, но найдена версия ${dependencyVersion}.`
+                        LogHelper.error(
+                            `Модуль "${moduleName}" требует версию "${dependencyName}: ${dependencyRange}", но найдена версия ${dependencyVersion}.`
                         );
+                        return false;
                     }
 
-                    return;
+                    return true;
                 }
             }
-
-            LogHelper.error(`Модуль "${moduleName}" не найдена зависимость "${dependency}".`);
         }
     }
 
     /**
      * Проверяет и загружает модули с ожидающими зависимостями
      */
-    private checkPendingDependencies(): void {
-        for (const moduleName in this.pendingDependencies) {
-            const dependencies = JSON.parse(
-                this.pendingDependencies.get(moduleName)
-            );
+    private async checkPendingDependencies(): Promise<void> {
+        for (const [moduleName, dependencies] of this.pendingDependencies) {
+            const unloadedDependencies =
+                this.getUnloadedDependencies(dependencies);
 
-            if (this.areDependenciesLoaded(dependencies)) {
+            if (unloadedDependencies.length > 0) {
+                LogHelper.error(
+                    `Модуль "${moduleName}" не нашел зависимости: ${unloadedDependencies.join(
+                        ", "
+                    )}.`
+                );
+            } else {
                 this.pendingDependencies.delete(moduleName);
-                this.verifyDependencyVersions(moduleName, dependencies);
-                this.loadModule(moduleName);
+                await this.loadModule(moduleName);
             }
         }
     }
@@ -236,5 +257,16 @@ export class ModulesManager {
         ModulesManager.modulesList.forEach((value, key) => {
             LogHelper.info(`${chalk.bold(key.name)} - ${key.description}`);
         });
+    }
+
+    /**
+     * Проверяет наличие загруженного модуля
+     * @param moduleName - Имя модуля
+     * @returns true, если модуль загружен; в противном случае - false
+     */
+    private hasModule(moduleName: string): boolean {
+        return Array.from(ModulesManager.modulesList.keys()).some(
+            (moduleInfo) => moduleInfo.name === moduleName
+        );
     }
 }
