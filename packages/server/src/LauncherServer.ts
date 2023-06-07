@@ -59,17 +59,12 @@ export class LauncherServer {
     private _ProfilesManager: ProfilesManager;
     private _AuthlibManager: AuthlibManager;
 
-    /**
-     * It initializes the LauncherServer.
-     */
     constructor() {
         StorageHelper.validate();
-
         LogHelper.printVersion();
 
         LogHelper.info("Initialization start");
-        this.init();
-
+        this.init()
         LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd);
     }
 
@@ -127,7 +122,7 @@ export class LauncherServer {
     }
 
     /**
-     * It reload the LauncherServer.
+     * Функция для перезагрузки LauncherSever'а
      */
     public reload() {
         LogHelper.info("Reload LaunchServer");

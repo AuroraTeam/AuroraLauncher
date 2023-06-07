@@ -23,8 +23,6 @@ export class ModulesManager {
         ILauncherServerModule[]
     > = new Map();
     private readonly moduleQueue: string[] = [];
-    private readonly pendingDependencies: Map<string, IDependencies> =
-        new Map();
 
     constructor(
         private readonly langManager: LangManager,
@@ -85,8 +83,6 @@ export class ModulesManager {
                 await this.loadModule(moduleName);
             }
         }
-
-        await this.checkPendingDependencies();
     }
 
     /**
@@ -113,19 +109,6 @@ export class ModulesManager {
                 return;
             }
 
-            const dependencies = module.getInfo().dependencies || {};
-
-            if (Object.keys(dependencies).length > 0) {
-                if (!this.areDependenciesLoaded(dependencies)) {
-                    this.pendingDependencies.set(moduleName, dependencies);
-                    return;
-                }
-
-                if (!this.verifyDependencyVersions(moduleName, dependencies)) {
-                    return;
-                }
-            }
-
             if (!ModulesManager.modulesList.has(module.getInfo())) {
                 ModulesManager.modulesList.set(
                     module.getInfo(),
@@ -139,42 +122,6 @@ export class ModulesManager {
                 moduleName
             );
         }
-    }
-
-    /**
-     * Проверяет, все ли зависимости загружены
-     * @param {Record<string, string>} dependencies - Зависимости модуля
-     * @returns {boolean} true, если все зависимости загружены; в противном случае - false
-     */
-    private areDependenciesLoaded(
-        dependencies: Record<string, string>
-    ): boolean {
-        const unloadedDependencies = this.getUnloadedDependencies(dependencies);
-        return unloadedDependencies.length === 0;
-    }
-
-    /**
-     * Получает список незагруженных зависимостей
-     * @param {Record<string, string>} dependencies - Зависимости модуля
-     * @returns {string[]} Массив незагруженных зависимостей
-     */
-    private getUnloadedDependencies(
-        dependencies: Record<string, string>
-    ): string[] {
-        return Object.keys(dependencies).filter(
-            (dependency) => !this.isDependencyLoaded(dependency)
-        );
-    }
-
-    /**
-     * Проверяет, загружена ли зависимость
-     * @param {string} dependency - Зависимость
-     * @returns {boolean} true, если зависимость загружена; в противном случае - false
-     */
-    private isDependencyLoaded(dependency: string): boolean {
-        const [dependencyName] = dependency.split("@");
-
-        return this.hasModule(dependencyName)
     }
 
     /**
@@ -194,58 +141,6 @@ export class ModulesManager {
             "author" in moduleInfo &&
             typeof module.prototype.init === "function"
         );
-    }
-
-    /**
-     * Проверяет зависимости модуля и их версии
-     * @param {string} moduleName - Имя модуля
-     * @param {Record<string, string>} dependencies - Зависимости модуля
-     */
-    private verifyDependencyVersions(
-        moduleName: string,
-        dependencies: Record<string, string>
-    ): boolean {
-        for (const [dependency, dependencyRange] of Object.entries(
-            dependencies
-        )) {
-            const [dependencyName] = dependency.split("@");
-
-            for (const [moduleInfo] of ModulesManager.modulesList) {
-                if (moduleInfo.name === dependencyName) {
-                    const dependencyVersion = moduleInfo.version;
-
-                    if (!satisfies(dependencyVersion, dependencyRange)) {
-                        LogHelper.error(
-                            `Модуль "${moduleName}" требует версию "${dependencyName}: ${dependencyRange}", но найдена версия ${dependencyVersion}.`
-                        );
-                        return false;
-                    }
-
-                    return true;
-                }
-            }
-        }
-    }
-
-    /**
-     * Проверяет и загружает модули с ожидающими зависимостями
-     */
-    private async checkPendingDependencies(): Promise<void> {
-        for (const [moduleName, dependencies] of this.pendingDependencies) {
-            const unloadedDependencies =
-                this.getUnloadedDependencies(dependencies);
-
-            if (unloadedDependencies.length > 0) {
-                LogHelper.error(
-                    `Модуль "${moduleName}" не нашел зависимости: ${unloadedDependencies.join(
-                        ", "
-                    )}.`
-                );
-            } else {
-                this.pendingDependencies.delete(moduleName);
-                await this.loadModule(moduleName);
-            }
-        }
     }
 
     /**
