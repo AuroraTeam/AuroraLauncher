@@ -15,7 +15,7 @@ export class APIManager implements IHandleable {
     private api = new AuroraAPI(apiConfig.ws || 'ws://localhost:1370', {
         onClose: () => {
             this.connectStatus = false;
-            setTimeout(() => this.api.connect(), 5000);
+            setTimeout(() => this.initConnection(), 5000);
         },
     });
     private connectStatus = false;
