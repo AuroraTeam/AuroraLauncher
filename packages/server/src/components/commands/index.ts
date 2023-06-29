@@ -8,7 +8,7 @@ import { LangManager } from "../langs";
 @singleton()
 @injectable()
 export class CommandsManager {
-    private commands: Map<string, AbstractCommand> = new Map();
+    public commands: Map<string, AbstractCommand> = new Map();
     private console: ReadLine.Interface;
 
     constructor(private readonly langManager: LangManager) {

@@ -45,10 +45,6 @@ import { LogHelper, StorageHelper } from "./utils";
 @singleton()
 export class LauncherServer {
     private _AuthProvider: AuthProvider;
-    public get AuthProvider(): AuthProvider {
-        return this._AuthProvider;
-    }
-
     private _ConfigManager: ConfigManager;
     private _LangManager: LangManager;
     private _CommandsManager: CommandsManager;
@@ -60,19 +56,41 @@ export class LauncherServer {
     private _AuthlibManager: AuthlibManager;
 
     constructor() {
-        StorageHelper.validate();
-        LogHelper.printVersion();
-
-        LogHelper.info("Initialization start");
+        this.preInit()
         this.init()
-        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd);
     }
 
-    private init() {
+    private preInit() {
+        LogHelper.printVersion();
+        
         this._ConfigManager = container.resolve(ConfigManager);
         this._LangManager = container.resolve(LangManager);
 
-        // Auth
+        StorageHelper.validate();
+    }
+
+    private init() {
+        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initStart);
+
+        this.registerAuthProviders()
+        this.resolveDependencies()
+        this.registerCommands()
+        this.registerRequest()
+
+        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd)
+    }
+
+    private resolveDependencies() {
+        this._AuthlibManager = container.resolve(AuthlibManager);
+        this._CommandsManager = container.resolve(CommandsManager);
+        this._ClientsManager = container.resolve(ClientsManager);
+        this._ProfilesManager = container.resolve(ProfilesManager);
+        this._ModulesManager = container.resolve(ModulesManager);
+        this._UpdateManager = container.resolve(UpdateManager);
+        this._WebManager = container.resolve(WebManager);
+    }
+
+    private registerAuthProviders() {
         AuthManager.registerProviders({
             json: JsonAuthProvider,
             db: DatabaseAuthProvider,
@@ -81,17 +99,11 @@ export class LauncherServer {
             accept: AcceptAuthProvider,
         });
 
-        this._AuthProvider = AuthManager.getProvider(
-            this._ConfigManager,
-            this._LangManager
-        );
+        this._AuthProvider = AuthManager.getProvider( this._ConfigManager, this._LangManager);
         container.register("AuthProvider", { useValue: this._AuthProvider });
+    }
 
-        // Other
-
-        this._AuthlibManager = container.resolve(AuthlibManager);
-
-        this._CommandsManager = container.resolve(CommandsManager);
+    private registerCommands() {
         this._CommandsManager.registerCommands([
             container.resolve(HelpCommand),
             container.resolve(ReloadCommand),
@@ -106,13 +118,9 @@ export class LauncherServer {
             container.resolve(AboutCommand),
             container.resolve(StopCommand),
         ]);
+    }
 
-        this._ClientsManager = container.resolve(ClientsManager);
-        this._ProfilesManager = container.resolve(ProfilesManager);
-        this._ModulesManager = container.resolve(ModulesManager);
-        this._UpdateManager = container.resolve(UpdateManager);
-        this._WebManager = container.resolve(WebManager);
-
+    private registerRequest() {
         this._WebManager.registerRequests([
             container.resolve(AuthRequest),
             container.resolve(ProfileRequest),

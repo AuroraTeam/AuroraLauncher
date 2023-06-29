@@ -25,22 +25,18 @@ export class HelpCommand extends AbstractCommand {
         const commandsList: Map<Category, AbstractCommand[]> = new Map(
             Object.values(Category).map((c) => [c, []])
         );
-        Array.from(this.commandsManager.commands.values()).forEach(
-            (command: AbstractCommand) => {
-                commandsList.get(command.info.category).push(command);
-            }
-        );
 
-        commandsList.forEach((category, category_name) => {
+        this.commandsManager.commands.forEach((command: AbstractCommand) => {
+            commandsList.get(command.info.category)?.push(command);
+        });
+
+        commandsList.forEach((category, categoryName) => {
             if (category.length === 0) return;
-            LogHelper.info(`=== [ %s ] ===`, category_name.toUpperCase());
+            LogHelper.info(`=== [ ${categoryName.toUpperCase()} ] ===`);
             category.forEach((command: AbstractCommand) => {
+                const usage = command.info.usage ? ` ${chalk.red(command.info.usage)}` : "";
                 LogHelper.info(
-                    `${chalk.bold(command.info.name)}${
-                        !command.info.usage
-                            ? ""
-                            : chalk.red(" ", command.info.usage)
-                    } - ${command.info.description}`
+                    `${chalk.bold(command.info.name)}${usage} - ${command.info.description}`
                 );
             });
         });

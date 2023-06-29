@@ -29,7 +29,7 @@ export class AuthManager {
 
         if (!AuthManager.authProviders.has(providerType)) {
             LogHelper.fatal(
-                langManager.getTranslate.AuthManager.invalidProvider
+                langManager.getTranslate.AuthManager.invalidProvider, providerType
             );
         }
 
