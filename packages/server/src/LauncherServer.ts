@@ -56,13 +56,13 @@ export class LauncherServer {
     private _AuthlibManager: AuthlibManager;
 
     constructor() {
-        this.preInit()
-        this.init()
+        this.preInit();
+        this.init();
     }
 
     private preInit() {
         LogHelper.printVersion();
-        
+
         this._ConfigManager = container.resolve(ConfigManager);
         this._LangManager = container.resolve(LangManager);
 
@@ -72,12 +72,12 @@ export class LauncherServer {
     private init() {
         LogHelper.info(this._LangManager.getTranslate.LauncherServer.initStart);
 
-        this.registerAuthProviders()
-        this.resolveDependencies()
-        this.registerCommands()
-        this.registerRequest()
+        this.registerAuthProviders();
+        this.resolveDependencies();
+        this.registerCommands();
+        this.registerRequest();
 
-        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd)
+        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd);
     }
 
     private resolveDependencies() {
@@ -99,7 +99,7 @@ export class LauncherServer {
             accept: AcceptAuthProvider,
         });
 
-        this._AuthProvider = AuthManager.getProvider( this._ConfigManager, this._LangManager);
+        this._AuthProvider = AuthManager.getProvider(this._ConfigManager, this._LangManager);
         container.register("AuthProvider", { useValue: this._AuthProvider });
     }
 

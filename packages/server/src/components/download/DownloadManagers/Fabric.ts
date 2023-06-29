@@ -20,32 +20,23 @@ export class FabricManager extends FabricLikeManager {
         const profileUUID = await super.downloadClient(clientVer, clientName);
         if (!profileUUID) return;
 
-        const libraries = await this.resolveLibraries(
-            fabricVersion.libraries,
-            "Fabric"
-        );
+        const libraries = await this.resolveLibraries(fabricVersion.libraries, "Fabric");
         if (!libraries) return;
 
         this.profilesManager.editProfile(profileUUID, (profile) => ({
             mainClass: fabricVersion.mainClass,
             libraries: [...profile.libraries, ...libraries],
         }));
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.FabricManager.client
-                .success
-        );
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.FabricManager.client.success);
     }
 
     getFabricVersions(version: string): Promise<void | VersionMeta[]> {
         try {
-            return HttpHelper.getResourceFromJson(
-                `${this.fabricMetaLink}${version}`
-            );
+            return HttpHelper.getResourceFromJson(`${this.fabricMetaLink}${version}`);
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.FabricManager.info
-                    .errJsonParsing
+                this.langManager.getTranslate.DownloadManager.FabricManager.info.errJsonParsing
             );
         }
     }
@@ -57,8 +48,7 @@ export class FabricManager extends FabricLikeManager {
         const stableLoader = loaders.find(({ loader }) => loader.stable);
         if (!stableLoader) {
             return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.FabricManager.info
-                    .verNotFound,
+                this.langManager.getTranslate.DownloadManager.FabricManager.info.verNotFound,
                 version
             );
         }
@@ -70,8 +60,7 @@ export class FabricManager extends FabricLikeManager {
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.FabricManager.info
-                    .errClientParsing
+                this.langManager.getTranslate.DownloadManager.FabricManager.info.errClientParsing
             );
         }
     }

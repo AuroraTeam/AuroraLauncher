@@ -11,9 +11,7 @@ export class SyncAllCommand extends AbstractCommand {
     ) {
         super({
             name: "syncall",
-            description:
-                langManager.getTranslate.CommandsManager.commands.updates
-                    .SyncAllCommand,
+            description: langManager.getTranslate.CommandsManager.commands.updates.SyncAllCommand,
             category: Category.UPDATES,
         });
     }

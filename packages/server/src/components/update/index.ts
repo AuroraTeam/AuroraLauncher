@@ -1,11 +1,6 @@
 import path from "path";
 
-import {
-    HttpHelper,
-    LogHelper,
-    StorageHelper,
-    SystemHelper,
-} from "@root/utils";
+import { HttpHelper, LogHelper, StorageHelper, SystemHelper } from "@root/utils";
 import semver from "semver";
 import { injectable, singleton } from "tsyringe";
 
@@ -16,10 +11,7 @@ import { LangManager } from "../langs";
 @singleton()
 @injectable()
 export class UpdateManager {
-    private readonly apiUrl = new URL(
-        "versions",
-        "https://api.aurora-launcher.ru/"
-    );
+    private readonly apiUrl = new URL("versions", "https://api.aurora-launcher.ru/");
     private readonly fileTypeMap: Record<string, string> = {
         win32: "binary-win",
         darwin: "binary-mac",
@@ -44,15 +36,10 @@ export class UpdateManager {
         if (!latestVersion) return;
 
         LogHelper.info(this.langManager.getTranslate.UpdateManager.updating);
-        LogHelper.info(
-            this.langManager.getTranslate.UpdateManager.downloadingLatestVer
-        );
+        LogHelper.info(this.langManager.getTranslate.UpdateManager.downloadingLatestVer);
 
         const downloadUrl = latestVersion.files[this.fileType];
-        const downloadPath = path.resolve(
-            StorageHelper.storageDir,
-            this.execFileName
-        );
+        const downloadPath = path.resolve(StorageHelper.storageDir, this.execFileName);
 
         await HttpHelper.downloadFile(new URL(downloadUrl), downloadPath);
 
@@ -62,23 +49,16 @@ export class UpdateManager {
 
     public async checkUpdate(): Promise<Version | void> {
         LogHelper.info(this.langManager.getTranslate.UpdateManager.check);
-        const versionsData: VersionsData = await this.getVersionsData().catch(
-            () => undefined
-        );
+        const versionsData: VersionsData = await this.getVersionsData().catch(() => undefined);
 
         if (!versionsData) {
-            return LogHelper.info(
-                this.langManager.getTranslate.UpdateManager.checkEnd
-            );
+            return LogHelper.info(this.langManager.getTranslate.UpdateManager.checkEnd);
         }
 
-        const latestVersion =
-            versionsData[this.configManager.config.branch as "stable" | "dev"];
+        const latestVersion = versionsData[this.configManager.config.branch as "stable" | "dev"];
 
         if (!this.needUpdate(latestVersion)) {
-            return LogHelper.info(
-                this.langManager.getTranslate.UpdateManager.checkEnd
-            );
+            return LogHelper.info(this.langManager.getTranslate.UpdateManager.checkEnd);
         }
 
         const latestVersionData = versionsData.versions.find(
@@ -86,9 +66,7 @@ export class UpdateManager {
         );
 
         if (!latestVersionData) {
-            return LogHelper.error(
-                this.langManager.getTranslate.UpdateManager.checkErr
-            );
+            return LogHelper.error(this.langManager.getTranslate.UpdateManager.checkErr);
         }
 
         LogHelper.info(

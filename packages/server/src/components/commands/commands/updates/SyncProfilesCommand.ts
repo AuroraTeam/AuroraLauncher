@@ -4,15 +4,11 @@ import { injectable } from "tsyringe";
 
 @injectable()
 export class SyncProfilesCommand extends AbstractCommand {
-    constructor(
-        langManager: LangManager,
-        private readonly profilesManager: ProfilesManager
-    ) {
+    constructor(langManager: LangManager, private readonly profilesManager: ProfilesManager) {
         super({
             name: "syncprofiles",
             description:
-                langManager.getTranslate.CommandsManager.commands.updates
-                    .SyncProfilesCommand,
+                langManager.getTranslate.CommandsManager.commands.updates.SyncProfilesCommand,
             category: Category.UPDATES,
         });
     }

@@ -11,24 +11,12 @@ export class StorageHelper extends CoreStorageHelper {
     static readonly storageDir: string = SystemHelper.isStandalone()
         ? dirname(process.execPath)
         : __dirname;
-    static readonly gameFilesDir: string = resolve(
-        this.storageDir,
-        "gameFiles"
-    );
+    static readonly gameFilesDir: string = resolve(this.storageDir, "gameFiles");
     static readonly clientsDir: string = resolve(this.gameFilesDir, "clients");
     static readonly assetsDir: string = resolve(this.gameFilesDir, "assets");
-    static readonly assetsIndexesDir: string = resolve(
-        this.assetsDir,
-        "indexes"
-    );
-    static readonly assetsObjectsDir: string = resolve(
-        this.assetsDir,
-        "objects"
-    );
-    static readonly librariesDir: string = resolve(
-        this.gameFilesDir,
-        "libraries"
-    );
+    static readonly assetsIndexesDir: string = resolve(this.assetsDir, "indexes");
+    static readonly assetsObjectsDir: string = resolve(this.assetsDir, "objects");
+    static readonly librariesDir: string = resolve(this.gameFilesDir, "libraries");
     static readonly profilesDir: string = resolve(this.storageDir, "profiles");
     static readonly modulesDir: string = resolve(this.storageDir, "modules");
     static readonly authlibDir: string = resolve(this.storageDir, "authlib");

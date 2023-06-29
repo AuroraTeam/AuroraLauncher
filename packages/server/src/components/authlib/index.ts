@@ -47,14 +47,10 @@ export class AuthlibManager {
         });
 
         writeFileSync(this.privateKeyPath, keys.privateKey);
-        LogHelper.info(
-            this.langManager.getTranslate.AuthlibManager.privateKeySaved
-        );
+        LogHelper.info(this.langManager.getTranslate.AuthlibManager.privateKeySaved);
 
         writeFileSync(this.publicKeyPath, keys.publicKey);
-        LogHelper.info(
-            this.langManager.getTranslate.AuthlibManager.privateKeySaved
-        );
+        LogHelper.info(this.langManager.getTranslate.AuthlibManager.privateKeySaved);
     }
 
     /**

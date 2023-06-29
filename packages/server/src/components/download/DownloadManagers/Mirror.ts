@@ -3,13 +3,7 @@ import { resolve } from "path";
 import { URL } from "url";
 
 import { PartialProfileConfig } from "@aurora-launcher/core";
-import {
-    HttpHelper,
-    JsonHelper,
-    LogHelper,
-    StorageHelper,
-    ZipHelper,
-} from "@root/utils";
+import { HttpHelper, JsonHelper, LogHelper, StorageHelper, ZipHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { AbstractDownloadManager } from "./AbstractManager";
@@ -29,9 +23,7 @@ export class MirrorManager extends AbstractDownloadManager {
         try {
             await mkdir(clientDirPath);
         } catch (err) {
-            return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.dirExist
-            );
+            return LogHelper.error(this.langManager.getTranslate.DownloadManager.dirExist);
         }
 
         const mirror = mirrors.find(async (mirror) => {
@@ -40,35 +32,27 @@ export class MirrorManager extends AbstractDownloadManager {
 
         if (!mirror) {
             return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager
-                    .client.notFound
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.notFound
             );
         }
 
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MirrorManager.client
-                .download
-        );
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.download);
 
         let client: string;
         try {
-            client = await HttpHelper.downloadFile(
-                new URL(`${fileName}.zip`, mirror),
-                null,
-                { saveToTempFile: true }
-            );
+            client = await HttpHelper.downloadFile(new URL(`${fileName}.zip`, mirror), null, {
+                saveToTempFile: true,
+            });
         } catch (error) {
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager
-                    .client.downloadErr
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.downloadErr
             );
             LogHelper.debug(error);
             return;
         }
 
         LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MirrorManager.client
-                .unpacking
+            this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking
         );
 
         try {
@@ -76,8 +60,7 @@ export class MirrorManager extends AbstractDownloadManager {
         } catch (error) {
             await StorageHelper.rmdirRecursive(clientDirPath);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager
-                    .client.unpackingErr
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingErr
             );
             LogHelper.debug(error);
             return;
@@ -88,14 +71,11 @@ export class MirrorManager extends AbstractDownloadManager {
         let profile;
         try {
             profile = JsonHelper.fromJson<PartialProfileConfig>(
-                (
-                    await readFile(resolve(clientDirPath, "profile.json"))
-                ).toString()
+                (await readFile(resolve(clientDirPath, "profile.json"))).toString()
             );
         } catch (error) {
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager
-                    .client.profileErr
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.profileErr
             );
         }
 
@@ -111,9 +91,6 @@ export class MirrorManager extends AbstractDownloadManager {
                 },
             ],
         });
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MirrorManager.client
-                .success
-        );
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.success);
     }
 }

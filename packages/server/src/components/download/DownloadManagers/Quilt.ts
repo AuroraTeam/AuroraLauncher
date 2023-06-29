@@ -20,32 +20,23 @@ export class QuiltManager extends FabricLikeManager {
         const profileUUID = await super.downloadClient(clientVer, clientName);
         if (!profileUUID) return;
 
-        const libraries = await this.resolveLibraries(
-            quiltVersion.libraries,
-            "Quilt"
-        );
+        const libraries = await this.resolveLibraries(quiltVersion.libraries, "Quilt");
         if (!libraries) return;
 
         this.profilesManager.editProfile(profileUUID, (profile) => ({
             mainClass: quiltVersion.mainClass,
             libraries: [...profile.libraries, ...libraries],
         }));
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.QuiltManager.client
-                .success
-        );
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.QuiltManager.client.success);
     }
 
     getQuiltVersions(version: string): Promise<void | VersionMeta[]> {
         try {
-            return HttpHelper.getResourceFromJson(
-                `${this.quiltMetaLink}${version}`
-            );
+            return HttpHelper.getResourceFromJson(`${this.quiltMetaLink}${version}`);
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.QuiltManager.info
-                    .errJsonParsing
+                this.langManager.getTranslate.DownloadManager.QuiltManager.info.errJsonParsing
             );
         }
     }
@@ -63,8 +54,7 @@ export class QuiltManager extends FabricLikeManager {
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.QuiltManager.info
-                    .errClientParsing
+                this.langManager.getTranslate.DownloadManager.QuiltManager.info.errClientParsing
             );
         }
     }

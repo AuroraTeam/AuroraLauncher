@@ -40,9 +40,7 @@ export class CommandsManager {
      */
     private completer = (line: string): [string[], string] => {
         const completions = Array.from(this.commands.keys());
-        const hits = completions.filter((c) =>
-            c.startsWith(line.toLowerCase())
-        );
+        const hits = completions.filter((c) => c.startsWith(line.toLowerCase()));
         return [hits.length ? hits : completions, line];
     };
 
@@ -54,23 +52,15 @@ export class CommandsManager {
     private handleLine = (line: string): void => {
         LogHelper.handleUserPrompt(line);
 
-        const args = line
-            .match(/"[^"]*"|[^\s"]+/g)
-            ?.map((s) => s.trim().replace(/"/g, ""));
+        const args = line.match(/"[^"]*"|[^\s"]+/g)?.map((s) => s.trim().replace(/"/g, ""));
         if (!args) return;
 
         const cmd = args.shift().toLowerCase();
         if (!cmd || !this.commands.has(cmd)) {
-            return LogHelper.error(
-                this.langManager.getTranslate.CommandsManager.cmdNotFound,
-                cmd
-            );
+            return LogHelper.error(this.langManager.getTranslate.CommandsManager.cmdNotFound, cmd);
         }
 
-        LogHelper.dev(
-            this.langManager.getTranslate.CommandsManager.invokeCmd,
-            cmd
-        );
+        LogHelper.dev(this.langManager.getTranslate.CommandsManager.invokeCmd, cmd);
 
         this.commands.get(cmd).invoke(...args);
     };

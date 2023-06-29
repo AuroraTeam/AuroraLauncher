@@ -76,9 +76,6 @@ export class ProfileConfig implements IProfileConfig {
     }
 
     public static fromJSON(json: string) {
-        return plainToInstance(
-            ProfileConfig,
-            JsonHelper.fromJson<ProfileConfig>(json)
-        );
+        return plainToInstance(ProfileConfig, JsonHelper.fromJson<ProfileConfig>(json));
     }
 }

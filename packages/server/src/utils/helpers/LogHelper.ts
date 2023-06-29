@@ -19,8 +19,7 @@ const LOG_LEVELS = {
 };
 
 export class LogHelper {
-    private static readonly isDevEnabled: boolean =
-        process.argv.includes("--dev");
+    private static readonly isDevEnabled: boolean = process.argv.includes("--dev");
     private static readonly isDebugEnabled: boolean =
         process.argv.includes("--debug") || process.argv.includes("--dev");
 
@@ -34,10 +33,9 @@ export class LogHelper {
         return resolve(StorageHelper.logsDir, `LauncherServer-${dateStr}.log`);
     }
 
-    private static readonly logFileStream = createWriteStream(
-        LogHelper.getLogFilePath(),
-        { flags: "a" }
-    );
+    private static readonly logFileStream = createWriteStream(LogHelper.getLogFilePath(), {
+        flags: "a",
+    });
 
     public static debug(msg: any, ...args: any[]): void {
         if (!this.isDebugEnabled) return;
@@ -70,11 +68,7 @@ export class LogHelper {
         this.saveLog(msg + EOL);
     }
 
-    private static log(
-        level: keyof typeof LOG_LEVELS,
-        msg: any,
-        ...args: any[]
-    ) {
+    private static log(level: keyof typeof LOG_LEVELS, msg: any, ...args: any[]) {
         const coloredStr = [
             chalk.gray(new Date().toLocaleString()),
             LOG_LEVELS[level](` [${level}] `),
@@ -101,9 +95,7 @@ export class LogHelper {
                 chalk.cyan("AuroraLauncher ") +
                     chalk.green("LauncherServer ") +
                     chalk.yellow(`v${version}`) +
-                    chalk.green(
-                        `\nCopyright (C) 2020 - ${new Date().getFullYear()} `
-                    ) +
+                    chalk.green(`\nCopyright (C) 2020 - ${new Date().getFullYear()} `) +
                     chalk.blue("AuroraTeam (https://github.com/AuroraTeam)") +
                     chalk.green("\nLicensed under the MIT License") +
                     chalk.green("\nDocumentation page: ") +

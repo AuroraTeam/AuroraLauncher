@@ -7,9 +7,7 @@ export class StopCommand extends AbstractCommand {
     constructor(langManager: LangManager) {
         super({
             name: "stop",
-            description:
-                langManager.getTranslate.CommandsManager.commands.basic
-                    .StopCommand,
+            description: langManager.getTranslate.CommandsManager.commands.basic.StopCommand,
             category: Category.BASIC,
         });
     }

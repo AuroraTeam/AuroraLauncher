@@ -27,9 +27,7 @@ export class ClientsManager {
         const dirs = folders.filter((folder) => folder.isDirectory());
 
         if (dirs.length === 0) {
-            return LogHelper.info(
-                this.langManager.getTranslate.ClientsManager.syncSkip
-            );
+            return LogHelper.info(this.langManager.getTranslate.ClientsManager.syncSkip);
         }
 
         LogHelper.info(this.langManager.getTranslate.ClientsManager.sync);
@@ -37,10 +35,7 @@ export class ClientsManager {
         for (const { name } of dirs) {
             const startTime = Date.now();
 
-            this.hashedClients.set(
-                name,
-                await this.hashDir(join(StorageHelper.clientsDir, name))
-            );
+            this.hashedClients.set(name, await this.hashDir(join(StorageHelper.clientsDir, name)));
 
             LogHelper.info(
                 this.langManager.getTranslate.ClientsManager.syncTime,

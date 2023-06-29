@@ -4,15 +4,11 @@ import { injectable } from "tsyringe";
 
 @injectable()
 export class SyncClientsCommand extends AbstractCommand {
-    constructor(
-        langManager: LangManager,
-        private readonly clientsManager: ClientsManager
-    ) {
+    constructor(langManager: LangManager, private readonly clientsManager: ClientsManager) {
         super({
             name: "syncclients",
             description:
-                langManager.getTranslate.CommandsManager.commands.updates
-                    .SyncUpdatesCommand,
+                langManager.getTranslate.CommandsManager.commands.updates.SyncUpdatesCommand,
             category: Category.UPDATES,
         });
     }

@@ -22,10 +22,7 @@ export class AuthRequest extends AbstractRequest {
      * @param ws - the client that sent the request
      * @returns ResponseResult
      */
-    async invoke(
-        data: AuthRequestData,
-        ws: ExtendedWebSocketClient
-    ): Promise<ResponseResult> {
+    async invoke(data: AuthRequestData, ws: ExtendedWebSocketClient): Promise<ResponseResult> {
         const res = await this.authProvider.auth(data.login, data.password);
         ws.isAuthed = true;
         return res;

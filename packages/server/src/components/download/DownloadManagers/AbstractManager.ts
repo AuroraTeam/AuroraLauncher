@@ -14,15 +14,12 @@ export abstract class AbstractDownloadManager {
      * @param gameVersion - Версия игры
      * @param clientName - Название сборки
      */
-    public abstract downloadClient(
-        gameVersion: string,
-        clientName: string
-    ): Promise<any>;
+    public abstract downloadClient(gameVersion: string, clientName: string): Promise<any>;
 
     protected getLibPath(name: string): string {
         const patterns = name.split(":");
-        return `${patterns[0].replace(/\./g, "/")}/${patterns[1]}/${
+        return `${patterns[0].replace(/\./g, "/")}/${patterns[1]}/${patterns[2]}/${patterns[1]}-${
             patterns[2]
-        }/${patterns[1]}-${patterns[2]}.jar`;
+        }.jar`;
     }
 }

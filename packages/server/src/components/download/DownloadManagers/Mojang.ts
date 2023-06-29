@@ -2,13 +2,7 @@ import { mkdir, writeFile } from "fs/promises";
 import path, { resolve } from "path";
 
 import { ProfileLibrary } from "@aurora-launcher/core";
-import {
-    HttpHelper,
-    JsonHelper,
-    LogHelper,
-    ProgressHelper,
-    StorageHelper,
-} from "@root/utils";
+import { HttpHelper, JsonHelper, LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import {
@@ -27,8 +21,7 @@ import { AbstractDownloadManager } from "./AbstractManager";
 
 @injectable()
 export class MojangManager extends AbstractDownloadManager {
-    #versionManifestLink =
-        "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
+    #versionManifestLink = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
     #assetsLink = "https://resources.download.minecraft.net/";
     #librariesLink = "https://libraries.minecraft.net/";
 
@@ -37,16 +30,11 @@ export class MojangManager extends AbstractDownloadManager {
      * @param gameVersion - Версия игры
      * @param clientName - Название сборки
      */
-    async downloadClient(
-        gameVersion: string,
-        clientName: string
-    ): Promise<any> {
+    async downloadClient(gameVersion: string, clientName: string): Promise<any> {
         const version = await this.#getVersionInfo(gameVersion);
         if (!version) return;
 
-        if (
-            !(await this.#resolveClient(clientName, version.downloads.client))
-        ) {
+        if (!(await this.#resolveClient(clientName, version.downloads.client))) {
             return;
         }
         if (!(await this.#resolveAssets(version.assetIndex))) return;
@@ -76,15 +64,10 @@ export class MojangManager extends AbstractDownloadManager {
         try {
             await mkdir(clientDirPath);
         } catch (err) {
-            return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.dirExist
-            );
+            return LogHelper.error(this.langManager.getTranslate.DownloadManager.dirExist);
         }
 
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MojangManager.client
-                .download
-        );
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MojangManager.client.download);
 
         const progressBar = ProgressHelper.getDownloadProgressBar();
         progressBar.start(client.size, 0, { filename: "minecraft.jar" });
@@ -102,25 +85,18 @@ export class MojangManager extends AbstractDownloadManager {
         } catch (error) {
             LogHelper.debug(error);
             return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager
-                    .client.downloadErr
+                this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadErr
             );
         } finally {
             progressBar.stop();
         }
 
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MojangManager.client
-                .success
-        );
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MojangManager.client.success);
         return true;
     }
 
     async #resolveAssets(assetIndex: AssetIndex) {
-        const indexPath = resolve(
-            StorageHelper.assetsIndexesDir,
-            `${assetIndex.id}.json`
-        );
+        const indexPath = resolve(StorageHelper.assetsIndexesDir, `${assetIndex.id}.json`);
 
         LogHelper.info("Downloading assets");
 
@@ -133,10 +109,7 @@ export class MojangManager extends AbstractDownloadManager {
             .sort((a, b) => b.size - a.size)
             .map(({ hash }) => ({ hash, path: `${hash.slice(0, 2)}/${hash}` }));
 
-        const progressBar = ProgressHelper.getProgress(
-            "{bar} {percentage}% {value}/{total}",
-            40
-        );
+        const progressBar = ProgressHelper.getProgress("{bar} {percentage}% {value}/{total}", 40);
         progressBar.start(assetsHashes.length, 0);
 
         // LogHelper.info(
@@ -146,10 +119,7 @@ export class MojangManager extends AbstractDownloadManager {
         try {
             await HttpHelper.downloadFiles(
                 assetsHashes.map((asset) => ({
-                    destinationPath: resolve(
-                        StorageHelper.assetsObjectsDir,
-                        asset.path
-                    ),
+                    destinationPath: resolve(StorageHelper.assetsObjectsDir, asset.path),
                     sourceUrl: `${this.#assetsLink}${asset.path}`,
                     sha1: asset.hash,
                 })),
@@ -195,19 +165,13 @@ export class MojangManager extends AbstractDownloadManager {
             .flat();
 
         LogHelper.info("Downloading libraries");
-        const progressBar = ProgressHelper.getProgress(
-            "{bar} {percentage}% {value}/{total}",
-            40
-        );
+        const progressBar = ProgressHelper.getProgress("{bar} {percentage}% {value}/{total}", 40);
         progressBar.start(librariesList.length, 0);
 
         try {
             await HttpHelper.downloadFiles(
                 librariesList.map((library) => ({
-                    destinationPath: resolve(
-                        StorageHelper.librariesDir,
-                        library.path
-                    ),
+                    destinationPath: resolve(StorageHelper.librariesDir, library.path),
                     sourceUrl: `${this.#librariesLink}${library.path}`,
                     sha1: library.sha1,
                 })),
@@ -230,9 +194,7 @@ export class MojangManager extends AbstractDownloadManager {
     }
 
     #resolveNewNative(library: Library): ProfileLibrary {
-        const { os, arch } = library.name.match(
-            /natives-(?<os>\w+)(?:-(?<arch>\w+))?/
-        ).groups;
+        const { os, arch } = library.name.match(/natives-(?<os>\w+)(?:-(?<arch>\w+))?/).groups;
 
         const { path, sha1 } = library.downloads.artifact;
         return {
@@ -301,8 +263,7 @@ export class MojangManager extends AbstractDownloadManager {
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager.info
-                    .errVerParsing
+                this.langManager.getTranslate.DownloadManager.MojangManager.info.errVerParsing
             );
         }
     }
@@ -317,21 +278,17 @@ export class MojangManager extends AbstractDownloadManager {
 
         if (!version) {
             return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager.info
-                    .verNotFound,
+                this.langManager.getTranslate.DownloadManager.MojangManager.info.verNotFound,
                 gameVersion
             );
         }
 
         try {
-            return await HttpHelper.getResourceFromJson<VersionProfile>(
-                version.url
-            );
+            return await HttpHelper.getResourceFromJson<VersionProfile>(version.url);
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager.info
-                    .errClientParsing
+                this.langManager.getTranslate.DownloadManager.MojangManager.info.errClientParsing
             );
         }
     }

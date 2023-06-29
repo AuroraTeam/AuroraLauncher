@@ -14,9 +14,7 @@ export class HelpCommand extends AbstractCommand {
     ) {
         super({
             name: "help",
-            description:
-                langManager.getTranslate.CommandsManager.commands.basic
-                    .HelpCommand,
+            description: langManager.getTranslate.CommandsManager.commands.basic.HelpCommand,
             category: Category.BASIC,
         });
     }

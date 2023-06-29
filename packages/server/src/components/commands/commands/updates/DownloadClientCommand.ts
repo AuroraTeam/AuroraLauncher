@@ -22,18 +22,13 @@ export class DownloadClientCommand extends AbstractCommand {
         super({
             name: "downloadclient",
             description:
-                langManager.getTranslate.CommandsManager.commands.updates
-                    .DownloadClientCommand,
+                langManager.getTranslate.CommandsManager.commands.updates.DownloadClientCommand,
             category: Category.UPDATES,
             usage: "<version> <client name> <?source type>",
         });
     }
 
-    async invoke(
-        gameVersion?: string,
-        clientName?: string,
-        sourceType = "mojang"
-    ): Promise<void> {
+    async invoke(gameVersion?: string, clientName?: string, sourceType = "mojang"): Promise<void> {
         if (!gameVersion) {
             return LogHelper.error("Укажите название/версию клиента!");
         }

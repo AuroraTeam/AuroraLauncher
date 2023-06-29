@@ -1,19 +1,14 @@
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 import { HttpHelper } from "@root/utils";
 
-import {
-    AuthProvider,
-    AuthProviderConfig,
-    AuthResponseData,
-} from "./AuthProvider";
+import { AuthProvider, AuthProviderConfig, AuthResponseData } from "./AuthProvider";
 
 export class MojangAuthProvider implements AuthProvider {
     private authHost: string;
 
     constructor({ auth }: LauncherServerConfig) {
         this.authHost =
-            (<MojangAuthProviderConfig>auth).authHost ||
-            "https://authserver.mojang.com";
+            (<MojangAuthProviderConfig>auth).authHost || "https://authserver.mojang.com";
     }
 
     async auth(username: string, password: string): Promise<AuthResponseData> {

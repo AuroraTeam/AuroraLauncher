@@ -5,21 +5,11 @@ export interface AuthProviderConstructor {
 }
 
 export interface AuthProvider {
-    auth(
-        username: string,
-        password: string
-    ): PromiseOr<AuthResponseData | void>;
+    auth(username: string, password: string): PromiseOr<AuthResponseData | void>;
 
-    join(
-        accessToken: string,
-        userUUID: string,
-        serverID: string
-    ): PromiseOr<boolean | void>;
+    join(accessToken: string, userUUID: string, serverID: string): PromiseOr<boolean | void>;
 
-    hasJoined(
-        username: string,
-        serverID: string
-    ): PromiseOr<HasJoinedResponseData | void>;
+    hasJoined(username: string, serverID: string): PromiseOr<HasJoinedResponseData | void>;
 
     profile(userUUID: string): PromiseOr<ProfileResponseData | void>;
 

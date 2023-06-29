@@ -22,8 +22,7 @@ export class HasJoinedRequest extends AbstractRequest {
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         const { username, serverId } = req.query;
 
-        if (this.isInvalidValue(username) || this.isInvalidValue(serverId))
-            return res.sendError();
+        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return res.sendError();
 
         let user;
         try {

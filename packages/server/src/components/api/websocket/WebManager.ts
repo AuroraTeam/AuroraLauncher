@@ -13,10 +13,7 @@ export class WebManager {
     constructor(configManager: ConfigManager, langManager: LangManager) {
         const { host, port } = configManager.config.api;
 
-        this.webServerManager = new WebServerManager(
-            configManager,
-            langManager
-        );
+        this.webServerManager = new WebServerManager(configManager, langManager);
         this.webSocketManager = new Server({
             server: this.webServerManager.server,
         });
@@ -25,8 +22,6 @@ export class WebManager {
     }
 
     public registerRequests(requests: AbstractRequest[]): void {
-        requests.forEach((request) =>
-            this.webSocketManager.registerRequest(request)
-        );
+        requests.forEach((request) => this.webSocketManager.registerRequest(request));
     }
 }

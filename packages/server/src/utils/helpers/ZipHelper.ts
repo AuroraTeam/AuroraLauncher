@@ -12,11 +12,7 @@ export class ZipHelper {
      * @param destDir - конечная папка
      * @param whitelist
      */
-    static unzipArchive(
-        archive: string,
-        destDir: string,
-        whitelist: string[] = []
-    ): void {
+    static unzipArchive(archive: string, destDir: string, whitelist: string[] = []): void {
         const zip = new AdmZip(archive);
         const stat = statSync(archive);
         const progress = ProgressHelper.getLoadingProgressBar();
@@ -25,8 +21,7 @@ export class ZipHelper {
         zip.getEntries().forEach((entry) => {
             if (
                 entry.isDirectory ||
-                (whitelist.length > 0 &&
-                    !whitelist.includes(extname(entry.entryName)))
+                (whitelist.length > 0 && !whitelist.includes(extname(entry.entryName)))
             )
                 return;
 

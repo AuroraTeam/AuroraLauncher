@@ -1,11 +1,4 @@
-import {
-    Format,
-    GenericFormatter,
-    MultiBar,
-    Options,
-    Params,
-    SingleBar,
-} from "cli-progress";
+import { Format, GenericFormatter, MultiBar, Options, Params, SingleBar } from "cli-progress";
 
 export class ProgressHelper {
     private static barCompleteChar = "\u2588";
@@ -31,9 +24,7 @@ export class ProgressHelper {
         return new SingleBar(this.getDefaultParams(format, barsize));
     }
 
-    private static getMultiProgress(
-        format: string | GenericFormatter
-    ): MultiBar {
+    private static getMultiProgress(format: string | GenericFormatter): MultiBar {
         return new MultiBar(this.getDefaultParams(format));
     }
 

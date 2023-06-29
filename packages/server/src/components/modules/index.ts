@@ -18,10 +18,7 @@ import { LangManager } from "../langs";
 @singleton()
 @injectable()
 export class ModulesManager {
-    private static readonly modulesList: Map<
-        IModuleInfo,
-        ILauncherServerModule[]
-    > = new Map();
+    private static readonly modulesList: Map<IModuleInfo, ILauncherServerModule[]> = new Map();
     private readonly moduleQueue: string[] = [];
 
     constructor(
@@ -44,9 +41,7 @@ export class ModulesManager {
      */
     public async loadModules(): Promise<void> {
         try {
-            LogHelper.info(
-                this.langManager.getTranslate.ModulesManager.loadingStart
-            );
+            LogHelper.info(this.langManager.getTranslate.ModulesManager.loadingStart);
 
             const files = await fs.readdir(StorageHelper.modulesDir, {
                 withFileTypes: true,
@@ -56,9 +51,7 @@ export class ModulesManager {
                 .map((file) => file.name);
 
             if (moduleFiles.length === 0) {
-                LogHelper.info(
-                    this.langManager.getTranslate.ModulesManager.loadingSkip
-                );
+                LogHelper.info(this.langManager.getTranslate.ModulesManager.loadingSkip);
                 return;
             }
 
@@ -66,9 +59,7 @@ export class ModulesManager {
             await this.processModuleQueue();
         } catch (error) {
             LogHelper.debug(error.message);
-            LogHelper.error(
-                this.langManager.getTranslate.ModulesManager.loadingErr
-            );
+            LogHelper.error(this.langManager.getTranslate.ModulesManager.loadingErr);
         }
     }
 
@@ -96,10 +87,7 @@ export class ModulesManager {
                 return;
             }
 
-            const modulePath = path.resolve(
-                StorageHelper.modulesDir,
-                moduleName
-            );
+            const modulePath = path.resolve(StorageHelper.modulesDir, moduleName);
             const moduleUrl = `file://${modulePath}`;
             const module = (await import(moduleUrl)).Module;
 
@@ -110,10 +98,7 @@ export class ModulesManager {
             }
 
             if (!ModulesManager.modulesList.has(module.getInfo())) {
-                ModulesManager.modulesList.set(
-                    module.getInfo(),
-                    new module().init(this.app)
-                );
+                ModulesManager.modulesList.set(module.getInfo(), new module().init(this.app));
             }
         } catch (error) {
             LogHelper.debug(error.message);
