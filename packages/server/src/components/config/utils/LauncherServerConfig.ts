@@ -1,7 +1,7 @@
 import { AuthProviderConfig } from "@root/components/auth/providers";
 import { HjsonCommented, HjsonHelper } from "@root/utils";
 import { instanceToPlain, plainToInstance } from "class-transformer";
-import { v4 } from "uuid";
+import { randomUUID } from "crypto";
 
 import { ApiConfig } from "./ApiConfig";
 
@@ -19,7 +19,7 @@ export class LauncherServerConfig extends HjsonCommented {
     static getDefaults(): LauncherServerConfig {
         const config = new LauncherServerConfig();
         config.configVersion = 0;
-        config.projectID = v4();
+        config.projectID = randomUUID();
         config.projectName = "";
         config.lang = "ru";
         config.branch = "stable";

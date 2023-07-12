@@ -1,7 +1,9 @@
+import { randomUUID } from "crypto";
+
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 import { UUIDHelper } from "@root/utils";
 import { ResponseError } from "aurora-rpc-server";
-import { v4, v5 } from "uuid";
+import { v5 } from "uuid";
 
 import {
     AuthProvider,
@@ -22,10 +24,12 @@ export class AcceptAuthProvider implements AuthProvider {
         const data = {
             username,
             userUUID: v5(username, this.projectID),
-            accessToken: v4(),
+            accessToken: randomUUID(),
         };
 
-        const userIndex = this.sessionsDB.findIndex((user) => user.username === username);
+        const userIndex = this.sessionsDB.findIndex(
+            (user) => user.username === username
+        );
         if (userIndex) {
             this.sessionsDB.splice(userIndex, 1);
         }

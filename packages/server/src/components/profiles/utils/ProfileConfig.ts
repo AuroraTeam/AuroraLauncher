@@ -1,3 +1,5 @@
+import { randomUUID } from "crypto";
+
 import {
     ProfileConfig as IProfileConfig,
     PartialProfileConfig,
@@ -7,7 +9,6 @@ import {
 import { JsonHelper } from "@root/utils";
 import { instanceToPlain, plainToInstance } from "class-transformer";
 import { merge } from "lodash-es";
-import { v4 } from "uuid";
 
 export class ProfileConfig implements IProfileConfig {
     //Don`t touch
@@ -44,7 +45,7 @@ export class ProfileConfig implements IProfileConfig {
 
     private static readonly defaults: IProfileConfig = {
         configVersion: 0,
-        uuid: v4(),
+        uuid: randomUUID(),
         servers: [
             {
                 ip: "127.0.0.1",
