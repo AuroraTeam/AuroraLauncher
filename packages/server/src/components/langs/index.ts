@@ -6,6 +6,7 @@ import enTranslate from "./utils/en.json";
 import ruTranslate from "./utils/ru.json";
 
 export type Translate = typeof ruTranslate | typeof enTranslate;
+export type Lang = "ru" | "en";
 
 @singleton()
 @injectable()
@@ -44,7 +45,7 @@ export class LangManager {
      * Изменяет текущий язык
      * @param {string} lang - Язык для изменения
      */
-    public changeLang(lang: string): void {
+    public changeLang(lang: Lang): void {
         if (!this.langList.has(lang)) {
             LogHelper.error(this.getTranslate.LangManager.langNotFound, lang);
             return;

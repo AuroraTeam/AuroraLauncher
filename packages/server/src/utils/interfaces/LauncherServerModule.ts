@@ -3,7 +3,6 @@ export interface ILauncherServerModule {
     version: string;
     description: string;
     author: string;
-    dependencies: IDependencies;
 
     getInfo(): IModuleInfo;
     init(): void;
@@ -14,8 +13,4 @@ export interface IModuleInfo {
     version: string;
     description: string;
     author: string;
-}
-
-export interface IDependencies {
-    [index: string]: string;
 }
