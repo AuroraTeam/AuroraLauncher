@@ -2,47 +2,41 @@ import { Task } from "@root/components/thread/utils/types";
 import { Worker as NativeWorker } from 'worker_threads';
 
 export class AsyncQueue {
-    private tasks: Task<any>[] = [];
-    private taskIDs = 0;
-    private taskResolvers: Map<number, (value: any) => void> = new Map();
-    private readonly threads: NativeWorker[] = [];
+    private taskHelper: TaskHelper = new TaskHelper();
+    private threads: NativeWorker[] = [];
     private nextThreadIndex = 0;
 
     constructor(threads: NativeWorker[]) {
         this.threads = threads;
     }
 
-    public addTask<T>(task: Task<T>) {
+    public enqueueTask<T>(task: Task<T>) {
         return new Promise((resolve) => {
-            const taskId = this.taskIDs++;
-            this.taskResolvers.set(taskId, task);
-            this.tasks.push(task)
+            const taskId = this.taskHelper.getNewTaskId();
+            this.taskHelper.addTask(taskId, task, resolve);
 
             this.processTasks();
-        })
+        });
     }
 
     private async processTasks() {
-        while(this.tasks.length > 0) {
-            const task = this.tasks.shift()
-            if (task) {
-                const taskId = this.taskIDs - this.tasks.length - 1;
-                const thread = this.getAvailableThread();
+        while (this.taskHelper.hasTasks()) {
+            const { taskId, task } = this.taskHelper.getNextTask();
+            const thread = this.getAvailableThread();
 
-                if (thread) {
-                    thread.postMessage({ type: 'task', taskId, task });
-                }
+            if (thread) {
+                thread.postMessage({ type: 'task', taskId, task });
             }
         }
     }
 
     public resolve(taskId: number, data: any) {
-        const resolver = this.taskResolvers.get(taskId);
+        const resolver = this.taskHelper.getResolver(taskId);
         if (resolver) {
             resolver(data);
-            this.taskResolvers.delete(taskId);
+            this.taskHelper.removeTask(taskId);
 
-            if (this.taskResolvers.size > 0) {
+            if (this.taskHelper.hasTasks()) {
                 this.processTasks();
             }
         }
@@ -52,5 +46,35 @@ export class AsyncQueue {
         const thread= this.threads[this.nextThreadIndex];
         this.nextThreadIndex = (this.nextThreadIndex + 1) % this.threads.length;
         return thread;
+    }
+}
+
+class TaskHelper {
+    private tasks: { taskId: number; task: Task<any>; resolver: (value: any) => void }[] = [];
+    private taskIdCounter = 0;
+
+    public getNewTaskId(): number {
+        return this.taskIdCounter++;
+    }
+
+    public addTask<T>(taskId: number, task: Task<T>, resolver: (value: any) => void) {
+        this.tasks.push({ taskId, task, resolver });
+    }
+
+    public hasTasks(): boolean {
+        return this.tasks.length > 0;
+    }
+
+    public getNextTask() {
+        return this.tasks.shift()!;
+    }
+
+    public getResolver(taskId: number) {
+        const task = this.tasks.find((t) => t.taskId === taskId);
+        return task ? task.resolver : undefined;
+    }
+
+    public removeTask(taskId: number) {
+        this.tasks = this.tasks.filter((t) => t.taskId !== taskId);
     }
 }

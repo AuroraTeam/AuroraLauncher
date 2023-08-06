@@ -17,7 +17,7 @@ export class ThreadPool {
     }
 
     async runTask<T>(task: Task<T>) {
-        return this.asyncQueue.addTask(task);
+        return this.asyncQueue.enqueueTask(task);
     }
 
     private initializeThread(worker: NativeWorker) {
