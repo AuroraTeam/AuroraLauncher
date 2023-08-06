@@ -43,7 +43,7 @@ export class LangManager {
 
     /**
      * Изменяет текущий язык
-     * @param {string} lang - Язык для изменения
+     * @param {Lang} lang - Язык для изменения
      */
     public changeLang(lang: Lang): void {
         if (!this.langList.has(lang)) {
