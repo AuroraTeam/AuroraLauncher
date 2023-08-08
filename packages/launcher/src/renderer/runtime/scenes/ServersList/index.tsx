@@ -14,7 +14,7 @@ export default function ServersList() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        launcherAPI.api.getServers().then(setServers);
+        launcherAPI.scenes.serversList.getServers().then(setServers);
     }, []);
 
     const selectProfile = (profile: object) => {

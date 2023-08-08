@@ -20,7 +20,7 @@ export function ServerPanel() {
     const { showTitlebarBackBtn } = useTitlebar();
 
     useEffect(() => {
-        launcherAPI.api
+        launcherAPI.scenes.serverPanel
             .getProfile(selectedServer.profileUUID)
             .then(setSelectedProfile);
 
@@ -29,8 +29,11 @@ export function ServerPanel() {
 
     const startGame = () => {
         setGameStarted(true);
-        launcherAPI.game.start(selectedProfile, textToConsole, progress, () =>
-            setGameStarted(false)
+        launcherAPI.scenes.serverPanel.startGame(
+            selectedProfile,
+            textToConsole,
+            progress,
+            () => setGameStarted(false)
         );
     };
 

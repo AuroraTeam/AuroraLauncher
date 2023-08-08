@@ -37,7 +37,7 @@ export default function Login() {
 
         let username;
         try {
-            username = await launcherAPI.auth(login, password);
+            username = await launcherAPI.scenes.login.auth(login, password);
         } catch (error) {
             console.error(error);
             showModal('Ошибка авторизации', (error as Error).message);

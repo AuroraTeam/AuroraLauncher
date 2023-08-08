@@ -1,12 +1,9 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge } from 'electron';
 
-import {
-    API_AUTH_HANDLER,
-    API_HAS_CONNECTED_HANDLER,
-} from '../common/channels';
-import Game from './components/Game';
-import ServerList from './components/ServerList';
-import ServerPanel from './components/ServerPanel';
+import _API from './components/API';
+import LoginScene from './components/LoginScene';
+import ServerPanel from './components/ServerPanelScene';
+import ServersList from './components/ServersListScene';
 import Window from './components/Window';
 
 // export для типизации
@@ -15,16 +12,20 @@ export const API = {
         hide: Window.hide,
         close: Window.close,
     },
-    game: {
-        start: Game.start,
+    scenes: {
+        login: {
+            auth: LoginScene.auth,
+        },
+        serversList: {
+            getServers: ServersList.getServers,
+        },
+        serverPanel: {
+            getProfile: ServerPanel.getProfile,
+            startGame: ServerPanel.startGame,
+        },
     },
-    auth: (login: string, password: string): Promise<string> =>
-        ipcRenderer.invoke(API_AUTH_HANDLER, login, password),
     api: {
-        hasConnected: (): Promise<boolean> =>
-            ipcRenderer.invoke(API_HAS_CONNECTED_HANDLER),
-        getServers: ServerList.getServers,
-        getProfile: ServerPanel.getProfile,
+        hasConnected: _API.hasConnected,
     },
 };
 

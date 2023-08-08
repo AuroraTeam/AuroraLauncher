@@ -1,13 +1,16 @@
 import { ipcRenderer } from 'electron';
 
-import { GAME_START_EVENT } from '../../common/channels';
+import {
+    API_GET_PROFILE_HANDLER,
+    GAME_START_EVENT,
+} from '../../common/channels';
 
-export default class Game {
-    /**
-     * Start the game
-     * @param csl Print to console wrapper
-     */
-    static start(
+export default class ServerPanelScene {
+    static getProfile(uuid: string): Promise<any> {
+        return ipcRenderer.invoke(API_GET_PROFILE_HANDLER, uuid);
+    }
+
+    static startGame(
         profile: object,
         csl: (string: string) => void,
         progress: (data: object) => void,
