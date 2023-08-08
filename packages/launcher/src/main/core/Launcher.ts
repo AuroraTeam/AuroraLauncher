@@ -1,10 +1,10 @@
 import { Starter } from 'main/game/Starter';
 import { Service } from 'typedi';
 
+import { APIManager } from '../api/APIManager';
+import { AuthorizationService } from '../api/AuthorizationService';
 import { LogHelper } from '../helpers/LogHelper';
 import { StorageHelper } from '../helpers/StorageHelper';
-import { APIManager } from './APIManager';
-import { AuthorizationService } from './AuthorizationService';
 import { LauncherWindow } from './LauncherWindow';
 
 @Service()

@@ -1,5 +1,6 @@
+import { Worker as NativeWorker } from "worker_threads";
+
 import { Task } from "@root/components/thread/utils/types";
-import { Worker as NativeWorker } from 'worker_threads';
 
 export class AsyncQueue {
     private taskHelper: TaskHelper = new TaskHelper();
@@ -25,7 +26,7 @@ export class AsyncQueue {
             const thread = this.getAvailableThread();
 
             if (thread) {
-                thread.postMessage({ type: 'task', taskId, task });
+                thread.postMessage({ type: "task", taskId, task });
             }
         }
     }
@@ -43,7 +44,7 @@ export class AsyncQueue {
     }
 
     private getAvailableThread() {
-        const thread= this.threads[this.nextThreadIndex];
+        const thread = this.threads[this.nextThreadIndex];
         this.nextThreadIndex = (this.nextThreadIndex + 1) % this.threads.length;
         return thread;
     }

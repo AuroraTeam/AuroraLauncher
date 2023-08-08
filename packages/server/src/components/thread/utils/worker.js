@@ -1,7 +1,7 @@
 import { parentPort } from "worker_threads";
 
-parentPort.on('message', async (message) => {
-    if (message.type === 'task') {
+parentPort.on("message", async (message) => {
+    if (message.type === "task") {
         const { taskId, task } = message;
         try {
             const result = await task();
@@ -9,7 +9,7 @@ parentPort.on('message', async (message) => {
         } catch (error) {
             parentPort.postMessage({ taskId, error: error.message });
         }
-    } else if (message.type === 'terminate') {
+    } else if (message.type === "terminate") {
         process.exit(0);
     }
 });

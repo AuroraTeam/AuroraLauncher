@@ -27,9 +27,7 @@ export class AcceptAuthProvider implements AuthProvider {
             accessToken: randomUUID(),
         };
 
-        const userIndex = this.sessionsDB.findIndex(
-            (user) => user.username === username
-        );
+        const userIndex = this.sessionsDB.findIndex((user) => user.username === username);
         if (userIndex) {
             this.sessionsDB.splice(userIndex, 1);
         }
