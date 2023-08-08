@@ -8,6 +8,7 @@ import { LangManager } from "../langs";
 
 type HashedFile = {
     path: string;
+    size: number;
     sha1: string;
 };
 
@@ -65,8 +66,11 @@ export class ClientsManager {
     }
 
     async hashFile(path: string): Promise<HashedFile> {
+        const size = (await fs.stat(path)).size;
+
         return {
             path: path.replace(StorageHelper.clientsDir, ""),
+            size,
             sha1: await HashHelper.getSHA1fromFile(path),
         };
     }

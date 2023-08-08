@@ -2,10 +2,10 @@ import { API_AUTH_HANDLER, API_HAS_AUTHED_HANDLER } from 'common/channels';
 import { ipcMain } from 'electron';
 import { Service } from 'typedi';
 
+import { IHandleable } from '../core/IHandleable';
 import { APIManager } from './APIManager';
-import { IHandleable } from './IHandleable';
 
-interface Session {
+export interface Session {
     username: string;
     userUUID: string;
     accessToken: string;
@@ -13,7 +13,7 @@ interface Session {
 
 @Service()
 export class AuthorizationService implements IHandleable {
-    currentSession?: Session;
+    private currentSession?: Session;
 
     constructor(private apiService: APIManager) {}
 
@@ -29,7 +29,11 @@ export class AuthorizationService implements IHandleable {
         return this.currentSession.username;
     }
 
-    async hasAuthed() {
+    hasAuthed() {
         return !!this.currentSession;
+    }
+
+    getCurrentSession() {
+        return this.currentSession;
     }
 }

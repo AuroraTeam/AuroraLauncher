@@ -1,7 +1,8 @@
+import { randomUUID } from "crypto";
+
 import { AuthProviderConfig } from "@root/components/auth/providers";
 import { HjsonCommented, HjsonHelper } from "@root/utils";
 import { instanceToPlain, plainToInstance } from "class-transformer";
-import { randomUUID } from "crypto";
 
 import { ApiConfig } from "./ApiConfig";
 

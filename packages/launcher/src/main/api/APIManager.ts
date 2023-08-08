@@ -8,10 +8,10 @@ import {
     API_GET_SERVERS_HANDLER,
     API_HAS_CONNECTED_HANDLER,
 } from '../../common/channels';
-import { IHandleable } from './IHandleable';
+import { IHandleableDep } from '../core/IHandleable';
 
 @Service()
-export class APIManager implements IHandleable {
+export class APIManager implements IHandleableDep {
     private api = new AuroraAPI(apiConfig.ws || 'ws://localhost:1370', {
         onClose: () => {
             this.connectStatus = false;
