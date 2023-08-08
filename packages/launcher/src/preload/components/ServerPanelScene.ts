@@ -1,13 +1,10 @@
 import { ipcRenderer } from 'electron';
 
-import {
-    API_GET_PROFILE_HANDLER,
-    GAME_START_EVENT,
-} from '../../common/channels';
+import { EVENTS } from '../../common/channels';
 
 export default class ServerPanelScene {
     static getProfile(uuid: string): Promise<any> {
-        return ipcRenderer.invoke(API_GET_PROFILE_HANDLER, uuid);
+        return ipcRenderer.invoke(EVENTS.SCENES.SERVER_PANEL.GET_PROFILE, uuid);
     }
 
     static startGame(
@@ -16,7 +13,7 @@ export default class ServerPanelScene {
         progress: (data: object) => void,
         callback: () => void
     ) {
-        ipcRenderer.send(GAME_START_EVENT, {
+        ipcRenderer.send(EVENTS.SCENES.SERVER_PANEL.START_GAME, {
             ...profile,
             username: localStorage.getItem('username'),
             userUUID: localStorage.getItem('userUUID'),

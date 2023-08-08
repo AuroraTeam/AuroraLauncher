@@ -2,6 +2,7 @@ import { Response } from "aurora-rpc-client"
 
 export interface HashedFile {
     path: string
+    size: number
     sha1: string
 }
 

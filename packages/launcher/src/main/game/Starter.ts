@@ -11,7 +11,7 @@ import { StorageHelper } from 'main/helpers/StorageHelper';
 import { coerce, gte, lte } from 'semver';
 import { Service } from 'typedi';
 
-import { GAME_START_EVENT } from '../../common/channels';
+import { EVENTS } from '../../common/channels';
 import { AuthorizationService, Session } from '../api/AuthorizationService';
 import { Updater } from './Updater';
 
@@ -24,7 +24,7 @@ export class Starter implements IHandleable {
     ) {}
 
     initHandlers(): void {
-        ipcMain.on(GAME_START_EVENT, (event, clientArgs) =>
+        ipcMain.on(EVENTS.SCENES.SERVER_PANEL.START_GAME, (event, clientArgs) =>
             this.startGame(event, clientArgs)
         );
     }

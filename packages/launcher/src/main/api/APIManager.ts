@@ -3,42 +3,33 @@ import { api as apiConfig } from '@config';
 import { ipcMain } from 'electron';
 import { Service } from 'typedi';
 
-import {
-    API_GET_PROFILE_HANDLER,
-    API_GET_SERVERS_HANDLER,
-    API_HAS_CONNECTED_HANDLER,
-} from '../../common/channels';
+import { EVENTS } from '../../common/channels';
 import { IHandleableDep } from '../core/IHandleable';
 
 @Service()
 export class APIManager implements IHandleableDep {
     private api = new AuroraAPI(apiConfig.ws || 'ws://localhost:1370', {
         onClose: () => {
-            this.connectStatus = false;
             setTimeout(() => this.initConnection(), 5000);
         },
     });
-    private connectStatus = false;
 
     initHandlers() {
-        ipcMain.handle(API_HAS_CONNECTED_HANDLER, () => this.hasConnected());
-        ipcMain.handle(API_GET_SERVERS_HANDLER, () => this.api.getServers());
-        ipcMain.handle(API_GET_PROFILE_HANDLER, (_, uuid: string) =>
-            this.api.getProfile(uuid)
+        ipcMain.handle(EVENTS.SCENES.SERVERS_LIST.GET_SERVERS, () =>
+            this.api.getServers()
+        );
+        ipcMain.handle(
+            EVENTS.SCENES.SERVER_PANEL.GET_PROFILE,
+            (_, uuid: string) => this.api.getProfile(uuid)
         );
     }
 
     async initConnection() {
         try {
             await this.api.connect();
-            this.connectStatus = true;
         } catch (error) {
             //
         }
-    }
-
-    hasConnected() {
-        return this.connectStatus;
     }
 
     public getUpdates(dir: string) {
