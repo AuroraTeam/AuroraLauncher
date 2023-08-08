@@ -3,7 +3,7 @@ import { RecoilRoot } from 'recoil';
 
 import Layout from './runtime/components/Layout';
 import Login from './runtime/scenes/Login';
-import { ServerPanel } from './runtime/scenes/ServerPanel';
+import ServerPanel from './runtime/scenes/ServerPanel';
 import ServersList from './runtime/scenes/ServersList';
 
 export default function App() {

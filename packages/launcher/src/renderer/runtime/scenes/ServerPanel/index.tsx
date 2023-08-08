@@ -4,7 +4,7 @@ import If from '../../components/If';
 import { useTitlebar } from '../../components/TitleBar/hooks';
 import classes from './index.module.sass';
 
-export function ServerPanel() {
+export default function ServerPanel() {
     const [selectedServer] = useState(
         JSON.parse(localStorage.getItem('selectedProfile') as string)
     );

@@ -1,6 +1,5 @@
 import { contextBridge } from 'electron';
 
-import _API from './components/API';
 import LoginScene from './components/LoginScene';
 import ServerPanel from './components/ServerPanelScene';
 import ServersList from './components/ServersListScene';
@@ -23,9 +22,6 @@ export const API = {
             getProfile: ServerPanel.getProfile,
             startGame: ServerPanel.startGame,
         },
-    },
-    api: {
-        hasConnected: _API.hasConnected,
     },
 };
 

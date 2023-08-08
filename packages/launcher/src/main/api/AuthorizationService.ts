@@ -1,4 +1,4 @@
-import { API_AUTH_HANDLER, API_HAS_AUTHED_HANDLER } from 'common/channels';
+import { API_AUTH_HANDLER } from 'common/channels';
 import { ipcMain } from 'electron';
 import { Service } from 'typedi';
 
@@ -21,16 +21,11 @@ export class AuthorizationService implements IHandleable {
         ipcMain.handle(API_AUTH_HANDLER, (_, login: string, password: string) =>
             this.authorize(login, password)
         );
-        ipcMain.handle(API_HAS_AUTHED_HANDLER, () => this.hasAuthed());
     }
 
     async authorize(login: string, password: string) {
         this.currentSession = await this.apiService.auth(login, password);
         return this.currentSession.username;
-    }
-
-    hasAuthed() {
-        return !!this.currentSession;
     }
 
     getCurrentSession() {
