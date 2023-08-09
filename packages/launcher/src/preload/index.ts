@@ -17,9 +17,11 @@ export const API = {
         },
         serversList: {
             getServers: ServersList.getServers,
+            selectServer: ServersList.selectServer,
         },
         serverPanel: {
             getProfile: ServerPanel.getProfile,
+            getServer: ServerPanel.getServer,
             startGame: ServerPanel.startGame,
         },
     },

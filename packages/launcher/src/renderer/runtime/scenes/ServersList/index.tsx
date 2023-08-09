@@ -1,13 +1,10 @@
+import { Server } from '@aurora-launcher/api';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ServerButton } from '../../components/ServerButton';
 import SkinView from '../../components/SkinView';
 import classes from './index.module.sass';
-
-interface Server {
-    [key: string]: any;
-}
 
 export default function ServersList() {
     const [servers, setServers] = useState<Server[]>([]);
@@ -17,8 +14,8 @@ export default function ServersList() {
         launcherAPI.scenes.serversList.getServers().then(setServers);
     }, []);
 
-    const selectProfile = (profile: object) => {
-        localStorage.setItem('selectedProfile', JSON.stringify(profile));
+    const selectServer = (server: Server) => {
+        launcherAPI.scenes.serversList.selectServer(server);
         navigate('/ServerPanel');
     };
 
@@ -32,7 +29,7 @@ export default function ServersList() {
                     <ServerButton
                         key={i}
                         server={server}
-                        onClick={() => selectProfile(server)}
+                        onClick={() => selectServer(server)}
                     />
                 ))}
             </div>

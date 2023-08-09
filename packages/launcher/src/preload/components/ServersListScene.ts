@@ -1,9 +1,17 @@
+import { Server } from '@aurora-launcher/api';
 import { ipcRenderer } from 'electron';
 
 import { EVENTS } from '../../common/channels';
 
 export default class ServersListScene {
-    static getServers(): Promise<any[]> {
+    static getServers(): Promise<Server[]> {
         return ipcRenderer.invoke(EVENTS.SCENES.SERVERS_LIST.GET_SERVERS);
+    }
+
+    static selectServer(server: Server) {
+        return ipcRenderer.invoke(
+            EVENTS.SCENES.SERVERS_LIST.SELECT_SERVER,
+            server
+        );
     }
 }

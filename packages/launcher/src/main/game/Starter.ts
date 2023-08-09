@@ -2,45 +2,35 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import { delimiter, join } from 'path';
 
+import { Profile, Server } from '@aurora-launcher/api';
 import { ClientArguments } from '@aurora-launcher/core';
-import { IpcMainEvent, ipcMain } from 'electron';
-import { IHandleable } from 'main/core/IHandleable';
+import { IpcMainEvent } from 'electron';
 import { LauncherWindow } from 'main/core/LauncherWindow';
 import { LogHelper } from 'main/helpers/LogHelper';
 import { StorageHelper } from 'main/helpers/StorageHelper';
 import { coerce, gte, lte } from 'semver';
 import { Service } from 'typedi';
 
-import { EVENTS } from '../../common/channels';
 import { AuthorizationService, Session } from '../api/AuthorizationService';
 import { Updater } from './Updater';
 
 @Service()
-export class Starter implements IHandleable {
+export class Starter {
     constructor(
         private window: LauncherWindow,
         private authorizationService: AuthorizationService,
         private updater: Updater
     ) {}
 
-    initHandlers(): void {
-        ipcMain.on(EVENTS.SCENES.SERVER_PANEL.START_GAME, (event, clientArgs) =>
-            this.startGame(event, clientArgs)
-        );
-    }
-
-    private async startGame(
-        event: IpcMainEvent,
-        clientArgs: ClientArguments
-    ): Promise<void> {
-        try {
-            await this.updater.validateClient(clientArgs);
-        } catch (error) {
-            LogHelper.debug(error);
-            event.reply('stopGame');
-            return;
-        }
-        await this.start(event, clientArgs);
+    async startGame(profile?: Profile, server?: Server) {
+        // try {
+        //     await this.updater.validateClient(profile);
+        // } catch (error) {
+        //     LogHelper.debug(error);
+        //     event.reply('stopGame');
+        //     return;
+        // }
+        // await this.start(null, profile);
     }
 
     async start(

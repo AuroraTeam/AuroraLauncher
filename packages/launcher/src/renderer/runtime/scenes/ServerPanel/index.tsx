@@ -1,3 +1,4 @@
+import { Profile, Server } from '@aurora-launcher/api';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
 import If from '../../components/If';
@@ -5,10 +6,9 @@ import { useTitlebar } from '../../components/TitleBar/hooks';
 import classes from './index.module.sass';
 
 export default function ServerPanel() {
-    const [selectedServer] = useState(
-        JSON.parse(localStorage.getItem('selectedProfile') as string)
-    );
-    const [selectedProfile, setSelectedProfile] = useState({});
+    const [selectedProfile, setSelectedProfile] = useState({} as Profile);
+    const [selectedServer, setSelectedServer] = useState({} as Server);
+
     const [console, setConsole] = useState('');
     const [showProgress, setShowProgress] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
@@ -20,20 +20,16 @@ export default function ServerPanel() {
     const { showTitlebarBackBtn } = useTitlebar();
 
     useEffect(() => {
-        launcherAPI.scenes.serverPanel
-            .getProfile(selectedServer.profileUUID)
-            .then(setSelectedProfile);
+        launcherAPI.scenes.serverPanel.getProfile().then(setSelectedProfile);
+        launcherAPI.scenes.serverPanel.getServer().then(setSelectedServer);
 
         showTitlebarBackBtn();
     }, []);
 
     const startGame = () => {
         setGameStarted(true);
-        launcherAPI.scenes.serverPanel.startGame(
-            selectedProfile,
-            textToConsole,
-            progress,
-            () => setGameStarted(false)
+        launcherAPI.scenes.serverPanel.startGame(textToConsole, progress, () =>
+            setGameStarted(false)
         );
     };
 
