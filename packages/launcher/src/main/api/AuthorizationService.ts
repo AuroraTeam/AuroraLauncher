@@ -1,11 +1,7 @@
 import { Service } from 'typedi';
 
+import { UserData } from '../../common/types';
 import { APIManager } from './APIManager';
-
-export interface UserData {
-    username: string;
-    userUUID: string;
-}
 
 export interface Session extends UserData {
     accessToken: string;

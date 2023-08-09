@@ -37,16 +37,16 @@ export default function Login() {
         //     );
         // }
 
-        let username;
+        let userData;
         try {
-            username = await launcherAPI.scenes.login.auth(login, password);
+            userData = await launcherAPI.scenes.login.auth(login, password);
         } catch (error) {
             console.error(error);
             showModal('Ошибка авторизации', (error as Error).message);
             return;
         }
 
-        setTitlebarUserText(username);
+        setTitlebarUserText(userData.username);
         showTitlebarUser();
         navigate('ServersList');
     };
