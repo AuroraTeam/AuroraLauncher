@@ -12,7 +12,6 @@ export default class ServerPanelScene {
         return ipcRenderer.invoke(EVENTS.SCENES.SERVER_PANEL.GET_SERVER);
     }
 
-    // TODO Rework
     static startGame(
         consoleListener: (string: string) => void,
         progressListener: (data: object) => void,
@@ -20,17 +19,22 @@ export default class ServerPanelScene {
     ) {
         ipcRenderer.send(EVENTS.SCENES.SERVER_PANEL.START_GAME);
 
-        ipcRenderer.on('textToConsole', (_e, string) => {
-            consoleListener(string);
-        });
+        ipcRenderer.on(
+            EVENTS.SCENES.SERVER_PANEL.TEXT_TO_CONSOLE,
+            (_, string) => consoleListener(string)
+        );
 
-        ipcRenderer.on('loadProgress', (_e, data) => {
-            progressListener(data);
-        });
+        ipcRenderer.on(EVENTS.SCENES.SERVER_PANEL.LOAD_PROGRESS, (_, data) =>
+            progressListener(data)
+        );
 
-        ipcRenderer.once('stopGame', () => {
-            ipcRenderer.removeAllListeners('textToConsole');
-            ipcRenderer.removeAllListeners('loadProgress');
+        ipcRenderer.once(EVENTS.SCENES.SERVER_PANEL.STOP_GAME, () => {
+            ipcRenderer.removeAllListeners(
+                EVENTS.SCENES.SERVER_PANEL.TEXT_TO_CONSOLE
+            );
+            ipcRenderer.removeAllListeners(
+                EVENTS.SCENES.SERVER_PANEL.LOAD_PROGRESS
+            );
             stopGameListener();
         });
     }

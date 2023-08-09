@@ -28,7 +28,7 @@ export class ProfileRequest extends AbstractRequest {
             }`
         );
 
-        return profile.toObject();
+        return { profile: profile.toObject() };
     }
 }
 

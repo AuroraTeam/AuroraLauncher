@@ -15,6 +15,9 @@ export const EVENTS = {
             GET_PROFILE: 'scenes:serverPanel:getProfile',
             GET_SERVER: 'scenes:serverPanel:getServer',
             START_GAME: 'scenes:serverPanel:startGame',
+            TEXT_TO_CONSOLE: 'scenes:serverPanel:textToConsole',
+            LOAD_PROGRESS: 'scenes:serverPanel:loadProgress',
+            STOP_GAME: 'scenes:serverPanel:stopGame',
         },
     },
 };
