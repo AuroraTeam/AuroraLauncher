@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import { delimiter, join } from 'path';
 
-import { ClientArguments } from '@aurora-launcher/core';
+import { Profile } from '@aurora-launcher/core';
 import { LauncherWindow } from 'main/core/LauncherWindow';
 import { LogHelper } from 'main/helpers/LogHelper';
 import { StorageHelper } from 'main/helpers/StorageHelper';
@@ -20,7 +20,7 @@ export class Starter {
         private updater: Updater
     ) {}
 
-    async start(clientArgs: ClientArguments): Promise<void> {
+    async start(clientArgs: Profile): Promise<void> {
         const clientDir = join(StorageHelper.clientsDir, clientArgs.clientDir);
         const assetsDir = join(StorageHelper.assetsDir);
 
@@ -129,7 +129,7 @@ export class Starter {
 
     private gameLauncher(
         gameArgs: string[],
-        clientArgs: ClientArguments,
+        clientArgs: Profile,
         clientVersion: string,
         userArgs: Session
     ): void {

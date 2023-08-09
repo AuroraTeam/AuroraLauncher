@@ -1,10 +1,10 @@
-import { ProfileConfig, Server } from '@aurora-launcher/core';
+import { Profile, Server } from '@aurora-launcher/core';
 import { ipcRenderer } from 'electron';
 
 import { EVENTS } from '../../common/channels';
 
 export default class ServerPanelScene {
-    static getProfile(): Promise<ProfileConfig> {
+    static getProfile(): Promise<Profile> {
         return ipcRenderer.invoke(EVENTS.SCENES.SERVER_PANEL.GET_PROFILE);
     }
 

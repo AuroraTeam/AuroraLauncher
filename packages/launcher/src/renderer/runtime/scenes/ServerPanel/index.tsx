@@ -1,4 +1,4 @@
-import { ProfileConfig, Server } from '@aurora-launcher/core';
+import { Profile, Server } from '@aurora-launcher/core';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
 import If from '../../components/If';
@@ -6,7 +6,7 @@ import { useTitlebar } from '../../components/TitleBar/hooks';
 import classes from './index.module.sass';
 
 export default function ServerPanel() {
-    const [selectedProfile, setSelectedProfile] = useState({} as ProfileConfig);
+    const [selectedProfile, setSelectedProfile] = useState({} as Profile);
     const [selectedServer, setSelectedServer] = useState({} as Server);
 
     const [console, setConsole] = useState('');

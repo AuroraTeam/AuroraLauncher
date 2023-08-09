@@ -1,9 +1,7 @@
-import { ProfileConfig } from "../ClientArguments"
+import { Profile } from "../Profile"
 
 export interface ProfileRequestData {
     uuid: string
 }
 
-export interface ProfileResponseData {
-    profile: ProfileConfig
-}
+export type ProfileResponseData = Profile

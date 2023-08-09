@@ -1,7 +1,7 @@
 import { mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 
-import { ClientArguments } from '@aurora-launcher/core';
+import { Profile } from '@aurora-launcher/core';
 import { api as apiConfig } from '@config';
 import { HttpHelper } from 'main/helpers/HttpHelper';
 import { LogHelper } from 'main/helpers/LogHelper';
@@ -16,16 +16,16 @@ import { LauncherWindow } from '../core/LauncherWindow';
 export class Updater {
     constructor(private window: LauncherWindow, private api: APIManager) {}
 
-    async validateClient(clientArgs: ClientArguments) {
+    async validateClient(clientArgs: Profile) {
         await this.hash(clientArgs);
         await this.download(clientArgs);
     }
 
-    async hash(clientArgs: ClientArguments): Promise<void> {
+    async hash(clientArgs: Profile): Promise<void> {
         // TODO Здесь должен быть код, который будет проверять хеш файлов
     }
 
-    async download(clientArgs: ClientArguments): Promise<void> {
+    async download(clientArgs: Profile): Promise<void> {
         const parentDir = StorageHelper.clientsDir;
         this.window.sendEvent('textToConsole', `Load client files\n`);
 

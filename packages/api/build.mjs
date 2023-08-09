@@ -3,8 +3,10 @@ import { context } from "esbuild"
 const watchFlag = process.argv[2] === "--watch"
 
 ;(async () => {
-    !watchFlag && console.log("Build...")
-    !watchFlag && console.time("Build successfully")
+    if (!watchFlag) {
+        console.log("Build...")
+        console.time("Build successfully")
+    }
 
     await Promise.all(
         [
@@ -42,9 +44,8 @@ const watchFlag = process.argv[2] === "--watch"
             } else {
                 await ctx.rebuild()
                 await ctx.dispose()
+                console.timeEnd("Build successfully")
             }
         })
     )
-
-    !watchFlag && console.timeEnd("Build successfully")
 })()

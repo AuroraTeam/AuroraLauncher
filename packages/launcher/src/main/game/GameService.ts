@@ -1,4 +1,4 @@
-import { ProfileConfig, Server } from '@aurora-launcher/core';
+import { Profile, Server } from '@aurora-launcher/core';
 import { Service } from 'typedi';
 
 import { EVENTS } from '../../common/channels';
@@ -11,7 +11,7 @@ import { Updater } from './Updater';
 @Service()
 export class GameService {
     private selectedServer?: Server;
-    private selectedProfile?: ProfileConfig;
+    private selectedProfile?: Profile;
 
     constructor(
         private window: LauncherWindow,
@@ -21,12 +21,10 @@ export class GameService {
     ) {}
 
     async setServer(server: Server) {
-        const { profile } = await this.apiService.getProfile(
+        this.selectedServer = server;
+        this.selectedProfile = await this.apiService.getProfile(
             server.profileUUID
         );
-
-        this.selectedServer = server;
-        this.selectedProfile = profile;
     }
 
     getServer() {
