@@ -2,9 +2,7 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import { delimiter, join } from 'path';
 
-import { Profile, Server } from '@aurora-launcher/api';
 import { ClientArguments } from '@aurora-launcher/core';
-import { IpcMainEvent } from 'electron';
 import { LauncherWindow } from 'main/core/LauncherWindow';
 import { LogHelper } from 'main/helpers/LogHelper';
 import { StorageHelper } from 'main/helpers/StorageHelper';
@@ -22,21 +20,7 @@ export class Starter {
         private updater: Updater
     ) {}
 
-    async startGame(profile?: Profile, server?: Server) {
-        // try {
-        //     await this.updater.validateClient(profile);
-        // } catch (error) {
-        //     LogHelper.debug(error);
-        //     event.reply('stopGame');
-        //     return;
-        // }
-        // await this.start(null, profile);
-    }
-
-    async start(
-        event: IpcMainEvent,
-        clientArgs: ClientArguments
-    ): Promise<void> {
+    async start(clientArgs: ClientArguments): Promise<void> {
         const clientDir = join(StorageHelper.clientsDir, clientArgs.clientDir);
         const assetsDir = join(StorageHelper.assetsDir);
 
@@ -76,9 +60,9 @@ export class Starter {
         const nativesDirectory = join(clientDir, 'natives');
 
         const classPath: string[] = [];
-        if (clientArgs.classPath !== undefined) {
-            clientArgs.classPath.forEach((fileName) => {
-                const filePath = join(clientDir, fileName);
+        if (clientArgs.libraries !== undefined) {
+            clientArgs.libraries.forEach(({ path }) => {
+                const filePath = join(clientDir, path);
                 if (fs.statSync(filePath).isDirectory()) {
                     classPath.push(...this.scanDir(librariesDirectory));
                 } else {
@@ -127,7 +111,7 @@ export class Starter {
         });
 
         gameProccess.on('close', () => {
-            event.reply('stopGame');
+            this.window.sendEvent('stopGame');
             LogHelper.info('Game stop');
         });
     }

@@ -1,10 +1,10 @@
+import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 import { HttpHelper } from "@root/utils";
 
 import {
     AuthProvider,
     AuthProviderConfig,
-    AuthResponseData,
     HasJoinedResponseData,
     PrivilegesResponseData,
     ProfileResponseData,

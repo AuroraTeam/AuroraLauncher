@@ -69,7 +69,7 @@ export class ProfileConfig implements IProfileConfig {
     };
 
     toObject() {
-        return instanceToPlain(this);
+        return <IProfileConfig>instanceToPlain(this);
     }
 
     public toJSON() {

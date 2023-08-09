@@ -62,7 +62,7 @@
         "vite": "^4.3.7"
     },
     "dependencies": {
-        "@aurora-launcher/api": "^0.2.0-beta.5",
+        "@aurora-launcher/api": "^0.2.0-2",
         "@aurora-launcher/core": "^0.10.0",
         "p-map": "^6.0.0",
         "react": "^18.2.0",

@@ -1,4 +1,4 @@
-import { Server } from '@aurora-launcher/api';
+import { Server } from '@aurora-launcher/core';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,16 +1,11 @@
 import fs from "fs/promises";
 import { join } from "path";
 
+import { HashedFile } from "@aurora-launcher/core";
 import { HashHelper, LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
-
-type HashedFile = {
-    path: string;
-    size: number;
-    sha1: string;
-};
 
 @singleton()
 @injectable()

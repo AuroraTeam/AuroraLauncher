@@ -1,4 +1,4 @@
-import { Server } from '@aurora-launcher/api';
+import { Server } from '@aurora-launcher/core';
 import { ipcRenderer } from 'electron';
 
 import { EVENTS } from '../../common/channels';

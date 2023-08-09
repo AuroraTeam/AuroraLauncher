@@ -1,7 +1,8 @@
+import { ProfileRequestData, ProfileResponseData } from "@aurora-launcher/core";
 import { MojangAuthProviderConfig } from "@root/components/auth/providers";
 import { ConfigManager } from "@root/components/config";
 import { ProfilesManager } from "@root/components/profiles";
-import { AbstractRequest, ResponseResult } from "aurora-rpc-server";
+import { AbstractRequest } from "aurora-rpc-server";
 import { injectable } from "tsyringe";
 
 // TODO Указание доп.параметров для запуска клиента при использовании различных провайдеров
@@ -15,7 +16,7 @@ export class ProfileRequest extends AbstractRequest {
         super();
     }
 
-    invoke({ uuid }: ProfileRequestData): ResponseResult {
+    invoke({ uuid }: ProfileRequestData): ProfileResponseData {
         const config = this.configManager.config.auth as MojangAuthProviderConfig;
 
         const profile = this.profilesManager.profiles.find((p) => p.uuid == uuid);
@@ -30,8 +31,4 @@ export class ProfileRequest extends AbstractRequest {
 
         return { profile: profile.toObject() };
     }
-}
-
-interface ProfileRequestData {
-    uuid: string;
 }

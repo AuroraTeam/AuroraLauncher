@@ -29,7 +29,7 @@ export class Updater {
         const parentDir = StorageHelper.clientsDir;
         this.window.sendEvent('textToConsole', `Load client files\n`);
 
-        const { hashes } = await this.api.getUpdates(clientArgs.clientDir);
+        const hashes = await this.api.getUpdates(clientArgs.clientDir);
 
         if (!hashes) {
             this.window.sendEvent('textToConsole', `client not found\n`);
