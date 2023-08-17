@@ -5,6 +5,7 @@ import { HashHelper, LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
+import { Task } from "@root/components/thread/utils/types";
 
 type HashedFile = {
     path: string;
@@ -16,7 +17,9 @@ type HashedFile = {
 export class ClientsManager {
     readonly hashedClients = new Map<string, HashedFile[]>();
 
-    constructor(private readonly langManager: LangManager) {
+    constructor(
+        private readonly langManager: LangManager,
+    ) {
         this.hashClients();
     }
 
@@ -32,17 +35,23 @@ export class ClientsManager {
 
         LogHelper.info(this.langManager.getTranslate.ClientsManager.sync);
 
-        for (const { name } of dirs) {
+        const tasks: Task<void>[] = dirs.map((folder) => async () => {
             const startTime = Date.now();
+            const hashedFiles = await this.hashDir(join(StorageHelper.clientsDir, folder.name));
 
-            this.hashedClients.set(name, await this.hashDir(join(StorageHelper.clientsDir, name)));
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            this.hashedClients.set(folder.name, hashedFiles);
 
             LogHelper.info(
                 this.langManager.getTranslate.ClientsManager.syncTime,
-                name,
+                folder.name,
                 Date.now() - startTime
             );
-        }
+        });
+
+
+        await Promise.all(tasks.map(task => task()));
 
         LogHelper.info(this.langManager.getTranslate.ClientsManager.syncEnd);
     }

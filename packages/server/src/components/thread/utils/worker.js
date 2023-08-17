@@ -1,4 +1,5 @@
-import { parentPort } from "worker_threads";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { parentPort } = require("worker_threads");
 
 parentPort.on('message', async (message) => {
     if (message.type === 'task') {
@@ -10,6 +11,6 @@ parentPort.on('message', async (message) => {
             parentPort.postMessage({ taskId, error: error.message });
         }
     } else if (message.type === 'terminate') {
-        process.exit(0);
+        process.abort();
     }
 });

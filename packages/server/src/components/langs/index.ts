@@ -18,15 +18,7 @@ export class LangManager {
     private currentLang: Translate;
 
     constructor(private readonly configManager: ConfigManager) {
-        const selectedLang = configManager.config.lang;
-
-        if (!this.langList.has(selectedLang)) {
-            LogHelper.error(
-                'Invalid language settings! Language "%s" not found. Reset to default settings...',
-                selectedLang
-            );
-            this.configManager.setProp("lang", "en");
-        }
+        const selectedLang = this.validateLanguage(configManager.config.lang);
 
         this.currentLang = this.langList.get(selectedLang);
 
@@ -55,5 +47,24 @@ export class LangManager {
         this.configManager.setProp("lang", lang);
 
         LogHelper.info(this.getTranslate.LangManager.changeLang);
+    }
+
+    /**
+     * Проверяет валидность выбранного языка, возвращает 'en' если язык невалидный
+     * @param {Lang} lang - Выбранный язык
+     * @returns {Lang} Валидный язык
+     */
+    private validateLanguage(lang: string): string {
+        if (!this.langList.has(lang)) {
+            LogHelper.error(
+                'Invalid language settings! Language "%s" not found. Reset to default settings...',
+                lang
+            );
+            this.configManager.setProp("lang", "en");
+
+            return "en";
+        }
+
+        return lang;
     }
 }

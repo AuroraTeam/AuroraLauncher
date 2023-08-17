@@ -9,7 +9,7 @@ import { LangManager } from "../langs";
 @injectable()
 export class CommandsManager {
     public commands: Map<string, AbstractCommand> = new Map();
-    private console: ReadLine.Interface;
+    console: ReadLine.Interface;
 
     constructor(private readonly langManager: LangManager) {
         this.consoleInit();

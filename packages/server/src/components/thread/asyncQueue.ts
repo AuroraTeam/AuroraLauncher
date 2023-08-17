@@ -11,9 +11,8 @@ export class AsyncQueue {
     }
 
     public enqueueTask<T>(task: Task<T>) {
-        return new Promise((resolve) => {
-            const taskId = this.taskHelper.getNewTaskId();
-            this.taskHelper.addTask(taskId, task, resolve);
+        return new Promise( (resolve) => {
+            this.taskHelper.addTask(task, resolve);
 
             this.processTasks();
         });
@@ -57,7 +56,8 @@ class TaskHelper {
         return this.taskIdCounter++;
     }
 
-    public addTask<T>(taskId: number, task: Task<T>, resolver: (value: any) => void) {
+    public addTask<T>(task: Task<T>, resolver: (value: any) => void) {
+        const taskId: number = this.getNewTaskId();
         this.tasks.push({ taskId, task, resolver });
     }
 
