@@ -1,16 +1,12 @@
 import fs from "fs/promises";
 import { join } from "path";
 
+import { HashedFile } from "@aurora-launcher/core";
 import { HashHelper, LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
 import { Task } from "@root/components/thread/utils/types";
-
-type HashedFile = {
-    path: string;
-    sha1: string;
-};
 
 @singleton()
 @injectable()
@@ -74,8 +70,11 @@ export class ClientsManager {
     }
 
     async hashFile(path: string): Promise<HashedFile> {
+        const size = (await fs.stat(path)).size;
+
         return {
             path: path.replace(StorageHelper.clientsDir, ""),
+            size,
             sha1: await HashHelper.getSHA1fromFile(path),
         };
     }

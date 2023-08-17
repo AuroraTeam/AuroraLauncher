@@ -1,8 +1,8 @@
 import { randomUUID } from "crypto";
 
 import {
-    ProfileConfig as IProfileConfig,
-    PartialProfileConfig,
+    PartialProfile,
+    Profile,
     ProfileLibrary,
     ProfileServerConfig,
 } from "@aurora-launcher/core";
@@ -10,7 +10,7 @@ import { JsonHelper } from "@root/utils";
 import { instanceToPlain, plainToInstance } from "class-transformer";
 import { merge } from "lodash-es";
 
-export class ProfileConfig implements IProfileConfig {
+export class ProfileConfig implements Profile {
     //Don`t touch
     configVersion: number;
 
@@ -39,11 +39,11 @@ export class ProfileConfig implements IProfileConfig {
     jvmArgs: string[];
     clientArgs: string[];
 
-    constructor(config: PartialProfileConfig) {
+    constructor(config: PartialProfile) {
         merge(this, ProfileConfig.defaults, config);
     }
 
-    private static readonly defaults: IProfileConfig = {
+    private static readonly defaults: Profile = {
         configVersion: 0,
         uuid: randomUUID(),
         servers: [
@@ -69,7 +69,7 @@ export class ProfileConfig implements IProfileConfig {
     };
 
     toObject() {
-        return instanceToPlain(this);
+        return <Profile>instanceToPlain(this);
     }
 
     public toJSON() {

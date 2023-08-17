@@ -14,6 +14,7 @@
         "start:prod": "electron .",
         "clean": "rimraf build aurora-launcher-win32-x64",
         "prettier": "prettier --config .prettierrc.json --write src",
+        "typecheck": "tsc --noEmit",
         "lint": "eslint src --ext .ts,.tsx",
         "lint:fix": "npm run lint -- --fix",
         "pack": "electron-packager build"
@@ -61,8 +62,8 @@
         "vite": "^4.3.7"
     },
     "dependencies": {
-        "@aurora-launcher/api": "^0.2.0-beta.5",
-        "@aurora-launcher/core": "^0.10.0",
+        "@aurora-launcher/api": "^0.2.1",
+        "@aurora-launcher/core": "^0.11.2",
         "p-map": "^6.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

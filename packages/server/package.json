@@ -27,7 +27,7 @@
         "build:prod": "node scripts/build.mjs --minify",
         "build:bin": "pkg dist/app.js -t node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist --compress GZip",
         "clean": "rimraf dist",
-        "prettier": "prettier --write --print-width 100 src",
+        "prettier": "prettier --write src",
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
         "start": "node ."
@@ -59,7 +59,7 @@
         "typescript": "^5.0.4"
     },
     "dependencies": {
-        "@aurora-launcher/core": "^0.10.0",
+        "@aurora-launcher/core": "^0.11.2",
         "adm-zip": "^0.5.10",
         "aurora-rpc-server": "^0.1.5",
         "chalk": "^5.2.0",

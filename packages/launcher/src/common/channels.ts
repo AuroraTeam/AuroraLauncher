@@ -1,10 +1,23 @@
-export const WINDOW_HIDE_EVENT = 'window:hide';
-export const WINDOW_CLOSE_EVENT = 'window:close';
-
-export const API_AUTH_HANDLER = 'api:auth';
-export const API_HAS_AUTHED_HANDLER = 'api:hasAuthed';
-export const API_HAS_CONNECTED_HANDLER = 'api:hasConnected';
-export const API_GET_SERVERS_HANDLER = 'api:getServers';
-export const API_GET_PROFILE_HANDLER = 'api:getProfile';
-
-export const GAME_START_EVENT = 'game:start';
+export const EVENTS = {
+    WINDOW: {
+        HIDE: 'window:hide',
+        CLOSE: 'window:close',
+    },
+    SCENES: {
+        LOGIN: {
+            AUTH: 'scenes:login:auth',
+        },
+        SERVERS_LIST: {
+            GET_SERVERS: 'scenes:serversList:getServers',
+            SELECT_SERVER: 'scenes:serversList:selectServer',
+        },
+        SERVER_PANEL: {
+            GET_PROFILE: 'scenes:serverPanel:getProfile',
+            GET_SERVER: 'scenes:serverPanel:getServer',
+            START_GAME: 'scenes:serverPanel:startGame',
+            TEXT_TO_CONSOLE: 'scenes:serverPanel:textToConsole',
+            LOAD_PROGRESS: 'scenes:serverPanel:loadProgress',
+            STOP_GAME: 'scenes:serverPanel:stopGame',
+        },
+    },
+};

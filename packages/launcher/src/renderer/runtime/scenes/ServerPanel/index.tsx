@@ -1,14 +1,14 @@
+import { Profile, Server } from '@aurora-launcher/core';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
 import If from '../../components/If';
 import { useTitlebar } from '../../components/TitleBar/hooks';
 import classes from './index.module.sass';
 
-export function ServerPanel() {
-    const [selectedServer] = useState(
-        JSON.parse(localStorage.getItem('selectedProfile') as string)
-    );
-    const [selectedProfile, setSelectedProfile] = useState({});
+export default function ServerPanel() {
+    const [selectedProfile, setSelectedProfile] = useState({} as Profile);
+    const [selectedServer, setSelectedServer] = useState({} as Server);
+
     const [console, setConsole] = useState('');
     const [showProgress, setShowProgress] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
@@ -20,16 +20,15 @@ export function ServerPanel() {
     const { showTitlebarBackBtn } = useTitlebar();
 
     useEffect(() => {
-        launcherAPI.api
-            .getProfile(selectedServer.profileUUID)
-            .then(setSelectedProfile);
+        launcherAPI.scenes.serverPanel.getProfile().then(setSelectedProfile);
+        launcherAPI.scenes.serverPanel.getServer().then(setSelectedServer);
 
         showTitlebarBackBtn();
     }, []);
 
     const startGame = () => {
         setGameStarted(true);
-        launcherAPI.game.start(selectedProfile, textToConsole, progress, () =>
+        launcherAPI.scenes.serverPanel.startGame(textToConsole, progress, () =>
             setGameStarted(false)
         );
     };
@@ -62,7 +61,10 @@ export function ServerPanel() {
     return (
         <div className={classes.window}>
             <div className={classes.info}>
-                <div className={classes.title}>{selectedServer.title}</div>
+                <div>
+                    <div className={classes.title}>{selectedServer.title}</div>
+                    <div>{selectedProfile.version}</div>
+                </div>
                 <div className={classes.status}>
                     <div className={classes.gamers}>
                         Игроков

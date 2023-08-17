@@ -1,5 +1,6 @@
+import { UpdatesRequestData, UpdatesResponseData } from "@aurora-launcher/core";
 import { ClientsManager } from "@root/components/clients";
-import { AbstractRequest, ResponseResult } from "aurora-rpc-server";
+import { AbstractRequest } from "aurora-rpc-server";
 import { injectable } from "tsyringe";
 
 @injectable()
@@ -10,11 +11,7 @@ export class UpdatesRequest extends AbstractRequest {
         super();
     }
 
-    invoke({ dir }: UpdatesRequestData): ResponseResult {
-        return { hashes: this.clientsManager.hashedClients.get(dir) };
+    invoke({ dir }: UpdatesRequestData): UpdatesResponseData {
+        return this.clientsManager.hashedClients.get(dir);
     }
-}
-
-interface UpdatesRequestData {
-    dir: string;
 }

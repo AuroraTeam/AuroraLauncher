@@ -24,27 +24,29 @@ export default function Login() {
         const { login, password } = Object.fromEntries(formData) as AuthData;
 
         // Валидацию можно делать как хошш))
-        if (login.length < 3)
+        if (login.length < 3) {
             return showModal(
                 'Ошибка ввода',
                 'Логин должен быть не менее 3-ёх символов'
             );
-        // if (password.length < 8)
+        }
+        // if (password.length < 8) {
         //     return showModal(
         //         'Ошибка ввода',
         //         'Пароль должен быть не менее 8-ми символов'
         //     );
+        // }
 
-        let username;
+        let userData;
         try {
-            username = await launcherAPI.auth(login, password);
+            userData = await launcherAPI.scenes.login.auth(login, password);
         } catch (error) {
             console.error(error);
             showModal('Ошибка авторизации', (error as Error).message);
             return;
         }
 
-        setTitlebarUserText(username);
+        setTitlebarUserText(userData.username);
         showTitlebarUser();
         navigate('ServersList');
     };

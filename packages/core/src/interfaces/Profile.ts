@@ -1,8 +1,6 @@
-export type ClientArguments = ProfileConfig
+export type Profile = Required<PartialProfile>
 
-export type ProfileConfig = Required<PartialProfileConfig>
-
-export interface PartialProfileConfig {
+export interface PartialProfile {
     //Don`t touch
     configVersion?: number
 

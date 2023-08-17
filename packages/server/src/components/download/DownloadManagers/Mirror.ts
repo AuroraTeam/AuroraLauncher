@@ -2,7 +2,7 @@ import { mkdir, readFile } from "fs/promises";
 import { resolve } from "path";
 import { URL } from "url";
 
-import { PartialProfileConfig } from "@aurora-launcher/core";
+import { PartialProfile } from "@aurora-launcher/core";
 import { HttpHelper, JsonHelper, LogHelper, StorageHelper, ZipHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
@@ -70,7 +70,7 @@ export class MirrorManager extends AbstractDownloadManager {
 
         let profile;
         try {
-            profile = JsonHelper.fromJson<PartialProfileConfig>(
+            profile = JsonHelper.fromJson<PartialProfile>(
                 (await readFile(resolve(clientDirPath, "profile.json"))).toString()
             );
         } catch (error) {

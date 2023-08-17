@@ -1,10 +1,11 @@
-import { Starter } from 'main/game/Starter';
 import { Service } from 'typedi';
 
+import { APIManager } from '../api/APIManager';
 import { LogHelper } from '../helpers/LogHelper';
 import { StorageHelper } from '../helpers/StorageHelper';
-import { APIManager } from './APIManager';
-import { AuthorizationService } from './AuthorizationService';
+import { LoginScene } from '../scenes/Login';
+import { ServerPanelScene } from '../scenes/ServerPanel';
+import { ServersListScene } from '../scenes/ServersList';
 import { LauncherWindow } from './LauncherWindow';
 
 @Service()
@@ -12,9 +13,10 @@ export class Launcher {
     constructor(
         private window: LauncherWindow,
         private apiManager: APIManager,
-        private authorizationService: AuthorizationService,
 
-        private starter: Starter
+        private loginScene: LoginScene,
+        private serversListScene: ServersListScene,
+        private serverPanelScene: ServerPanelScene
     ) {
         this.init();
     }
@@ -22,12 +24,11 @@ export class Launcher {
     async init() {
         StorageHelper.createMissing();
 
-        // TODO REMOVE
-        this.apiManager.initHandlers();
         await this.apiManager.initConnection();
 
-        this.authorizationService.initHandlers();
-        this.starter.initHandlers();
+        this.loginScene.initHandlers();
+        this.serversListScene.initHandlers();
+        this.serverPanelScene.initHandlers();
 
         this.window.createWindow();
         LogHelper.info('Launcher started');

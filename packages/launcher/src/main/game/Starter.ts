@@ -2,46 +2,25 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import { delimiter, join } from 'path';
 
-import { ClientArguments } from '@aurora-launcher/core';
-import { IpcMainEvent, ipcMain } from 'electron';
-import { IHandleable } from 'main/core/IHandleable';
+import { Profile } from '@aurora-launcher/core';
 import { LauncherWindow } from 'main/core/LauncherWindow';
 import { LogHelper } from 'main/helpers/LogHelper';
 import { StorageHelper } from 'main/helpers/StorageHelper';
 import { coerce, gte, lte } from 'semver';
 import { Service } from 'typedi';
 
-import { GAME_START_EVENT } from '../../common/channels';
+import { AuthorizationService, Session } from '../api/AuthorizationService';
 import { Updater } from './Updater';
 
 @Service()
-export class Starter implements IHandleable {
-    constructor(private window: LauncherWindow) {}
+export class Starter {
+    constructor(
+        private window: LauncherWindow,
+        private authorizationService: AuthorizationService,
+        private updater: Updater
+    ) {}
 
-    initHandlers(): void {
-        ipcMain.on(GAME_START_EVENT, (event, clientArgs) =>
-            this.startGame(event, clientArgs)
-        );
-    }
-
-    private async startGame(
-        event: IpcMainEvent,
-        clientArgs: ClientArguments
-    ): Promise<void> {
-        try {
-            await Updater.validateClient(clientArgs);
-        } catch (error) {
-            LogHelper.debug(error);
-            event.reply('stopGame');
-            return;
-        }
-        await this.start(event, clientArgs);
-    }
-
-    async start(
-        event: IpcMainEvent,
-        clientArgs: ClientArguments
-    ): Promise<void> {
+    async start(clientArgs: Profile): Promise<void> {
         const clientDir = join(StorageHelper.clientsDir, clientArgs.clientDir);
         const assetsDir = join(StorageHelper.assetsDir);
 
@@ -52,6 +31,13 @@ export class Starter implements IHandleable {
             return;
         }
 
+        const userArgs = this.authorizationService.getCurrentSession();
+        if (!userArgs) {
+            this.window.sendEvent('textToConsole', 'Auth requierd');
+            LogHelper.error('Auth requierd');
+            return;
+        }
+
         const gameArgs: string[] = [];
 
         gameArgs.push('--version', clientArgs.version);
@@ -59,19 +45,24 @@ export class Starter implements IHandleable {
         gameArgs.push('--assetsDir', assetsDir);
 
         if (gte(clientVersion, '1.6.0')) {
-            this.gameLauncher(gameArgs, clientArgs, clientVersion.version);
+            this.gameLauncher(
+                gameArgs,
+                clientArgs,
+                clientVersion.version,
+                userArgs
+            );
         } else {
-            gameArgs.push(clientArgs.username);
-            gameArgs.push(clientArgs.accessToken);
+            gameArgs.push(userArgs.username);
+            gameArgs.push(userArgs.accessToken);
         }
 
         const librariesDirectory = join(clientDir, 'libraries');
         const nativesDirectory = join(clientDir, 'natives');
 
         const classPath: string[] = [];
-        if (clientArgs.classPath !== undefined) {
-            clientArgs.classPath.forEach((fileName) => {
-                const filePath = join(clientDir, fileName);
+        if (clientArgs.libraries !== undefined) {
+            clientArgs.libraries.forEach(({ path }) => {
+                const filePath = join(clientDir, path);
                 if (fs.statSync(filePath).isDirectory()) {
                     classPath.push(...this.scanDir(librariesDirectory));
                 } else {
@@ -120,7 +111,7 @@ export class Starter implements IHandleable {
         });
 
         gameProccess.on('close', () => {
-            event.reply('stopGame');
+            this.window.sendEvent('stopGame');
             LogHelper.info('Game stop');
         });
     }
@@ -138,14 +129,15 @@ export class Starter implements IHandleable {
 
     private gameLauncher(
         gameArgs: string[],
-        clientArgs: ClientArguments,
-        clientVersion: string
+        clientArgs: Profile,
+        clientVersion: string,
+        userArgs: Session
     ): void {
-        gameArgs.push('--username', clientArgs.username);
+        gameArgs.push('--username', userArgs.username);
 
         if (gte(clientVersion, '1.7.2')) {
-            gameArgs.push('--uuid', clientArgs.userUUID);
-            gameArgs.push('--accessToken', clientArgs.accessToken);
+            gameArgs.push('--uuid', userArgs.userUUID);
+            gameArgs.push('--accessToken', userArgs.accessToken);
 
             if (gte(clientVersion, '1.7.3')) {
                 gameArgs.push('--assetIndex', clientArgs.assetsIndex);
@@ -163,7 +155,7 @@ export class Starter implements IHandleable {
                 gameArgs.push('--versionType', 'AuroraLauncher v0.0.3');
             }
         } else {
-            gameArgs.push('--session', clientArgs.accessToken);
+            gameArgs.push('--session', userArgs.accessToken);
         }
     }
 }
