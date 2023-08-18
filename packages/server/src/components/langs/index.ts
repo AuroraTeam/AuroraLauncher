@@ -54,7 +54,7 @@ export class LangManager {
      * @param {Lang} lang - Выбранный язык
      * @returns {Lang} Валидный язык
      */
-    private validateLanguage(lang: string): string {
+    private validateLanguage(lang: Lang): Lang {
         if (!this.langList.has(lang)) {
             LogHelper.error(
                 'Invalid language settings! Language "%s" not found. Reset to default settings...',

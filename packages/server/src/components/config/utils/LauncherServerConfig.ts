@@ -5,12 +5,13 @@ import { HjsonCommented, HjsonHelper } from "@root/utils";
 import { instanceToPlain, plainToInstance } from "class-transformer";
 
 import { ApiConfig } from "./ApiConfig";
+import { Lang } from "@root/components";
 
 export class LauncherServerConfig extends HjsonCommented {
     configVersion: number;
     projectID: string;
     projectName: string;
-    lang: string;
+    lang: Lang;
     branch: branch;
     env: Environment;
     mirrors: string[];

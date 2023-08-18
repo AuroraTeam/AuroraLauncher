@@ -41,7 +41,7 @@ import {
     UpdateCommand,
 } from "./components/commands/commands";
 import { LogHelper, StorageHelper } from "./utils";
-import {ThreadPool} from "@root/components/thread/threadPool";
+import { ThreadPool } from "@root/components/thread/threadPool";
 
 @singleton()
 export class LauncherServer {
