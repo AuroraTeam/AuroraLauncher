@@ -12,23 +12,26 @@ import { injectable } from "tsyringe";
 export class ProfileRequest extends AbstractRequest {
     method = "profile";
 
-    constructor(private configManager: ConfigManager, private profilesManager: ProfilesManager) {
+    constructor(
+        private configManager: ConfigManager,
+        private profilesManager: ProfilesManager,
+    ) {
         super();
     }
 
     invoke({ uuid }: ProfileRequestData): ProfileResponseData {
         const config = this.configManager.config.auth as MojangAuthProviderConfig;
 
-        const profile = this.profilesManager.profiles.find((p) => p.uuid == uuid);
-        profile.jvmArgs.push(
+        const profile = this.profilesManager.profiles.find((p) => p.uuid == uuid).toObject();
+        profile.jvmArgs.unshift(
             `-Dminecraft.api.auth.host=${config.authHost || "http://127.0.0.1:1370/authlib"}`,
             `-Dminecraft.api.account.host=${config.accountHost || "http://127.0.0.1:1370/authlib"}`,
             `-Dminecraft.api.session.host=${config.sessionHost || "http://127.0.0.1:1370/authlib"}`,
             `-Dminecraft.api.services.host=${
                 config.servicesHost || "http://127.0.0.1:1370/authlib"
-            }`
+            }`,
         );
 
-        return { profile: profile.toObject() };
+        return profile;
     }
 }
