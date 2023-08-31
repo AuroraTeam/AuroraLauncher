@@ -1,7 +1,7 @@
 import { mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 
-import { Profile } from '@aurora-launcher/core';
+import { HashHelper, Profile } from '@aurora-launcher/core';
 import { api as apiConfig } from '@config';
 import { HttpHelper } from 'main/helpers/HttpHelper';
 import { LogHelper } from 'main/helpers/LogHelper';
@@ -10,31 +10,39 @@ import pMap from 'p-map';
 import { Service } from 'typedi';
 
 import { APIManager } from '../api/APIManager';
-import { LauncherWindow } from '../core/LauncherWindow';
+import { GameWindow } from './GameWindow';
 
 @Service()
 export class Updater {
-    constructor(private window: LauncherWindow, private api: APIManager) {}
+    constructor(
+        private api: APIManager,
+        private gameWindow: GameWindow,
+    ) {}
 
-    async validateClient(clientArgs: Profile) {
-        await this.hash(clientArgs);
-        await this.download(clientArgs);
+    async validateClient(clientArgs: Profile): Promise<void> {
+        await this.validateAssets(clientArgs);
+        await this.validateLibraries(clientArgs);
+        await this.validateGameFiles(clientArgs);
     }
 
-    async hash(clientArgs: Profile): Promise<void> {
-        // TODO Здесь должен быть код, который будет проверять хеш файлов
+    async validateAssets(clientArgs: Profile): Promise<void> {
+        this.gameWindow.sendToConsole('Load assets files');
+
+        // TODO: Validate assets
     }
 
-    async download(clientArgs: Profile): Promise<void> {
-        const parentDir = StorageHelper.clientsDir;
-        this.window.sendEvent('textToConsole', `Load client files\n`);
+    async validateLibraries(clientArgs: Profile): Promise<void> {
+        this.gameWindow.sendToConsole('Load libraries files');
+
+        // TODO: Validate libraries
+    }
+
+    async validateGameFiles(clientArgs: Profile): Promise<void> {
+        this.gameWindow.sendToConsole('Load client files');
 
         const hashes = await this.api.getUpdates(clientArgs.clientDir);
-
         if (!hashes) {
-            this.window.sendEvent('textToConsole', `client not found\n`);
-            LogHelper.error(`client not found`);
-            return;
+            throw new Error('Client not found');
         }
 
         hashes.sort((a, b) => b.size - a.size);
@@ -44,36 +52,36 @@ export class Updater {
         await pMap(
             hashes,
             async (hash) => {
-                const filePath = join(parentDir, hash.path);
+                const filePath = join(StorageHelper.clientsDir, hash.path);
                 mkdirSync(dirname(filePath), { recursive: true });
 
                 const fileUrl = new URL(
                     `files/clients/${hash.path.replace('\\', '/')}`,
-                    apiConfig.web
+                    apiConfig.web,
                 );
+
+                const fileHash = await HashHelper.getSHA1fromFile(filePath);
+                if (fileHash === hash.sha1) {
+                    this.gameWindow.sendToConsole(
+                        `File ${hash.path} already downloaded`,
+                    );
+                    return;
+                }
 
                 try {
                     await HttpHelper.downloadFile(fileUrl, filePath);
                 } catch (error) {
-                    this.window.sendEvent(
-                        'textToConsole',
-                        `file ${fileUrl} not found\n`
-                    );
-                    LogHelper.error(`file ${fileUrl} not found`);
-                    return;
+                    throw new Error(`file ${fileUrl} not found`);
                 }
 
-                this.window.sendEvent(
-                    'textToConsole',
-                    `File ${hash.path} downloaded \n`
-                );
+                this.gameWindow.sendToConsole(`File ${hash.path} downloaded`);
 
-                this.window.sendEvent('loadProgress', {
+                this.gameWindow.sendProgress({
                     total: totalSize,
                     loaded: (loaded += hash.size),
                 });
             },
-            { concurrency: 4 }
+            { concurrency: 4 },
         );
     }
 }

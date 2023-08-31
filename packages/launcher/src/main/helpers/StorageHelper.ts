@@ -8,7 +8,7 @@ export class StorageHelper {
     static clientsDir: string = resolve(StorageHelper.storageDir, 'clients');
     static librariesDir: string = resolve(
         StorageHelper.storageDir,
-        'libraries'
+        'libraries',
     );
     static nativesDir: string = resolve(StorageHelper.storageDir, 'natives');
     static logFile: string = resolve(StorageHelper.storageDir, 'Launcher.log');

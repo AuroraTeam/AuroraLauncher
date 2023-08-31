@@ -1,12 +1,11 @@
 import { Profile, Server } from '@aurora-launcher/core';
 import { Service } from 'typedi';
 
-import { EVENTS } from '../../common/channels';
 import { APIManager } from '../api/APIManager';
-import { LauncherWindow } from '../core/LauncherWindow';
 import { LogHelper } from '../helpers/LogHelper';
 import { Starter } from './Starter';
 import { Updater } from './Updater';
+import { GameWindow } from './GameWindow';
 
 @Service()
 export class GameService {
@@ -14,16 +13,16 @@ export class GameService {
     private selectedProfile?: Profile;
 
     constructor(
-        private window: LauncherWindow,
         private apiService: APIManager,
         private gameUpdater: Updater,
-        private gameStarter: Starter
+        private gameStarter: Starter,
+        private gameWindow: GameWindow,
     ) {}
 
     async setServer(server: Server) {
         this.selectedServer = server;
         this.selectedProfile = await this.apiService.getProfile(
-            server.profileUUID
+            server.profileUUID,
         );
     }
 
@@ -40,8 +39,8 @@ export class GameService {
         const server = this.selectedServer;
 
         if (!profile || !server) {
-            this.sendToConsole('[ERROR] Profile or server not set');
-            this.stopGame();
+            this.gameWindow.sendToConsole('Error: Profile or server not set');
+            this.gameWindow.stopGame();
             return;
         }
 
@@ -49,25 +48,10 @@ export class GameService {
             await this.gameUpdater.validateClient(profile);
         } catch (error) {
             LogHelper.error(error);
-            this.sendToConsole(`${error}`);
-            this.stopGame();
+            this.gameWindow.sendToConsole(`${error}`);
+            this.gameWindow.stopGame();
             return;
         }
         await this.gameStarter.start(profile);
-    }
-
-    private sendToConsole(text: string) {
-        this.window.sendEvent(
-            EVENTS.SCENES.SERVER_PANEL.TEXT_TO_CONSOLE,
-            `${text}\n`
-        );
-    }
-
-    private sendProgress(progress: object) {
-        //
-    }
-
-    private stopGame() {
-        //
     }
 }

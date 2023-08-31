@@ -4,6 +4,7 @@ import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import If from '../../components/If';
 import { useTitlebar } from '../../components/TitleBar/hooks';
 import classes from './index.module.sass';
+import { LoadProgress } from '../../../../common/types';
 
 export default function ServerPanel() {
     const [selectedProfile, setSelectedProfile] = useState({} as Profile);
@@ -29,7 +30,7 @@ export default function ServerPanel() {
     const startGame = () => {
         setGameStarted(true);
         launcherAPI.scenes.serverPanel.startGame(textToConsole, progress, () =>
-            setGameStarted(false)
+            setGameStarted(false),
         );
     };
 
@@ -43,7 +44,7 @@ export default function ServerPanel() {
         // }, 1);
     };
 
-    const progress = (data: any) => {
+    const progress = (data: LoadProgress) => {
         window.console.log(data);
 
         const total = data.total;
@@ -54,7 +55,7 @@ export default function ServerPanel() {
         setShowProgress(percent < 100);
 
         progressInfo.current.innerHTML = `Загружено ${bytesToSize(
-            loaded
+            loaded,
         )} из ${bytesToSize(total)}`;
     };
 
