@@ -38,9 +38,9 @@
     "devDependencies": {
         "@types/ws": "^8.5.3",
         "concurrently": "^8.0.1",
-        "esbuild": "^0.17.19",
+        "esbuild": "^0.19.2",
         "import-sort-style-module": "^6.0.0",
-        "prettier": "^2.4.0",
+        "prettier": "^3.0.3",
         "prettier-plugin-import-sort": "0.0.7",
         "rimraf": "^5.0.0",
         "typescript": "^5.0.4"
