@@ -44,8 +44,9 @@ const watchFlag = process.argv[2] === "--watch"
             } else {
                 await ctx.rebuild()
                 await ctx.dispose()
-                console.timeEnd("Build successfully")
             }
         })
     )
+
+    !watchFlag && console.timeEnd("Build successfully")
 })()

@@ -42,20 +42,20 @@
         "dist"
     ],
     "devDependencies": {
-        "@tsconfig/node18": "^2.0.1",
+        "@tsconfig/node18": "^18.2.1",
         "@tsconfig/strictest": "^2.0.1",
         "@types/node": "^18.15.0",
-        "@typescript-eslint/eslint-plugin": "^5.41.0",
-        "@typescript-eslint/parser": "^5.41.0",
+        "@typescript-eslint/eslint-plugin": "^6.5.0",
+        "@typescript-eslint/parser": "^6.5.0",
         "eslint": "^8.8.0",
         "import-sort-style-module": "^6.0.0",
-        "prettier": "^2.5.1",
+        "prettier": "^3.0.3",
         "prettier-plugin-import-sort": "0.0.7",
-        "tsup": "^6.6.3",
+        "tsup": "^7.2.0",
         "typescript": "^5.0.4"
     },
     "dependencies": {
-        "got": "^12.6.1",
+        "got": "^13.0.0",
         "p-map": "^6.0.0"
     }
 }

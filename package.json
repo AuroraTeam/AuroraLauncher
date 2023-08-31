@@ -6,7 +6,7 @@
     ],
     "scripts": {
         "dev": "concurrently -i -n server,launcher,core,api \"npm:dev -w packages/server\" \"npm:dev -w packages/launcher\" \"npm:dev -w packages/core\" \"npm:dev -w packages/api\"",
-        "build:libs": "npm run build -w packages/api -w packages/core"
+        "build:libs": "npm run build -w packages/core -w packages/api"
     },
     "devDependencies": {
         "concurrently": "^8.0.1"
