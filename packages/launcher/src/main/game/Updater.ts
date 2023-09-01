@@ -4,7 +4,6 @@ import { dirname, join } from 'path';
 
 import {
     HashHelper,
-    HashedFile,
     HttpHelper,
     JsonHelper,
     Profile,
@@ -45,10 +44,9 @@ export class Updater {
 
         const assetsHashes = Object.values(objects)
             .sort((a, b) => b.size - a.size)
-            .map(({ hash, size }) => ({
-                sha1: hash,
-                size,
-                path: `objects/${hash.slice(0, 2)}/${hash}`,
+            .map((hash) => ({
+                ...hash,
+                path: `objects/${hash.hash.slice(0, 2)}/${hash.hash}`,
             }));
 
         const assetsObjectsDir = join(StorageHelper.assetsDir, 'objects');
@@ -63,7 +61,8 @@ export class Updater {
             assetsHashes,
             async (hash) => {
                 await this.validateAndDownloadFile(
-                    hash,
+                    hash.path,
+                    hash.hash,
                     assetsObjectsDir,
                     'assets',
                 );
@@ -80,7 +79,25 @@ export class Updater {
     async validateLibraries(clientArgs: Profile): Promise<void> {
         this.gameWindow.sendToConsole('Load libraries files');
 
-        // TODO: Validate libraries
+        let loaded = 0;
+
+        await pMap(
+            clientArgs.libraries,
+            async (library) => {
+                await this.validateAndDownloadFile(
+                    library.path,
+                    library.sha1,
+                    StorageHelper.librariesDir,
+                    'libraries',
+                );
+
+                this.gameWindow.sendProgress({
+                    total: clientArgs.libraries.length,
+                    loaded: (loaded += 1),
+                });
+            },
+            { concurrency: 4 },
+        );
     }
 
     async validateGameFiles(clientArgs: Profile): Promise<void> {
@@ -95,12 +112,15 @@ export class Updater {
         const totalSize = hashes.reduce((prev, cur) => prev + cur.size, 0);
         let loaded = 0;
 
+        const clientDir = join(StorageHelper.clientsDir, clientArgs.clientDir);
+
         await pMap(
             hashes,
             async (hash) => {
                 await this.validateAndDownloadFile(
-                    hash,
-                    clientArgs.clientDir,
+                    hash.path,
+                    hash.sha1,
+                    clientDir,
                     'clients',
                 );
 
@@ -124,18 +144,19 @@ export class Updater {
     }
 
     async validateAndDownloadFile(
-        hash: HashedFile,
+        path: string,
+        sha1: string,
         rootDir: string,
         type: 'clients' | 'libraries' | 'assets',
     ): Promise<void> {
-        const filePath = join(rootDir, hash.path);
+        const filePath = join(rootDir, path);
         mkdirSync(dirname(filePath), { recursive: true });
 
-        const fileUrl = this.getFileUrl(hash.path, type);
+        const fileUrl = this.getFileUrl(path, type);
 
         try {
             const fileHash = await HashHelper.getSHA1fromFile(filePath);
-            if (fileHash === hash.sha1) return;
+            if (fileHash === sha1) return;
         } catch (error) {
             // ignore
         }

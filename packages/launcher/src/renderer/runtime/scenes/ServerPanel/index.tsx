@@ -29,6 +29,7 @@ export default function ServerPanel() {
 
     const startGame = () => {
         setConsole('');
+        setShowProgress(true);
         setGameStarted(true);
         launcherAPI.scenes.serverPanel.startGame(textToConsole, progress, () =>
             setGameStarted(false),
@@ -36,20 +37,19 @@ export default function ServerPanel() {
     };
 
     const textToConsole = (string: string) => {
-        // const consoleEl = consoleRef.current;
-        // consoleEl.append(string);
         setConsole((console) => console + string);
+
+        const consoleEl = consoleRef.current;
+        if (!consoleEl) return;
         // Если не оборачивать в setTimeout, то оно прокручивает не до конца
-        // setTimeout(() => {
-        // consoleEl.scrollTop = consoleEl.scrollHeight;
-        // }, 1);
+        setTimeout(() => {
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }, 1);
     };
 
-    const progress = (data: LoadProgress) => {
-        window.console.log(data);
+    const progress = ({ total, loaded }: LoadProgress) => {
+        if (!progressLine.current) return;
 
-        const total = data.total;
-        const loaded = data.loaded;
         const percent = (loaded / total) * 100;
 
         progressLine.current.style.width = percent + '%';
