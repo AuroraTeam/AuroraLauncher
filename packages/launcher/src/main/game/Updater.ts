@@ -1,10 +1,15 @@
 import { mkdirSync } from 'fs';
+import { writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 
-import { HashHelper, Profile } from '@aurora-launcher/core';
+import {
+    HashHelper,
+    HashedFile,
+    HttpHelper,
+    JsonHelper,
+    Profile,
+} from '@aurora-launcher/core';
 import { api as apiConfig } from '@config';
-import { HttpHelper } from 'main/helpers/HttpHelper';
-import { LogHelper } from 'main/helpers/LogHelper';
 import { StorageHelper } from 'main/helpers/StorageHelper';
 import pMap from 'p-map';
 import { Service } from 'typedi';
@@ -28,7 +33,48 @@ export class Updater {
     async validateAssets(clientArgs: Profile): Promise<void> {
         this.gameWindow.sendToConsole('Load assets files');
 
-        // TODO: Validate assets
+        const assetsIndexPath = `indexes/${clientArgs.assetsIndex}.json`;
+        const filePath = join(StorageHelper.assetsDir, assetsIndexPath);
+        mkdirSync(dirname(filePath), { recursive: true });
+
+        const assetsIndexUrl = this.getFileUrl(assetsIndexPath, 'assets');
+        const assetsFile = await HttpHelper.getResource(assetsIndexUrl);
+        await writeFile(filePath, assetsFile);
+
+        const { objects } = JsonHelper.fromJson<Assets>(assetsFile);
+
+        const assetsHashes = Object.values(objects)
+            .sort((a, b) => b.size - a.size)
+            .map(({ hash, size }) => ({
+                sha1: hash,
+                size,
+                path: `objects/${hash.slice(0, 2)}/${hash}`,
+            }));
+
+        const assetsObjectsDir = join(StorageHelper.assetsDir, 'objects');
+
+        const totalSize = assetsHashes.reduce(
+            (prev, cur) => prev + cur.size,
+            0,
+        );
+        let loaded = 0;
+
+        await pMap(
+            assetsHashes,
+            async (hash) => {
+                await this.validateAndDownloadFile(
+                    hash,
+                    assetsObjectsDir,
+                    'assets',
+                );
+
+                this.gameWindow.sendProgress({
+                    total: totalSize,
+                    loaded: (loaded += hash.size),
+                });
+            },
+            { concurrency: 4 },
+        );
     }
 
     async validateLibraries(clientArgs: Profile): Promise<void> {
@@ -52,29 +98,11 @@ export class Updater {
         await pMap(
             hashes,
             async (hash) => {
-                const filePath = join(StorageHelper.clientsDir, hash.path);
-                mkdirSync(dirname(filePath), { recursive: true });
-
-                const fileUrl = new URL(
-                    `files/clients/${hash.path.replace('\\', '/')}`,
-                    apiConfig.web,
+                await this.validateAndDownloadFile(
+                    hash,
+                    clientArgs.clientDir,
+                    'clients',
                 );
-
-                const fileHash = await HashHelper.getSHA1fromFile(filePath);
-                if (fileHash === hash.sha1) {
-                    this.gameWindow.sendToConsole(
-                        `File ${hash.path} already downloaded`,
-                    );
-                    return;
-                }
-
-                try {
-                    await HttpHelper.downloadFile(fileUrl, filePath);
-                } catch (error) {
-                    throw new Error(`file ${fileUrl} not found`);
-                }
-
-                this.gameWindow.sendToConsole(`File ${hash.path} downloaded`);
 
                 this.gameWindow.sendProgress({
                     total: totalSize,
@@ -84,4 +112,61 @@ export class Updater {
             { concurrency: 4 },
         );
     }
+
+    private getFileUrl(
+        path: string,
+        type: 'clients' | 'libraries' | 'assets',
+    ): URL {
+        return new URL(
+            `files/${type}/${path.replace('\\', '/')}`,
+            apiConfig.web,
+        );
+    }
+
+    async validateAndDownloadFile(
+        hash: HashedFile,
+        rootDir: string,
+        type: 'clients' | 'libraries' | 'assets',
+    ): Promise<void> {
+        const filePath = join(rootDir, hash.path);
+        mkdirSync(dirname(filePath), { recursive: true });
+
+        const fileUrl = this.getFileUrl(hash.path, type);
+
+        try {
+            const fileHash = await HashHelper.getSHA1fromFile(filePath);
+            if (fileHash === hash.sha1) return;
+        } catch (error) {
+            // ignore
+        }
+
+        try {
+            await HttpHelper.downloadFile(fileUrl, filePath);
+        } catch (error) {
+            throw new Error(`file ${fileUrl} not found`);
+        }
+    }
+}
+
+// TODO: Move to @aurora-launcher/core
+/**
+ * For assets
+ */
+export interface Assets {
+    /**
+     * Найдено в https://launchermeta.mojang.com/v1/packages/3d8e55480977e32acd9844e545177e69a52f594b/pre-1.6.json \
+     * до версии 1.6 (если точнее до снапшота 13w23b)
+     */
+    map_to_resources?: boolean;
+    /**
+     * Найдено в https://launchermeta.mojang.com/v1/packages/770572e819335b6c0a053f8378ad88eda189fc14/legacy.json \
+     * начиная с версии версии 1.6 (если точнее с снапшота 13w24a) и до 1.7.2 (13w48b)
+     */
+    virtual?: boolean;
+    objects: { [key: string]: Asset };
+}
+
+export interface Asset {
+    hash: string;
+    size: number;
 }

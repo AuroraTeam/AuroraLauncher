@@ -26,25 +26,25 @@ export class AuroraAPI {
         this.#clientInstance.close(code, data)
     }
 
-    public async auth(login: string, password: string) {
+    public async auth(login: string, password: string): Promise<AuthResponseData> {
         return await this.#getRequest<AuthRequestData, AuthResponseData>("auth", { login, password })
     }
 
-    public async getServers() {
+    public async getServers(): Promise<ServersResponseData> {
         return await this.#getRequest<undefined, ServersResponseData>("servers")
     }
 
-    public async getProfile(uuid: string) {
+    public async getProfile(uuid: string): Promise<ProfileResponseData> {
         return await this.#getRequest<ProfileRequestData, ProfileResponseData>("profile", { uuid })
     }
 
-    public async getUpdates(dir: string) {
+    public async getUpdates(dir: string): Promise<UpdatesResponseData> {
         return await this.#getRequest<UpdatesRequestData, UpdatesResponseData>("updates", { dir })
     }
 
     async #getRequest<Req extends Request["params"], Res extends Response["result"]>(
         method: string,
-        params?: Req
+        params?: Req,
     ): Promise<Res> {
         try {
             const { result } = await this.#clientInstance.send(method, params)
