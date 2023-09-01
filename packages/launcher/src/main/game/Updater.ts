@@ -15,6 +15,7 @@ import { Service } from 'typedi';
 
 import { APIManager } from '../api/APIManager';
 import { GameWindow } from './GameWindow';
+import { LibrariesMatcher } from './LibrariesMatcher';
 
 @Service()
 export class Updater {
@@ -49,8 +50,6 @@ export class Updater {
                 path: `objects/${hash.hash.slice(0, 2)}/${hash.hash}`,
             }));
 
-        const assetsObjectsDir = join(StorageHelper.assetsDir, 'objects');
-
         const totalSize = assetsHashes.reduce(
             (prev, cur) => prev + cur.size,
             0,
@@ -63,7 +62,7 @@ export class Updater {
                 await this.validateAndDownloadFile(
                     hash.path,
                     hash.hash,
-                    assetsObjectsDir,
+                    StorageHelper.assetsDir,
                     'assets',
                 );
 
@@ -82,9 +81,8 @@ export class Updater {
         let loaded = 0;
 
         await pMap(
-            clientArgs.libraries.filter(
-                () => true,
-                // && library.rules // TODO
+            clientArgs.libraries.filter((library) =>
+                LibrariesMatcher.match(library.rules),
             ),
             async (library) => {
                 await this.validateAndDownloadFile(

@@ -2,22 +2,20 @@ import { spawn } from 'child_process';
 import { delimiter, join } from 'path';
 
 import { Profile, ZipHelper } from '@aurora-launcher/core';
-import { LauncherWindow } from 'main/core/LauncherWindow';
 import { LogHelper } from 'main/helpers/LogHelper';
 import { StorageHelper } from 'main/helpers/StorageHelper';
 import { coerce, gte, lte } from 'semver';
 import { Service } from 'typedi';
 
 import { AuthorizationService, Session } from '../api/AuthorizationService';
-import { Updater } from './Updater';
-import pMap from 'p-map';
+import { LibrariesMatcher } from './LibrariesMatcher';
+import { GameWindow } from './GameWindow';
 
 @Service()
 export class Starter {
     constructor(
-        private window: LauncherWindow,
         private authorizationService: AuthorizationService,
-        private updater: Updater,
+        private gameWindow: GameWindow,
     ) {}
 
     async start(clientArgs: Profile): Promise<void> {
@@ -39,6 +37,8 @@ export class Starter {
         gameArgs.push('--gameDir', clientDir);
         gameArgs.push('--assetsDir', StorageHelper.assetsDir);
 
+        // TODO: add support legacy assets
+
         if (gte(clientVersion, '1.6.0')) {
             this.gameLauncher(
                 gameArgs,
@@ -53,8 +53,9 @@ export class Starter {
 
         const classPath = clientArgs.libraries
             .filter(
-                (library) => library.type === 'library',
-                // && library.rules // TODO
+                (library) =>
+                    library.type === 'library' &&
+                    LibrariesMatcher.match(library.rules),
             )
             .map(({ path }) => {
                 return join(StorageHelper.librariesDir, path);
@@ -71,34 +72,30 @@ export class Starter {
         const nativesDirectory = this.prepareNatives(clientArgs);
         jvmArgs.push(`-Djava.library.path=${nativesDirectory}`);
 
-        if (clientArgs.jvmArgs?.length > 0) {
-            jvmArgs.push(...clientArgs.jvmArgs);
-        }
+        jvmArgs.push(...clientArgs.jvmArgs);
 
         jvmArgs.push('-cp', classPath.join(delimiter));
         jvmArgs.push(clientArgs.mainClass);
 
         jvmArgs.push(...gameArgs);
-        if (clientArgs.clientArgs?.length > 0) {
-            jvmArgs.push(...clientArgs.clientArgs);
-        }
+        jvmArgs.push(...clientArgs.clientArgs);
 
-        const gameProccess = spawn('java', jvmArgs, {
-            cwd: clientDir,
-        });
+        const gameProccess = spawn('java', jvmArgs, { cwd: clientDir });
 
         gameProccess.stdout.on('data', (data: Buffer) => {
-            this.window.sendEvent('textToConsole', data.toString());
-            LogHelper.info(data.toString());
+            const log = data.toString().trim();
+            this.gameWindow.sendToConsole(log);
+            LogHelper.info(log);
         });
 
         gameProccess.stderr.on('data', (data: Buffer) => {
-            this.window.sendEvent('textToConsole', data.toString());
-            LogHelper.error(data.toString());
+            const log = data.toString().trim();
+            this.gameWindow.sendToConsole(log);
+            LogHelper.error(log);
         });
 
         gameProccess.on('close', () => {
-            this.window.sendEvent('stopGame');
+            this.gameWindow.stopGame();
             LogHelper.info('Game stop');
         });
     }
@@ -127,7 +124,7 @@ export class Starter {
             }
 
             if (gte(clientVersion, '1.9.0')) {
-                gameArgs.push('--versionType', 'AuroraLauncher v0.0.3');
+                gameArgs.push('--versionType', 'AuroraLauncher v0.1.0');
             }
         } else {
             gameArgs.push('--session', userArgs.accessToken);
@@ -143,8 +140,9 @@ export class Starter {
 
         clientArgs.libraries
             .filter(
-                (library) => library.type === 'native',
-                // && library.rules // TODO
+                (library) =>
+                    library.type === 'native' &&
+                    LibrariesMatcher.match(library.rules),
             )
             .forEach(({ path }) => {
                 try {
