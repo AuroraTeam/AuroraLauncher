@@ -3,10 +3,11 @@ import { resolve } from "path";
 import { URL } from "url";
 
 import { HttpHelper, JsonHelper, PartialProfile, ZipHelper } from "@aurora-launcher/core";
-import { LogHelper, StorageHelper } from "@root/utils";
+import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { AbstractDownloadManager } from "./AbstractManager";
+import { statSync } from "fs";
 
 @injectable()
 export class MirrorManager extends AbstractDownloadManager {
@@ -55,8 +56,14 @@ export class MirrorManager extends AbstractDownloadManager {
             this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking,
         );
 
+        const progress = ProgressHelper.getLoadingProgressBar();
+        const stat = statSync(client);
+        progress.start(stat.size, 0);
+
         try {
-            ZipHelper.unzipArchive(client, clientDirPath);
+            ZipHelper.unzipArchive(client, clientDirPath, undefined, (size) => {
+                progress.increment(size);
+            });
         } catch (error) {
             await StorageHelper.rmdirRecursive(clientDirPath);
             LogHelper.error(
@@ -65,6 +72,7 @@ export class MirrorManager extends AbstractDownloadManager {
             LogHelper.debug(error);
             return;
         } finally {
+            progress.stop();
             await StorageHelper.rmdirRecursive(client).catch();
         }
 
