@@ -2,8 +2,8 @@ import { mkdir, readFile } from "fs/promises";
 import { resolve } from "path";
 import { URL } from "url";
 
-import { PartialProfile } from "@aurora-launcher/core";
-import { HttpHelper, JsonHelper, LogHelper, StorageHelper, ZipHelper } from "@root/utils";
+import { HttpHelper, JsonHelper, PartialProfile, ZipHelper } from "@aurora-launcher/core";
+import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { AbstractDownloadManager } from "./AbstractManager";
@@ -32,7 +32,7 @@ export class MirrorManager extends AbstractDownloadManager {
 
         if (!mirror) {
             return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager.client.notFound
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.notFound,
             );
         }
 
@@ -45,14 +45,14 @@ export class MirrorManager extends AbstractDownloadManager {
             });
         } catch (error) {
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager.client.downloadErr
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.downloadErr,
             );
             LogHelper.debug(error);
             return;
         }
 
         LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking
+            this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking,
         );
 
         try {
@@ -60,7 +60,7 @@ export class MirrorManager extends AbstractDownloadManager {
         } catch (error) {
             await StorageHelper.rmdirRecursive(clientDirPath);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingErr
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingErr,
             );
             LogHelper.debug(error);
             return;
@@ -71,11 +71,11 @@ export class MirrorManager extends AbstractDownloadManager {
         let profile;
         try {
             profile = JsonHelper.fromJson<PartialProfile>(
-                (await readFile(resolve(clientDirPath, "profile.json"))).toString()
+                (await readFile(resolve(clientDirPath, "profile.json"))).toString(),
             );
         } catch (error) {
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager.client.profileErr
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.profileErr,
             );
         }
 

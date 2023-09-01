@@ -1,10 +1,10 @@
 import type { AuthProvider } from "@root/components/auth/providers";
-import { JsonHelper } from "@root/utils";
 import { inject, injectable } from "tsyringe";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
+import { JsonHelper } from "@aurora-launcher/core";
 
 @injectable()
 export class ProfilesRequest extends AbstractRequest {
@@ -31,7 +31,7 @@ export class ProfilesRequest extends AbstractRequest {
             return res.sendError(
                 400,
                 "IllegalArgumentException",
-                "Not more that 10 profile name per call is allowed."
+                "Not more that 10 profile name per call is allowed.",
             );
 
         res.sendJson(await this.authProvider.profiles(data));

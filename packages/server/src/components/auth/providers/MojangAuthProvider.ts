@@ -1,6 +1,5 @@
-import { AuthResponseData } from "@aurora-launcher/core";
+import { AuthResponseData, HttpHelper } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { HttpHelper } from "@root/utils";
 
 import { AuthProvider, AuthProviderConfig } from "./AuthProvider";
 
@@ -22,7 +21,7 @@ export class MojangAuthProvider implements AuthProvider {
                 },
                 username,
                 password,
-            }
+            },
         );
 
         return {
@@ -62,7 +61,7 @@ interface AuthenticateResponse {
         {
             name: string;
             id: string;
-        }
+        },
     ];
     selectedProfile: {
         name: string;

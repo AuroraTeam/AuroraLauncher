@@ -1,8 +1,8 @@
 import { mkdir, writeFile } from "fs/promises";
 import path, { resolve } from "path";
 
-import { ProfileLibrary } from "@aurora-launcher/core";
-import { HttpHelper, JsonHelper, LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
+import { HttpHelper, JsonHelper, ProfileLibrary } from "@aurora-launcher/core";
+import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import {
@@ -80,12 +80,12 @@ export class MojangManager extends AbstractDownloadManager {
                     onProgress: (progress) => {
                         progressBar.update(progress.transferred);
                     },
-                }
+                },
             );
         } catch (error) {
             LogHelper.debug(error);
             return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadErr
+                this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadErr,
             );
         } finally {
             progressBar.stop();
@@ -127,7 +127,7 @@ export class MojangManager extends AbstractDownloadManager {
                     afterDownload() {
                         progressBar.increment();
                     },
-                }
+                },
             );
         } catch (error) {
             // LogHelper.error(
@@ -179,7 +179,7 @@ export class MojangManager extends AbstractDownloadManager {
                     afterDownload() {
                         progressBar.increment();
                     },
-                }
+                },
             );
         } catch (error) {
             LogHelper.info("Downloading libraries failed");
@@ -258,12 +258,12 @@ export class MojangManager extends AbstractDownloadManager {
     async #getVersions() {
         try {
             return await HttpHelper.getResourceFromJson<VersionsManifest>(
-                this.#versionManifestLink
+                this.#versionManifestLink,
             );
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager.info.errVerParsing
+                this.langManager.getTranslate.DownloadManager.MojangManager.info.errVerParsing,
             );
         }
     }
@@ -279,7 +279,7 @@ export class MojangManager extends AbstractDownloadManager {
         if (!version) {
             return LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MojangManager.info.verNotFound,
-                gameVersion
+                gameVersion,
             );
         }
 
@@ -288,7 +288,7 @@ export class MojangManager extends AbstractDownloadManager {
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MojangManager.info.errClientParsing
+                this.langManager.getTranslate.DownloadManager.MojangManager.info.errClientParsing,
             );
         }
     }

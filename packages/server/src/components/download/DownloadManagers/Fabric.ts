@@ -1,8 +1,9 @@
-import { HttpHelper, LogHelper } from "@root/utils";
+import { LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { ClientMeta, VersionMeta } from "../interfaces/IFabric";
 import { FabricLikeManager } from "./FabricLike";
+import { HttpHelper } from "@aurora-launcher/core";
 
 @injectable()
 export class FabricManager extends FabricLikeManager {
@@ -36,7 +37,7 @@ export class FabricManager extends FabricLikeManager {
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.FabricManager.info.errJsonParsing
+                this.langManager.getTranslate.DownloadManager.FabricManager.info.errJsonParsing,
             );
         }
     }
@@ -49,18 +50,18 @@ export class FabricManager extends FabricLikeManager {
         if (!stableLoader) {
             return LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.FabricManager.info.verNotFound,
-                version
+                version,
             );
         }
 
         try {
             return await HttpHelper.getResourceFromJson<ClientMeta>(
-                `${this.fabricMetaLink}${version}/${stableLoader.loader.version}/profile/json`
+                `${this.fabricMetaLink}${version}/${stableLoader.loader.version}/profile/json`,
             );
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.FabricManager.info.errClientParsing
+                this.langManager.getTranslate.DownloadManager.FabricManager.info.errClientParsing,
             );
         }
     }

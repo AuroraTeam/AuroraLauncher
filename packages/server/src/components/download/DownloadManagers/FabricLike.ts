@@ -1,7 +1,7 @@
 import { resolve } from "path";
 
-import { ProfileLibrary } from "@aurora-launcher/core";
-import { HashHelper, HttpHelper, LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
+import { HashHelper, HttpHelper, ProfileLibrary } from "@aurora-launcher/core";
+import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 
 import { Library } from "../interfaces/IFabric";
 import { MojangManager } from "./Mojang";
@@ -9,7 +9,7 @@ import { MojangManager } from "./Mojang";
 export class FabricLikeManager extends MojangManager {
     protected async resolveLibraries(
         libraries: Library[],
-        loaderName: string
+        loaderName: string,
     ): Promise<ProfileLibrary[]> {
         LogHelper.info(`Downloading ${loaderName} libraries`);
 
@@ -31,7 +31,7 @@ export class FabricLikeManager extends MojangManager {
                     afterDownload() {
                         progressBar.increment();
                     },
-                }
+                },
             );
         } catch (error) {
             LogHelper.info(`Downloading ${loaderName} libraries failed`);
@@ -51,7 +51,7 @@ export class FabricLikeManager extends MojangManager {
                     sha1: await HashHelper.getSHA1fromFile(filePath),
                     type: "library",
                 };
-            })
+            }),
         );
     }
 }

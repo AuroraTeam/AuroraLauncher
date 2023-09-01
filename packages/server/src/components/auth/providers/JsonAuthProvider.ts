@@ -1,6 +1,5 @@
-import { AuthResponseData } from "@aurora-launcher/core";
+import { AuthResponseData, HttpHelper } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { HttpHelper } from "@root/utils";
 
 import {
     AuthProvider,
@@ -49,7 +48,7 @@ export class JsonAuthProvider implements AuthProvider {
     async privileges(accessToken: string): Promise<PrivilegesResponseData> {
         return await HttpHelper.postJson<PrivilegesResponseData>(
             new URL(this.config.privilegesUrl),
-            { accessToken }
+            { accessToken },
         );
     }
 

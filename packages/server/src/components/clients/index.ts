@@ -1,8 +1,8 @@
 import fs from "fs/promises";
 import { join } from "path";
 
-import { HashedFile } from "@aurora-launcher/core";
-import { HashHelper, LogHelper, StorageHelper } from "@root/utils";
+import { HashHelper, HashedFile } from "@aurora-launcher/core";
+import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
@@ -13,9 +13,7 @@ import { Task } from "@root/components/thread/utils/types";
 export class ClientsManager {
     readonly hashedClients = new Map<string, HashedFile[]>();
 
-    constructor(
-        private readonly langManager: LangManager,
-    ) {
+    constructor(private readonly langManager: LangManager) {
         this.hashClients();
     }
 
@@ -42,12 +40,11 @@ export class ClientsManager {
             LogHelper.info(
                 this.langManager.getTranslate.ClientsManager.syncTime,
                 folder.name,
-                Date.now() - startTime
+                Date.now() - startTime,
             );
         });
 
-
-        await Promise.all(tasks.map(task => task()));
+        await Promise.all(tasks.map((task) => task()));
 
         LogHelper.info(this.langManager.getTranslate.ClientsManager.syncEnd);
     }

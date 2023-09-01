@@ -1,12 +1,13 @@
 import path from "path";
 
-import { HttpHelper, LogHelper, StorageHelper, SystemHelper } from "@root/utils";
+import { LogHelper, StorageHelper, SystemHelper } from "@root/utils";
 import semver from "semver";
 import { injectable, singleton } from "tsyringe";
 
 import { version as currentVersion } from "../../../package.json";
 import { ConfigManager } from "../config";
 import { LangManager } from "../langs";
+import { HttpHelper } from "@aurora-launcher/core";
 
 @singleton()
 @injectable()
@@ -26,7 +27,7 @@ export class UpdateManager {
 
     constructor(
         private readonly configManager: ConfigManager,
-        private readonly langManager: LangManager
+        private readonly langManager: LangManager,
     ) {
         this.checkUpdate();
     }
@@ -62,7 +63,7 @@ export class UpdateManager {
         }
 
         const latestVersionData = versionsData.versions.find(
-            (versionData: Version) => versionData.version === latestVersion
+            (versionData: Version) => versionData.version === latestVersion,
         );
 
         if (!latestVersionData) {
@@ -71,13 +72,13 @@ export class UpdateManager {
 
         LogHelper.info(
             this.langManager.getTranslate.UpdateManager.newUpdateAvaliable,
-            latestVersion
+            latestVersion,
         );
         LogHelper.info(
             this.langManager.getTranslate.UpdateManager.newUpdate,
             latestVersion,
             currentVersion,
-            new Date(latestVersionData.date).toLocaleString()
+            new Date(latestVersionData.date).toLocaleString(),
         );
 
         return latestVersionData;

@@ -63,7 +63,7 @@
     },
     "dependencies": {
         "@aurora-launcher/api": "^0.2.1",
-        "@aurora-launcher/core": "^0.11.2",
+        "@aurora-launcher/core": "^0.12.0",
         "p-map": "^6.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
