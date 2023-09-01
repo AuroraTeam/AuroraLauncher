@@ -10,13 +10,11 @@ export class StorageHelper {
         StorageHelper.storageDir,
         'libraries',
     );
-    static nativesDir: string = resolve(StorageHelper.storageDir, 'natives');
     static logFile: string = resolve(StorageHelper.storageDir, 'Launcher.log');
 
     static createMissing(): void {
         if (!existsSync(this.assetsDir)) mkdirSync(this.assetsDir);
         if (!existsSync(this.clientsDir)) mkdirSync(this.clientsDir);
         if (!existsSync(this.librariesDir)) mkdirSync(this.librariesDir);
-        if (!existsSync(this.nativesDir)) mkdirSync(this.nativesDir);
     }
 }

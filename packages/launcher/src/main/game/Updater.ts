@@ -82,7 +82,10 @@ export class Updater {
         let loaded = 0;
 
         await pMap(
-            clientArgs.libraries,
+            clientArgs.libraries.filter(
+                () => true,
+                // && library.rules // TODO
+            ),
             async (library) => {
                 await this.validateAndDownloadFile(
                     library.path,

@@ -46,12 +46,12 @@ export class GameService {
 
         try {
             await this.gameUpdater.validateClient(profile);
+            await this.gameStarter.start(profile);
         } catch (error) {
             LogHelper.error(error);
             this.gameWindow.sendToConsole(`${error}`);
             this.gameWindow.stopGame();
             return;
         }
-        await this.gameStarter.start(profile);
     }
 }

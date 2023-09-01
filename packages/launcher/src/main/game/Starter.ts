@@ -1,5 +1,4 @@
 import { spawn } from 'child_process';
-import fs from 'fs';
 import { delimiter, join } from 'path';
 
 import { Profile } from '@aurora-launcher/core';
@@ -17,63 +16,49 @@ export class Starter {
     constructor(
         private window: LauncherWindow,
         private authorizationService: AuthorizationService,
-        private updater: Updater
+        private updater: Updater,
     ) {}
 
     async start(clientArgs: Profile): Promise<void> {
         const clientDir = join(StorageHelper.clientsDir, clientArgs.clientDir);
-        const assetsDir = join(StorageHelper.assetsDir);
 
         const clientVersion = coerce(clientArgs.version);
         if (clientVersion === null) {
-            this.window.sendEvent('textToConsole', 'Invalig client version');
-            LogHelper.error('Invalig client version');
-            return;
+            throw new Error('Invalig client version');
         }
 
         const userArgs = this.authorizationService.getCurrentSession();
         if (!userArgs) {
-            this.window.sendEvent('textToConsole', 'Auth requierd');
-            LogHelper.error('Auth requierd');
-            return;
+            throw new Error('Auth requierd');
         }
 
         const gameArgs: string[] = [];
 
         gameArgs.push('--version', clientArgs.version);
         gameArgs.push('--gameDir', clientDir);
-        gameArgs.push('--assetsDir', assetsDir);
+        gameArgs.push('--assetsDir', StorageHelper.assetsDir);
 
         if (gte(clientVersion, '1.6.0')) {
             this.gameLauncher(
                 gameArgs,
                 clientArgs,
                 clientVersion.version,
-                userArgs
+                userArgs,
             );
         } else {
             gameArgs.push(userArgs.username);
             gameArgs.push(userArgs.accessToken);
         }
 
-        const librariesDirectory = join(clientDir, 'libraries');
-        const nativesDirectory = join(clientDir, 'natives');
-
-        const classPath: string[] = [];
-        if (clientArgs.libraries !== undefined) {
-            clientArgs.libraries.forEach(({ path }) => {
-                const filePath = join(clientDir, path);
-                if (fs.statSync(filePath).isDirectory()) {
-                    classPath.push(...this.scanDir(librariesDirectory));
-                } else {
-                    classPath.push(filePath);
-                }
+        const classPath = clientArgs.libraries
+            .filter(
+                (library) => library.type === 'library',
+                // && library.rules // TODO
+            )
+            .map(({ path }) => {
+                return join(StorageHelper.librariesDir, path);
             });
-        } else {
-            this.window.sendEvent('textToConsole', 'classPath is empty');
-            LogHelper.error('classPath is empty');
-            return;
-        }
+        classPath.push(join(clientDir, clientArgs.gameJar));
 
         const jvmArgs = [];
 
@@ -82,6 +67,7 @@ export class Starter {
         //     '-javaagent:../../authlib-injector.jar=http://localhost:1370'
         // );
 
+        const nativesDirectory = this.prepareNatives(clientArgs);
         jvmArgs.push(`-Djava.library.path=${nativesDirectory}`);
 
         if (clientArgs.jvmArgs?.length > 0) {
@@ -115,23 +101,11 @@ export class Starter {
             LogHelper.info('Game stop');
         });
     }
-
-    private scanDir(dir: string, list: string[] = []): string[] {
-        if (fs.statSync(dir).isDirectory()) {
-            for (const fdir of fs.readdirSync(dir)) {
-                this.scanDir(join(dir, fdir), list);
-            }
-        } else {
-            list.push(dir);
-        }
-        return list;
-    }
-
     private gameLauncher(
         gameArgs: string[],
         clientArgs: Profile,
         clientVersion: string,
-        userArgs: Session
+        userArgs: Session,
     ): void {
         gameArgs.push('--username', userArgs.username);
 
@@ -157,5 +131,19 @@ export class Starter {
         } else {
             gameArgs.push('--session', userArgs.accessToken);
         }
+    }
+
+    prepareNatives(clientArgs: Profile) {
+        const nativesDir = join(StorageHelper.clientsDir, 'natives');
+
+        const nativesFiles = clientArgs.libraries.filter(
+            (library) => library.type === 'native',
+            // && library.rules // TODO
+        );
+
+        // ZipHelper
+        // TODO
+
+        return nativesDir;
     }
 }
