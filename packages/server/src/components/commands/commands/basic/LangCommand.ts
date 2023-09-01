@@ -7,9 +7,7 @@ export class LangCommand extends AbstractCommand {
     constructor(private readonly langManager: LangManager) {
         super({
             name: "lang",
-            description:
-                langManager.getTranslate.CommandsManager.commands.basic
-                    .LangCommand,
+            description: langManager.getTranslate.CommandsManager.commands.basic.LangCommand,
             category: Category.BASIC,
             usage: "<lang> (ru|en)",
         });

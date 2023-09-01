@@ -1,10 +1,12 @@
-import { createHash } from "crypto"
+import { BinaryLike, createHash } from "crypto"
 import { readFile } from "fs/promises"
 
 export class HashHelper {
+    static getSHA1(str: BinaryLike) {
+        return createHash("sha1").update(str).digest("hex")
+    }
+
     static async getSHA1fromFile(path: string) {
-        return createHash("sha1")
-            .update(await readFile(path))
-            .digest("hex")
+        return this.getSHA1(await readFile(path))
     }
 }

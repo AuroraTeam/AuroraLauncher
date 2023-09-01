@@ -22,8 +22,7 @@ export class WebServerManager {
         private readonly configManager: ConfigManager,
         private readonly langManager: LangManager
     ) {
-        if (this.webServer)
-            throw new Error("The web server has already been created");
+        if (this.webServer) throw new Error("The web server has already been created");
 
         const { ssl, useSSL } = this.configManager.config.api;
 
@@ -39,14 +38,10 @@ export class WebServerManager {
         const keyPath = resolve(StorageHelper.storageDir, ssl.key);
 
         if (!fs.existsSync(certPath)) {
-            LogHelper.fatal(
-                this.langManager.getTranslate.WebSocketManager.certNotFound
-            );
+            LogHelper.fatal(this.langManager.getTranslate.WebSocketManager.certNotFound);
         }
         if (!fs.existsSync(keyPath)) {
-            LogHelper.fatal(
-                this.langManager.getTranslate.WebSocketManager.keyNotFound
-            );
+            LogHelper.fatal(this.langManager.getTranslate.WebSocketManager.keyNotFound);
         }
 
         this.webServer = https.createServer(
@@ -54,8 +49,7 @@ export class WebServerManager {
                 cert: fs.readFileSync(certPath),
                 key: fs.readFileSync(keyPath),
             },
-            (req: http.IncomingMessage, res: http.ServerResponse) =>
-                this.requestListener(req, res)
+            (req: http.IncomingMessage, res: http.ServerResponse) => this.requestListener(req, res)
         );
     }
 
@@ -66,10 +60,7 @@ export class WebServerManager {
      * @param res - http.ServerResponse - The response object that will be sent back to the client.
      * @returns The response object
      */
-    private requestListener(
-        req: http.IncomingMessage,
-        res: http.ServerResponse
-    ) {
+    private requestListener(req: http.IncomingMessage, res: http.ServerResponse) {
         if (req.url.startsWith("/files")) return this.fileListing(req.url, res);
         this.requestsManager.getRequest(req, res);
     }
@@ -116,9 +107,7 @@ export class WebServerManager {
                 "<!DOCTYPE html><html><head><style>*{font-family:monospace;font-size:14px}</style></head><body>"
             );
             res.write(
-                dirListing
-                    .map((el) => `<a href="/files${url}/${el}">${el}</a>`)
-                    .join("<br>")
+                dirListing.map((el) => `<a href="/files${url}/${el}">${el}</a>`).join("<br>")
             );
             res.end("</body></html>");
         } catch (error) {

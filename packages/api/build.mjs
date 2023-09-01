@@ -3,8 +3,10 @@ import { context } from "esbuild"
 const watchFlag = process.argv[2] === "--watch"
 
 ;(async () => {
-    console.log("Build...")
-    console.time("Build successfully")
+    if (!watchFlag) {
+        console.log("Build...")
+        console.time("Build successfully")
+    }
 
     await Promise.all(
         [
@@ -12,17 +14,17 @@ const watchFlag = process.argv[2] === "--watch"
             {
                 id: "browser",
                 platform: "browser",
-                outfile: "dist/aurora-api-web.js",
+                outfile: "dist/index-web.js",
             },
             // Node
             {
                 id: "node-cjs",
                 format: "cjs",
-                outfile: "dist/aurora-api-node.cjs",
+                outfile: "dist/index-node.cjs",
             },
             {
                 id: "node-mjs",
-                outfile: "dist/aurora-api-node.mjs",
+                outfile: "dist/index-node.mjs",
             },
         ].map(async ({ id, ...config }) => {
             const ctx = await context({
@@ -40,10 +42,11 @@ const watchFlag = process.argv[2] === "--watch"
                 console.log(`Watching "${id}" ...`)
                 await ctx.watch()
             } else {
-                ctx.dispose()
+                await ctx.rebuild()
+                await ctx.dispose()
             }
         })
     )
 
-    console.timeEnd("Build successfully")
+    !watchFlag && console.timeEnd("Build successfully")
 })()

@@ -1,3 +1,4 @@
+import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 
 export interface AuthProviderConstructor {
@@ -5,21 +6,11 @@ export interface AuthProviderConstructor {
 }
 
 export interface AuthProvider {
-    auth(
-        username: string,
-        password: string
-    ): PromiseOr<AuthResponseData | void>;
+    auth(username: string, password: string): PromiseOr<AuthResponseData>;
 
-    join(
-        accessToken: string,
-        userUUID: string,
-        serverID: string
-    ): PromiseOr<boolean | void>;
+    join(accessToken: string, userUUID: string, serverID: string): PromiseOr<boolean | void>;
 
-    hasJoined(
-        username: string,
-        serverID: string
-    ): PromiseOr<HasJoinedResponseData | void>;
+    hasJoined(username: string, serverID: string): PromiseOr<HasJoinedResponseData | void>;
 
     profile(userUUID: string): PromiseOr<ProfileResponseData | void>;
 
@@ -34,12 +25,6 @@ export class AuthProviderConfig {
     static getDefaultConfig(): AuthProviderConfig {
         return { type: "accept" };
     }
-}
-
-export interface AuthResponseData {
-    username: string;
-    userUUID: string;
-    accessToken: string;
 }
 
 export interface HasJoinedResponseData {

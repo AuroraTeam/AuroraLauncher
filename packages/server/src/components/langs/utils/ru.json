@@ -1,5 +1,6 @@
 {
     "LauncherServer": {
+        "initStart": "Начало инициализации",
         "initEnd": "Инициализация завершена"
     },
     "LangManager": {

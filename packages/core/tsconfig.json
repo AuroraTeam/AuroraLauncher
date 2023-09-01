@@ -2,7 +2,9 @@
     "extends": ["@tsconfig/strictest/tsconfig", "@tsconfig/node18/tsconfig"],
     "compilerOptions": {
         "declaration": true,
-        "declarationDir": "dist/types"
+        "declarationDir": "dist/types",
+        "module": "ES2022",
+        "moduleResolution": "Bundler"
     },
     "include": ["src"]
 }

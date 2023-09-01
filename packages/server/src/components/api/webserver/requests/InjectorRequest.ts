@@ -11,18 +11,14 @@ export class InjectorRequest extends AbstractRequest {
     method = "GET";
     url = /^\/authlib$/;
 
-    constructor(
-        private configManager: ConfigManager,
-        private authlibManager: AuthlibManager
-    ) {
+    constructor(private configManager: ConfigManager, private authlibManager: AuthlibManager) {
         super();
     }
 
     async emit(_: WebRequest, res: WebResponse): Promise<void> {
         res.sendJson({
             meta: {
-                serverName:
-                    this.configManager.config.projectName || "Aurora Launcher",
+                serverName: this.configManager.config.projectName || "Aurora Launcher",
                 implementationName: "aurora-launchserver",
                 implementationVersion: "0.0.1",
                 "feature.no_mojang_namespace": true,

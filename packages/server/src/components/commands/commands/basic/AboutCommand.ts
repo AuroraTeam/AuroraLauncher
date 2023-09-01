@@ -10,9 +10,7 @@ export class AboutCommand extends AbstractCommand {
     constructor(langManager: LangManager) {
         super({
             name: "about",
-            description:
-                langManager.getTranslate.CommandsManager.commands.basic
-                    .AboutCommand,
+            description: langManager.getTranslate.CommandsManager.commands.basic.AboutCommand,
             category: Category.BASIC,
         });
     }
@@ -28,15 +26,9 @@ export class AboutCommand extends AbstractCommand {
         );
 
         LogHelper.info(
-            "Source code: " +
-                chalk.blue("https://github.com/AuroraTeam/LauncherServer")
+            "Source code: " + chalk.blue("https://github.com/AuroraTeam/LauncherServer")
         );
-        LogHelper.info(
-            "Documentation: " + chalk.blue("https://docs.aurora-launcher.ru")
-        );
-        LogHelper.info(
-            "Discord channel: " +
-                chalk.blue("https://discord.aurora-launcher.ru")
-        );
+        LogHelper.info("Documentation: " + chalk.blue("https://docs.aurora-launcher.ru"));
+        LogHelper.info("Discord channel: " + chalk.blue("https://discord.aurora-launcher.ru"));
     }
 }

@@ -7,7 +7,7 @@ import installExtension, {
 } from 'electron-extension-installer';
 import { Service } from 'typedi';
 
-import { WINDOW_CLOSE_EVENT, WINDOW_HIDE_EVENT } from '../../common/channels';
+import { EVENTS } from '../../common/channels';
 import logo from '../../renderer/runtime/assets/images/logo.png';
 
 const isDev = process.env.DEV === 'true';
@@ -54,12 +54,12 @@ export class LauncherWindow {
         });
 
         // hide the main window when the minimize button is pressed
-        ipcMain.on(WINDOW_HIDE_EVENT, () => {
+        ipcMain.on(EVENTS.WINDOW.HIDE, () => {
             this.mainWindow?.minimize();
         });
 
         // close the main window when the close button is pressed
-        ipcMain.on(WINDOW_CLOSE_EVENT, () => {
+        ipcMain.on(EVENTS.WINDOW.CLOSE, () => {
             this.mainWindow?.close();
         });
     }

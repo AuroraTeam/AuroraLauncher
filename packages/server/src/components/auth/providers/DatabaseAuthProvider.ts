@@ -1,3 +1,4 @@
+import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 import { LogHelper, UUIDHelper } from "@root/utils";
 import { ResponseError } from "aurora-rpc-server";
@@ -6,7 +7,6 @@ import { DataSource, EntitySchema, In } from "typeorm";
 import {
     AuthProvider,
     AuthProviderConfig,
-    AuthResponseData,
     HasJoinedResponseData,
     PrivilegesResponseData,
     ProfileResponseData,
@@ -51,11 +51,7 @@ export class DatabaseAuthProvider implements AuthProvider {
         return userData;
     }
 
-    async join(
-        accessToken: string,
-        userUUID: string,
-        serverID: string
-    ): Promise<boolean> {
+    async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
         const user = await this.userRepository.findOneBy({
             accessToken: accessToken,
             userUUID: UUIDHelper.getWithDashes(userUUID),
@@ -68,10 +64,7 @@ export class DatabaseAuthProvider implements AuthProvider {
         return true;
     }
 
-    async hasJoined(
-        username: string,
-        serverID: string
-    ): Promise<HasJoinedResponseData> {
+    async hasJoined(username: string, serverID: string): Promise<HasJoinedResponseData> {
         const user = await this.userRepository.findOneBy({ username });
         if (!user) throw new ResponseError("User not found", 100);
         if (user.serverID !== serverID) {
@@ -108,18 +101,14 @@ export class DatabaseAuthProvider implements AuthProvider {
     }
 
     async profiles(userUUIDs: string[]): Promise<ProfilesResponseData[]> {
-        return [
-            ...(await this.userRepository.findBy({ userUUID: In(userUUIDs) })),
-        ].map((user) => ({
+        return [...(await this.userRepository.findBy({ userUUID: In(userUUIDs) }))].map((user) => ({
             id: user.userUUID as string,
             name: user.username as string,
         }));
     }
 }
 
-const getUserEntity = (
-    properties: DatabaseAuthProviderConfig["properties"]
-) => {
+const getUserEntity = (properties: DatabaseAuthProviderConfig["properties"]) => {
     return new EntitySchema({
         name: "user",
         tableName: properties.tableName,

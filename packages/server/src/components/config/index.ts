@@ -10,10 +10,7 @@ import { LauncherServerConfig } from "./utils/LauncherServerConfig";
 @singleton()
 export class ConfigManager {
     #config: LauncherServerConfig;
-    #configFile: string = resolve(
-        StorageHelper.storageDir,
-        "LauncherServerConfig.hjson"
-    );
+    #configFile: string = resolve(StorageHelper.storageDir, "LauncherServerConfig.hjson");
 
     constructor() {
         if (fs.existsSync(this.#configFile)) {
@@ -64,9 +61,7 @@ export class ConfigManager {
         } catch (e) {
             if (e instanceof SyntaxError) {
                 LogHelper.error(e);
-                LogHelper.fatal(
-                    "Json syntax broken. Try fix or delete LauncherServerConfig.json"
-                );
+                LogHelper.fatal("Json syntax broken. Try fix or delete LauncherServerConfig.json");
             }
             LogHelper.fatal(e);
         }

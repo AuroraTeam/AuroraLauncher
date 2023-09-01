@@ -1,5 +1,6 @@
+import { Server, ServersResponseData } from "@aurora-launcher/core";
 import { ProfilesManager } from "@root/components/profiles";
-import { AbstractRequest, ResponseResult } from "aurora-rpc-server";
+import { AbstractRequest } from "aurora-rpc-server";
 import { injectable } from "tsyringe";
 
 @injectable()
@@ -14,8 +15,8 @@ export class ServersRequest extends AbstractRequest {
      * It returns a list of servers.
      * @returns An array of objects.
      */
-    invoke(): ResponseResult {
-        const servers: any[] = [];
+    invoke(): ServersResponseData {
+        const servers: Server[] = [];
 
         this.profilesManager.profiles
             .sort((a, b) => a.sortIndex - b.sortIndex)

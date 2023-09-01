@@ -1,14 +1,15 @@
+import { Profile, Server } from '@aurora-launcher/core';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
 import If from '../../components/If';
 import { useTitlebar } from '../../components/TitleBar/hooks';
 import classes from './index.module.sass';
+import { LoadProgress } from '../../../../common/types';
 
-export function ServerPanel() {
-    const [selectedServer] = useState(
-        JSON.parse(localStorage.getItem('selectedProfile') as string)
-    );
-    const [selectedProfile, setSelectedProfile] = useState({});
+export default function ServerPanel() {
+    const [selectedProfile, setSelectedProfile] = useState({} as Profile);
+    const [selectedServer, setSelectedServer] = useState({} as Server);
+
     const [console, setConsole] = useState('');
     const [showProgress, setShowProgress] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
@@ -20,49 +21,52 @@ export function ServerPanel() {
     const { showTitlebarBackBtn } = useTitlebar();
 
     useEffect(() => {
-        launcherAPI.api
-            .getProfile(selectedServer.profileUUID)
-            .then(setSelectedProfile);
+        launcherAPI.scenes.serverPanel.getProfile().then(setSelectedProfile);
+        launcherAPI.scenes.serverPanel.getServer().then(setSelectedServer);
 
         showTitlebarBackBtn();
     }, []);
 
     const startGame = () => {
+        setConsole('');
+        setShowProgress(true);
         setGameStarted(true);
-        launcherAPI.game.start(selectedProfile, textToConsole, progress, () =>
-            setGameStarted(false)
+        launcherAPI.scenes.serverPanel.startGame(textToConsole, progress, () =>
+            setGameStarted(false),
         );
     };
 
     const textToConsole = (string: string) => {
-        // const consoleEl = consoleRef.current;
-        // consoleEl.append(string);
         setConsole((console) => console + string);
+
+        const consoleEl = consoleRef.current;
+        if (!consoleEl) return;
         // Если не оборачивать в setTimeout, то оно прокручивает не до конца
-        // setTimeout(() => {
-        // consoleEl.scrollTop = consoleEl.scrollHeight;
-        // }, 1);
+        setTimeout(() => {
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }, 1);
     };
 
-    const progress = (data: any) => {
-        window.console.log(data);
+    const progress = ({ total, loaded }: LoadProgress) => {
+        if (!progressLine.current) return;
 
-        const total = data.total;
-        const loaded = data.loaded;
         const percent = (loaded / total) * 100;
 
         progressLine.current.style.width = percent + '%';
         setShowProgress(percent < 100);
 
         progressInfo.current.innerHTML = `Загружено ${bytesToSize(
-            loaded
+            loaded,
         )} из ${bytesToSize(total)}`;
     };
 
     return (
         <div className={classes.window}>
             <div className={classes.info}>
-                <div className={classes.title}>{selectedServer.title}</div>
+                <div>
+                    <div className={classes.title}>{selectedServer.title}</div>
+                    <div>{selectedProfile.version}</div>
+                </div>
                 <div className={classes.status}>
                     <div className={classes.gamers}>
                         Игроков

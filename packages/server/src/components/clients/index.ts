@@ -1,15 +1,12 @@
 import fs from "fs/promises";
 import { join } from "path";
 
-import { HashHelper, LogHelper, StorageHelper } from "@root/utils";
+import { HashHelper, HashedFile } from "@aurora-launcher/core";
+import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
-
-type HashedFile = {
-    path: string;
-    sha1: string;
-};
+import { Task } from "@root/components/thread/utils/types";
 
 @singleton()
 @injectable()
@@ -27,27 +24,27 @@ export class ClientsManager {
         const dirs = folders.filter((folder) => folder.isDirectory());
 
         if (dirs.length === 0) {
-            return LogHelper.info(
-                this.langManager.getTranslate.ClientsManager.syncSkip
-            );
+            return LogHelper.info(this.langManager.getTranslate.ClientsManager.syncSkip);
         }
 
         LogHelper.info(this.langManager.getTranslate.ClientsManager.sync);
 
-        for (const { name } of dirs) {
+        const tasks: Task<void>[] = dirs.map((folder) => async () => {
             const startTime = Date.now();
+            const hashedFiles = await this.hashDir(join(StorageHelper.clientsDir, folder.name));
 
-            this.hashedClients.set(
-                name,
-                await this.hashDir(join(StorageHelper.clientsDir, name))
-            );
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            this.hashedClients.set(folder.name, hashedFiles);
 
             LogHelper.info(
                 this.langManager.getTranslate.ClientsManager.syncTime,
-                name,
-                Date.now() - startTime
+                folder.name,
+                Date.now() - startTime,
             );
-        }
+        });
+
+        await Promise.all(tasks.map((task) => task()));
 
         LogHelper.info(this.langManager.getTranslate.ClientsManager.syncEnd);
     }
@@ -70,8 +67,11 @@ export class ClientsManager {
     }
 
     async hashFile(path: string): Promise<HashedFile> {
+        const size = (await fs.stat(path)).size;
+
         return {
             path: path.replace(StorageHelper.clientsDir, ""),
+            size,
             sha1: await HashHelper.getSHA1fromFile(path),
         };
     }

@@ -7,9 +7,7 @@ export class StatusCommand extends AbstractCommand {
     constructor(langManager: LangManager) {
         super({
             name: "status",
-            description:
-                langManager.getTranslate.CommandsManager.commands.basic
-                    .StatusCommand,
+            description: langManager.getTranslate.CommandsManager.commands.basic.StatusCommand,
             category: Category.BASIC,
         });
     }

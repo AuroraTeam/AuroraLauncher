@@ -1,13 +1,7 @@
 import { resolve } from "path";
 
-import { ProfileLibrary } from "@aurora-launcher/core";
-import {
-    HashHelper,
-    HttpHelper,
-    LogHelper,
-    ProgressHelper,
-    StorageHelper,
-} from "@root/utils";
+import { HashHelper, HttpHelper, ProfileLibrary } from "@aurora-launcher/core";
+import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 
 import { Library } from "../interfaces/IFabric";
 import { MojangManager } from "./Mojang";
@@ -15,14 +9,11 @@ import { MojangManager } from "./Mojang";
 export class FabricLikeManager extends MojangManager {
     protected async resolveLibraries(
         libraries: Library[],
-        loaderName: string
+        loaderName: string,
     ): Promise<ProfileLibrary[]> {
         LogHelper.info(`Downloading ${loaderName} libraries`);
 
-        const progressBar = ProgressHelper.getProgress(
-            "{bar} {percentage}% {value}/{total}",
-            40
-        );
+        const progressBar = ProgressHelper.getProgress("{bar} {percentage}% {value}/{total}", 40);
         progressBar.start(libraries.length, 0);
 
         const librariesList = libraries.map((library) => ({
@@ -33,17 +24,14 @@ export class FabricLikeManager extends MojangManager {
         try {
             await HttpHelper.downloadFiles(
                 librariesList.map((library) => ({
-                    destinationPath: resolve(
-                        StorageHelper.librariesDir,
-                        library.path
-                    ),
+                    destinationPath: resolve(StorageHelper.librariesDir, library.path),
                     sourceUrl: `${library.url}${library.path}`,
                 })),
                 {
                     afterDownload() {
                         progressBar.increment();
                     },
-                }
+                },
             );
         } catch (error) {
             LogHelper.info(`Downloading ${loaderName} libraries failed`);
@@ -56,17 +44,14 @@ export class FabricLikeManager extends MojangManager {
 
         return Promise.all(
             librariesList.map(async (library) => {
-                const filePath = resolve(
-                    StorageHelper.librariesDir,
-                    library.path
-                );
+                const filePath = resolve(StorageHelper.librariesDir, library.path);
 
                 return {
                     path: library.path,
                     sha1: await HashHelper.getSHA1fromFile(filePath),
                     type: "library",
                 };
-            })
+            }),
         );
     }
 }

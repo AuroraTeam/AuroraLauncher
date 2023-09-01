@@ -1,14 +1,14 @@
 {
     "name": "@aurora-launcher/api",
-    "version": "0.2.0-beta.5",
+    "version": "0.2.1",
     "description": "JS/TS API implementation for Aurora Launcher",
-    "main": "./dist/aurora-api-node.cjs",
-    "browser": "./dist/aurora-api-web.js",
+    "main": "./dist/index-node.cjs",
+    "browser": "./dist/index-web.js",
     "types": "./dist/types/index.d.ts",
     "exports": {
-        "browser": "./dist/aurora-api-web.js",
-        "import": "./dist/aurora-api-node.mjs",
-        "require": "./dist/aurora-api-node.cjs"
+        "browser": "./dist/index-web.js",
+        "import": "./dist/index-node.mjs",
+        "require": "./dist/index-node.cjs"
     },
     "scripts": {
         "dev": "concurrently -r \"node build.mjs --watch\" \"tsc --emitDeclarationOnly --watch\"",
@@ -32,14 +32,15 @@
     },
     "homepage": "https://github.com/AuroraTeam/AuroraAPI#readme",
     "dependencies": {
-        "aurora-rpc-client": "^0.3.0"
+        "@aurora-launcher/core": "^0.12.0",
+        "aurora-rpc-client": "^0.3.3"
     },
     "devDependencies": {
         "@types/ws": "^8.5.3",
         "concurrently": "^8.0.1",
-        "esbuild": "^0.17.19",
+        "esbuild": "^0.19.2",
         "import-sort-style-module": "^6.0.0",
-        "prettier": "^2.4.0",
+        "prettier": "^3.0.3",
         "prettier-plugin-import-sort": "0.0.7",
         "rimraf": "^5.0.0",
         "typescript": "^5.0.4"

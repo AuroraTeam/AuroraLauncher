@@ -41,14 +41,11 @@ import {
     UpdateCommand,
 } from "./components/commands/commands";
 import { LogHelper, StorageHelper } from "./utils";
+import { ThreadPool } from "@root/components/thread/threadPool";
 
 @singleton()
 export class LauncherServer {
     private _AuthProvider: AuthProvider;
-    public get AuthProvider(): AuthProvider {
-        return this._AuthProvider;
-    }
-
     private _ConfigManager: ConfigManager;
     private _LangManager: LangManager;
     private _CommandsManager: CommandsManager;
@@ -58,26 +55,44 @@ export class LauncherServer {
     private _UpdateManager: UpdateManager;
     private _ProfilesManager: ProfilesManager;
     private _AuthlibManager: AuthlibManager;
+    private _threadPool: ThreadPool;
 
-    /**
-     * It initializes the LauncherServer.
-     */
     constructor() {
-        StorageHelper.validate();
+        this.preInit();
+        this.init();
+    }
 
+    private preInit() {
         LogHelper.printVersion();
 
-        LogHelper.info("Initialization start");
-        this.init();
+        this._ConfigManager = container.resolve(ConfigManager);
+        this._LangManager = container.resolve(LangManager);
+
+        StorageHelper.validate();
+    }
+
+    private init() {
+        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initStart);
+
+        this.registerAuthProviders();
+        this.resolveDependencies();
+        this.registerCommands();
+        this.registerRequest();
 
         LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd);
     }
 
-    private init() {
-        this._ConfigManager = container.resolve(ConfigManager);
-        this._LangManager = container.resolve(LangManager);
+    private resolveDependencies() {
+        this._AuthlibManager = container.resolve(AuthlibManager);
+        this._CommandsManager = container.resolve(CommandsManager);
+        this._ClientsManager = container.resolve(ClientsManager);
+        this._ProfilesManager = container.resolve(ProfilesManager);
+        this._ModulesManager = container.resolve(ModulesManager);
+        this._UpdateManager = container.resolve(UpdateManager);
+        this._WebManager = container.resolve(WebManager);
+    }
 
-        // Auth
+    private registerAuthProviders() {
         AuthManager.registerProviders({
             json: JsonAuthProvider,
             db: DatabaseAuthProvider,
@@ -86,17 +101,11 @@ export class LauncherServer {
             accept: AcceptAuthProvider,
         });
 
-        this._AuthProvider = AuthManager.getProvider(
-            this._ConfigManager,
-            this._LangManager
-        );
+        this._AuthProvider = AuthManager.getProvider(this._ConfigManager, this._LangManager);
         container.register("AuthProvider", { useValue: this._AuthProvider });
+    }
 
-        // Other
-
-        this._AuthlibManager = container.resolve(AuthlibManager);
-
-        this._CommandsManager = container.resolve(CommandsManager);
+    private registerCommands() {
         this._CommandsManager.registerCommands([
             container.resolve(HelpCommand),
             container.resolve(ReloadCommand),
@@ -111,13 +120,9 @@ export class LauncherServer {
             container.resolve(AboutCommand),
             container.resolve(StopCommand),
         ]);
+    }
 
-        this._ClientsManager = container.resolve(ClientsManager);
-        this._ProfilesManager = container.resolve(ProfilesManager);
-        this._ModulesManager = container.resolve(ModulesManager);
-        this._UpdateManager = container.resolve(UpdateManager);
-        this._WebManager = container.resolve(WebManager);
-
+    private registerRequest() {
         this._WebManager.registerRequests([
             container.resolve(AuthRequest),
             container.resolve(ProfileRequest),
@@ -127,7 +132,7 @@ export class LauncherServer {
     }
 
     /**
-     * It reload the LauncherServer.
+     * Функция для перезагрузки LauncherSever'а
      */
     public reload() {
         LogHelper.info("Reload LaunchServer");

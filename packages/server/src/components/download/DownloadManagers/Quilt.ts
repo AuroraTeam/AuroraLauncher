@@ -1,8 +1,9 @@
-import { HttpHelper, LogHelper } from "@root/utils";
+import { LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { ClientMeta, VersionMeta } from "../interfaces/IQuilt";
 import { FabricLikeManager } from "./FabricLike";
+import { HttpHelper } from "@aurora-launcher/core";
 
 @injectable()
 export class QuiltManager extends FabricLikeManager {
@@ -20,32 +21,23 @@ export class QuiltManager extends FabricLikeManager {
         const profileUUID = await super.downloadClient(clientVer, clientName);
         if (!profileUUID) return;
 
-        const libraries = await this.resolveLibraries(
-            quiltVersion.libraries,
-            "Quilt"
-        );
+        const libraries = await this.resolveLibraries(quiltVersion.libraries, "Quilt");
         if (!libraries) return;
 
         this.profilesManager.editProfile(profileUUID, (profile) => ({
             mainClass: quiltVersion.mainClass,
             libraries: [...profile.libraries, ...libraries],
         }));
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.QuiltManager.client
-                .success
-        );
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.QuiltManager.client.success);
     }
 
     getQuiltVersions(version: string): Promise<void | VersionMeta[]> {
         try {
-            return HttpHelper.getResourceFromJson(
-                `${this.quiltMetaLink}${version}`
-            );
+            return HttpHelper.getResourceFromJson(`${this.quiltMetaLink}${version}`);
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.QuiltManager.info
-                    .errJsonParsing
+                this.langManager.getTranslate.DownloadManager.QuiltManager.info.errJsonParsing,
             );
         }
     }
@@ -58,13 +50,12 @@ export class QuiltManager extends FabricLikeManager {
 
         try {
             return await HttpHelper.getResourceFromJson<ClientMeta>(
-                `${this.quiltMetaLink}${version}/${loader.version}/profile/json`
+                `${this.quiltMetaLink}${version}/${loader.version}/profile/json`,
             );
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.QuiltManager.info
-                    .errClientParsing
+                this.langManager.getTranslate.DownloadManager.QuiltManager.info.errClientParsing,
             );
         }
     }

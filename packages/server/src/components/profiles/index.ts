@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 
-import { PartialProfileConfig } from "@aurora-launcher/core";
+import { PartialProfile } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
@@ -20,9 +20,7 @@ export class ProfilesManager {
         const files = await fs.readdir(StorageHelper.profilesDir);
 
         if (files.length === 0) {
-            LogHelper.info(
-                this.langManager.getTranslate.ProfilesManager.syncSkip
-            );
+            LogHelper.info(this.langManager.getTranslate.ProfilesManager.syncSkip);
             return;
         }
 
@@ -39,11 +37,7 @@ export class ProfilesManager {
                 this.profiles.push(ProfileConfig.fromJSON(data));
             } catch (e) {
                 if (e instanceof SyntaxError) {
-                    LogHelper.error(
-                        this.langManager.getTranslate.ProfilesManager
-                            .loadingErr,
-                        file
-                    );
+                    LogHelper.error(this.langManager.getTranslate.ProfilesManager.loadingErr, file);
                 } else {
                     LogHelper.debug(e);
                 }
@@ -58,14 +52,11 @@ export class ProfilesManager {
         await this.loadProfiles();
     }
 
-    async createProfile(parameters: PartialProfileConfig): Promise<string> {
+    async createProfile(parameters: PartialProfile): Promise<string> {
         const profile = new ProfileConfig(parameters);
         this.profiles.push(profile);
         await fs.writeFile(
-            path.resolve(
-                StorageHelper.profilesDir,
-                `${profile.clientDir}.json`
-            ),
+            path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
             profile.toJSON()
         );
         return profile.uuid;
@@ -73,9 +64,7 @@ export class ProfilesManager {
 
     async editProfile(
         uuid: string,
-        parameters:
-            | PartialProfileConfig
-            | ((profile: ProfileConfig) => Partial<ProfileConfig>)
+        parameters: PartialProfile | ((profile: ProfileConfig) => PartialProfile)
     ): Promise<void> {
         const profile = this.profiles.find((p) => p.uuid === uuid);
 
@@ -85,10 +74,7 @@ export class ProfilesManager {
             Object.assign(profile, parameters(profile));
         }
         await fs.writeFile(
-            path.resolve(
-                StorageHelper.profilesDir,
-                `${profile.clientDir}.json`
-            ),
+            path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
             profile.toJSON()
         );
     }

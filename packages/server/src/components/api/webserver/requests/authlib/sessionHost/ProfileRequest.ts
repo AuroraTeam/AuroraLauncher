@@ -66,9 +66,7 @@ export class ProfileRequest extends AbstractRequest {
         if (signed) texturesValue.signatureRequired = true;
         texturesValue = Buffer.from(JSON.stringify(texturesValue));
         data.properties[0].value = texturesValue.toString("base64");
-        if (signed)
-            data.properties[0].signature =
-                this.authlibManager.getSignature(texturesValue);
+        if (signed) data.properties[0].signature = this.authlibManager.getSignature(texturesValue);
         res.sendJson(data);
     }
 }

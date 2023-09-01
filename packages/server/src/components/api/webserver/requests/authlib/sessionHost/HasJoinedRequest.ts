@@ -1,11 +1,11 @@
 import type { AuthProvider } from "@root/components/auth/providers";
 import { AuthlibManager } from "@root/components/authlib";
-import { JsonHelper } from "@root/utils";
 import { inject, injectable } from "tsyringe";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
+import { JsonHelper } from "@aurora-launcher/core";
 
 @injectable()
 export class HasJoinedRequest extends AbstractRequest {
@@ -14,7 +14,7 @@ export class HasJoinedRequest extends AbstractRequest {
 
     constructor(
         @inject("AuthProvider") private authProvider: AuthProvider,
-        private authlibManager: AuthlibManager
+        private authlibManager: AuthlibManager,
     ) {
         super();
     }
@@ -22,8 +22,7 @@ export class HasJoinedRequest extends AbstractRequest {
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         const { username, serverId } = req.query;
 
-        if (this.isInvalidValue(username) || this.isInvalidValue(serverId))
-            return res.sendError();
+        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return res.sendError();
 
         let user;
         try {
@@ -51,7 +50,7 @@ export class HasJoinedRequest extends AbstractRequest {
                 profileName: username,
                 signatureRequired: true,
                 textures,
-            })
+            }),
         ).toString("base64");
 
         res.sendJson({

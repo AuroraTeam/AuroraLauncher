@@ -8,15 +8,13 @@ export class StorageHelper {
     static clientsDir: string = resolve(StorageHelper.storageDir, 'clients');
     static librariesDir: string = resolve(
         StorageHelper.storageDir,
-        'libraries'
+        'libraries',
     );
-    static nativesDir: string = resolve(StorageHelper.storageDir, 'natives');
     static logFile: string = resolve(StorageHelper.storageDir, 'Launcher.log');
 
     static createMissing(): void {
         if (!existsSync(this.assetsDir)) mkdirSync(this.assetsDir);
         if (!existsSync(this.clientsDir)) mkdirSync(this.clientsDir);
         if (!existsSync(this.librariesDir)) mkdirSync(this.librariesDir);
-        if (!existsSync(this.nativesDir)) mkdirSync(this.nativesDir);
     }
 }

@@ -3,12 +3,14 @@ import path from "path";
 
 import { LauncherServer } from "@root/LauncherServer";
 import {
-    LauncherServerModule,
+    IDependencies,
+    ILauncherServerModule,
+    IModuleInfo,
     LogHelper,
-    ModuleInfo,
     StorageHelper,
 } from "@root/utils";
 import chalk from "chalk";
+import { satisfies } from "semver";
 import { delay, inject, injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
@@ -16,71 +18,88 @@ import { LangManager } from "../langs";
 @singleton()
 @injectable()
 export class ModulesManager {
-    public static modulesList = new Map<ModuleInfo, LauncherServerModule[]>();
+    private static readonly modulesList: Map<IModuleInfo, ILauncherServerModule[]> = new Map();
+    private readonly moduleQueue: string[] = [];
+
     constructor(
         private readonly langManager: LangManager,
         @inject(delay(() => LauncherServer))
         private readonly app: LauncherServer
     ) {
-        this.loadModules();
-    }
+        const startTime = Date.now();
 
-    async loadModules(): Promise<void> {
-        try {
-            LogHelper.info(
-                this.langManager.getTranslate.ModulesManager.loadingStart
-            );
-            const startTime = Date.now();
-
-            const files = await fs.readdir(StorageHelper.modulesDir, {
-                withFileTypes: true,
-            });
-            const moduleFiles = files.filter(
-                (file) => file.isFile() && file.name.endsWith(".js")
-            );
-
-            if (moduleFiles.length === 0) {
-                LogHelper.info(
-                    this.langManager.getTranslate.ModulesManager.loadingSkip
-                );
-                return;
-            }
-
-            await Promise.all(
-                moduleFiles.map((file) => this.loadModule(file.name))
-            );
-
+        this.loadModules().then(() => {
             LogHelper.info(
                 this.langManager.getTranslate.ModulesManager.loadingEnd,
                 Date.now() - startTime
             );
+        });
+    }
+
+    /**
+     * Загружает модули
+     */
+    public async loadModules(): Promise<void> {
+        try {
+            LogHelper.info(this.langManager.getTranslate.ModulesManager.loadingStart);
+
+            const files = await fs.readdir(StorageHelper.modulesDir, {
+                withFileTypes: true,
+            });
+            const moduleFiles = files
+                .filter((file) => file.isFile() && file.name.endsWith(".js"))
+                .map((file) => file.name);
+
+            if (moduleFiles.length === 0) {
+                LogHelper.info(this.langManager.getTranslate.ModulesManager.loadingSkip);
+                return;
+            }
+
+            this.moduleQueue.push(...moduleFiles);
+            await this.processModuleQueue();
         } catch (error) {
             LogHelper.debug(error.message);
-            LogHelper.error(
-                this.langManager.getTranslate.ModulesManager.loadingErr
-            );
+            LogHelper.error(this.langManager.getTranslate.ModulesManager.loadingErr);
         }
     }
 
     /**
-     * Загружает модуль из директории модулей и, если он действителен, добавляет его в список модулей
+     * Обрабатывает очередь модулей для загрузки
+     */
+    private async processModuleQueue(): Promise<void> {
+        while (this.moduleQueue.length > 0) {
+            const moduleName = this.moduleQueue.shift();
+
+            if (moduleName) {
+                await this.loadModule(moduleName);
+            }
+        }
+    }
+
+    /**
+     * Загружает модуль
      * @param {string} moduleName - Имя модуля, который нужно загрузить
      */
     private async loadModule(moduleName: string): Promise<void> {
         try {
-            const modulePath = path.resolve(
-                StorageHelper.modulesDir,
-                moduleName
-            );
+            if (this.hasModule(moduleName)) {
+                LogHelper.debug(`Модуль "${moduleName}" уже загружен.`);
+                return;
+            }
 
-            const { Module } = await import(modulePath);
+            const modulePath = path.resolve(StorageHelper.modulesDir, moduleName);
+            const moduleUrl = `file://${modulePath}`;
+            const module = (await import(moduleUrl)).Module;
 
-            // TODO validate
+            if (!this.isValidModule(module)) {
+                //TODO: LOG
+                LogHelper.dev("invalid");
+                return;
+            }
 
-            ModulesManager.modulesList.set(
-                Module.getInfo(),
-                new Module().init(this.app)
-            );
+            if (!ModulesManager.modulesList.has(module.getInfo())) {
+                ModulesManager.modulesList.set(module.getInfo(), new module().init(this.app));
+            }
         } catch (error) {
             LogHelper.debug(error.message);
             LogHelper.error(
@@ -91,7 +110,26 @@ export class ModulesManager {
     }
 
     /**
-     * Вывод списка загруженных модулей
+     * Проверяет, является ли модуль допустимым
+     * @param {any} module - Загруженный модуль
+     * @returns {boolean} true, если модуль допустим; в противном случае - false
+     */
+    private isValidModule(module: any): boolean {
+        const moduleInfo = module.getInfo();
+
+        return (
+            typeof module === "function" &&
+            typeof moduleInfo === "object" &&
+            "name" in moduleInfo &&
+            "version" in moduleInfo &&
+            "description" in moduleInfo &&
+            "author" in moduleInfo &&
+            typeof module.prototype.init === "function"
+        );
+    }
+
+    /**
+     * Выводит список загруженных модулей
      */
     public static listModules(): void {
         LogHelper.info("Загруженные модули:");
@@ -99,5 +137,16 @@ export class ModulesManager {
         ModulesManager.modulesList.forEach((value, key) => {
             LogHelper.info(`${chalk.bold(key.name)} - ${key.description}`);
         });
+    }
+
+    /**
+     * Проверяет наличие загруженного модуля
+     * @param moduleName - Имя модуля
+     * @returns true, если модуль загружен; в противном случае - false
+     */
+    private hasModule(moduleName: string): boolean {
+        return Array.from(ModulesManager.modulesList.keys()).some(
+            (moduleInfo) => moduleInfo.name === moduleName
+        );
     }
 }
