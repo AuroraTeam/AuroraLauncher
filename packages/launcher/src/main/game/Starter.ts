@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 import { delimiter, join } from 'path';
 
-import { Profile } from '@aurora-launcher/core';
+import { Profile, ZipHelper } from '@aurora-launcher/core';
 import { LauncherWindow } from 'main/core/LauncherWindow';
 import { LogHelper } from 'main/helpers/LogHelper';
 import { StorageHelper } from 'main/helpers/StorageHelper';
@@ -10,6 +10,7 @@ import { Service } from 'typedi';
 
 import { AuthorizationService, Session } from '../api/AuthorizationService';
 import { Updater } from './Updater';
+import pMap from 'p-map';
 
 @Service()
 export class Starter {
@@ -134,15 +135,27 @@ export class Starter {
     }
 
     prepareNatives(clientArgs: Profile) {
-        const nativesDir = join(StorageHelper.clientsDir, 'natives');
-
-        const nativesFiles = clientArgs.libraries.filter(
-            (library) => library.type === 'native',
-            // && library.rules // TODO
+        const nativesDir = join(
+            StorageHelper.clientsDir,
+            clientArgs.clientDir,
+            'natives',
         );
 
-        // ZipHelper
-        // TODO
+        clientArgs.libraries
+            .filter(
+                (library) => library.type === 'native',
+                // && library.rules // TODO
+            )
+            .forEach(({ path }) => {
+                try {
+                    ZipHelper.unzip(
+                        join(StorageHelper.librariesDir, path),
+                        nativesDir,
+                    );
+                } catch (error) {
+                    // ignore
+                }
+            });
 
         return nativesDir;
     }

@@ -115,15 +115,13 @@ export class Updater {
         const totalSize = hashes.reduce((prev, cur) => prev + cur.size, 0);
         let loaded = 0;
 
-        const clientDir = join(StorageHelper.clientsDir, clientArgs.clientDir);
-
         await pMap(
             hashes,
             async (hash) => {
                 await this.validateAndDownloadFile(
                     hash.path,
                     hash.sha1,
-                    clientDir,
+                    StorageHelper.clientsDir,
                     'clients',
                 );
 

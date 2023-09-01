@@ -61,7 +61,7 @@ export class MirrorManager extends AbstractDownloadManager {
         progress.start(stat.size, 0);
 
         try {
-            ZipHelper.unzipArchive(client, clientDirPath, undefined, (size) => {
+            ZipHelper.unzip(client, clientDirPath, undefined, (size) => {
                 progress.increment(size);
             });
         } catch (error) {

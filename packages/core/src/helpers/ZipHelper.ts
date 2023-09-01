@@ -10,7 +10,7 @@ export class ZipHelper {
      * @param whitelist
      * @param onProgress
      */
-    static unzipArchive(
+    static unzip(
         archive: string,
         destDir: string,
         whitelist: string[] = [],
