@@ -28,6 +28,7 @@ export default function ServerPanel() {
     }, []);
 
     const startGame = () => {
+        setConsole('');
         setGameStarted(true);
         launcherAPI.scenes.serverPanel.startGame(textToConsole, progress, () =>
             setGameStarted(false),
