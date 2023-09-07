@@ -2,7 +2,7 @@ import { Action, LibraryRule, Name } from '@aurora-launcher/core';
 
 export class LibrariesMatcher {
     static match(rules?: LibraryRule[]) {
-        if (!rules) return true;
+        if (!rules || rules.length === 0) return true;
 
         let result;
 
@@ -32,15 +32,18 @@ export class LibrariesMatcher {
     }
 
     private static isMatchedOs(os: string) {
-        return this.mapOsToPlatform(os) === process.platform;
+        return os ? this.mapOsToPlatform(os) === process.platform : true;
     }
 
     private static isMatchedArch(arch?: string) {
+        // Не нашёл используется ли это где-то, но пожалуй оставлю, всё равно работает
         return arch ? this.mapArch(arch) === process.arch : true;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private static isMatchedVersion(version?: string) {
-        // TODO: add support version comparison
+        // эта тема встречается только на старых версиях (например на 1.6.4) с macOS
+        // поэтому думаю мы с этим даже не столкнёмся, но на всякий случай оставлю этот обработчик
         return true;
     }
 
@@ -50,23 +53,20 @@ export class LibrariesMatcher {
                 return 'darwin';
             case Name.Windows:
                 return 'win32';
-            case Name.Linux:
-                return 'linux';
             default:
+                // Linux and others
                 return os;
         }
     }
 
     private static mapArch(arch: string) {
         switch (arch) {
-            case 'x64':
-                return 'x64';
             case 'x32':
             case 'x86':
                 return 'ia32';
             default:
+                // x64 and others
                 return arch;
         }
-        // TODO: add support for other archs
     }
 }
