@@ -7,7 +7,7 @@ import nodemon from "nodemon";
 const cwd = fileURLToPath(dirname(dirname(import.meta.url)));
 
 nodemon({
-    watch: ["dist/app.js"],
+    script: "dist/app.js",
     args: ["--dev"],
     cwd,
 });
@@ -15,4 +15,10 @@ nodemon({
 spawn("npm", "run build:dev -- --watch --logLevel info".split(" "), {
     shell: true,
     cwd,
-}).stderr.on("data", (c) => console.log(c.toString()));
+}).stderr.on("data", (data) => {
+    const text = data.toString();
+    console.log(text);
+    if (text.includes("build finished")) {
+        nodemon.emit("restart");
+    }
+});
