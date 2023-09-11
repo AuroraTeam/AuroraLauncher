@@ -1,5 +1,5 @@
 import { MutableRefObject, useEffect, useRef } from 'react';
-import { SkinViewer, WalkingAnimation } from 'skinview3d';
+import { SkinViewer, WalkingAnimation, createOrbitControls } from 'skinview3d';
 
 import defaultSkin from '../assets/images/steve.png';
 
@@ -12,15 +12,18 @@ export default function SkinView() {
             width: 220,
             height: 440,
             skin: defaultSkin,
-            enableControls: false,
         });
 
         skinViewer.camera.position.x = -20;
         skinViewer.camera.position.y = 20;
         skinViewer.zoom = 0.8;
 
-        skinViewer.animation = new WalkingAnimation();
-        skinViewer.animation.speed = 0.5;
+        skinViewer.animations.add(WalkingAnimation);
+        skinViewer.animations.speed = 0.6;
+
+        const control = createOrbitControls(skinViewer);
+        control.enableRotate = true;
+        control.enableZoom = false;
     }, []);
 
     return <canvas ref={skinCanvas} />;
