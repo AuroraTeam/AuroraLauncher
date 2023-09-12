@@ -32,22 +32,22 @@ export class MojangManager extends AbstractDownloadManager {
      * @param clientName - Название сборки
      */
     async downloadClient(gameVersion: string, clientName: string): Promise<any> {
-        const version = await this.#getVersionInfo(gameVersion);
+        const version = await this.getVersionInfo(gameVersion);
         if (!version) return;
 
         if (!(await this.#resolveClient(clientName, version.downloads.client))) {
             return;
         }
-        if (!(await this.#resolveAssets(version.assetIndex))) return;
+        if (!(await this.resolveAssets(version.assetIndex))) return;
 
-        const libraries = await this.#resolveLibraries(version.libraries);
+        const libraries = await this.resolveLibraries(version.libraries);
         if (!libraries) return;
 
         return this.profilesManager.createProfile({
             version: gameVersion,
             clientDir: clientName,
             assetsIndex: version.assets,
-            libraries: libraries,
+            libraries,
             servers: [
                 {
                     ip: "127.0.0.1",
@@ -96,7 +96,7 @@ export class MojangManager extends AbstractDownloadManager {
         return true;
     }
 
-    async #resolveAssets(assetIndex: AssetIndex) {
+    protected async resolveAssets(assetIndex: AssetIndex) {
         const indexPath = resolve(StorageHelper.assetsIndexesDir, `${assetIndex.id}.json`);
 
         LogHelper.info("Downloading assets");
@@ -150,7 +150,7 @@ export class MojangManager extends AbstractDownloadManager {
         return true;
     }
 
-    async #resolveLibraries(libraries: Library[]) {
+    protected async resolveLibraries(libraries: Library[]) {
         const librariesList = libraries
             .map((library) => {
                 if (library.natives) {
@@ -283,7 +283,7 @@ export class MojangManager extends AbstractDownloadManager {
         }
     }
 
-    async #getVersionInfo(gameVersion: string) {
+    protected async getVersionInfo(gameVersion: string) {
         const versionInfo = await this.#getVersions();
         if (!versionInfo) return;
 

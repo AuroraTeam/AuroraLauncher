@@ -6,11 +6,11 @@ import { HttpHelper, JsonHelper, PartialProfile, ZipHelper } from "@aurora-launc
 import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
-import { AbstractDownloadManager } from "./AbstractManager";
 import { statSync } from "fs";
+import { MojangManager } from "./Mojang";
 
 @injectable()
-export class MirrorManager extends AbstractDownloadManager {
+export class MirrorManager extends MojangManager {
     /**
      * Скачивание клиена с зеркала
      * @param fileName - Название архива с файлами клиента
@@ -86,9 +86,9 @@ export class MirrorManager extends AbstractDownloadManager {
         }
 
         // TODO rework getting profile
-        let profile;
+        let profile: PartialProfile;
         try {
-            profile = JsonHelper.fromJson<PartialProfile>(
+            profile = JsonHelper.fromJson(
                 (await readFile(resolve(clientDirPath, "profile.json"))).toString(),
             );
         } catch (error) {
@@ -97,11 +97,18 @@ export class MirrorManager extends AbstractDownloadManager {
             );
         }
 
-        // TODO downloading assets and libraries
+        const version = await this.getVersionInfo(profile.version);
+        if (!version) return;
+
+        if (!(await this.resolveAssets(version.assetIndex))) return;
+
+        const libraries = await this.resolveLibraries(version.libraries);
+        if (!libraries) return;
 
         this.profilesManager.createProfile({
             ...profile,
             clientDir: clientName,
+            libraries,
             servers: [
                 {
                     title: clientName,
