@@ -39,15 +39,16 @@ export class MirrorManager extends AbstractDownloadManager {
 
         LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.download);
 
-        let progress = ProgressHelper.getDownloadProgressBar();
-        // progress.start(stat.size, 0);
+        let progressBar = ProgressHelper.getDownloadProgressBar();
+        progressBar.start(0, 0);
 
         let client: string;
         try {
             client = await HttpHelper.downloadFile(new URL(`${fileName}.zip`, mirror), null, {
                 saveToTempFile: true,
                 onProgress(progress) {
-                    progress;
+                    progress.total && progressBar.setTotal(progress.total);
+                    progressBar.update(progress.transferred);
                 },
             });
         } catch (error) {
@@ -56,19 +57,21 @@ export class MirrorManager extends AbstractDownloadManager {
             );
             LogHelper.debug(error);
             return;
+        } finally {
+            progressBar.stop();
         }
 
         LogHelper.info(
             this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking,
         );
 
-        progress = ProgressHelper.getLoadingProgressBar();
+        progressBar = ProgressHelper.getLoadingProgressBar();
         const stat = statSync(client);
-        progress.start(stat.size, 0);
+        progressBar.start(stat.size, 0);
 
         try {
             ZipHelper.unzip(client, clientDirPath, undefined, (size) => {
-                progress.increment(size);
+                progressBar.increment(size);
             });
         } catch (error) {
             await StorageHelper.rmdirRecursive(clientDirPath);
@@ -78,10 +81,11 @@ export class MirrorManager extends AbstractDownloadManager {
             LogHelper.debug(error);
             return;
         } finally {
-            progress.stop();
+            progressBar.stop();
             await StorageHelper.rmdirRecursive(client).catch();
         }
 
+        // TODO rework getting profile
         let profile;
         try {
             profile = JsonHelper.fromJson<PartialProfile>(
@@ -92,6 +96,8 @@ export class MirrorManager extends AbstractDownloadManager {
                 this.langManager.getTranslate.DownloadManager.MirrorManager.client.profileErr,
             );
         }
+
+        // TODO downloading assets and libraries
 
         this.profilesManager.createProfile({
             ...profile,
