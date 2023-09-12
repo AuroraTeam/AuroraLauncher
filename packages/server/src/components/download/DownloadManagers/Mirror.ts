@@ -19,14 +19,6 @@ export class MirrorManager extends AbstractDownloadManager {
     async downloadClient(fileName: string, clientName: string): Promise<void> {
         const mirrors: string[] = this.configManager.config.mirrors;
 
-        const clientDirPath = resolve(StorageHelper.clientsDir, clientName);
-
-        try {
-            await mkdir(clientDirPath);
-        } catch (err) {
-            return LogHelper.error(this.langManager.getTranslate.DownloadManager.dirExist);
-        }
-
         const mirror = mirrors.find(async (mirror) => {
             await HttpHelper.existsResource(new URL(`${fileName}.zip`, mirror));
         });
@@ -37,12 +29,26 @@ export class MirrorManager extends AbstractDownloadManager {
             );
         }
 
+        const clientDirPath = resolve(StorageHelper.clientsDir, clientName);
+
+        try {
+            await mkdir(clientDirPath);
+        } catch (err) {
+            return LogHelper.error(this.langManager.getTranslate.DownloadManager.dirExist);
+        }
+
         LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.download);
+
+        let progress = ProgressHelper.getDownloadProgressBar();
+        // progress.start(stat.size, 0);
 
         let client: string;
         try {
             client = await HttpHelper.downloadFile(new URL(`${fileName}.zip`, mirror), null, {
                 saveToTempFile: true,
+                onProgress(progress) {
+                    progress;
+                },
             });
         } catch (error) {
             LogHelper.error(
@@ -56,7 +62,7 @@ export class MirrorManager extends AbstractDownloadManager {
             this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking,
         );
 
-        const progress = ProgressHelper.getLoadingProgressBar();
+        progress = ProgressHelper.getLoadingProgressBar();
         const stat = statSync(client);
         progress.start(stat.size, 0);
 
