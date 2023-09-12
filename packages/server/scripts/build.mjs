@@ -22,6 +22,7 @@ const ctx = await context({
 }).catch(() => process.exit(1));
 
 if (watch) {
+    console.log("Watching...");
     await ctx.watch();
 } else {
     await ctx.rebuild();

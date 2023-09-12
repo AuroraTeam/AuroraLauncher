@@ -5,15 +5,17 @@ import minimist from 'minimist';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { _, watch, ...args } = minimist(process.argv.slice(2));
 
-console.log('Build...');
-console.time('Build successfully');
+if (!watch) {
+    console.log('Build...');
+    console.time('Build successfully');
+}
 
 const ctx = await context({
     entryPoints: ['src/main/index.ts'],
     bundle: true,
     sourcemap: true,
     platform: 'node',
-    target: 'node18',
+    target: 'node20',
     format: 'cjs',
     outdir: 'build/main',
     external: ['electron'],
@@ -24,11 +26,12 @@ const ctx = await context({
     plugins: [esbuildDecorators()],
     ...args,
 }).catch(() => process.exit(1));
-console.timeEnd('Build successfully');
 
 if (watch) {
     console.log('Watching...');
     await ctx.watch();
 } else {
-    ctx.dispose();
+    await ctx.rebuild();
+    await ctx.dispose();
+    console.timeEnd('Build successfully');
 }
