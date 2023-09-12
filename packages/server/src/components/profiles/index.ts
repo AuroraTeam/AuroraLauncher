@@ -32,7 +32,7 @@ export class ProfilesManager {
             try {
                 const data = await fs.readFile(
                     path.resolve(StorageHelper.profilesDir, file),
-                    "utf-8"
+                    "utf-8",
                 );
                 this.profiles.push(ProfileConfig.fromJSON(data));
             } catch (e) {
@@ -57,14 +57,14 @@ export class ProfilesManager {
         this.profiles.push(profile);
         await fs.writeFile(
             path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
-            profile.toJSON()
+            profile.toJSON(),
         );
         return profile.uuid;
     }
 
     async editProfile(
         uuid: string,
-        parameters: PartialProfile | ((profile: ProfileConfig) => PartialProfile)
+        parameters: PartialProfile | ((profile: ProfileConfig) => Partial<PartialProfile>),
     ): Promise<void> {
         const profile = this.profiles.find((p) => p.uuid === uuid);
 
@@ -75,7 +75,7 @@ export class ProfilesManager {
         }
         await fs.writeFile(
             path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
-            profile.toJSON()
+            profile.toJSON(),
         );
     }
 

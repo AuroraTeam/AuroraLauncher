@@ -21,7 +21,7 @@ export class QuiltManager extends FabricLikeManager {
         const profileUUID = await super.downloadClient(clientVer, clientName);
         if (!profileUUID) return;
 
-        const libraries = await this.resolveLibraries(quiltVersion.libraries, "Quilt");
+        const libraries = await this.resolveExtraLibraries(quiltVersion.libraries, "Quilt");
         if (!libraries) return;
 
         this.profilesManager.editProfile(profileUUID, (profile) => ({
