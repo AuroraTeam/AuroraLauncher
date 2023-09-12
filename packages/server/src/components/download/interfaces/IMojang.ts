@@ -92,6 +92,7 @@ export interface Classifiers {
     "natives-osx"?: Artifact;
     "natives-windows"?: Artifact;
     "natives-macos"?: Artifact;
+    [x: string]: Artifact;
 }
 
 export interface Extract {

@@ -7,6 +7,7 @@ import { injectable } from "tsyringe";
 
 import {
     Action,
+    Artifact,
     AssetIndex,
     Assets,
     Classifiers,
@@ -208,12 +209,11 @@ export class MojangManager extends AbstractDownloadManager {
     #resolveOldNative(library: Library): ProfileLibrary[] {
         const downloads = this.#resolveRulesForNatives(library);
 
-        return downloads.map(([os, nativeIndex]) => {
-            const artifact = library.downloads.classifiers[nativeIndex];
-
-            const { path, sha1 } = artifact;
-            let arch; // TODO resolveRulesForNatives "x-${arch}"
-
+        const resolveNative = (
+            { path, sha1 }: Artifact,
+            os: Name,
+            arch?: string,
+        ): ProfileLibrary => {
             return {
                 path,
                 sha1,
@@ -221,11 +221,28 @@ export class MojangManager extends AbstractDownloadManager {
                 rules: [
                     {
                         action: Action.Allow,
-                        os: { name: <Name>os, arch },
+                        os: { name: os, arch },
                     },
                 ],
             };
-        });
+        };
+
+        return downloads
+            .map(([os, nativeIndex]) => {
+                if ((<string>nativeIndex).includes("${arch}")) {
+                    return ["32", "64"].map((arch) => {
+                        const formattedNativeIndex = (<string>nativeIndex).replace("${arch}", arch);
+                        return resolveNative(
+                            library.downloads.classifiers[formattedNativeIndex],
+                            <Name>os,
+                            `x${arch}`,
+                        );
+                    });
+                } else {
+                    return resolveNative(library.downloads.classifiers[nativeIndex], <Name>os);
+                }
+            })
+            .flat();
     }
 
     #resolveLibrary(library: Library): ProfileLibrary {
@@ -234,13 +251,11 @@ export class MojangManager extends AbstractDownloadManager {
     }
 
     #resolveRulesForNatives(library: Library) {
-        // TODO "natives": {"windows": "natives-windows-${arch}"}
-
         if (!library.rules) {
             return Object.entries(library.natives);
         }
 
-        const res: [string, keyof Classifiers][] = [];
+        let res: [string, keyof Classifiers][] = [];
         library.rules.forEach((rule) => {
             if (rule.action === Action.Allow) {
                 if (rule.os) {
@@ -249,7 +264,7 @@ export class MojangManager extends AbstractDownloadManager {
                     res.push(...Object.entries(library.natives));
                 }
             } else {
-                res.filter(([os]) => os !== rule.os.name);
+                res = res.filter(([os]) => os !== rule.os.name);
             }
         });
         return res;
