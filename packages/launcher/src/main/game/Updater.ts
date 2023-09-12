@@ -157,7 +157,7 @@ export class Updater {
             const fileHash = await HashHelper.getSHA1fromFile(filePath);
             if (fileHash === sha1) return;
         } catch (error) {
-            // ignore
+            // ignore not found file
         }
 
         try {

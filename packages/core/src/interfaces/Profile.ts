@@ -14,6 +14,7 @@ export interface PartialProfile {
     clientDir: string
 
     // Assets
+    // TODO rename to assetIndex
     assetsIndex: string
     libraries: ProfileLibrary[]
 

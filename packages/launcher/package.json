@@ -1,6 +1,6 @@
 {
     "name": "@aurora-launcher/launcher",
-    "version": "0.1.0-beta1",
+    "version": "0.1.0-beta2",
     "description": "Launcher for Minecraft",
     "main": "build/main/index.js",
     "private": true,
@@ -34,7 +34,7 @@
     "homepage": "https://github.com/AuroraTeam/Launcher#readme",
     "devDependencies": {
         "@aurora-launcher/esbuild-decorators": "^0.0.1",
-        "@types/node": "^18.16.12",
+        "@types/node": "^18.17.15",
         "@types/react": "^18.0.18",
         "@types/react-dom": "^18.0.6",
         "@types/semver": "^7.3.8",
@@ -71,7 +71,7 @@
         "recoil": "^0.7.5",
         "reflect-metadata": "^0.1.13",
         "semver": "^7.3.5",
-        "skinview3d": "^3.0.0-alpha.1",
+        "skinview3d": "^2.2.1",
         "typedi": "^0.10.0"
     },
     "importSort": {

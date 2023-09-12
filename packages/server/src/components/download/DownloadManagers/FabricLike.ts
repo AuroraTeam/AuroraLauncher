@@ -7,7 +7,7 @@ import { Library } from "../interfaces/IFabric";
 import { MojangManager } from "./Mojang";
 
 export class FabricLikeManager extends MojangManager {
-    protected async resolveLibraries(
+    protected async resolveExtraLibraries(
         libraries: Library[],
         loaderName: string,
     ): Promise<ProfileLibrary[]> {

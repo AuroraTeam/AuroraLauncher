@@ -27,7 +27,7 @@ export class ZipHelper {
                 return
 
             onProgress && onProgress(entry.header.compressedSize)
-            zip.extractEntryTo(entry, destDir)
+            zip.extractEntryTo(entry, destDir, true, true)
         })
     }
 }

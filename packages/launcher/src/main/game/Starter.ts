@@ -72,6 +72,14 @@ export class Starter {
         const nativesDirectory = this.prepareNatives(clientArgs);
         jvmArgs.push(`-Djava.library.path=${nativesDirectory}`);
 
+        if (gte(clientVersion, '1.20.0')) {
+            jvmArgs.push(
+                `-Djna.tmpdir=${nativesDirectory}`,
+                `-Dorg.lwjgl.system.SharedLibraryExtractPath=${nativesDirectory}`,
+                `-Dio.netty.native.workdir=${nativesDirectory}`,
+            );
+        }
+
         jvmArgs.push(...clientArgs.jvmArgs);
 
         jvmArgs.push('-cp', classPath.join(delimiter));
@@ -80,7 +88,8 @@ export class Starter {
         jvmArgs.push(...gameArgs);
         jvmArgs.push(...clientArgs.clientArgs);
 
-        const gameProccess = spawn('java', jvmArgs, { cwd: clientDir });
+        // TODO: add java detect/select
+        const gameProccess = spawn('javaw', jvmArgs, { cwd: clientDir });
 
         gameProccess.stdout.on('data', (data: Buffer) => {
             const log = data.toString().trim();
@@ -149,9 +158,10 @@ export class Starter {
                     ZipHelper.unzip(
                         join(StorageHelper.librariesDir, path),
                         nativesDir,
+                        ['.so', '.dylib', '.jnilib', '.dll'],
                     );
                 } catch (error) {
-                    // ignore
+                    LogHelper.error(error);
                 }
             });
 
