@@ -14,7 +14,6 @@ export interface PartialProfile {
     clientDir: string
     assetIndex: string
     libraries: ProfileLibrary[]
-    // Launch client
     gameJar?: string
     mainClass?: string
     jvmArgs?: string[]
@@ -26,6 +25,11 @@ export interface PartialProfile {
     updateExclusions?: string[]
     // TODO Продумать опционалки
     // updateOptional: ProfileOptional[]
+
+    // Whitelist
+    whiteListType: "null" | "uuids" | "permissions"
+    whiteListPermisson?: number // TODO permission в виде чего?
+    whiteListUUIDs?: string[] // Список игроков по uuid
 }
 
 export interface ProfileLibrary {
