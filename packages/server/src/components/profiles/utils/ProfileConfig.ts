@@ -26,6 +26,9 @@ export class ProfileConfig implements Profile {
     update: string[];
     updateVerify: string[];
     updateExclusions: string[];
+    whiteListType: "null" | "uuids" | "permissions";
+    whiteListPermisson: number;
+    whiteListUUIDs: string[];
 
     constructor(config: PartialProfile) {
         merge(this, ProfileConfig.defaults, config);
@@ -53,6 +56,9 @@ export class ProfileConfig implements Profile {
         libraries: [],
         jvmArgs: [],
         clientArgs: [],
+        whiteListType: "null",
+        whiteListPermisson: 0,
+        whiteListUUIDs: [],
     };
 
     toObject() {
