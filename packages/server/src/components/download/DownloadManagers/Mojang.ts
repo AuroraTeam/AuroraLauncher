@@ -46,14 +46,13 @@ export class MojangManager extends AbstractDownloadManager {
         return this.profilesManager.createProfile({
             version: gameVersion,
             clientDir: clientName,
-            assetsIndex: version.assets,
+            assetIndex: version.assets,
             libraries,
             servers: [
                 {
                     ip: "127.0.0.1",
                     port: 25565,
                     title: clientName,
-                    whiteListType: "null",
                 },
             ],
         });

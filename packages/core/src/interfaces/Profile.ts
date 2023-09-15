@@ -12,23 +12,20 @@ export interface PartialProfile {
     // Client
     version: string
     clientDir: string
-
-    // Assets
-    // TODO rename to assetIndex
-    assetsIndex: string
+    assetIndex: string
     libraries: ProfileLibrary[]
+    // Launch client
+    gameJar?: string
+    mainClass?: string
+    jvmArgs?: string[]
+    clientArgs?: string[]
 
     // Updates
     update?: string[]
     updateVerify?: string[]
     updateExclusions?: string[]
+    // TODO Продумать опционалки
     // updateOptional: ProfileOptional[]
-
-    // Launch client
-    mainClass?: string
-    gameJar?: string
-    jvmArgs?: string[]
-    clientArgs?: string[]
 }
 
 export interface ProfileLibrary {
@@ -64,13 +61,6 @@ export interface ProfileServerConfig {
     ip: string
     port: number
     title: string
-
-    // Whitelist
-    whiteListType: "null" | "users" | "uuids" | "permissions"
-    whiteListPermisson?: number // permission в виде битового флага (пока только как возможный вариант)
-    whiteListUUIDs?: string[] // Список игроков по uuid
-    hideProfile?: boolean
-    message?: string
 }
 
 // export interface ProfileOptional {

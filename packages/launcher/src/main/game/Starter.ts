@@ -121,7 +121,7 @@ export class Starter {
             gameArgs.push('--accessToken', userArgs.accessToken);
 
             if (gte(clientVersion, '1.7.3')) {
-                gameArgs.push('--assetIndex', clientArgs.assetsIndex);
+                gameArgs.push('--assetIndex', clientArgs.assetIndex);
 
                 if (lte(clientVersion, '1.9.0')) {
                     gameArgs.push('--userProperties', '{}');

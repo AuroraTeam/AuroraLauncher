@@ -33,15 +33,15 @@ export class Updater {
     async validateAssets(clientArgs: Profile): Promise<void> {
         this.gameWindow.sendToConsole('Load assets files');
 
-        const assetsIndexPath = `indexes/${clientArgs.assetsIndex}.json`;
-        const filePath = join(StorageHelper.assetsDir, assetsIndexPath);
+        const assetIndexPath = `indexes/${clientArgs.assetIndex}.json`;
+        const filePath = join(StorageHelper.assetsDir, assetIndexPath);
         mkdirSync(dirname(filePath), { recursive: true });
 
-        const assetsIndexUrl = this.getFileUrl(assetsIndexPath, 'assets');
-        const assetsFile = await HttpHelper.getResource(assetsIndexUrl);
-        await writeFile(filePath, assetsFile);
+        const assetIndexUrl = this.getFileUrl(assetIndexPath, 'assets');
+        const assetFile = await HttpHelper.getResource(assetIndexUrl);
+        await writeFile(filePath, assetFile);
 
-        const { objects } = JsonHelper.fromJson<Assets>(assetsFile);
+        const { objects } = JsonHelper.fromJson<Assets>(assetFile);
 
         const assetsHashes = Object.values(objects)
             .sort((a, b) => b.size - a.size)

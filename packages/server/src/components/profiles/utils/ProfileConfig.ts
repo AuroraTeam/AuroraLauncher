@@ -11,33 +11,21 @@ import { instanceToPlain, plainToInstance } from "class-transformer";
 import { merge } from "lodash-es";
 
 export class ProfileConfig implements Profile {
-    //Don`t touch
     configVersion: number;
-
-    // Profile information
     uuid: string;
     sortIndex: number;
     servers: ProfileServerConfig[];
-
-    // Client
     version: string;
     clientDir: string;
-
-    // Assets
-    assetsIndex: string;
+    assetIndex: string;
     libraries: ProfileLibrary[];
-
-    // Updates
+    gameJar: string;
+    mainClass: string;
+    jvmArgs: string[];
+    clientArgs: string[];
     update: string[];
     updateVerify: string[];
     updateExclusions: string[];
-    // updateOptional: ProfileOptional[]
-
-    // Launch client
-    mainClass: string;
-    gameJar: string;
-    jvmArgs: string[];
-    clientArgs: string[];
 
     constructor(config: PartialProfile) {
         merge(this, ProfileConfig.defaults, config);
@@ -50,19 +38,18 @@ export class ProfileConfig implements Profile {
             {
                 ip: "127.0.0.1",
                 port: 25565,
-                title: "",
-                whiteListType: "null",
+                title: "Test Server",
             },
         ],
         sortIndex: 0,
         version: "",
         clientDir: "",
-        assetsIndex: "",
+        assetIndex: "",
         update: [],
         updateVerify: [],
         updateExclusions: [],
-        mainClass: "net.minecraft.client.main.Main",
         gameJar: "minecraft.jar",
+        mainClass: "net.minecraft.client.main.Main",
         libraries: [],
         jvmArgs: [],
         clientArgs: [],
