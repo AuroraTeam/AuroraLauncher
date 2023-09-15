@@ -8,7 +8,8 @@
     "exports": {
         "browser": "./dist/index-web.js",
         "import": "./dist/index-node.mjs",
-        "require": "./dist/index-node.cjs"
+        "require": "./dist/index-node.cjs",
+        "types": "./dist/types/index.d.ts"
     },
     "scripts": {
         "dev": "concurrently -r \"node build.mjs --watch\" \"tsc --emitDeclarationOnly --watch\"",

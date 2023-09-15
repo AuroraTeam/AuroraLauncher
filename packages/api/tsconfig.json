@@ -7,5 +7,6 @@
         "declarationDir": "dist/types",
         "moduleResolution": "bundler",
         "skipLibCheck": true
-    }
+    },
+    "include": ["src"]
 }
