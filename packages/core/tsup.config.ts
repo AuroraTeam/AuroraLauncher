@@ -1,3 +1,4 @@
+import { exec } from "child_process"
 import { defineConfig } from "tsup"
 
 export default defineConfig({
@@ -7,5 +8,7 @@ export default defineConfig({
     sourcemap: true,
     minify: true,
     clean: true,
-    onSuccess: "tsc",
+    onSuccess: async () => {
+        exec("tsc")
+    },
 })
