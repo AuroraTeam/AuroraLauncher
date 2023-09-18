@@ -5,11 +5,11 @@
 
 |           Название модуля           |             Описание              | Расположение                                               |
 | :---------------------------------: | :-------------------------------: | ---------------------------------------------------------- |
-|        @aurora-launcher\api         |    Библиотека для работы с API    | [packages\api](packages\api)                               |
-|        @aurora-launcher\core        |     Библиотека с общим кодом      | [packages\core](packages\core)                             |
-| @aurora-launcher\esbuild-decorators | Поддержка декораторов для esbuild | [packages\esbuild-decorators](packages\esbuild-decorators) |
-|      @aurora-launcher\launcher      |           Код лаунчера            | [packages\launcher](packages\launcher)                     |
-|       @aurora-launcher\server       |         Код лаунчсервера          | [packages\server](packages\server)                         |
+|        @aurora-launcher/api         |    Библиотека для работы с API    | [packages/api](packages/api)                               |
+|        @aurora-launcher/core        |     Библиотека с общим кодом      | [packages/core](packages/core)                             |
+| @aurora-launcher/esbuild-decorators | Поддержка декораторов для esbuild | [packages/esbuild-decorators](packages/esbuild-decorators) |
+|      @aurora-launcher/launcher      |           Код лаунчера            | [packages/launcher](packages/launcher)                     |
+|       @aurora-launcher/server       |         Код лаунчсервера          | [packages/server](packages/server)                         |
 
 ---
 
