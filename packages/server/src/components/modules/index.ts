@@ -2,15 +2,8 @@ import fs from "fs/promises";
 import path from "path";
 
 import { LauncherServer } from "@root/LauncherServer";
-import {
-    IDependencies,
-    ILauncherServerModule,
-    IModuleInfo,
-    LogHelper,
-    StorageHelper,
-} from "@root/utils";
+import { ILauncherServerModule, IModuleInfo, LogHelper, StorageHelper } from "@root/utils";
 import chalk from "chalk";
-import { satisfies } from "semver";
 import { delay, inject, injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
@@ -23,15 +16,16 @@ export class ModulesManager {
 
     constructor(
         private readonly langManager: LangManager,
+        // TODO Нужен другой вариант, "позднее связывание" для модулей не катит
         @inject(delay(() => LauncherServer))
-        private readonly app: LauncherServer
+        private readonly app: LauncherServer,
     ) {
         const startTime = Date.now();
 
         this.loadModules().then(() => {
             LogHelper.info(
                 this.langManager.getTranslate.ModulesManager.loadingEnd,
-                Date.now() - startTime
+                Date.now() - startTime,
             );
         });
     }
@@ -104,7 +98,7 @@ export class ModulesManager {
             LogHelper.debug(error.message);
             LogHelper.error(
                 this.langManager.getTranslate.ModulesManager.moduleLoadingErr,
-                moduleName
+                moduleName,
             );
         }
     }
@@ -146,7 +140,7 @@ export class ModulesManager {
      */
     private hasModule(moduleName: string): boolean {
         return Array.from(ModulesManager.modulesList.keys()).some(
-            (moduleInfo) => moduleInfo.name === moduleName
+            (moduleInfo) => moduleInfo.name === moduleName,
         );
     }
 }
