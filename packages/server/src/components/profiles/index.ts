@@ -1,22 +1,23 @@
 import fs from "fs/promises";
-import path from "path";
 
-import { PartialProfile } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
-import { ProfileConfig } from "./utils/ProfileConfig";
+import { ProfileConfig } from "./ProfileConfig";
+import { resolve } from "path";
+import { Profile } from "@aurora-launcher/core";
 
 @singleton()
 @injectable()
 export class ProfilesManager {
-    profiles: ProfileConfig[] = [];
+    private profiles: ProfileConfig[] = [];
+
     constructor(private readonly langManager: LangManager) {
         this.loadProfiles();
     }
 
-    async loadProfiles(): Promise<void> {
+    private async loadProfiles(): Promise<void> {
         const files = await fs.readdir(StorageHelper.profilesDir);
 
         if (files.length === 0) {
@@ -30,10 +31,7 @@ export class ProfilesManager {
             if (!file.endsWith(".json")) continue;
 
             try {
-                const data = await fs.readFile(
-                    path.resolve(StorageHelper.profilesDir, file),
-                    "utf-8",
-                );
+                const data = await fs.readFile(resolve(StorageHelper.profilesDir, file), "utf-8");
                 this.profiles.push(ProfileConfig.fromJSON(data));
             } catch (e) {
                 if (e instanceof SyntaxError) {
@@ -52,11 +50,14 @@ export class ProfilesManager {
         await this.loadProfiles();
     }
 
-    async createProfile(parameters: PartialProfile): Promise<string> {
+    /**
+     * @returns The uuid of the created profile
+     */
+    async createProfile(parameters: Partial<Profile>): Promise<string> {
         const profile = new ProfileConfig(parameters);
         this.profiles.push(profile);
         await fs.writeFile(
-            path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
+            resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
             profile.toJSON(),
         );
         return profile.uuid;
@@ -64,17 +65,14 @@ export class ProfilesManager {
 
     async editProfile(
         uuid: string,
-        parameters: PartialProfile | ((profile: ProfileConfig) => Partial<PartialProfile>),
+        parameters: Partial<Profile> | ((profile: ProfileConfig) => Partial<Profile>),
     ): Promise<void> {
         const profile = this.profiles.find((p) => p.uuid === uuid);
 
-        if (typeof parameters === "object") {
-            Object.assign(profile, parameters);
-        } else {
-            Object.assign(profile, parameters(profile));
-        }
+        Object.assign(profile, typeof parameters === "object" ? parameters : parameters(profile));
+
         await fs.writeFile(
-            path.resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
+            resolve(StorageHelper.profilesDir, `${profile.clientDir}.json`),
             profile.toJSON(),
         );
     }

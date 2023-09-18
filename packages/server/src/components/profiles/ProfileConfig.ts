@@ -1,12 +1,6 @@
 import { randomUUID } from "crypto";
 
-import {
-    JsonHelper,
-    PartialProfile,
-    Profile,
-    ProfileLibrary,
-    ProfileServerConfig,
-} from "@aurora-launcher/core";
+import { JsonHelper, Profile, ProfileLibrary, ProfileServerConfig } from "@aurora-launcher/core";
 import { instanceToPlain, plainToInstance } from "class-transformer";
 import { merge } from "lodash-es";
 
@@ -27,10 +21,10 @@ export class ProfileConfig implements Profile {
     updateVerify: string[];
     updateExclusions: string[];
     whiteListType: "null" | "uuids" | "permissions";
-    whiteListPermisson: number;
-    whiteListUUIDs: string[];
+    whiteListPermisson?: number;
+    whiteListUUIDs?: string[];
 
-    constructor(config: PartialProfile) {
+    constructor(config: Partial<Profile>) {
         merge(this, ProfileConfig.defaults, config);
     }
 
@@ -57,11 +51,9 @@ export class ProfileConfig implements Profile {
         jvmArgs: [],
         clientArgs: [],
         whiteListType: "null",
-        whiteListPermisson: 0,
-        whiteListUUIDs: [],
     };
 
-    toObject() {
+    public toObject() {
         return <Profile>instanceToPlain(this);
     }
 

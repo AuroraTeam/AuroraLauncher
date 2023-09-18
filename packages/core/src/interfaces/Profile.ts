@@ -1,28 +1,26 @@
-export type Profile = Required<PartialProfile>
-
-export interface PartialProfile {
+export interface Profile {
     //Don`t touch
-    configVersion?: number
+    configVersion: number
 
     // Profile information
-    uuid?: string
-    sortIndex?: number
-    servers?: ProfileServerConfig[]
+    uuid: string
+    sortIndex: number
+    servers: ProfileServerConfig[]
 
     // Client
     version: string
     clientDir: string
     assetIndex: string
     libraries: ProfileLibrary[]
-    gameJar?: string
-    mainClass?: string
-    jvmArgs?: string[]
-    clientArgs?: string[]
+    gameJar: string
+    mainClass: string
+    jvmArgs: string[]
+    clientArgs: string[]
 
     // Updates
-    update?: string[]
-    updateVerify?: string[]
-    updateExclusions?: string[]
+    update: string[]
+    updateVerify: string[]
+    updateExclusions: string[]
     // TODO Продумать опционалки
     // updateOptional: ProfileOptional[]
 

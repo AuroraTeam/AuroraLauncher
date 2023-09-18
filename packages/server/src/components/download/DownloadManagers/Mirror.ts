@@ -2,12 +2,13 @@ import { mkdir, readFile } from "fs/promises";
 import { resolve } from "path";
 import { URL } from "url";
 
-import { HttpHelper, JsonHelper, PartialProfile, ZipHelper } from "@aurora-launcher/core";
+import { HttpHelper, JsonHelper, ZipHelper } from "@aurora-launcher/core";
 import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
 import { statSync } from "fs";
 import { MojangManager } from "./Mojang";
+import { Profile } from "@aurora-launcher/core";
 
 @injectable()
 export class MirrorManager extends MojangManager {
@@ -86,7 +87,7 @@ export class MirrorManager extends MojangManager {
         }
 
         // TODO rework getting profile
-        let profile: PartialProfile;
+        let profile: Partial<Profile>;
         try {
             profile = JsonHelper.fromJson(
                 (await readFile(resolve(clientDirPath, "profile.json"))).toString(),
