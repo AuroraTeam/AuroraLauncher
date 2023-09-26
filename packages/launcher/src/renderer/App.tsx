@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import Layout from './runtime/components/Layout';
@@ -9,7 +9,7 @@ import ServersList from './runtime/scenes/ServersList';
 export default function App() {
     return (
         <RecoilRoot>
-            <BrowserRouter>
+            <HashRouter>
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Login />} />
@@ -17,7 +17,7 @@ export default function App() {
                         <Route path="/ServerPanel" element={<ServerPanel />} />
                     </Route>
                 </Routes>
-            </BrowserRouter>
+            </HashRouter>
         </RecoilRoot>
     );
 }
