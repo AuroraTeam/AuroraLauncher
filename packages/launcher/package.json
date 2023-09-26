@@ -12,12 +12,12 @@
         "build:renderer": "tsc && vite build",
         "start:dev": "cross-env DEV=true nodemon --watch src --ext ts,tsx --ignore 'src/renderer' --exec electron .",
         "start:prod": "electron .",
-        "clean": "rimraf build aurora-launcher-win32-x64",
+        "clean": "rimraf build out",
         "prettier": "prettier --config .prettierrc.json --write src",
         "typecheck": "tsc --noEmit",
         "lint": "eslint src --ext .ts,.tsx",
         "lint:fix": "npm run lint -- --fix",
-        "pack": "electron-packager build"
+        "pack": "electron-packager build --overwrite --out=out"
     },
     "repository": {
         "type": "git",

@@ -1,6 +1,6 @@
 # Aurora builds ignore
 build
-aurora-launcher-*
+out
 
 # Logs
 logs
