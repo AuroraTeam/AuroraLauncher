@@ -10,7 +10,7 @@ import { Service } from 'typedi';
 import { EVENTS } from '../../common/channels';
 import logo from '../../renderer/runtime/assets/images/logo.png';
 
-const isDev = process.env.DEV === 'true';
+const isDev = process.env.DEV === 'true' && !app.isPackaged;
 
 @Service()
 export class LauncherWindow {
@@ -32,10 +32,10 @@ export class LauncherWindow {
                     },
                 })
                     .then((name: any) =>
-                        console.log(`Added Extension: ${name}`)
+                        console.log(`Added Extension: ${name}`),
                     )
                     .catch((err: any) =>
-                        console.error('An error occurred: ', err)
+                        console.error('An error occurred: ', err),
                     );
             }
 
