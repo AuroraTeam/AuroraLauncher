@@ -41,6 +41,7 @@ export class CommandsManager {
     private completer = (line: string): [string[], string] => {
         const completions = Array.from(this.commands.keys());
         const hits = completions.filter((c) => c.startsWith(line.toLowerCase()));
+        
         return [hits.length ? hits : completions, line];
     };
 
