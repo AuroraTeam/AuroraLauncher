@@ -10,12 +10,14 @@ import { Service } from 'typedi';
 import { AuthorizationService, Session } from '../api/AuthorizationService';
 import { LibrariesMatcher } from './LibrariesMatcher';
 import { GameWindow } from './GameWindow';
+import { JavaManager } from './JavaManager';
 
 @Service()
 export class Starter {
     constructor(
         private authorizationService: AuthorizationService,
         private gameWindow: GameWindow,
+        private javaManager: JavaManager,
     ) {}
 
     async start(clientArgs: Profile): Promise<void> {
@@ -88,8 +90,13 @@ export class Starter {
         jvmArgs.push(...gameArgs);
         jvmArgs.push(...clientArgs.clientArgs);
 
-        // TODO: add java detect/select
-        const gameProccess = spawn('javaw', jvmArgs, { cwd: clientDir });
+        await this.javaManager.checkAndDownloadJava(clientArgs.javaVersion);
+
+        const gameProccess = spawn(
+            this.javaManager.getJavaPath(clientArgs.javaVersion),
+            jvmArgs,
+            { cwd: clientDir },
+        );
 
         gameProccess.stdout.on('data', (data: Buffer) => {
             const log = data.toString().trim();
@@ -133,7 +140,7 @@ export class Starter {
             }
 
             if (gte(clientVersion, '1.9.0')) {
-                gameArgs.push('--versionType', 'AuroraLauncher v0.1.0');
+                gameArgs.push('--versionType', 'AuroraLauncher v0.0.9');
             }
         } else {
             gameArgs.push('--session', userArgs.accessToken);

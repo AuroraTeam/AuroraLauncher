@@ -10,6 +10,7 @@ export class StorageHelper {
         StorageHelper.storageDir,
         'libraries',
     );
+    static javaDir: string = resolve(StorageHelper.storageDir, 'java');
     static logFile: string = resolve(StorageHelper.storageDir, 'Launcher.log');
 
     static createMissing(): void {

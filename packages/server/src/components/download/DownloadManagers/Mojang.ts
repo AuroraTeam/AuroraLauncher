@@ -45,6 +45,7 @@ export class MojangManager extends AbstractDownloadManager {
 
         return this.profilesManager.createProfile({
             version: gameVersion,
+            javaVersion: version.javaVersion.majorVersion,
             clientDir: clientName,
             assetIndex: version.assets,
             libraries,

@@ -8,6 +8,7 @@ export interface Profile {
     servers: ProfileServerConfig[]
 
     // Client
+    javaVersion: number
     version: string
     clientDir: string
     assetIndex: string

@@ -6,7 +6,6 @@ export class LibrariesMatcher {
 
         let result;
 
-        // Вот это пожалуй стоит покрыть тестами
         rules.forEach((rule) => {
             if (rule.action === Action.Allow) {
                 result = true;
