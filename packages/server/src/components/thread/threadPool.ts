@@ -1,5 +1,4 @@
-import { Worker as NativeWorker } from "worker_threads";
-
+import { Worker as NativeWorker } from 'worker_threads';
 import { AsyncQueue } from "@root/components/thread/asyncQueue";
 import { Task } from "@root/components/thread/utils/types";
 
@@ -9,12 +8,12 @@ export class ThreadPool {
 
     constructor(numOfThreads: number) {
         for (let i = 0; i < numOfThreads; i++) {
-            const thread = new NativeWorker("./utils/worker.js");
+            const thread = new NativeWorker('./utils/worker.js');
             this.threads.push(thread);
             this.initializeThread(thread);
         }
 
-        this.asyncQueue = new AsyncQueue(this.threads);
+        this.asyncQueue = new AsyncQueue(this.threads)
     }
 
     async runTask<T>(task: Task<T>) {
@@ -22,14 +21,14 @@ export class ThreadPool {
     }
 
     private initializeThread(worker: NativeWorker) {
-        worker.on("message", (result) => {
-            if ("taskId" in result) {
+        worker.on('message', (result) => {
+            if ('taskId' in result) {
                 this.asyncQueue.resolve(result.taskId, result.data);
             }
         });
 
-        worker.on("error", (error) => {
-            console.error("Worker error:", error);
+        worker.on('error', (error) => {
+            console.error('Worker error:', error);
         });
     }
 }

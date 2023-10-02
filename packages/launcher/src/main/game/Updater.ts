@@ -109,13 +109,13 @@ export class Updater {
             throw new Error('Client not found');
         }
 
-        hashes.sort((a, b) => b.size - a.size);
-        const totalSize = hashes.reduce((prev, cur) => prev + cur.size, 0);
+        hashes.sort((a: { size: number; }, b: { size: number; }) => b.size - a.size);
+        const totalSize = hashes.reduce((prev: any, cur: { size: any; }) => prev + cur.size, 0);
         let loaded = 0;
 
         await pMap(
             hashes,
-            async (hash) => {
+            async (hash: any) => {
                 await this.validateAndDownloadFile(
                     hash.path,
                     hash.sha1,
