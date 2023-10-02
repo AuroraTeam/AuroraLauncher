@@ -86,8 +86,7 @@ export class ModulesManager {
             const module = (await import(moduleUrl)).Module;
 
             if (!this.isValidModule(module)) {
-                //TODO: LOG
-                LogHelper.dev("invalid");
+                LogHelper.dev("Invalid module. Please check it's structure or contact with author for correction.");
                 return;
             }
 
