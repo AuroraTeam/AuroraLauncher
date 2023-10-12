@@ -17,5 +17,6 @@ export class StorageHelper {
         if (!existsSync(this.assetsDir)) mkdirSync(this.assetsDir);
         if (!existsSync(this.clientsDir)) mkdirSync(this.clientsDir);
         if (!existsSync(this.librariesDir)) mkdirSync(this.librariesDir);
+        if (!existsSync(this.javaDir)) mkdirSync(this.javaDir);
     }
 }

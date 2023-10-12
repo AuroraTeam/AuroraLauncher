@@ -4,7 +4,7 @@ import { existsSync } from 'fs';
 import { Service } from 'typedi';
 import { HttpHelper, ZipHelper } from '@aurora-launcher/core';
 import tar from 'tar';
-import { rename, rmdir } from 'fs/promises';
+import { mkdir, rename, rmdir } from 'fs/promises';
 
 @Service()
 export class JavaManager {
@@ -41,6 +41,7 @@ export class JavaManager {
         if (process.platform === 'win32') {
             ZipHelper.unzip(javaFile, javaDir);
         } else {
+            await mkdir(javaDir);
             await tar.x({
                 file: javaFile,
                 cwd: javaDir,
@@ -57,7 +58,17 @@ export class JavaManager {
     }
 
     getJavaPath(majorVersion: number) {
-        return join(this.#getJavaDir(majorVersion), 'bin', 'javaw');
+        if (process.platform === 'darwin') {
+            return join(
+                this.#getJavaDir(majorVersion),
+                'Contents',
+                'Home',
+                'bin',
+                'java',
+            );
+        } else {
+            return join(this.#getJavaDir(majorVersion), 'bin', 'java');
+        }
     }
 
     #getJavaDir(majorVersion: number) {
@@ -69,7 +80,7 @@ export class JavaManager {
             case 'win32':
                 return 'windows';
             case 'darwin':
-                return 'macos';
+                return 'mac';
             default:
                 // Linux and others
                 return process.platform;
