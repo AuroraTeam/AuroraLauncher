@@ -70,7 +70,7 @@ export class Starter {
 
         const jvmArgs = [];
 
-        this.authlibInjector.verify();
+        await this.authlibInjector.verify();
         jvmArgs.push(
             `-javaagent:${this.authlibInjector.authlibFilePath}=${apiConfig.web}`,
         );

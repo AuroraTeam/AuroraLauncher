@@ -4,16 +4,16 @@ import { join } from 'path';
 import { StorageHelper } from '../helpers/StorageHelper';
 import { LogHelper } from '../helpers/LogHelper';
 export class AuthlibInjector {
-    authlibFilePath = join(StorageHelper.storageDir, 'authlib.jar');
+    readonly authlibFilePath = join(StorageHelper.storageDir, 'authlib.jar');
 
     async verify() {
         if (!existsSync(this.authlibFilePath)) {
-            this.downloadAuthlib();
+            await this.#downloadAuthlib();
         }
         LogHelper.info('Authlib loaded successfully');
     }
 
-    async downloadAuthlib() {
+    async #downloadAuthlib() {
         const apiUrl =
             'https://authlib-injector.yushi.moe/artifact/latest.json';
 
@@ -50,13 +50,11 @@ export class AuthlibInjector {
     }
 }
 
-export interface AuthlibData {
+interface AuthlibData {
     build_number: number;
     version: string;
     download_url: string;
-    checksums: Checksums;
-}
-
-export interface Checksums {
-    sha256: string;
+    checksums: {
+        sha256: string;
+    };
 }
