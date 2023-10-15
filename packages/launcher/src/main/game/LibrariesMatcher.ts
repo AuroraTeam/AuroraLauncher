@@ -1,4 +1,5 @@
 import { Action, LibraryRule, Name } from '@aurora-launcher/core';
+import { Architecture, Platform } from './System';
 
 export class LibrariesMatcher {
     static match(rules?: LibraryRule[]) {
@@ -30,7 +31,7 @@ export class LibrariesMatcher {
         return result;
     }
 
-    private static isMatchedOs(os: string) {
+    private static isMatchedOs(os: Name) {
         return os ? this.mapOsToPlatform(os) === process.platform : true;
     }
 
@@ -46,26 +47,17 @@ export class LibrariesMatcher {
         return true;
     }
 
-    private static mapOsToPlatform(os: string) {
-        switch (os) {
-            case Name.Osx:
-                return 'darwin';
-            case Name.Windows:
-                return 'win32';
-            default:
-                // Linux and others
-                return os;
+    private static mapOsToPlatform(os: Name) {
+        if (os === Name.Osx) {
+            return Platform.MACOS;
         }
+        return os;
     }
 
     private static mapArch(arch: string) {
-        switch (arch) {
-            case 'x32':
-            case 'x86':
-                return 'ia32';
-            default:
-                // x64 and others
-                return arch;
+        if (['x32', 'x86'].includes(arch)) {
+            return Architecture.X32;
         }
+        return arch;
     }
 }
