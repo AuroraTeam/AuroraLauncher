@@ -11,7 +11,7 @@ export const titlebarTitle = atom({
     key: 'titlebar.title',
     default: {
         show: true,
-        text: 'AuroraLauncher dev build v0.1.0',
+        text: 'AuroraLauncher',
     },
 });
 

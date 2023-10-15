@@ -1,5 +1,5 @@
 import { Action, LibraryRule, Name } from '@aurora-launcher/core';
-import { Architecture, Platform } from './System';
+import { Architecture, Platform } from '../core/System';
 
 export class LibrariesMatcher {
     static match(rules?: LibraryRule[]) {
@@ -48,10 +48,12 @@ export class LibrariesMatcher {
     }
 
     private static mapOsToPlatform(os: Name) {
-        if (os === Name.Osx) {
-            return Platform.MACOS;
-        }
-        return os;
+        const osToPlatform = {
+            [Name.Osx]: Platform.MACOS,
+            [Name.Linux]: Platform.LINUX,
+            [Name.Windows]: Platform.WINDOWS,
+        };
+        return osToPlatform[os];
     }
 
     private static mapArch(arch: string) {

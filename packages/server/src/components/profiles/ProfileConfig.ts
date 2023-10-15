@@ -9,6 +9,7 @@ export class ProfileConfig implements Profile {
     uuid: string;
     sortIndex: number;
     servers: ProfileServerConfig[];
+    javaVersion: number;
     version: string;
     clientDir: string;
     assetIndex: string;
@@ -39,6 +40,7 @@ export class ProfileConfig implements Profile {
             },
         ],
         sortIndex: 0,
+        javaVersion: 8,
         version: "",
         clientDir: "",
         assetIndex: "",

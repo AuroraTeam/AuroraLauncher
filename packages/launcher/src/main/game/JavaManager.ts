@@ -5,7 +5,7 @@ import { Service } from 'typedi';
 import { HttpHelper, ZipHelper } from '@aurora-launcher/core';
 import tar from 'tar';
 import { mkdir, rename, rmdir } from 'fs/promises';
-import { Architecture, Platform } from './System';
+import { Architecture, Platform } from '../core/System';
 
 @Service()
 export class JavaManager {

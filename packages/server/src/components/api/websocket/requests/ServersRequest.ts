@@ -18,7 +18,8 @@ export class ServersRequest extends AbstractRequest {
     invoke(): ServersResponseData {
         const servers: Server[] = [];
 
-        this.profilesManager.profiles
+        this.profilesManager
+            .getProfiles()
             .sort((a, b) => a.sortIndex - b.sortIndex)
             .forEach((profile) => {
                 profile.servers.forEach(({ ip, port, title }) => {

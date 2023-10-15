@@ -51,7 +51,6 @@ export class GameService {
             LogHelper.error(error);
             this.gameWindow.sendToConsole(`${error}`);
             this.gameWindow.stopGame();
-            return;
         }
     }
 }

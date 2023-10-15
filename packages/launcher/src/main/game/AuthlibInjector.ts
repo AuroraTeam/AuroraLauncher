@@ -3,6 +3,9 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 import { StorageHelper } from '../helpers/StorageHelper';
 import { LogHelper } from '../helpers/LogHelper';
+import { Service } from 'typedi';
+
+@Service()
 export class AuthlibInjector {
     readonly authlibFilePath = join(StorageHelper.storageDir, 'authlib.jar');
 
