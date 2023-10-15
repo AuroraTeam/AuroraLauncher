@@ -16,7 +16,7 @@ export class Launcher {
 
         private loginScene: LoginScene,
         private serversListScene: ServersListScene,
-        private serverPanelScene: ServerPanelScene
+        private serverPanelScene: ServerPanelScene,
     ) {
         this.init();
     }

@@ -27,7 +27,7 @@ export default function Login() {
         if (login.length < 3) {
             return showModal(
                 'Ошибка ввода',
-                'Логин должен быть не менее 3-ёх символов'
+                'Логин должен быть не менее 3-ёх символов',
             );
         }
         // if (password.length < 8) {

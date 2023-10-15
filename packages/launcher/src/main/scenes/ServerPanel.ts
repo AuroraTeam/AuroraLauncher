@@ -11,13 +11,13 @@ export class ServerPanelScene implements IHandleable {
 
     initHandlers() {
         ipcMain.handle(EVENTS.SCENES.SERVER_PANEL.GET_PROFILE, () =>
-            this.gameService.getProfile()
+            this.gameService.getProfile(),
         );
         ipcMain.handle(EVENTS.SCENES.SERVER_PANEL.GET_SERVER, () =>
-            this.gameService.getServer()
+            this.gameService.getServer(),
         );
         ipcMain.on(EVENTS.SCENES.SERVER_PANEL.START_GAME, () =>
-            this.gameService.startGame()
+            this.gameService.startGame(),
         );
     }
 }

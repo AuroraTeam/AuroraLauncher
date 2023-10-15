@@ -11,7 +11,7 @@ export default class ServersListScene {
     static selectServer(server: Server) {
         return ipcRenderer.invoke(
             EVENTS.SCENES.SERVERS_LIST.SELECT_SERVER,
-            server
+            server,
         );
     }
 }

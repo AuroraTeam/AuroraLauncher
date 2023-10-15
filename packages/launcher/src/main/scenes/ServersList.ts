@@ -11,16 +11,16 @@ import { GameService } from '../game/GameService';
 export class ServersListScene implements IHandleable {
     constructor(
         private apiService: APIManager,
-        private gameService: GameService
+        private gameService: GameService,
     ) {}
 
     initHandlers() {
         ipcMain.handle(EVENTS.SCENES.SERVERS_LIST.GET_SERVERS, () =>
-            this.apiService.getServers()
+            this.apiService.getServers(),
         );
         ipcMain.handle(
             EVENTS.SCENES.SERVERS_LIST.SELECT_SERVER,
-            (_, server: Server) => this.gameService.setServer(server)
+            (_, server: Server) => this.gameService.setServer(server),
         );
     }
 }

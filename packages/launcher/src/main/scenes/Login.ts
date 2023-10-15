@@ -13,7 +13,7 @@ export class LoginScene implements IHandleable {
         ipcMain.handle(
             EVENTS.SCENES.LOGIN.AUTH,
             (_, login: string, password: string) =>
-                this.authorizationService.authorize(login, password)
+                this.authorizationService.authorize(login, password),
         );
     }
 }

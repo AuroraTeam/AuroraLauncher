@@ -11,7 +11,7 @@ export class LogHelper {
 
     private static readonly logFileStream = createWriteStream(
         StorageHelper.logFile,
-        { flags: 'a' }
+        { flags: 'a' },
     );
 
     static debug(msg: any, ...args: any): void {
