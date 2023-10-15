@@ -48,7 +48,7 @@ export class FabricLikeManager extends MojangManager {
 
                 return {
                     path: library.path,
-                    sha1: await HashHelper.getSHA1fromFile(filePath),
+                    sha1: await HashHelper.getHashfromFile(filePath, "sha1"),
                     type: "library",
                 };
             }),

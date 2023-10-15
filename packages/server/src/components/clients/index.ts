@@ -72,7 +72,7 @@ export class ClientsManager {
         return {
             path: path.replace(StorageHelper.clientsDir, ""),
             size,
-            sha1: await HashHelper.getSHA1fromFile(path),
+            sha1: await HashHelper.getHashfromFile(path, "sha1"),
         };
     }
 }

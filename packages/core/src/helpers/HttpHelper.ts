@@ -85,7 +85,7 @@ export class HttpHelper {
             saveToTempFile?: boolean
         } = {
             saveToTempFile: false,
-        }
+        },
     ) {
         if (options.saveToTempFile) filePath = StorageHelper.getTmpPath()
         if (filePath === null) throw new Error("File path not found")
@@ -105,7 +105,7 @@ export class HttpHelper {
         options: {
             onProgress?: onProgressFunction
             afterDownload?: () => void
-        } = {}
+        } = {},
     ) {
         await pMap(
             filesList,
@@ -118,11 +118,11 @@ export class HttpHelper {
                 await this.download(
                     file.sourceUrl,
                     file.destinationPath,
-                    options.onProgress
+                    options.onProgress,
                 )
                 if (options.afterDownload) options.afterDownload()
             },
-            { concurrency: this.concurrency }
+            { concurrency: this.concurrency },
         )
     }
 
@@ -136,7 +136,7 @@ export class HttpHelper {
     private static async download(
         url: string | URL,
         filePath: string,
-        onProgress?: onProgressFunction
+        onProgress?: onProgressFunction,
     ): Promise<string> {
         await mkdir(dirname(filePath), { recursive: true })
 
@@ -157,7 +157,10 @@ export class HttpHelper {
 
         let currentHash
         try {
-            currentHash = await HashHelper.getSHA1fromFile(file.destinationPath)
+            currentHash = await HashHelper.getHashfromFile(
+                file.destinationPath,
+                "sha1",
+            )
         } catch (error) {
             return false
         }

@@ -11,6 +11,9 @@ import { AuthorizationService, Session } from '../api/AuthorizationService';
 import { LibrariesMatcher } from './LibrariesMatcher';
 import { GameWindow } from './GameWindow';
 import { JavaManager } from './JavaManager';
+import { AuthlibInjector } from './AuthlibInjector';
+
+import { api as apiConfig } from '@config';
 
 @Service()
 export class Starter {
@@ -18,6 +21,7 @@ export class Starter {
         private authorizationService: AuthorizationService,
         private gameWindow: GameWindow,
         private javaManager: JavaManager,
+        private authlibInjector: AuthlibInjector,
     ) {}
 
     async start(clientArgs: Profile): Promise<void> {
@@ -66,10 +70,10 @@ export class Starter {
 
         const jvmArgs = [];
 
-        // TODO Убрать костыль
-        // jvmArgs.push(
-        //     '-javaagent:../../authlib-injector.jar=http://localhost:1370'
-        // );
+        this.authlibInjector.verify();
+        jvmArgs.push(
+            `-javaagent:${this.authlibInjector.authlibFilePath}=${apiConfig.web}`,
+        );
 
         const nativesDirectory = this.prepareNatives(clientArgs);
         jvmArgs.push(`-Djava.library.path=${nativesDirectory}`);

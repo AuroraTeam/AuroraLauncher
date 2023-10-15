@@ -109,8 +109,13 @@ export class Updater {
             throw new Error('Client not found');
         }
 
-        hashes.sort((a: { size: number; }, b: { size: number; }) => b.size - a.size);
-        const totalSize = hashes.reduce((prev: any, cur: { size: any; }) => prev + cur.size, 0);
+        hashes.sort(
+            (a: { size: number }, b: { size: number }) => b.size - a.size,
+        );
+        const totalSize = hashes.reduce(
+            (prev: any, cur: { size: any }) => prev + cur.size,
+            0,
+        );
         let loaded = 0;
 
         await pMap(
@@ -154,7 +159,7 @@ export class Updater {
         const fileUrl = this.getFileUrl(path, type);
 
         try {
-            const fileHash = await HashHelper.getSHA1fromFile(filePath);
+            const fileHash = await HashHelper.getHashfromFile(filePath, 'sha1');
             if (fileHash === sha1) return;
         } catch (error) {
             // ignore not found file
