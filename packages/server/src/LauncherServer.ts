@@ -23,7 +23,6 @@ import {
     AuthProvider,
     DatabaseAuthProvider,
     JsonAuthProvider,
-    MojangAuthProvider,
     RejectAuthProvider,
 } from "./components/auth/providers";
 import {
@@ -41,7 +40,6 @@ import {
     UpdateCommand,
 } from "./components/commands/commands";
 import { LogHelper, StorageHelper } from "./utils";
-import { ThreadPool } from "@root/components/thread/threadPool";
 
 @singleton()
 export class LauncherServer {
@@ -55,7 +53,6 @@ export class LauncherServer {
     private _UpdateManager: UpdateManager;
     private _ProfilesManager: ProfilesManager;
     private _AuthlibManager: AuthlibManager;
-    private _threadPool: ThreadPool;
 
     constructor() {
         this.preInit();
@@ -96,7 +93,6 @@ export class LauncherServer {
         AuthManager.registerProviders({
             json: JsonAuthProvider,
             db: DatabaseAuthProvider,
-            mojang: MojangAuthProvider,
             reject: RejectAuthProvider,
             accept: AcceptAuthProvider,
         });
