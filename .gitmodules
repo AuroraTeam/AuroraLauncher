@@ -1,0 +1,4 @@
+[submodule "packages/launcher"]
+	path = packages/launcher
+	url = https://github.com/AuroraTeam/Launcher
+	branch = dev
