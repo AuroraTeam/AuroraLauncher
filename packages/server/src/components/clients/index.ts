@@ -6,7 +6,6 @@ import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
-import { Task } from "@root/components/thread/utils/types";
 
 @singleton()
 @injectable()
@@ -29,7 +28,7 @@ export class ClientsManager {
 
         LogHelper.info(this.langManager.getTranslate.ClientsManager.sync);
 
-        const tasks: Task<void>[] = dirs.map((folder) => async () => {
+        const tasks = dirs.map((folder) => async () => {
             const startTime = Date.now();
             const hashedFiles = await this.hashDir(join(StorageHelper.clientsDir, folder.name));
 
