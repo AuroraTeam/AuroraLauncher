@@ -22,9 +22,9 @@ import { AbstractDownloadManager } from "./AbstractManager";
 
 @injectable()
 export class MojangManager extends AbstractDownloadManager {
-    #versionManifestLink = "https://launchermeta.fastmcmirror.org/mc/game/version_manifest_v2.json";
-    #assetsLink = "https://resources.fastmcmirror.net/";
-    #librariesLink = "https://libraries.fastmcmirror.net/";
+    #versionManifestLink = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
+    #assetsLink = "https://resources.download.minecraft.net/";
+    #librariesLink = "https://libraries.minecraft.net/";
 
     /**
      * Скачивание клиента с зеркала Mojang
