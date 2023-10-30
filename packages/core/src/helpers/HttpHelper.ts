@@ -140,7 +140,16 @@ export class HttpHelper {
     ): Promise<string> {
         await mkdir(dirname(filePath), { recursive: true })
 
-        const req = got(url)
+        const req = got(url, {
+            timeout: {
+                lookup: 100,
+                connect: 50,
+                secureConnect: 50,
+                socket: 1000,
+                send: 10000,
+                response: 1000,
+            },
+        })
 
         if (onProgress) {
             req.on("downloadProgress", onProgress)
