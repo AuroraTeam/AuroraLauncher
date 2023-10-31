@@ -166,7 +166,7 @@ export class HttpHelper {
 
         let currentHash
         try {
-            currentHash = await HashHelper.getHashfromFile(
+            currentHash = await HashHelper.getHashFromFile(
                 file.destinationPath,
                 "sha1",
             )

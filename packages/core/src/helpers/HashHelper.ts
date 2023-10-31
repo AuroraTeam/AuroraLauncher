@@ -6,7 +6,7 @@ export class HashHelper {
         return createHash(type).update(str).digest("hex")
     }
 
-    static async getHashfromFile(path: string, type: "sha1" | "sha256") {
+    static async getHashFromFile(path: string, type: "sha1" | "sha256") {
         return this.getHash(await readFile(path), type)
     }
 }
