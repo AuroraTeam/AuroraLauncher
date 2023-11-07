@@ -27,11 +27,12 @@ export class ProfileConfig implements Profile {
 
     constructor(config: Partial<Profile>) {
         merge(this, ProfileConfig.defaults, config);
+        this.uuid = randomUUID();
     }
 
     private static readonly defaults: Profile = {
         configVersion: 0,
-        uuid: randomUUID(),
+        uuid: "",
         servers: [
             {
                 ip: "127.0.0.1",
