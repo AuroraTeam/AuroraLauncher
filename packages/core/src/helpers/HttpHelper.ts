@@ -1,12 +1,17 @@
-import { mkdir, writeFile } from "fs/promises"
+import { mkdir } from "fs/promises"
 import { dirname } from "path"
 import { URL } from "url"
 
-import got, { Progress } from "got"
 import pMap from "p-map"
 
 import { HashHelper, JsonData, JsonHelper, StorageHelper } from "."
+import { createWriteStream } from "fs"
+import { request } from "undici"
 
+interface Progress {
+    transferred: number
+    total: number
+}
 type onProgressFunction = (progress: Progress) => void
 
 export interface File {
@@ -33,7 +38,7 @@ export class HttpHelper {
      */
     public static async existsResource(url: string | URL) {
         try {
-            const { statusCode } = await got.head(url)
+            const { statusCode } = await request(url, { method: "HEAD" })
             return statusCode >= 200 && statusCode < 300
         } catch (error) {
             return false
@@ -46,8 +51,8 @@ export class HttpHelper {
      * @returns Promise, который вернёт содержимое ресурса, в случае успеха
      */
     public static async getResource(url: string | URL) {
-        const { body } = await got.get(url)
-        return body
+        const { body } = await request(url)
+        return body.text()
     }
 
     /**
@@ -64,8 +69,15 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт обработанный объект, в случае успеха
      */
-    public static postJson<T>(url: string | URL, json: JsonData): Promise<T> {
-        return got.post(url, { json }).json()
+    public static async postJson<T>(
+        url: string | URL,
+        json: JsonData,
+    ): Promise<T> {
+        const { body } = await request(url, {
+            method: "POST",
+            body: JsonHelper.toJson(json),
+        })
+        return (await body.json()) as T
     }
 
     /**
@@ -140,25 +152,36 @@ export class HttpHelper {
     ): Promise<string> {
         await mkdir(dirname(filePath), { recursive: true })
 
-        const req = got(url, {
-            timeout: {
-                lookup: 100,
-                connect: 50,
-                secureConnect: 50,
-                socket: 1000,
-                send: 10000,
-                response: 1000,
-            },
-        })
+        const { statusCode, headers, body } = await request(url)
 
-        if (onProgress) {
-            req.on("downloadProgress", onProgress)
+        if (statusCode >= 400) {
+            throw new Error(
+                `Failed to download ${url} with status code ${statusCode}`,
+            )
         }
 
-        const buffer = await req.buffer()
-        await writeFile(filePath, buffer)
+        // handle redirects
+        if (statusCode > 300 && statusCode < 400 && !!headers["location"]) {
+            return this.download(<string>headers["location"], filePath)
+        }
 
-        return filePath
+        if (onProgress) {
+            let transferred = 0
+            const total = +(headers["content-length"] || 0)
+
+            body.on("data", (chunk) => {
+                onProgress({
+                    transferred: (transferred += chunk.byteLength),
+                    total,
+                })
+            })
+        }
+
+        return new Promise((resolve, reject) => {
+            body.pipe(createWriteStream(filePath))
+                .on("finish", () => resolve(filePath))
+                .on("error", (error) => reject(error))
+        })
     }
 
     private static async verifyFileHash(file: File) {
