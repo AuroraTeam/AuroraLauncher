@@ -102,9 +102,9 @@
         "downloadEnd": "Загрузка завершена! Пожалуйста, перезапустите LauncherServer."
     },
     "ClientsManager": {
-        "sync": "Синхронизация папки clients",
+        "sync": "Синхронизация клиентов",
         "syncTime": "Папка \"%s\" - %dms",
-        "syncEnd": "Синхронизация завершена",
+        "syncEnd": "Синхронизация клиентов завершена",
         "syncSkip": "Папка clients пуста. Синхронизация пропущена"
     },
     "ProgressHelper": {
@@ -112,8 +112,8 @@
         "download": "{bar} {percentage}% | Осталось: {eta_formatted} | Скорость: {speed}/s | {value_formatted}/{total_formatted} | {filename}"
     },
     "ProfilesManager": {
-        "sync": "Синхронизация папки profiles",
-        "syncEnd": "Синхронизация завершена",
+        "sync": "Синхронизация профилей",
+        "syncEnd": "Синхронизация профилей завершена",
         "syncSkip": "Папка profiles пуста. Синхронизация пропущена",
         "loadingErr": "Json cинтаксис нарушен. Попробуйте исправить или удалить файл profiles/%s"
     },
