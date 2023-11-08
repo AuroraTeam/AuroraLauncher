@@ -6,13 +6,16 @@ import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
+import { ThreadPool } from "@root/components/thread";
 
 @singleton()
 @injectable()
 export class ClientsManager {
     readonly hashedClients = new Map<string, HashedFile[]>();
 
-    constructor(private readonly langManager: LangManager) {
+    constructor(
+        private readonly langManager: LangManager
+    ) {
         this.hashClients();
     }
 
