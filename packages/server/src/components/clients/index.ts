@@ -6,7 +6,6 @@ import { LogHelper, StorageHelper } from "@root/utils";
 import { injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
-import { ThreadPool } from "@root/components/thread";
 
 @singleton()
 @injectable()
@@ -35,8 +34,6 @@ export class ClientsManager {
             const startTime = Date.now();
             const hashedFiles = await this.hashDir(join(StorageHelper.clientsDir, folder.name));
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             this.hashedClients.set(folder.name, hashedFiles);
 
             LogHelper.info(

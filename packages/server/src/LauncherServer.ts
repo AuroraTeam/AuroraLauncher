@@ -1,5 +1,4 @@
 import { container, singleton } from "tsyringe";
-import { Worker } from "node:worker_threads"
 
 import {
     AuthlibManager,
@@ -36,8 +35,6 @@ import {
     UpdateCommand,
 } from "./components/commands/commands";
 import { LogHelper, StorageHelper } from "./utils";
-import { ThreadPool } from "@root/components/thread";
-
 @singleton()
 export class LauncherServer {
     private _AuthProvider: AuthProvider;
@@ -50,7 +47,6 @@ export class LauncherServer {
     private _UpdateManager: UpdateManager;
     private _ProfilesManager: ProfilesManager;
     private _AuthlibManager: AuthlibManager;
-    private _ThreadPool: ThreadPool
 
     constructor() {
         this.preInit();
@@ -62,11 +58,6 @@ export class LauncherServer {
 
         this._ConfigManager = container.resolve(ConfigManager);
         this._LangManager = container.resolve(LangManager);
-
-        this._ThreadPool = new ThreadPool();
-
-        container.register("ThreadPool", { useValue: this._ThreadPool })
-
 
         StorageHelper.validate();
     }
