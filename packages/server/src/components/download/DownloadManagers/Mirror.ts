@@ -106,7 +106,7 @@ export class MirrorManager extends MojangManager {
         const libraries = await this.resolveLibraries(version.libraries);
         if (!libraries) return;
 
-        this.profilesManager.createProfile({
+        await this.profilesManager.createProfile({
             ...profile,
             clientDir: clientName,
             libraries,
