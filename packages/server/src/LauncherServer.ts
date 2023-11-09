@@ -63,14 +63,10 @@ export class LauncherServer {
     }
 
     private init() {
-        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initStart);
-
         this.registerAuthProviders();
         this.resolveDependencies();
         this.registerCommands();
         this.registerRequest();
-
-        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd);
     }
 
     private resolveDependencies() {

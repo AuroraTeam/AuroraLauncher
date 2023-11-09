@@ -1,8 +1,4 @@
 {
-    "LauncherServer": {
-        "initStart": "Initialization start",
-        "initEnd": "Initialization end"
-    },
     "LangManager": {
         "init": "LangManager initialized. Selected language: \"%s\"",
         "strNotFound": "String \"%s\" not found!",
