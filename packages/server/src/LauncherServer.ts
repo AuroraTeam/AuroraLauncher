@@ -125,8 +125,8 @@ export class LauncherServer {
      * Функция для перезагрузки LauncherSever'а
      */
     public reload() {
-        LogHelper.info("Reload LaunchServer");
         container.clearInstances();
+        this.preInit();
         this.init();
     }
 }

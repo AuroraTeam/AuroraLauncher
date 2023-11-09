@@ -130,12 +130,10 @@
         "keyNotFound": "Key file not found"
     },
     "ModulesManager": {
-        "loadingStart": "Modules loading start...",
+        "loadingStart": "Modules loading start",
         "loadingEnd": "Modules loading ended. Total time: %d ms.",
         "loadingSkip": "Modules folder empty. Skip loading",
         "loadingErr": "An error occurred while loading modules",
-        "downloadModuleDependencies": "Not all dependencies are installed for %s module, installing...",
-        "buildModule": "%s module not builded, building...",
         "moduleLoadingErr": "An error occurred when trying to load the %s module."
     }
 }
