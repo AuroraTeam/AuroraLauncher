@@ -24,10 +24,11 @@ export class QuiltManager extends FabricLikeManager {
         const libraries = await this.resolveExtraLibraries(quiltVersion.libraries, "Quilt");
         if (!libraries) return;
 
-        this.profilesManager.editProfile(profileUUID, (profile) => ({
+        await this.profilesManager.editProfile(profileUUID, (profile) => ({
             mainClass: quiltVersion.mainClass,
             libraries: [...profile.libraries, ...libraries],
         }));
+
         LogHelper.info(this.langManager.getTranslate.DownloadManager.QuiltManager.client.success);
     }
 

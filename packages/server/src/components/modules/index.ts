@@ -20,14 +20,7 @@ export class ModulesManager {
         @inject(delay(() => LauncherServer))
         private readonly app: LauncherServer,
     ) {
-        const startTime = Date.now();
-
-        this.loadModules().then(() => {
-            LogHelper.info(
-                this.langManager.getTranslate.ModulesManager.loadingEnd,
-                Date.now() - startTime,
-            );
-        });
+        this.loadModules();
     }
 
     /**
@@ -36,6 +29,7 @@ export class ModulesManager {
     public async loadModules(): Promise<void> {
         try {
             LogHelper.info(this.langManager.getTranslate.ModulesManager.loadingStart);
+            const startTime = Date.now();
 
             const files = await fs.readdir(StorageHelper.modulesDir, {
                 withFileTypes: true,
@@ -51,6 +45,11 @@ export class ModulesManager {
 
             this.moduleQueue.push(...moduleFiles);
             await this.processModuleQueue();
+
+            LogHelper.info(
+                this.langManager.getTranslate.ModulesManager.loadingEnd,
+                Date.now() - startTime,
+            );
         } catch (error) {
             LogHelper.debug(error.message);
             LogHelper.error(this.langManager.getTranslate.ModulesManager.loadingErr);

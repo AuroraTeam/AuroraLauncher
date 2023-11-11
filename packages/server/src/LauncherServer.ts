@@ -1,8 +1,8 @@
 import { container, singleton } from "tsyringe";
 
 import {
-    AuthManager,
     AuthlibManager,
+    AuthManager,
     ClientsManager,
     CommandsManager,
     ConfigManager,
@@ -12,12 +12,7 @@ import {
     UpdateManager,
     WebManager,
 } from "./components";
-import {
-    AuthRequest,
-    ProfileRequest,
-    ServersRequest,
-    UpdatesRequest,
-} from "./components/api/websocket/requests";
+import { AuthRequest, ProfileRequest, ServersRequest, UpdatesRequest, } from "./components/api/websocket/requests";
 import {
     AcceptAuthProvider,
     AuthProvider,
@@ -40,7 +35,6 @@ import {
     UpdateCommand,
 } from "./components/commands/commands";
 import { LogHelper, StorageHelper } from "./utils";
-
 @singleton()
 export class LauncherServer {
     private _AuthProvider: AuthProvider;
@@ -69,14 +63,10 @@ export class LauncherServer {
     }
 
     private init() {
-        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initStart);
-
         this.registerAuthProviders();
         this.resolveDependencies();
         this.registerCommands();
         this.registerRequest();
-
-        LogHelper.info(this._LangManager.getTranslate.LauncherServer.initEnd);
     }
 
     private resolveDependencies() {
@@ -131,8 +121,8 @@ export class LauncherServer {
      * Функция для перезагрузки LauncherSever'а
      */
     public reload() {
-        LogHelper.info("Reload LaunchServer");
         container.clearInstances();
+        this.preInit();
         this.init();
     }
 }

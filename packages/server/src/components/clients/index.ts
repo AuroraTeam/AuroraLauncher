@@ -12,7 +12,9 @@ import { LangManager } from "../langs";
 export class ClientsManager {
     readonly hashedClients = new Map<string, HashedFile[]>();
 
-    constructor(private readonly langManager: LangManager) {
+    constructor(
+        private readonly langManager: LangManager
+    ) {
         this.hashClients();
     }
 
@@ -32,8 +34,6 @@ export class ClientsManager {
             const startTime = Date.now();
             const hashedFiles = await this.hashDir(join(StorageHelper.clientsDir, folder.name));
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             this.hashedClients.set(folder.name, hashedFiles);
 
             LogHelper.info(

@@ -1,8 +1,4 @@
 {
-    "LauncherServer": {
-        "initStart": "Initialization start",
-        "initEnd": "Initialization end"
-    },
     "LangManager": {
         "init": "LangManager initialized. Selected language: \"%s\"",
         "strNotFound": "String \"%s\" not found!",
@@ -102,9 +98,9 @@
         "downloadEnd": "Download complete! Please restart LauncherServer."
     },
     "ClientsManager": {
-        "sync": "Syncing clients dir",
+        "sync": "Syncing clients",
         "syncTime": "Syncing \"%s\" - %dms",
-        "syncEnd": "Syncing clients dir end",
+        "syncEnd": "Syncing clients end",
         "syncSkip": "Clients dir is empty. Skip sync"
     },
     "ProgressHelper": {
@@ -112,8 +108,8 @@
         "download": "{bar} {percentage}% | Remaining: {eta_formatted} | Speed: {speed}/s | {value_formatted}/{total_formatted} | {filename}"
     },
     "ProfilesManager": {
-        "sync": "Syncing profiles dir",
-        "syncEnd": "Syncing profiles dir end",
+        "sync": "Syncing profiles",
+        "syncEnd": "Syncing profiles end",
         "syncSkip": "Profiles dir empty. Skip sync",
         "loadingErr": "Json syntax broken. Try fix or delete file profiles/%s"
     },
@@ -130,12 +126,10 @@
         "keyNotFound": "Key file not found"
     },
     "ModulesManager": {
-        "loadingStart": "Modules loading start...",
+        "loadingStart": "Modules loading start",
         "loadingEnd": "Modules loading ended. Total time: %d ms.",
         "loadingSkip": "Modules folder empty. Skip loading",
         "loadingErr": "An error occurred while loading modules",
-        "downloadModuleDependencies": "Not all dependencies are installed for %s module, installing...",
-        "buildModule": "%s module not builded, building...",
         "moduleLoadingErr": "An error occurred when trying to load the %s module."
     }
 }
