@@ -34,9 +34,9 @@ jobs:
           tag_name: ${{ env.PACKAGE_VERSION }}
           name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
           files: |
-            dist/LauncherServer.js
-            dist/LauncherServer-win.exe
-            dist/LauncherServer-linux
-            dist/LauncherServer-macos
+            packages/server/dist/LauncherServer.js
+            packages/server/dist/LauncherServer-win.exe
+            packages/server/dist/LauncherServer-linux
+            packages/server/dist/LauncherServer-macos
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
