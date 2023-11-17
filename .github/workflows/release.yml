@@ -24,8 +24,9 @@ jobs:
 
       - name: Build LauncherServer
         run: |
-          npm run build:prod
-          npm run build:bin
+          npm run build:libs
+          npm run build:prod -w packages/server
+          npm run build:bin -w packages/server
 
       - name: Upload release
         uses: softprops/action-gh-release@v1
