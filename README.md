@@ -3,20 +3,19 @@
 
 ## Модули
 
-|           Название модуля           |             Описание              | Расположение                                               |
-| :---------------------------------: | :-------------------------------: | ---------------------------------------------------------- |
-|        @aurora-launcher/api         |    Библиотека для работы с API    | [packages/api](packages/api)                               |
-|        @aurora-launcher/core        |     Библиотека с общим кодом      | [packages/core](packages/core)                             |
-| @aurora-launcher/esbuild-decorators | Поддержка декораторов для esbuild | [packages/esbuild-decorators](packages/esbuild-decorators) |
-|      @aurora-launcher/launcher      |           Код лаунчера            | [packages/launcher](packages/launcher)                     |
-|       @aurora-launcher/server       |         Код лаунчсервера          | [packages/server](packages/server)                         |
+|           Название модуля           |             Описание              | Расположение                                                |
+| :---------------------------------: | :-------------------------------: | ----------------------------------------------------------- |
+|        @aurora-launcher/api         |    Библиотека для работы с API    | [packages/api](packages/api)                                |
+|        @aurora-launcher/core        |     Библиотека с общим кодом      | [packages/core](packages/core)                              |
+| @aurora-launcher/esbuild-decorators | Поддержка декораторов для esbuild | [packages/esbuild-decorators](packages/esbuild-decorators)  |
+|      @aurora-launcher/launcher      |           Код лаунчера            | [packages/launcher](https://github.com/AuroraTeam/Launcher) |
+|       @aurora-launcher/server       |         Код лаунчсервера          | [packages/server](packages/server)                          |
 
 ---
 
 На данный момент лаунчер находится в разработке, но вы можете помочь мне с кодом или ведением задач. Или например предлагать свои идеи в раздел [Issues](https://github.com/AuroraTeam/LauncherServer/issues).
 А также вы можете поддержать меня материально:
 
--   [Через Donation Alerts](https://www.donationalerts.com/r/jocat)
 -   Перевод на карту: `4276 3000 2167 4414`
 
 ## Мы в Discord
