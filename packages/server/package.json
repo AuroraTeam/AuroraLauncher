@@ -24,7 +24,7 @@
     "scripts": {
         "dev": "node scripts/dev.mjs",
         "build:dev": "node scripts/build.mjs",
-        "build:prod": "node scripts/build.mjs --sources-content=false --minify",
+        "build:prod": "node scripts/build.mjs --prod",
         "build:bin": "pkg dist/app.js -t node18-linux-x64,node18-macos-x64,node18-win-x64 --out-path dist --compress GZip",
         "clean": "rimraf dist",
         "prettier": "prettier --write src",

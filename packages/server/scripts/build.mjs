@@ -3,7 +3,12 @@ import { context } from "esbuild";
 import minimist from "minimist";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { _, watch, ...args } = minimist(process.argv.slice(2));
+const { _, watch, prod, ...args } = minimist(process.argv.slice(2));
+
+if (prod) {
+    args.minify = true;
+    args.sourcesContent = false;
+}
 
 if (!watch) {
     console.log("Build...");
