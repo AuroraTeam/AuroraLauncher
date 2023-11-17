@@ -22,7 +22,7 @@ const ctx = await context({
     sourcemap: true,
     plugins: [esbuildDecorators()],
     entryPoints: ["src/app.ts"],
-    outdir: "dist",
+    outfile: "dist/LauncherServer.js",
     ...args,
 }).catch(() => process.exit(1));
 
