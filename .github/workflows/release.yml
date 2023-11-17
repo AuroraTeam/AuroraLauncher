@@ -21,7 +21,7 @@ jobs:
 
       - name: Build LauncherServer
         run: |
-          cd server
+          cd packages/server
           npm i
           npm run build:prod
           npm run build:bin
