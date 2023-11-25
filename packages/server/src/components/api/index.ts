@@ -1,2 +1,2 @@
 export * from "./webserver/WebServerManager";
-export * from "./websocket/WebManager";
+export * from "./websocket";
