@@ -13,7 +13,7 @@ interface JoinRequestDto {
 }
 
 @injectable()
-export class JoinRequest extends AbstractRequest {
+export class JoinWebRequest extends AbstractRequest {
     method = "POST";
     url = /^\/authlib\/sessionserver\/session\/minecraft\/join$/;
 

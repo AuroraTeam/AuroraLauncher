@@ -10,7 +10,7 @@ export interface ExtendedWebSocketClient extends WebSocketClient {
 }
 
 @injectable()
-export class AuthRequest extends AbstractRequest {
+export class AuthWsRequest extends AbstractRequest {
     method = "auth";
 
     constructor(@inject("AuthProvider") private authProvider: AuthProvider) {

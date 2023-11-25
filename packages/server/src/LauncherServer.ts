@@ -27,10 +27,14 @@ import {
     DownloadClientCommand,
     AboutCommand,
     StopCommand,
-    AuthRequest,
-    ProfileRequest,
-    ServersRequest,
-    UpdatesRequest,
+    AuthWsRequest,
+    ProfileWsRequest,
+    ServersWsRequest,
+    UpdatesWsRequest,
+    HasJoinedWebRequest,
+    InjectorWebRequest,
+    JoinWebRequest,
+    ProfileWebRequest,
 } from "./components";
 import { LogHelper, StorageHelper } from "./utils";
 
@@ -108,11 +112,19 @@ export class LauncherServer {
     }
 
     private registerRequest() {
-        this._WebManager.registerRequests([
-            container.resolve(AuthRequest),
-            container.resolve(ProfileRequest),
-            container.resolve(ServersRequest),
-            container.resolve(UpdatesRequest),
+        this._WebManager.registerWsRequests([
+            container.resolve(AuthWsRequest),
+            container.resolve(ProfileWsRequest),
+            container.resolve(ServersWsRequest),
+            container.resolve(UpdatesWsRequest),
+        ]);
+
+        this._WebManager.registerWebRequests([
+            container.resolve(InjectorWebRequest),
+            container.resolve(ProfileWebRequest),
+            container.resolve(ProfileWebRequest),
+            container.resolve(JoinWebRequest),
+            container.resolve(HasJoinedWebRequest),
         ]);
     }
 

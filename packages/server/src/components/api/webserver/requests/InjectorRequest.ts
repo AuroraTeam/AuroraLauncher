@@ -7,7 +7,7 @@ import { WebResponse } from "../WebResponse";
 import { AbstractRequest } from "./AbstractRequest";
 
 @injectable()
-export class InjectorRequest extends AbstractRequest {
+export class InjectorWebRequest extends AbstractRequest {
     method = "GET";
     url = /^\/authlib$/;
 

@@ -7,7 +7,7 @@ import {
     MojangManager,
     ProfilesManager,
     QuiltManager,
-} from "@root/components/";
+} from "@root/components";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
 import { injectable } from "tsyringe";
 
@@ -17,7 +17,7 @@ export class DownloadClientCommand extends AbstractCommand {
         private readonly langManager: LangManager,
         private readonly profilesManager: ProfilesManager,
         private readonly configManager: ConfigManager,
-        private readonly commandsManager: CommandsManager
+        private readonly commandsManager: CommandsManager,
     ) {
         super({
             name: "downloadclient",
@@ -45,7 +45,7 @@ export class DownloadClientCommand extends AbstractCommand {
         await new DownloadManager(
             this.langManager,
             this.profilesManager,
-            this.configManager
+            this.configManager,
         ).downloadClient(gameVersion, clientName);
         this.commandsManager.console.resume();
     }

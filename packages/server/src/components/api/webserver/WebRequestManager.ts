@@ -1,33 +1,15 @@
 import { IncomingMessage, ServerResponse } from "http";
 
-import { container } from "tsyringe";
-
 import { AbstractRequest } from "./requests/AbstractRequest";
-import { ProfilesRequest } from "./requests/authlib/accountsHost/ProfilesRequest";
-import { HasJoinedRequest } from "./requests/authlib/sessionHost/HasJoinedRequest";
-import { JoinRequest } from "./requests/authlib/sessionHost/JoinRequest";
-import { ProfileRequest } from "./requests/authlib/sessionHost/ProfileRequest";
-import { InjectorRequest } from "./requests/InjectorRequest";
+
 import { WebRequest } from "./WebRequest";
 import { WebResponse } from "./WebResponse";
 
 export class WebRequestManager {
     private requests: AbstractRequest[] = [];
 
-    constructor() {
-        this.registerRequests([
-            container.resolve(InjectorRequest),
-            container.resolve(ProfilesRequest),
-            container.resolve(ProfileRequest),
-            container.resolve(JoinRequest),
-            container.resolve(HasJoinedRequest),
-        ]);
-    }
-
-    registerRequests(requests: AbstractRequest[]): void {
-        requests.forEach((request) => {
-            this.requests.push(request);
-        });
+    registerRequest(request: AbstractRequest): void {
+        this.requests.push(request);
     }
 
     async getRequest(req: IncomingMessage, res: ServerResponse) {

@@ -7,7 +7,7 @@ import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
 
 @injectable()
-export class ProfileRequest extends AbstractRequest {
+export class ProfileWebRequest extends AbstractRequest {
     method = "GET";
     url =
         /^\/authlib\/sessionserver\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/;

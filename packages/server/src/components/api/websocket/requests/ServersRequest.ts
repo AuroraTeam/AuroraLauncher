@@ -4,7 +4,7 @@ import { AbstractRequest } from "aurora-rpc-server";
 import { injectable } from "tsyringe";
 
 @injectable()
-export class ServersRequest extends AbstractRequest {
+export class ServersWsRequest extends AbstractRequest {
     method = "servers";
 
     constructor(private profilesManager: ProfilesManager) {

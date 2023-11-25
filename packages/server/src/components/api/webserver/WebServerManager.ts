@@ -4,11 +4,11 @@ import http from "http";
 import https from "https";
 import { join, resolve } from "path";
 
-import { ConfigManager } from "@root/components/config";
-import { LangManager } from "@root/components/langs";
+import { ConfigManager, LangManager } from "@root/components";
 import { LogHelper, StorageHelper } from "@root/utils";
 
 import { WebRequestManager } from "./WebRequestManager";
+import { AbstractRequest } from "./requests/AbstractRequest";
 
 export class WebServerManager {
     private webServer: http.Server | https.Server;
@@ -18,9 +18,13 @@ export class WebServerManager {
         return this.webServer;
     }
 
+    registerRequest(request: AbstractRequest): void {
+        this.requestsManager.registerRequest(request);
+    }
+
     constructor(
         private readonly configManager: ConfigManager,
-        private readonly langManager: LangManager
+        private readonly langManager: LangManager,
     ) {
         if (this.webServer) throw new Error("The web server has already been created");
 
@@ -29,7 +33,7 @@ export class WebServerManager {
         if (!useSSL) {
             this.webServer = http.createServer(
                 (req: http.IncomingMessage, res: http.ServerResponse) =>
-                    this.requestListener(req, res)
+                    this.requestListener(req, res),
             );
             return;
         }
@@ -49,7 +53,7 @@ export class WebServerManager {
                 cert: fs.readFileSync(certPath),
                 key: fs.readFileSync(keyPath),
             },
-            (req: http.IncomingMessage, res: http.ServerResponse) => this.requestListener(req, res)
+            (req: http.IncomingMessage, res: http.ServerResponse) => this.requestListener(req, res),
         );
     }
 
@@ -104,10 +108,10 @@ export class WebServerManager {
 
             if (url.length !== 0) dirListing.unshift("..");
             res.write(
-                "<!DOCTYPE html><html><head><style>*{font-family:monospace;font-size:14px}</style></head><body>"
+                "<!DOCTYPE html><html><head><style>*{font-family:monospace;font-size:14px}</style></head><body>",
             );
             res.write(
-                dirListing.map((el) => `<a href="/files${url}/${el}">${el}</a>`).join("<br>")
+                dirListing.map((el) => `<a href="/files${url}/${el}">${el}</a>`).join("<br>"),
             );
             res.end("</body></html>");
         } catch (error) {

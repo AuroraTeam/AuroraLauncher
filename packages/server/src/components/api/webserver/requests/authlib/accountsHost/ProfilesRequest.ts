@@ -7,7 +7,7 @@ import { AbstractRequest } from "../../AbstractRequest";
 import { JsonHelper } from "@aurora-launcher/core";
 
 @injectable()
-export class ProfilesRequest extends AbstractRequest {
+export class ProfilesWebRequest extends AbstractRequest {
     method = "POST";
     url = /^\/authlib\/api\/profiles\/minecraft$/;
 

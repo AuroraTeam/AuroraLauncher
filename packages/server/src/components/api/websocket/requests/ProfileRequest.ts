@@ -1,11 +1,10 @@
 import { ProfileRequestData, ProfileResponseData } from "@aurora-launcher/core";
-import { ConfigManager } from "@root/components/config";
-import { ProfilesManager } from "@root/components/profiles";
+import { ConfigManager, ProfilesManager } from "@root/components";
 import { AbstractRequest } from "aurora-rpc-server";
 import { injectable } from "tsyringe";
 
 @injectable()
-export class ProfileRequest extends AbstractRequest {
+export class ProfileWsRequest extends AbstractRequest {
     method = "profile";
 
     constructor(

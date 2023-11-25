@@ -8,7 +8,7 @@ import { AbstractRequest } from "../../AbstractRequest";
 import { JsonHelper } from "@aurora-launcher/core";
 
 @injectable()
-export class HasJoinedRequest extends AbstractRequest {
+export class HasJoinedWebRequest extends AbstractRequest {
     method = "GET";
     url = /^\/authlib\/sessionserver\/session\/minecraft\/hasJoined/;
 
