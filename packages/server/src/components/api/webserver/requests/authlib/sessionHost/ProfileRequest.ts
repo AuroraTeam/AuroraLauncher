@@ -14,7 +14,7 @@ export class ProfileRequest extends AbstractRequest {
 
     constructor(
         @inject("AuthProvider") private authProvider: AuthProvider,
-        private authlibManager: AuthlibManager
+        private authlibManager: AuthlibManager,
     ) {
         super();
     }
@@ -67,6 +67,6 @@ export class ProfileRequest extends AbstractRequest {
         texturesValue = Buffer.from(JSON.stringify(texturesValue));
         data.properties[0].value = texturesValue.toString("base64");
         if (signed) data.properties[0].signature = this.authlibManager.getSignature(texturesValue);
-        res.sendJson(data);
+        res.json(data);
     }
 }

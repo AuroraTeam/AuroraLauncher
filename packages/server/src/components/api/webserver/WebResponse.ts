@@ -15,9 +15,9 @@ export class WebResponse {
      * @param {string} [error] - The error code.
      * @param {string} [errorMessage] - The message that will be displayed to the user.
      */
-    public sendError(code = 400, error?: string, errorMessage?: string): void {
+    public error(code = 400, error?: string, errorMessage?: string): void {
         this.raw.statusCode = code;
-        if (error) this.sendJson({ error, errorMessage });
+        if (error) this.json({ error, errorMessage });
         else this.raw.end();
     }
 
@@ -25,7 +25,7 @@ export class WebResponse {
      * It sends a JSON response to the client
      * @param {object} data - The data to be sent.
      */
-    public sendJson(data: object): void {
+    public json(data: object): void {
         this.raw.setHeader("Content-Type", "application/json; charset=utf-8");
         this.raw.end(JsonHelper.toJson(data));
     }

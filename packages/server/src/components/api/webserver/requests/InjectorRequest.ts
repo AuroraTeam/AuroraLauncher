@@ -19,7 +19,7 @@ export class InjectorRequest extends AbstractRequest {
     }
 
     async emit(_: WebRequest, res: WebResponse): Promise<void> {
-        res.sendJson({
+        res.json({
             meta: {
                 serverName: this.configManager.config.projectName || "Aurora Launcher",
                 implementationName: "aurora-launchserver",

@@ -27,7 +27,7 @@ export class JoinRequest extends AbstractRequest {
         try {
             data = JsonHelper.fromJson<JoinRequestDto>(await req.getRawBody());
         } catch (error) {
-            return res.sendError(400, "BadRequestException");
+            return res.error(400, "BadRequestException");
         }
 
         if (
@@ -35,7 +35,7 @@ export class JoinRequest extends AbstractRequest {
             this.isInvalidValue(data.selectedProfile) ||
             this.isInvalidValue(data.serverId)
         )
-            return res.sendError(400, "BadRequestException");
+            return res.error(400, "BadRequestException");
 
         const status = await this.authProvider.join(
             data.accessToken,
@@ -43,7 +43,7 @@ export class JoinRequest extends AbstractRequest {
             data.serverId,
         );
         if (!status)
-            return res.sendError(
+            return res.error(
                 400,
                 "ForbiddenOperationException",
                 "Invalid credentials. Invalid username or password.",

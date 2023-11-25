@@ -38,8 +38,8 @@ export class WebRequestManager {
         const webResponse = new WebResponse(res);
 
         // Нижние 2 обработчика корректны для api.mojang.com и authserver.mojang.com
-        if (request === undefined) return webResponse.sendError(404);
-        if (request.method !== req.method) return webResponse.sendError(405);
+        if (request === undefined) return webResponse.error(404);
+        if (request.method !== req.method) return webResponse.error(405);
         request.emit(webRequest, webResponse);
     }
 }

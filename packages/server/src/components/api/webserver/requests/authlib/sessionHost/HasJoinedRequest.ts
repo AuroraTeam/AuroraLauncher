@@ -22,13 +22,13 @@ export class HasJoinedRequest extends AbstractRequest {
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         const { username, serverId } = req.query;
 
-        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return res.sendError();
+        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return res.error();
 
         let user;
         try {
             user = await this.authProvider.hasJoined(username, serverId);
         } catch (error) {
-            return res.sendError(400, error.message);
+            return res.error(400, error.message);
         }
 
         const textures: any = {};
@@ -53,7 +53,7 @@ export class HasJoinedRequest extends AbstractRequest {
             }),
         ).toString("base64");
 
-        res.sendJson({
+        res.json({
             id: user.userUUID,
             name: username,
             properties: [
