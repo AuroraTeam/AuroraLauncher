@@ -32,14 +32,18 @@ export class WebRequestManager {
 
     async getRequest(req: IncomingMessage, res: ServerResponse) {
         res.setHeader("X-Authlib-Injector-API-Location", "/authlib");
+
         const request = this.requests.find((r) => r.url.test(req.url));
 
-        const webRequest = new WebRequest(req);
-        const webResponse = new WebResponse(res);
-
-        // Нижние 2 обработчика корректны для api.mojang.com и authserver.mojang.com
+        const webResponse = WebResponse.fromRaw(res);
         if (request === undefined) return webResponse.error(404);
-        if (request.method !== req.method) return webResponse.error(405);
-        request.emit(webRequest, webResponse);
+
+        WebRequest.fromRaw(req)
+            .then((webRequest) => {
+                request.emit(webRequest, webResponse);
+            })
+            .catch((error) => {
+                webResponse.error(error.status || 400, error.message);
+            });
     }
 }

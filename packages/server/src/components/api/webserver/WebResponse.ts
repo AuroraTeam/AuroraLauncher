@@ -5,7 +5,7 @@ import { JsonHelper } from "@aurora-launcher/core";
 export class WebResponse {
     raw: ServerResponse;
 
-    constructor(response: ServerResponse) {
+    private constructor(response: ServerResponse) {
         this.raw = response;
     }
 
@@ -28,5 +28,9 @@ export class WebResponse {
     public json(data: object): void {
         this.raw.setHeader("Content-Type", "application/json; charset=utf-8");
         this.raw.end(JsonHelper.toJson(data));
+    }
+
+    static fromRaw(response: ServerResponse) {
+        return new WebResponse(response);
     }
 }
