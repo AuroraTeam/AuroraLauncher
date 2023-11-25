@@ -1,5 +1,4 @@
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { ResponseError } from "aurora-rpc-server";
 
 import { AuthProvider, AuthProviderConfig } from "./AuthProvider";
 
@@ -12,15 +11,24 @@ export class RejectAuthProvider implements AuthProvider {
     }
 
     auth(): never {
-        throw new ResponseError(this.message, 110);
+        throw new Error(this.message);
     }
 
-    // These methods don't need implementation
-    join(): void {}
-    hasJoined(): void {}
-    profile(): void {}
-    privileges(): void {}
-    profiles(): void {}
+    join(): never {
+        throw new Error();
+    }
+
+    hasJoined(): never {
+        throw new Error();
+    }
+
+    profile(): never {
+        throw new Error();
+    }
+
+    profiles(): never {
+        throw new Error();
+    }
 }
 
 interface RejectAuthProviderConfig extends AuthProviderConfig {

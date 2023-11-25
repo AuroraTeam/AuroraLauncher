@@ -5,7 +5,6 @@ import {
     AuthProvider,
     AuthProviderConfig,
     HasJoinedResponseData,
-    PrivilegesResponseData,
     ProfileResponseData,
     ProfilesResponseData,
 } from "./AuthProvider";
@@ -45,17 +44,11 @@ export class JsonAuthProvider implements AuthProvider {
         });
     }
 
-    async privileges(accessToken: string): Promise<PrivilegesResponseData> {
-        return await HttpHelper.postJson<PrivilegesResponseData>(
-            new URL(this.config.privilegesUrl),
-            { accessToken },
+    async profiles(usernames: string[]): Promise<ProfilesResponseData[]> {
+        return await HttpHelper.postJson<ProfilesResponseData[]>(
+            new URL(this.config.profilesUrl),
+            usernames,
         );
-    }
-
-    async profiles(userUUIDs: string[]): Promise<ProfilesResponseData[]> {
-        return await HttpHelper.postJson<ProfilesResponseData[]>(new URL(this.config.profilesUrl), {
-            userUUIDs,
-        });
     }
 }
 
@@ -64,6 +57,5 @@ export interface JsonAuthProviderConfig extends AuthProviderConfig {
     joinUrl: string;
     hasJoinedUrl: string;
     profileUrl: string;
-    privilegesUrl: string;
     profilesUrl: string;
 }

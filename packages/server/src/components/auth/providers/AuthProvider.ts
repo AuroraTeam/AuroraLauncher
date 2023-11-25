@@ -8,15 +8,13 @@ export interface AuthProviderConstructor {
 export interface AuthProvider {
     auth(username: string, password: string): PromiseOr<AuthResponseData>;
 
-    join(accessToken: string, userUUID: string, serverID: string): PromiseOr<boolean | void>;
+    join(accessToken: string, userUUID: string, serverID: string): PromiseOr<boolean>;
 
-    hasJoined(username: string, serverID: string): PromiseOr<HasJoinedResponseData | void>;
+    hasJoined(username: string, serverID: string): PromiseOr<HasJoinedResponseData>;
 
-    profile(userUUID: string): PromiseOr<ProfileResponseData | void>;
+    profile(userUUID: string): PromiseOr<ProfileResponseData>;
 
-    privileges(accessToken: string): PromiseOr<PrivilegesResponseData | void>;
-
-    profiles(userUUIDs: string[]): PromiseOr<ProfilesResponseData[] | void>;
+    profiles(usernames: string[]): PromiseOr<ProfilesResponseData[]>;
 }
 
 export class AuthProviderConfig {
@@ -37,13 +35,6 @@ export interface ProfileResponseData {
     username: string;
     skinUrl?: string;
     capeUrl?: string;
-}
-
-export interface PrivilegesResponseData {
-    onlineChat: boolean;
-    multiplayerServer: boolean;
-    multiplayerRealms: boolean;
-    telemetry: boolean;
 }
 
 export interface ProfilesResponseData {

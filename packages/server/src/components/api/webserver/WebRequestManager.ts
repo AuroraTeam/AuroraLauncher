@@ -4,7 +4,6 @@ import { container } from "tsyringe";
 
 import { AbstractRequest } from "./requests/AbstractRequest";
 import { ProfilesRequest } from "./requests/authlib/accountsHost/ProfilesRequest";
-import { PrivelegesRequest } from "./requests/authlib/servicesHost/PrivelegesRequest";
 import { HasJoinedRequest } from "./requests/authlib/sessionHost/HasJoinedRequest";
 import { JoinRequest } from "./requests/authlib/sessionHost/JoinRequest";
 import { ProfileRequest } from "./requests/authlib/sessionHost/ProfileRequest";
@@ -19,7 +18,6 @@ export class WebRequestManager {
         this.registerRequests([
             container.resolve(InjectorRequest),
             container.resolve(ProfilesRequest),
-            container.resolve(PrivelegesRequest),
             container.resolve(ProfileRequest),
             container.resolve(JoinRequest),
             container.resolve(HasJoinedRequest),

@@ -3,10 +3,9 @@ import { randomUUID } from "crypto";
 import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 import { UUIDHelper } from "@root/utils";
-import { ResponseError } from "aurora-rpc-server";
 import { v5 } from "uuid";
 
-import { AuthProvider, PrivilegesResponseData, ProfilesResponseData } from "./AuthProvider";
+import { AuthProvider, ProfilesResponseData } from "./AuthProvider";
 
 export class AcceptAuthProvider implements AuthProvider {
     private projectID: string;
@@ -19,8 +18,8 @@ export class AcceptAuthProvider implements AuthProvider {
     auth(username: string): AuthResponseData {
         const data = {
             username,
-            userUUID: v5(username, this.projectID),
-            accessToken: randomUUID(),
+            userUUID: UUIDHelper.getWithoutDashes(v5(username, this.projectID)),
+            accessToken: UUIDHelper.getWithoutDashes(randomUUID()),
         };
 
         const userIndex = this.sessionsDB.findIndex((user) => user.username === username);
@@ -38,9 +37,7 @@ export class AcceptAuthProvider implements AuthProvider {
 
     join(accessToken: string, userUUID: string, serverId: string): boolean {
         const user = this.sessionsDB.find(
-            (user) =>
-                user.accessToken === accessToken &&
-                user.userUUID === UUIDHelper.getWithDashes(userUUID)
+            (user) => user.accessToken === accessToken && user.userUUID === userUUID,
         );
         if (!user) return false;
 
@@ -50,32 +47,23 @@ export class AcceptAuthProvider implements AuthProvider {
 
     hasJoined(username: string, serverId: string): UserData {
         const user = this.sessionsDB.find((user) => user.username === username);
-        if (!user) throw new ResponseError("User not found", 100);
+        if (!user) throw new Error("User not found");
 
         if (user.serverId !== serverId) {
-            throw new ResponseError("Invalid serverId", 101);
+            throw new Error("Invalid serverId");
         }
         return user;
     }
 
     profile(userUUID: string): UserData {
         const user = this.sessionsDB.find((e) => e.userUUID === userUUID);
-        if (!user) throw new ResponseError("User not found", 100);
+        if (!user) throw new Error("User not found");
         return user;
     }
 
-    privileges(): PrivilegesResponseData {
-        return {
-            onlineChat: true,
-            multiplayerServer: true,
-            multiplayerRealms: true,
-            telemetry: false,
-        };
-    }
-
-    profiles(userUUIDs: string[]): ProfilesResponseData[] {
+    profiles(usernames: string[]): ProfilesResponseData[] {
         return this.sessionsDB
-            .filter(({ userUUID }) => userUUIDs.includes(userUUID))
+            .filter(({ username }) => usernames.includes(username))
             .map((user) => ({
                 id: user.userUUID,
                 name: user.username,

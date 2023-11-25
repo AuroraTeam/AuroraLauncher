@@ -1,17 +1,16 @@
 import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 import { LogHelper, UUIDHelper } from "@root/utils";
-import { ResponseError } from "aurora-rpc-server";
 import { DataSource, EntitySchema, In } from "typeorm";
 
 import {
     AuthProvider,
     AuthProviderConfig,
     HasJoinedResponseData,
-    PrivilegesResponseData,
     ProfileResponseData,
     ProfilesResponseData,
 } from "./AuthProvider";
+import { randomUUID } from "crypto";
 
 export class DatabaseAuthProvider implements AuthProvider {
     private userRepository;
@@ -36,12 +35,12 @@ export class DatabaseAuthProvider implements AuthProvider {
 
     async auth(username: string): Promise<AuthResponseData> {
         const user = await this.userRepository.findOneBy({ username });
-        if (!user) throw new ResponseError("User not found", 100);
+        if (!user) throw new Error("User not found");
 
         const userData = {
             username,
-            userUUID: user.userUUID as string,
-            accessToken: user.accessToken as string,
+            userUUID: user.userUUID,
+            accessToken: UUIDHelper.getWithoutDashes(randomUUID()),
         };
 
         await this.userRepository.update(user, {
@@ -52,10 +51,7 @@ export class DatabaseAuthProvider implements AuthProvider {
     }
 
     async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
-        const user = await this.userRepository.findOneBy({
-            accessToken: accessToken,
-            userUUID: UUIDHelper.getWithDashes(userUUID),
-        });
+        const user = await this.userRepository.findOneBy({ accessToken, userUUID });
         if (!user) return false;
 
         user.serverID = serverID;
@@ -66,50 +62,39 @@ export class DatabaseAuthProvider implements AuthProvider {
 
     async hasJoined(username: string, serverID: string): Promise<HasJoinedResponseData> {
         const user = await this.userRepository.findOneBy({ username });
-        if (!user) throw new ResponseError("User not found", 100);
+        if (!user) throw new Error("User not found");
         if (user.serverID !== serverID) {
-            throw new ResponseError("Invalid serverId", 101);
+            throw new Error("Invalid serverId");
         }
 
         return {
-            userUUID: user.userUUID as string,
-            skinUrl: user.skinUrl as string,
-            capeUrl: user.capeUrl as string,
+            userUUID: user.userUUID,
+            skinUrl: user.skinUrl,
+            capeUrl: user.capeUrl,
         };
     }
 
     async profile(userUUID: string): Promise<ProfileResponseData> {
         const user = await this.userRepository.findOneBy({ userUUID });
-        if (!user) throw new ResponseError("User not found", 100);
+        if (!user) throw new Error("User not found");
 
         return {
-            username: user.username as string,
-            skinUrl: user.skinUrl as string,
-            capeUrl: user.capeUrl as string,
+            username: user.username,
+            skinUrl: user.skinUrl,
+            capeUrl: user.capeUrl,
         };
     }
 
-    async privileges(accessToken: string): Promise<PrivilegesResponseData> {
-        const user = await this.userRepository.findOneBy({ accessToken });
-
-        return {
-            onlineChat: user.onlineChat as boolean,
-            multiplayerServer: user.multiplayerServer as boolean,
-            multiplayerRealms: user.multiplayerRealms as boolean,
-            telemetry: user.telemetry as boolean,
-        };
-    }
-
-    async profiles(userUUIDs: string[]): Promise<ProfilesResponseData[]> {
-        return [...(await this.userRepository.findBy({ userUUID: In(userUUIDs) }))].map((user) => ({
-            id: user.userUUID as string,
-            name: user.username as string,
+    async profiles(usernames: string[]): Promise<ProfilesResponseData[]> {
+        return [...(await this.userRepository.findBy({ username: In(usernames) }))].map((user) => ({
+            id: user.userUUID,
+            name: user.username,
         }));
     }
 }
 
 const getUserEntity = (properties: DatabaseAuthProviderConfig["properties"]) => {
-    return new EntitySchema({
+    return new EntitySchema<UserEntity>({
         name: "user",
         tableName: properties.tableName,
         columns: {
@@ -145,30 +130,6 @@ const getUserEntity = (properties: DatabaseAuthProviderConfig["properties"]) => 
                 type: String,
                 name: properties.capeUrlColumn,
             },
-            onlineChat: {
-                type: Boolean,
-                width: 1,
-                default: true,
-                name: properties.onlineChatColumn,
-            },
-            multiplayerServer: {
-                type: Boolean,
-                width: 1,
-                default: true,
-                name: properties.multiplayerServerColumn,
-            },
-            multiplayerRealms: {
-                type: Boolean,
-                width: 1,
-                default: true,
-                name: properties.multiplayerRealmsColumn,
-            },
-            telemetry: {
-                type: Boolean,
-                width: 1,
-                default: false,
-                name: properties.telemetryColumn,
-            },
         },
     });
 };
@@ -191,14 +152,11 @@ export class DatabaseAuthProviderConfig extends AuthProviderConfig {
         serverIdColumn: string;
         skinUrlColumn: string;
         capeUrlColumn: string;
-        onlineChatColumn: string;
-        multiplayerServerColumn: string;
-        multiplayerRealmsColumn: string;
-        telemetryColumn: string;
     };
 }
 
 // type AvaliableDataBaseType = DatabaseType
+// TODO Скорее всего надо бы установить в зависимости пакеты для работы с этими бд (сейчас установлен только mysql2)
 type AvaliableDataBaseType =
     | "mysql"
     | "mariadb"
@@ -208,3 +166,13 @@ type AvaliableDataBaseType =
     | "mssql"
     | "mongodb"
     | "better-sqlite3";
+
+interface UserEntity {
+    username: string;
+    password: string;
+    userUUID: string;
+    accessToken: string;
+    serverID: string;
+    skinUrl: string;
+    capeUrl: string;
+}

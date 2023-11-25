@@ -11,7 +11,10 @@ export class InjectorRequest extends AbstractRequest {
     method = "GET";
     url = /^\/authlib$/;
 
-    constructor(private configManager: ConfigManager, private authlibManager: AuthlibManager) {
+    constructor(
+        private configManager: ConfigManager,
+        private authlibManager: AuthlibManager,
+    ) {
         super();
     }
 
@@ -22,7 +25,6 @@ export class InjectorRequest extends AbstractRequest {
                 implementationName: "aurora-launchserver",
                 implementationVersion: "0.0.1",
                 "feature.no_mojang_namespace": true,
-                "feature.privileges_api": true,
             },
             skinDomains: this.configManager.config.api.injector.skinDomains,
             signaturePublickey: this.authlibManager.getPublicKey(),
