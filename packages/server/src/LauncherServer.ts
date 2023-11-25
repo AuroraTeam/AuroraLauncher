@@ -1,40 +1,39 @@
 import { container, singleton } from "tsyringe";
-
 import {
-    AuthlibManager,
-    AuthManager,
-    ClientsManager,
-    CommandsManager,
+    AuthProvider,
     ConfigManager,
     LangManager,
+    CommandsManager,
     ModulesManager,
-    ProfilesManager,
-    UpdateManager,
     WebManager,
-} from "./components";
-import { AuthRequest, ProfileRequest, ServersRequest, UpdatesRequest, } from "./components/api/websocket/requests";
-import {
-    AcceptAuthProvider,
-    AuthProvider,
-    DatabaseAuthProvider,
+    ClientsManager,
+    UpdateManager,
+    ProfilesManager,
+    AuthlibManager,
+    AuthManager,
     JsonAuthProvider,
+    DatabaseAuthProvider,
     RejectAuthProvider,
-} from "./components/auth/providers";
-import {
-    AboutCommand,
-    BranchCommand,
-    DownloadClientCommand,
+    AcceptAuthProvider,
     HelpCommand,
-    LangCommand,
-    ModulesCommand,
     ReloadCommand,
-    StopCommand,
-    SyncAllCommand,
-    SyncClientsCommand,
-    SyncProfilesCommand,
+    ModulesCommand,
+    BranchCommand,
     UpdateCommand,
-} from "./components/commands/commands";
+    LangCommand,
+    SyncAllCommand,
+    SyncProfilesCommand,
+    SyncClientsCommand,
+    DownloadClientCommand,
+    AboutCommand,
+    StopCommand,
+    AuthRequest,
+    ProfileRequest,
+    ServersRequest,
+    UpdatesRequest,
+} from "./components";
 import { LogHelper, StorageHelper } from "./utils";
+
 @singleton()
 export class LauncherServer {
     private _AuthProvider: AuthProvider;
