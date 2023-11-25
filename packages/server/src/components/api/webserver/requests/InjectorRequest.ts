@@ -24,7 +24,6 @@ export class InjectorRequest extends AbstractRequest {
                 serverName: this.configManager.config.projectName || "Aurora Launcher",
                 implementationName: "aurora-launchserver",
                 implementationVersion: "0.0.1",
-                "feature.no_mojang_namespace": true,
             },
             skinDomains: this.configManager.config.api.injector.skinDomains,
             signaturePublickey: this.authlibManager.getPublicKey(),

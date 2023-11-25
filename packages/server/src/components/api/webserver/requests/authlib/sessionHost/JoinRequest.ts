@@ -25,7 +25,7 @@ export class JoinRequest extends AbstractRequest {
         let data: JoinRequestDto;
 
         try {
-            data = JsonHelper.fromJson<JoinRequestDto>(await req.getRawBody());
+            data = JsonHelper.fromJson<JoinRequestDto>(req.body);
         } catch (error) {
             return res.error(400, "BadRequestException");
         }

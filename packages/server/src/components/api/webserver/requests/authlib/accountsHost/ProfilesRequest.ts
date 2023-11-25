@@ -19,7 +19,7 @@ export class ProfilesRequest extends AbstractRequest {
         let data: string[];
 
         try {
-            data = JsonHelper.fromJson(await req.getRawBody());
+            data = JsonHelper.fromJson(req.body);
         } catch (error) {
             return res.error(400, "BadRequestException");
         }
