@@ -7,8 +7,8 @@ import nodemon from "nodemon";
 const cwd = fileURLToPath(dirname(dirname(import.meta.url)));
 
 nodemon({
-    script: "dist/app.js",
-    watch: ["dist/app.js"],
+    script: "dist/LauncherServer.js",
+    watch: ["dist/LauncherServer.js"],
     args: ["--dev"],
     cwd,
 });
