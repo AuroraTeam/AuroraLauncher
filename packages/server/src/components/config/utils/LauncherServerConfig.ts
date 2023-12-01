@@ -10,6 +10,7 @@ import { Lang } from "@root/components";
 export class LauncherServerConfig extends HjsonCommented {
     configVersion: number;
     projectID: string;
+    projectName: string;
     lang: Lang;
     branch: branch;
     env: Environment;
@@ -21,6 +22,7 @@ export class LauncherServerConfig extends HjsonCommented {
         const config = new LauncherServerConfig();
         config.configVersion = 0;
         config.projectID = randomUUID();
+        config.projectName = "";
         config.lang = "ru";
         config.branch = "stable";
         config.env = Environment.DEV;
