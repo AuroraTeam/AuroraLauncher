@@ -4,12 +4,11 @@ import path from "path";
 import { LauncherServer } from "@root/LauncherServer";
 import { ILauncherServerModule, IModuleInfo, LogHelper, StorageHelper } from "@root/utils";
 import chalk from "chalk";
-import { delay, inject, injectable, singleton } from "tsyringe";
 
 import { LangManager } from "../langs";
+import { Service } from "typedi";
 
-@singleton()
-@injectable()
+@Service()
 export class ModulesManager {
     private static readonly modulesList: Map<IModuleInfo, ILauncherServerModule[]> = new Map();
     private readonly moduleQueue: string[] = [];
@@ -17,7 +16,6 @@ export class ModulesManager {
     constructor(
         private readonly langManager: LangManager,
         // TODO Нужен другой вариант, "позднее связывание" для модулей не катит
-        @inject(delay(() => LauncherServer))
         private readonly app: LauncherServer,
     ) {
         this.loadModules();

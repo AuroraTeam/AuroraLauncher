@@ -4,13 +4,13 @@ import { URL } from "url";
 
 import { HttpHelper, JsonHelper, ZipHelper } from "@aurora-launcher/core";
 import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
 import { statSync } from "fs";
 import { MojangManager } from "./Mojang";
 import { Profile } from "@aurora-launcher/core";
 
-@injectable()
+@Service()
 export class MirrorManager extends MojangManager {
     /**
      * Скачивание клиена с зеркала

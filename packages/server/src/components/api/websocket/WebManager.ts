@@ -1,12 +1,12 @@
 import { ConfigManager } from "@root/components/config";
 import { LangManager } from "@root/components/langs";
 import { AbstractRequest as AbstractWsRequest, Server } from "aurora-rpc-server";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
 import { WebServerManager } from "../index";
 import { AbstractRequest as AbstractWebRequest } from "../webserver/requests/AbstractRequest";
 
-@injectable()
+@Service()
 export class WebManager {
     private webServerManager: WebServerManager;
     private webSocketManager: Server;

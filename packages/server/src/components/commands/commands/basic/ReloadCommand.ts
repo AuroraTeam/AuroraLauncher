@@ -1,13 +1,13 @@
 import { LauncherServer } from "@root/LauncherServer";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
-import { delay, inject, injectable } from "tsyringe";
+import { Inject, Service } from "typedi";
 
-@injectable()
+@Service()
 export class ReloadCommand extends AbstractCommand {
-    constructor(
-        @inject(delay(() => LauncherServer))
-        private readonly launcherServer: LauncherServer
-    ) {
+    @Inject(() => LauncherServer)
+    private readonly launcherServer: LauncherServer;
+
+    constructor() {
         super({
             name: "reload",
             description: "Restarts LauncherServer",

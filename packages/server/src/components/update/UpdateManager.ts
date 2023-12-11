@@ -2,15 +2,14 @@ import path from "path";
 
 import { LogHelper, StorageHelper, SystemHelper } from "@root/utils";
 import semver from "semver";
-import { injectable, singleton } from "tsyringe";
+import { Service } from "typedi";
 
 import { version as currentVersion } from "../../../package.json";
 import { ConfigManager } from "../config";
 import { LangManager } from "../langs";
 import { HttpHelper } from "@aurora-launcher/core";
 
-@singleton()
-@injectable()
+@Service()
 export class UpdateManager {
     private readonly apiUrl = new URL("versions", "https://api.aurora-launcher.ru/");
     private readonly fileTypeMap: Record<string, string> = {

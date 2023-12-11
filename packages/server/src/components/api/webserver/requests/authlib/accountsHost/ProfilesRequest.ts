@@ -1,17 +1,17 @@
 import type { AuthProvider } from "@root/components/auth/providers";
-import { inject, injectable } from "tsyringe";
+import { Inject, Service } from "typedi";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
 import { JsonHelper } from "@aurora-launcher/core";
 
-@injectable()
+@Service()
 export class ProfilesWebRequest extends AbstractRequest {
     method = "POST";
     url = /^\/authlib\/api\/profiles\/minecraft$/;
 
-    constructor(@inject("AuthProvider") private authProvider: AuthProvider) {
+    constructor(@Inject("AuthProvider") private authProvider: AuthProvider) {
         super();
     }
 

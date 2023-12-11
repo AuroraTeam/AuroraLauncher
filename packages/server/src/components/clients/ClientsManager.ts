@@ -3,18 +3,15 @@ import { join } from "path";
 
 import { HashHelper, HashedFile } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper } from "@root/utils";
-import { injectable, singleton } from "tsyringe";
+import { Service } from "typedi";
 
 import { LangManager } from "../langs";
 
-@singleton()
-@injectable()
+@Service()
 export class ClientsManager {
     readonly hashedClients = new Map<string, HashedFile[]>();
 
-    constructor(
-        private readonly langManager: LangManager
-    ) {
+    constructor(private readonly langManager: LangManager) {
         this.hashClients();
     }
 

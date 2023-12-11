@@ -1,5 +1,5 @@
 import type { AuthProvider } from "@root/components/auth/providers";
-import { inject, injectable } from "tsyringe";
+import { Inject, Service } from "typedi";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
@@ -12,12 +12,12 @@ interface JoinRequestDto {
     serverId: string;
 }
 
-@injectable()
+@Service()
 export class JoinWebRequest extends AbstractRequest {
     method = "POST";
     url = /^\/authlib\/sessionserver\/session\/minecraft\/join$/;
 
-    constructor(@inject("AuthProvider") private authProvider: AuthProvider) {
+    constructor(@Inject("AuthProvider") private authProvider: AuthProvider) {
         super();
     }
 

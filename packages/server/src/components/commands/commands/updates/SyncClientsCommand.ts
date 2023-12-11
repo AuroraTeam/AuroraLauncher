@@ -1,10 +1,13 @@
 import { ClientsManager, LangManager } from "@root/components";
 import { AbstractCommand, Category } from "@root/utils";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
-@injectable()
+@Service()
 export class SyncClientsCommand extends AbstractCommand {
-    constructor(langManager: LangManager, private readonly clientsManager: ClientsManager) {
+    constructor(
+        langManager: LangManager,
+        private readonly clientsManager: ClientsManager,
+    ) {
         super({
             name: "syncclients",
             description:

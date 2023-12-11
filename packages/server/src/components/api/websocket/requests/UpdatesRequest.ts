@@ -1,9 +1,9 @@
 import { UpdatesRequestData, UpdatesResponseData } from "@aurora-launcher/core";
 import { ClientsManager } from "@root/components/clients";
 import { AbstractRequest } from "aurora-rpc-server";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
-@injectable()
+@Service()
 export class UpdatesWsRequest extends AbstractRequest {
     method = "updates";
 

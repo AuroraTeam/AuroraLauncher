@@ -1,11 +1,11 @@
 import { LangManager } from "@root/components/langs";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
 import chalk from "chalk";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
 import { version } from "../../../../../package.json";
 
-@injectable()
+@Service()
 export class AboutCommand extends AbstractCommand {
     constructor(langManager: LangManager) {
         super({
@@ -21,12 +21,12 @@ export class AboutCommand extends AbstractCommand {
                 chalk.cyan("AuroraLauncher ") +
                     chalk.green("LauncherServer ") +
                     "v" +
-                    chalk.yellow(version)
-            )
+                    chalk.yellow(version),
+            ),
         );
 
         LogHelper.info(
-            "Source code: " + chalk.blue("https://github.com/AuroraTeam/LauncherServer")
+            "Source code: " + chalk.blue("https://github.com/AuroraTeam/LauncherServer"),
         );
         LogHelper.info("Documentation: " + chalk.blue("https://docs.aurora-launcher.ru"));
         LogHelper.info("Discord channel: " + chalk.blue("https://discord.aurora-launcher.ru"));

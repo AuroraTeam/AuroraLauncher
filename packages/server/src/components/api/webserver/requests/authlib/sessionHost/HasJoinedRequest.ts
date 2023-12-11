@@ -1,19 +1,19 @@
 import type { AuthProvider } from "@root/components/auth/providers";
 import { AuthlibManager } from "@root/components/authlib";
-import { inject, injectable } from "tsyringe";
+import { Inject, Service } from "typedi";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
 import { JsonHelper } from "@aurora-launcher/core";
 
-@injectable()
+@Service()
 export class HasJoinedWebRequest extends AbstractRequest {
     method = "GET";
     url = /^\/authlib\/sessionserver\/session\/minecraft\/hasJoined/;
 
     constructor(
-        @inject("AuthProvider") private authProvider: AuthProvider,
+        @Inject("AuthProvider") private authProvider: AuthProvider,
         private authlibManager: AuthlibManager,
     ) {
         super();

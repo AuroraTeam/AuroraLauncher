@@ -1,4 +1,4 @@
-import { container, singleton } from "tsyringe";
+import { container } from "tsyringe";
 import {
     AuthProvider,
     ConfigManager,
@@ -37,8 +37,8 @@ import {
     ProfileWebRequest,
 } from "./components";
 import { LogHelper, StorageHelper } from "./utils";
-
-@singleton()
+import Container, { Service } from "typedi";
+@Service()
 export class LauncherServer {
     private _AuthProvider: AuthProvider;
     private _ConfigManager: ConfigManager;
@@ -59,8 +59,8 @@ export class LauncherServer {
     private preInit() {
         LogHelper.printVersion();
 
-        this._ConfigManager = container.resolve(ConfigManager);
-        this._LangManager = container.resolve(LangManager);
+        this._ConfigManager = Container.get(ConfigManager);
+        this._LangManager = Container.get(LangManager);
 
         StorageHelper.validate();
     }
@@ -73,13 +73,13 @@ export class LauncherServer {
     }
 
     private resolveDependencies() {
-        this._AuthlibManager = container.resolve(AuthlibManager);
-        this._CommandsManager = container.resolve(CommandsManager);
-        this._ClientsManager = container.resolve(ClientsManager);
-        this._ProfilesManager = container.resolve(ProfilesManager);
-        this._ModulesManager = container.resolve(ModulesManager);
-        this._UpdateManager = container.resolve(UpdateManager);
-        this._WebManager = container.resolve(WebManager);
+        this._AuthlibManager = Container.get(AuthlibManager);
+        this._CommandsManager = Container.get(CommandsManager);
+        this._ClientsManager = Container.get(ClientsManager);
+        this._ProfilesManager = Container.get(ProfilesManager);
+        this._ModulesManager = new ModulesManager(this._LangManager, this); // Temporary
+        this._UpdateManager = Container.get(UpdateManager);
+        this._WebManager = Container.get(WebManager);
     }
 
     private registerAuthProviders() {
@@ -91,40 +91,40 @@ export class LauncherServer {
         });
 
         this._AuthProvider = AuthManager.getProvider(this._ConfigManager, this._LangManager);
-        container.register("AuthProvider", { useValue: this._AuthProvider });
+        Container.set("AuthProvider", this._AuthProvider);
     }
 
     private registerCommands() {
         this._CommandsManager.registerCommands([
-            container.resolve(HelpCommand),
-            container.resolve(ReloadCommand),
-            container.resolve(ModulesCommand),
-            container.resolve(BranchCommand),
-            container.resolve(UpdateCommand),
-            container.resolve(LangCommand),
-            container.resolve(SyncAllCommand),
-            container.resolve(SyncProfilesCommand),
-            container.resolve(SyncClientsCommand),
-            container.resolve(DownloadClientCommand),
-            container.resolve(AboutCommand),
-            container.resolve(StopCommand),
+            Container.get(HelpCommand),
+            // Container.get(ReloadCommand),
+            Container.get(ModulesCommand),
+            Container.get(BranchCommand),
+            Container.get(UpdateCommand),
+            Container.get(LangCommand),
+            Container.get(SyncAllCommand),
+            Container.get(SyncProfilesCommand),
+            Container.get(SyncClientsCommand),
+            Container.get(DownloadClientCommand),
+            Container.get(AboutCommand),
+            Container.get(StopCommand),
         ]);
     }
 
     private registerRequest() {
         this._WebManager.registerWsRequests([
-            container.resolve(AuthWsRequest),
-            container.resolve(ProfileWsRequest),
-            container.resolve(ServersWsRequest),
-            container.resolve(UpdatesWsRequest),
+            Container.get(AuthWsRequest),
+            Container.get(ProfileWsRequest),
+            Container.get(ServersWsRequest),
+            Container.get(UpdatesWsRequest),
         ]);
 
         this._WebManager.registerWebRequests([
-            container.resolve(InjectorWebRequest),
-            container.resolve(ProfileWebRequest),
-            container.resolve(ProfileWebRequest),
-            container.resolve(JoinWebRequest),
-            container.resolve(HasJoinedWebRequest),
+            Container.get(InjectorWebRequest),
+            Container.get(ProfileWebRequest),
+            Container.get(ProfileWebRequest),
+            Container.get(JoinWebRequest),
+            Container.get(HasJoinedWebRequest),
         ]);
     }
 

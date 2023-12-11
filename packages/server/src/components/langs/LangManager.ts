@@ -1,11 +1,10 @@
 import { LogHelper } from "@root/utils";
-import { injectable, singleton } from "tsyringe";
+import { Service } from "typedi";
 
 import { ConfigManager } from "../config";
 import { Lang, Translate, langList } from "./utils";
 
-@singleton()
-@injectable()
+@Service()
 export class LangManager {
     private currentLang: Translate;
 

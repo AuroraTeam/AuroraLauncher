@@ -1,9 +1,9 @@
 import { Server, ServersResponseData } from "@aurora-launcher/core";
 import { ProfilesManager } from "@root/components/profiles";
 import { AbstractRequest } from "aurora-rpc-server";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
-@injectable()
+@Service()
 export class ServersWsRequest extends AbstractRequest {
     method = "servers";
 

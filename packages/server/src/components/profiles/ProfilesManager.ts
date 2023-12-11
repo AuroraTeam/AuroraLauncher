@@ -1,15 +1,14 @@
 import fs from "fs/promises";
 
 import { LogHelper, StorageHelper } from "@root/utils";
-import { injectable, singleton } from "tsyringe";
+import { Service } from "typedi";
 
 import { LangManager } from "../langs";
 import { ProfileConfig } from "./ProfileConfig";
 import { resolve } from "path";
 import { Profile } from "@aurora-launcher/core";
 
-@singleton()
-@injectable()
+@Service()
 export class ProfilesManager {
     private profiles: ProfileConfig[] = [];
 

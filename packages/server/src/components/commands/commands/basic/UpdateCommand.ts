@@ -1,8 +1,8 @@
 import { UpdateManager } from "@root/components/update";
 import { AbstractCommand, Category } from "@root/utils";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
-@injectable()
+@Service()
 export class UpdateCommand extends AbstractCommand {
     constructor(private readonly updateManager: UpdateManager) {
         super({

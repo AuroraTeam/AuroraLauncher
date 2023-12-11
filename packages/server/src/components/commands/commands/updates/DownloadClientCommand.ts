@@ -9,9 +9,9 @@ import {
     QuiltManager,
 } from "@root/components";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
-@injectable()
+@Service()
 export class DownloadClientCommand extends AbstractCommand {
     constructor(
         private readonly langManager: LangManager,

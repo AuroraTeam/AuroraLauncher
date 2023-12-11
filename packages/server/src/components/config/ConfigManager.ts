@@ -3,10 +3,10 @@ import { resolve } from "path";
 
 import { LogHelper, StorageHelper } from "@root/utils";
 import { set } from "lodash-es";
-import { singleton } from "tsyringe";
 import { LauncherServerConfig } from "./utils";
+import { Service } from "typedi";
 
-@singleton()
+@Service()
 export class ConfigManager {
     #config: LauncherServerConfig;
     #configFile: string = resolve(StorageHelper.storageDir, "LauncherServerConfig.hjson");

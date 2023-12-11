@@ -1,12 +1,11 @@
 import ReadLine from "readline";
 
 import { AbstractCommand, LogHelper } from "@root/utils";
-import { injectable, singleton } from "tsyringe";
+import { Service } from "typedi";
 
 import { LangManager } from "../langs";
 
-@singleton()
-@injectable()
+@Service()
 export class CommandsManager {
     public commands: Map<string, AbstractCommand> = new Map();
     console: ReadLine.Interface;

@@ -1,11 +1,11 @@
 import { LogHelper } from "@root/utils";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
 import { ConfigManager } from "../config";
 import { LangManager } from "../langs";
 import { AuthProvider, AuthProviderConstructor } from "./providers";
 
-@injectable()
+@Service()
 export class AuthManager {
     private static authProviders: Map<string, AuthProviderConstructor> = new Map();
 

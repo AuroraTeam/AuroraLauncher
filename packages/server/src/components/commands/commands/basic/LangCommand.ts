@@ -1,8 +1,8 @@
 import { Lang, LangManager } from "@root/components";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
-@injectable()
+@Service()
 export class LangCommand extends AbstractCommand {
     constructor(private readonly langManager: LangManager) {
         super({

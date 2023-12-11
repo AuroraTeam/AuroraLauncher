@@ -1,16 +1,16 @@
 import { LangManager } from "@root/components/langs";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
 import chalk from "chalk";
-import { delay, inject, injectable } from "tsyringe";
 
 import { CommandsManager } from "../..";
+import { Inject, Service } from "typedi";
 
-@injectable()
+@Service()
 export class HelpCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
-        @inject(delay(() => CommandsManager))
-        private readonly commandsManager: CommandsManager
+        @Inject(() => CommandsManager)
+        private readonly commandsManager: CommandsManager,
     ) {
         super({
             name: "help",
@@ -21,7 +21,7 @@ export class HelpCommand extends AbstractCommand {
 
     invoke(): void {
         const commandsList: Map<Category, AbstractCommand[]> = new Map(
-            Object.values(Category).map((c) => [c, []])
+            Object.values(Category).map((c) => [c, []]),
         );
 
         this.commandsManager.commands.forEach((command: AbstractCommand) => {
@@ -34,7 +34,7 @@ export class HelpCommand extends AbstractCommand {
             category.forEach((command: AbstractCommand) => {
                 const usage = command.info.usage ? ` ${chalk.red(command.info.usage)}` : "";
                 LogHelper.info(
-                    `${chalk.bold(command.info.name)}${usage} - ${command.info.description}`
+                    `${chalk.bold(command.info.name)}${usage} - ${command.info.description}`,
                 );
             });
         });

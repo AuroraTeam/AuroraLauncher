@@ -28,6 +28,7 @@
         "build:bin": "pkg dist/LauncherServer.js -t node18-linux-x64,node18-macos-x64,node18-win-x64 --out-path dist --compress GZip",
         "clean": "rimraf dist",
         "prettier": "prettier --write src",
+        "typecheck": "tsc --noEmit",
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
         "start": "node ."
@@ -72,8 +73,9 @@
         "raw-body": "^2.5.2",
         "reflect-metadata": "^0.1.13",
         "semver": "^7.3.8",
+        "source-map-support": "^0.5.21",
         "strip-ansi": "^7.0.1",
-        "tsyringe": "^4.7.0",
+        "typedi": "^0.10.0",
         "typeorm": "^0.3.12",
         "uuid": "^9.0.0"
     },

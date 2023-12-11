@@ -1,7 +1,7 @@
 import "reflect-metadata";
-
-import { container } from "tsyringe";
+import "source-map-support/register";
 
 import { LauncherServer } from "./LauncherServer";
+import Container from "typedi";
 
-container.resolve(LauncherServer);
+Container.get(LauncherServer);

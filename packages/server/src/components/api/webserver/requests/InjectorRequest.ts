@@ -1,12 +1,12 @@
 import { AuthlibManager } from "@root/components/authlib";
 import { ConfigManager } from "@root/components/config";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
 import { WebRequest } from "../WebRequest";
 import { WebResponse } from "../WebResponse";
 import { AbstractRequest } from "./AbstractRequest";
 
-@injectable()
+@Service()
 export class InjectorWebRequest extends AbstractRequest {
     method = "GET";
     url = /^\/authlib$/;

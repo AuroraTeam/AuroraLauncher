@@ -1,5 +1,7 @@
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
+import { Service } from "typedi";
 
+@Service()
 export class ModulesCommand extends AbstractCommand {
     constructor() {
         // private readonly modulesManager: ModulesManager

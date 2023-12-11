@@ -3,7 +3,7 @@ import path, { resolve } from "path";
 
 import { HttpHelper, JsonHelper, ProfileLibrary } from "@aurora-launcher/core";
 import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
 import {
     Action,
@@ -20,7 +20,7 @@ import {
 } from "../interfaces/IMojang";
 import { AbstractDownloadManager } from "./AbstractManager";
 
-@injectable()
+@Service()
 export class MojangManager extends AbstractDownloadManager {
     #versionManifestLink = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
     #assetsLink = "https://resources.download.minecraft.net/";

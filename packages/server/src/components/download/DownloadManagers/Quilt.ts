@@ -1,11 +1,11 @@
 import { LogHelper } from "@root/utils";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
 import { ClientMeta, VersionMeta } from "../interfaces/IQuilt";
 import { FabricLikeManager } from "./FabricLike";
 import { HttpHelper } from "@aurora-launcher/core";
 
-@injectable()
+@Service()
 export class QuiltManager extends FabricLikeManager {
     quiltMetaLink = "https://meta.quiltmc.org/v3/versions/loader/";
 

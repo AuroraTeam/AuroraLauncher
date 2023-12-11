@@ -1,19 +1,19 @@
 import type { AuthProvider } from "@root/components/auth/providers";
 import { AuthlibManager } from "@root/components/authlib";
-import { inject, injectable } from "tsyringe";
+import { Inject, Service } from "typedi";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
 
-@injectable()
+@Service()
 export class ProfileWebRequest extends AbstractRequest {
     method = "GET";
     url =
         /^\/authlib\/sessionserver\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/;
 
     constructor(
-        @inject("AuthProvider") private authProvider: AuthProvider,
+        @Inject("AuthProvider") private authProvider: AuthProvider,
         private authlibManager: AuthlibManager,
     ) {
         super();

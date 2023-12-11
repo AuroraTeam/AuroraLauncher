@@ -1,10 +1,13 @@
 import { LangManager, ProfilesManager } from "@root/components";
 import { AbstractCommand, Category } from "@root/utils";
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 
-@injectable()
+@Service()
 export class SyncProfilesCommand extends AbstractCommand {
-    constructor(langManager: LangManager, private readonly profilesManager: ProfilesManager) {
+    constructor(
+        langManager: LangManager,
+        private readonly profilesManager: ProfilesManager,
+    ) {
         super({
             name: "syncprofiles",
             description:
