@@ -1,4 +1,3 @@
-import { container } from "tsyringe";
 import {
     AuthProvider,
     ConfigManager,
@@ -16,7 +15,7 @@ import {
     RejectAuthProvider,
     AcceptAuthProvider,
     HelpCommand,
-    ReloadCommand,
+    // ReloadCommand,
     ModulesCommand,
     BranchCommand,
     UpdateCommand,
@@ -132,7 +131,6 @@ export class LauncherServer {
      * Функция для перезагрузки LauncherSever'а
      */
     public reload() {
-        container.clearInstances();
         this.preInit();
         this.init();
     }
