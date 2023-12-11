@@ -15,7 +15,6 @@ import {
     RejectAuthProvider,
     AcceptAuthProvider,
     HelpCommand,
-    // ReloadCommand,
     ModulesCommand,
     BranchCommand,
     UpdateCommand,
@@ -96,7 +95,6 @@ export class LauncherServer {
     private registerCommands() {
         this._CommandsManager.registerCommands([
             Container.get(HelpCommand),
-            // Container.get(ReloadCommand),
             Container.get(ModulesCommand),
             Container.get(BranchCommand),
             Container.get(UpdateCommand),
@@ -125,13 +123,5 @@ export class LauncherServer {
             Container.get(JoinWebRequest),
             Container.get(HasJoinedWebRequest),
         ]);
-    }
-
-    /**
-     * Функция для перезагрузки LauncherSever'а
-     */
-    public reload() {
-        this.preInit();
-        this.init();
     }
 }

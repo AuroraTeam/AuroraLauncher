@@ -3,7 +3,6 @@ export * from "./BranchCommand";
 export * from "./HelpCommand";
 export * from "./LangCommand";
 export * from "./ModulesCommand";
-export * from "./ReloadCommand";
 export * from "./StatusCommand";
 export * from "./StopCommand";
 export * from "./UpdateCommand";
