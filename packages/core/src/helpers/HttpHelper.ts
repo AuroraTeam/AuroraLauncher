@@ -9,6 +9,7 @@ import { createWriteStream } from "fs"
 import { request } from "undici"
 
 interface Progress {
+    url: string | URL
     transferred: number
     total: number
 }
@@ -116,14 +117,18 @@ export class HttpHelper {
         filesList: File[],
         options: {
             onProgress?: onProgressFunction
-            afterDownload?: () => void
+            beforeDownload?: (data: { url: string | URL }) => void
+            afterDownload?: (data: { url: string | URL }) => void
         } = {},
     ) {
         await pMap(
             filesList,
             async (file) => {
                 if (await this.verifyFileHash(file)) {
-                    if (options.afterDownload) options.afterDownload()
+                    if (options.afterDownload)
+                        options.afterDownload({
+                            url: file.sourceUrl,
+                        })
                     return
                 }
 
@@ -131,8 +136,9 @@ export class HttpHelper {
                     file.sourceUrl,
                     file.destinationPath,
                     options.onProgress,
+                    options.beforeDownload,
+                    options.afterDownload,
                 )
-                if (options.afterDownload) options.afterDownload()
             },
             { concurrency: this.concurrency },
         )
@@ -149,6 +155,8 @@ export class HttpHelper {
         url: string | URL,
         filePath: string,
         onProgress?: onProgressFunction,
+        beforeDownload?: (data: { url: string | URL }) => void,
+        afterDownload?: (data: { url: string | URL }) => void,
     ): Promise<string> {
         await mkdir(dirname(filePath), { recursive: true })
 
@@ -160,9 +168,16 @@ export class HttpHelper {
             )
         }
 
+        const location = <string | undefined>headers["location"]
         // handle redirects
-        if (statusCode > 300 && statusCode < 400 && !!headers["location"]) {
-            return this.download(<string>headers["location"], filePath)
+        if (statusCode > 300 && statusCode < 400 && !!location) {
+            return this.download(
+                location,
+                filePath,
+                onProgress,
+                beforeDownload,
+                afterDownload,
+            )
         }
 
         if (onProgress) {
@@ -171,15 +186,25 @@ export class HttpHelper {
 
             body.on("data", (chunk) => {
                 onProgress({
+                    url,
                     transferred: (transferred += chunk.byteLength),
                     total,
                 })
             })
         }
 
+        if (beforeDownload) {
+            beforeDownload({ url })
+        }
+
         return new Promise((resolve, reject) => {
             body.pipe(createWriteStream(filePath))
-                .on("finish", () => resolve(filePath))
+                .on("finish", () => {
+                    resolve(filePath)
+                    if (afterDownload) {
+                        afterDownload({ url })
+                    }
+                })
                 .on("error", (error) => reject(error))
         })
     }

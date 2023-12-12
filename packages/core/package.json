@@ -1,6 +1,6 @@
 {
     "name": "@aurora-launcher/core",
-    "version": "0.14.0",
+    "version": "0.15.0",
     "description": "Base library for Aurora Launcher",
     "type": "commonjs",
     "main": "./dist/index.js",
@@ -39,7 +39,8 @@
         }
     },
     "files": [
-        "dist"
+        "dist",
+        "src"
     ],
     "devDependencies": {
         "@tsconfig/node18": "^18.2.1",
