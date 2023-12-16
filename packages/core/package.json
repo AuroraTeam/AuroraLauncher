@@ -52,12 +52,12 @@
         "import-sort-style-module": "^6.0.0",
         "prettier": "^3.0.3",
         "prettier-plugin-import-sort": "0.0.7",
-        "tsup": "^7.2.0",
+        "tsup": "^8.0.1",
         "typescript": "^5.0.4"
     },
     "dependencies": {
         "adm-zip": "^0.5.10",
-        "p-map": "^6.0.0",
-        "undici": "^5.27.2"
+        "p-map": "^7.0.0",
+        "undici": "^6.0.1"
     }
 }
