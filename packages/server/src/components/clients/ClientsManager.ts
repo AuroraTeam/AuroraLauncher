@@ -53,7 +53,7 @@ export class ClientsManager {
         for (const entry of entries) {
             const entryPath = join(dirPath, entry.name);
             if (entry.isDirectory()) {
-                arrayOfFiles.concat(await this.hashDir(entryPath));
+                arrayOfFiles.push(...(await this.hashDir(entryPath)));
             } else {
                 arrayOfFiles.push(await this.hashFile(entryPath));
             }
