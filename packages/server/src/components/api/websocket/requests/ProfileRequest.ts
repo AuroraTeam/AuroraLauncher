@@ -1,7 +1,7 @@
 import { ProfileRequestData, ProfileResponseData } from "@aurora-launcher/core";
 import { ConfigManager, ProfilesManager } from "@root/components";
 import { AbstractRequest } from "aurora-rpc-server";
-import { Service } from "typedi";
+import { Inject, Service } from "typedi";
 
 @Service()
 export class ProfileWsRequest extends AbstractRequest {
@@ -9,6 +9,7 @@ export class ProfileWsRequest extends AbstractRequest {
 
     constructor(
         private configManager: ConfigManager,
+        @Inject(() => ProfilesManager) // почему-то не инжектится автоматически
         private profilesManager: ProfilesManager,
     ) {
         super();
