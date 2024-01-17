@@ -23,7 +23,7 @@ export class AcceptAuthProvider implements AuthProvider {
         };
 
         const userIndex = this.sessionsDB.findIndex((user) => user.username === username);
-        if (userIndex) {
+        if (userIndex !== -1) {
             this.sessionsDB.splice(userIndex, 1);
         }
 

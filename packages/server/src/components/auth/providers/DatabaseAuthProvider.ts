@@ -40,18 +40,22 @@ export class DatabaseAuthProvider implements AuthProvider {
         const userData = {
             username,
             userUUID: user.userUUID,
-            accessToken: UUIDHelper.getWithoutDashes(randomUUID()),
+            accessToken: randomUUID(),
         };
 
-        await this.userRepository.update(user, {
-            accessToken: userData.accessToken,
-        });
+        await this.userRepository.update(
+            { userUUID: user.userUUID },
+            { accessToken: userData.accessToken },
+        );
 
         return userData;
     }
 
     async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
-        const user = await this.userRepository.findOneBy({ accessToken, userUUID });
+        const user = await this.userRepository.findOneBy({
+            accessToken,
+            userUUID: UUIDHelper.getWithDashes(userUUID),
+        });
         if (!user) return false;
 
         user.serverID = serverID;
@@ -75,7 +79,9 @@ export class DatabaseAuthProvider implements AuthProvider {
     }
 
     async profile(userUUID: string): Promise<ProfileResponseData> {
-        const user = await this.userRepository.findOneBy({ userUUID });
+        const user = await this.userRepository.findOneBy({
+            userUUID: UUIDHelper.getWithDashes(userUUID),
+        });
         if (!user) throw new Error("User not found");
 
         return {
@@ -139,7 +145,7 @@ export class DatabaseAuthProviderConfig extends AuthProviderConfig {
         type: AvaliableDataBaseType;
         host: string;
         port: number;
-        user: string;
+        username: string;
         password: string;
         database: string;
     };
