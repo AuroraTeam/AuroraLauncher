@@ -1,8 +1,4 @@
 export class ApiConfig {
-    addresses: {
-        web: string;
-        websocket: string;
-    };
     host: string;
     port: number;
     useSSL: boolean;
@@ -18,10 +14,6 @@ export class ApiConfig {
 
     static getDefaultConfig(): ApiConfig {
         return {
-            addresses: {
-                web: "http://localhost:1370/",
-                websocket: "ws://localhost:1370/ws",
-            },
             host: "0.0.0.0",
             port: 1370,
             useSSL: false,
