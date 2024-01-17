@@ -18,8 +18,8 @@ export class AcceptAuthProvider implements AuthProvider {
     auth(username: string): AuthResponseData {
         const data = {
             username,
-            userUUID: UUIDHelper.getWithoutDashes(v5(username, this.projectID)),
-            accessToken: UUIDHelper.getWithoutDashes(randomUUID()),
+            userUUID: v5(username, this.projectID),
+            accessToken: randomUUID(),
         };
 
         const userIndex = this.sessionsDB.findIndex((user) => user.username === username);
@@ -37,7 +37,9 @@ export class AcceptAuthProvider implements AuthProvider {
 
     join(accessToken: string, userUUID: string, serverId: string): boolean {
         const user = this.sessionsDB.find(
-            (user) => user.accessToken === accessToken && user.userUUID === userUUID,
+            (user) =>
+                user.accessToken === accessToken &&
+                user.userUUID === UUIDHelper.getWithDashes(userUUID),
         );
         if (!user) return false;
 
@@ -56,7 +58,7 @@ export class AcceptAuthProvider implements AuthProvider {
     }
 
     profile(userUUID: string): UserData {
-        const user = this.sessionsDB.find((e) => e.userUUID === userUUID);
+        const user = this.sessionsDB.find((e) => e.userUUID === UUIDHelper.getWithDashes(userUUID));
         if (!user) throw new Error("User not found");
         return user;
     }
