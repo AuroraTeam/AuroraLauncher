@@ -77,6 +77,7 @@ export class HttpHelper {
         const { body } = await request(url, {
             method: "POST",
             body: JsonHelper.toJson(json),
+            headers: { "Content-Type": "application/json" },
         })
         return (await body.json()) as T
     }
