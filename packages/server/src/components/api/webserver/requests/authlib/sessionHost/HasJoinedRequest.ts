@@ -22,7 +22,9 @@ export class HasJoinedWebRequest extends AbstractRequest {
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
         const { username, serverId } = req.query;
 
-        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) return res.error();
+        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) {
+            return res.error(400, "BadRequestException", "Empty values are not allowed.");
+        }
 
         let user;
         try {
@@ -36,6 +38,11 @@ export class HasJoinedWebRequest extends AbstractRequest {
             textures.SKIN = {
                 url: user.skinUrl,
             };
+            if (user.isAlex) {
+                textures.SKIN.metadata = {
+                    model: "slim",
+                };
+            }
         }
         if (user.capeUrl?.length > 0) {
             textures.CAPE = {

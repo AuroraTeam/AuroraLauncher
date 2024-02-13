@@ -5,6 +5,7 @@ import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
 import { JsonHelper } from "@aurora-launcher/core";
+import { UUIDHelper } from "@root/utils";
 
 interface JoinRequestDto {
     accessToken: string;
@@ -27,7 +28,7 @@ export class JoinWebRequest extends AbstractRequest {
         try {
             data = JsonHelper.fromJson<JoinRequestDto>(req.body);
         } catch (error) {
-            return res.error(400, "BadRequestException");
+            return res.error(400, "BadRequestException", error.message);
         }
 
         if (
@@ -35,19 +36,14 @@ export class JoinWebRequest extends AbstractRequest {
             this.isInvalidValue(data.selectedProfile) ||
             this.isInvalidValue(data.serverId)
         )
-            return res.error(400, "BadRequestException");
+            return res.error(400, "BadRequestException", "Empty values are not allowed.");
 
         const status = await this.authProvider.join(
             data.accessToken,
-            data.selectedProfile,
+            UUIDHelper.getWithDashes(data.selectedProfile),
             data.serverId,
         );
-        if (!status)
-            return res.error(
-                400,
-                "ForbiddenOperationException",
-                "Invalid credentials. Invalid username or password.",
-            );
+        if (!status) return res.error(400, "ForbiddenOperationException", "Invalid credentials.");
 
         res.raw.end();
     }

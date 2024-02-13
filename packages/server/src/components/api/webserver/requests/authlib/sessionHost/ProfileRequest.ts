@@ -5,6 +5,7 @@ import { Inject, Service } from "typedi";
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
+import { UUIDHelper } from "@root/utils";
 
 @Service()
 export class ProfileWebRequest extends AbstractRequest {
@@ -26,7 +27,7 @@ export class ProfileWebRequest extends AbstractRequest {
 
         let user;
         try {
-            user = await this.authProvider.profile(uuid);
+            user = await this.authProvider.profile(UUIDHelper.getWithDashes(uuid));
         } catch (error) {
             res.raw.statusCode = 204;
             res.raw.end();
@@ -38,6 +39,11 @@ export class ProfileWebRequest extends AbstractRequest {
             textures.SKIN = {
                 url: user.skinUrl,
             };
+            if (user.isAlex) {
+                textures.SKIN.metadata = {
+                    model: "slim",
+                };
+            }
         }
         if (user.capeUrl?.length > 0) {
             textures.CAPE = {

@@ -2,10 +2,14 @@ import { randomUUID } from "crypto";
 
 import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { UUIDHelper } from "@root/utils";
 import { v5 } from "uuid";
 
-import { AuthProvider, ProfilesResponseData } from "./AuthProvider";
+import {
+    AuthProvider,
+    HasJoinedResponseData,
+    ProfileResponseData,
+    ProfilesResponseData,
+} from "./AuthProvider";
 
 export class AcceptAuthProvider implements AuthProvider {
     private projectID: string;
@@ -37,9 +41,7 @@ export class AcceptAuthProvider implements AuthProvider {
 
     join(accessToken: string, userUUID: string, serverId: string): boolean {
         const user = this.sessionsDB.find(
-            (user) =>
-                user.accessToken === accessToken &&
-                user.userUUID === UUIDHelper.getWithDashes(userUUID),
+            (user) => user.accessToken === accessToken && user.userUUID === userUUID,
         );
         if (!user) return false;
 
@@ -47,7 +49,7 @@ export class AcceptAuthProvider implements AuthProvider {
         return true;
     }
 
-    hasJoined(username: string, serverId: string): UserData {
+    hasJoined(username: string, serverId: string): HasJoinedResponseData {
         const user = this.sessionsDB.find((user) => user.username === username);
         if (!user) throw new Error("User not found");
 
@@ -57,8 +59,8 @@ export class AcceptAuthProvider implements AuthProvider {
         return user;
     }
 
-    profile(userUUID: string): UserData {
-        const user = this.sessionsDB.find((e) => e.userUUID === UUIDHelper.getWithDashes(userUUID));
+    profile(userUUID: string): ProfileResponseData {
+        const user = this.sessionsDB.find((e) => e.userUUID === userUUID);
         if (!user) throw new Error("User not found");
         return user;
     }

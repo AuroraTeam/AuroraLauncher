@@ -8,7 +8,7 @@ import {
     ProfileResponseData,
     ProfilesResponseData,
 } from "./AuthProvider";
-import { UUIDHelper } from "../../../utils";
+import { ResponseError } from "aurora-rpc-server";
 
 export class JsonAuthProvider implements AuthProvider {
     private config: JsonAuthProviderConfig;
@@ -17,39 +17,58 @@ export class JsonAuthProvider implements AuthProvider {
         this.config = <JsonAuthProviderConfig>auth;
     }
 
-    async auth(username: string, password: string): Promise<AuthResponseData> {
-        return await HttpHelper.postJson<AuthResponseData>(this.config.authUrl, {
-            username,
-            password,
-        });
+    async auth(login: string, password: string): Promise<AuthResponseData> {
+        try {
+            return this.parseResponse(
+                await HttpHelper.postJson<ApiResponse<AuthResponseData>>(this.config.authUrl, {
+                    login,
+                    password,
+                }),
+            );
+        } catch (error) {
+            throw new ResponseError(error.message, 200);
+        }
     }
 
     async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
-        return await HttpHelper.postJson<boolean>(this.config.joinUrl, {
-            accessToken,
-            userUUID: UUIDHelper.getWithDashes(userUUID),
-            serverID,
-        });
+        return this.parseResponse(
+            await HttpHelper.postJson<ApiResponse<boolean>>(this.config.joinUrl, {
+                accessToken,
+                userUUID,
+                serverID,
+            }),
+        );
     }
 
     async hasJoined(username: string, serverID: string): Promise<HasJoinedResponseData> {
-        return await HttpHelper.postJson<HasJoinedResponseData>(this.config.hasJoinedUrl, {
-            username,
-            serverID,
-        });
+        return this.parseResponse(
+            await HttpHelper.postJson<ApiResponse<HasJoinedResponseData>>(
+                this.config.hasJoinedUrl,
+                { username, serverID },
+            ),
+        );
     }
 
     async profile(userUUID: string): Promise<ProfileResponseData> {
-        return await HttpHelper.postJson<ProfileResponseData>(this.config.profileUrl, {
-            userUUID: UUIDHelper.getWithDashes(userUUID),
-        });
+        return this.parseResponse(
+            await HttpHelper.postJson<ApiResponse<ProfileResponseData>>(this.config.profileUrl, {
+                userUUID,
+            }),
+        );
     }
 
     async profiles(usernames: string[]): Promise<ProfilesResponseData[]> {
-        return await HttpHelper.postJson<ProfilesResponseData[]>(
-            this.config.profilesUrl,
-            usernames,
+        return this.parseResponse(
+            await HttpHelper.postJson<ApiResponse<ProfilesResponseData[]>>(
+                this.config.profilesUrl,
+                usernames,
+            ),
         );
+    }
+
+    parseResponse<T>(response: ApiResponse<T>): T {
+        if (response.success === true) return response.result;
+        throw new Error(response.error);
     }
 }
 
@@ -60,3 +79,15 @@ export interface JsonAuthProviderConfig extends AuthProviderConfig {
     profileUrl: string;
     profilesUrl: string;
 }
+
+interface ApiResult<T> {
+    success: true;
+    result: T;
+}
+
+interface ApiError {
+    success: false;
+    error: string;
+}
+
+type ApiResponse<T> = ApiResult<T> | ApiError;

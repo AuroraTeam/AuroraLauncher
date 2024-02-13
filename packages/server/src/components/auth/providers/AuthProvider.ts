@@ -27,12 +27,14 @@ export class AuthProviderConfig {
 
 export interface HasJoinedResponseData {
     userUUID: string;
+    isAlex?: string;
     skinUrl?: string;
     capeUrl?: string;
 }
 
 export interface ProfileResponseData {
     username: string;
+    isAlex?: string;
     skinUrl?: string;
     capeUrl?: string;
 }

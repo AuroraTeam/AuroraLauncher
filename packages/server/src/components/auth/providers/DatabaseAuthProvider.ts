@@ -1,6 +1,6 @@
 import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { LogHelper, UUIDHelper } from "@root/utils";
+import { LogHelper } from "@root/utils";
 import { DataSource, EntitySchema, In } from "typeorm";
 
 import {
@@ -11,6 +11,7 @@ import {
     ProfilesResponseData,
 } from "./AuthProvider";
 import { randomUUID } from "crypto";
+import { ResponseError } from "aurora-rpc-server";
 
 export class DatabaseAuthProvider implements AuthProvider {
     private userRepository;
@@ -35,7 +36,10 @@ export class DatabaseAuthProvider implements AuthProvider {
 
     async auth(username: string): Promise<AuthResponseData> {
         const user = await this.userRepository.findOneBy({ username });
-        if (!user) throw new Error("User not found");
+        if (!user) throw new ResponseError("User not found", 300);
+
+        // TODO!!! Check password
+        // if (user.password !== password) throw new ResponseError("Wrong password", 301);
 
         const userData = {
             username,
@@ -54,7 +58,7 @@ export class DatabaseAuthProvider implements AuthProvider {
     async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
         const user = await this.userRepository.findOneBy({
             accessToken,
-            userUUID: UUIDHelper.getWithDashes(userUUID),
+            userUUID,
         });
         if (!user) return false;
 
@@ -79,9 +83,7 @@ export class DatabaseAuthProvider implements AuthProvider {
     }
 
     async profile(userUUID: string): Promise<ProfileResponseData> {
-        const user = await this.userRepository.findOneBy({
-            userUUID: UUIDHelper.getWithDashes(userUUID),
-        });
+        const user = await this.userRepository.findOneBy({ userUUID });
         if (!user) throw new Error("User not found");
 
         return {
