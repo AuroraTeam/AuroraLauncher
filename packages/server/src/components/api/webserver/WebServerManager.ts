@@ -65,8 +65,17 @@ export class WebServerManager {
      * @returns The response object
      */
     private requestListener(req: http.IncomingMessage, res: http.ServerResponse) {
+        if (req.url === "/") return this.redirectListener(req, res);
         if (req.url.startsWith("/files")) return this.fileListing(req.url, res);
         this.requestsManager.getRequest(req, res);
+    }
+
+    private redirectListener(req: http.IncomingMessage, res: http.ServerResponse) {
+        const { useSSL } = this.configManager.config.api;
+        res.writeHead(301, {
+            Location: `http${useSSL ? "s" : ""}://${req.headers.host}/files`,
+        });
+        res.end();
     }
 
     private async fileListing(url: string, res: http.ServerResponse) {
