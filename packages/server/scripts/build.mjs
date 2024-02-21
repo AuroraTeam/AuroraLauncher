@@ -8,6 +8,9 @@ const { _, watch, prod, ...args } = minimist(process.argv.slice(2));
 if (prod) {
     args.minify = true;
     args.sourcesContent = false;
+    args.sourcemap = "inline";
+} else {
+    args.sourcemap = true;
 }
 
 if (!watch) {
@@ -19,7 +22,6 @@ const ctx = await context({
     platform: "node",
     target: "node20",
     bundle: true,
-    sourcemap: true,
     plugins: [esbuildDecorators()],
     entryPoints: ["src/app.ts"],
     outfile: "dist/LauncherServer.js",

@@ -1,8 +1,8 @@
-name: LaunchServer - Release Build
+name: LaunchServer - PreRelease Build
 
 on:
   push:
-    branches: [master]
+    branches: [testing]
 
 jobs:
   build:
@@ -33,6 +33,7 @@ jobs:
         with:
           tag_name: ${{ env.PACKAGE_VERSION }}
           name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
+          prerelease: true
           files: |
             packages/server/dist/LauncherServer.js
             packages/server/dist/LauncherServer-win.exe
