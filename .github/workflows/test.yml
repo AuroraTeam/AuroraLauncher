@@ -1,0 +1,54 @@
+name: LaunchServer - PreRelease Build
+
+on:
+  push:
+    branches: [testing]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Get version value, set to env
+        run: echo "PACKAGE_VERSION=v$(node -p "require('./packages/server/package.json').version")" >> $GITHUB_ENV
+
+      - name: Download dependencies
+        run: npm i
+
+      - name: Build LauncherServer
+        run: |
+          npm run build:libs
+          npm run build:prod -w packages/server
+          npm run build:bin -w packages/server
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.PACKAGE_VERSION }}
+          name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
+          prerelease: true
+          files: |
+            packages/server/dist/LauncherServer.js
+            packages/server/dist/LauncherServer-win.exe
+            packages/server/dist/LauncherServer-linux
+            packages/server/dist/LauncherServer-macos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload new version to storage
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_PORT: ${{ secrets.SSH_SERVER_PORT }}
+          SOURCE: "packages/server/dist/"
+          TARGET: "${{ secrets.STORAGE_DIR }}/${{ env.PACKAGE_VERSION }}"
+          # SCRIPT_BEFORE: "mkdir ${{ secrets.STORAGE_DIR }}/${{ env.PACKAGE_VERSION }}"
