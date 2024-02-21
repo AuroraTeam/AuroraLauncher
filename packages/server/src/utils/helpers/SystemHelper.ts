@@ -10,7 +10,7 @@ export class SystemHelper {
     /**
      * Сравнивает платформы.
      */
-    public static comparePlatforms(platform: availablePlatforms): boolean {
+    public static comparePlatforms(platform: AvailablePlatforms): boolean {
         return process.platform === platform;
     }
 
@@ -22,4 +22,4 @@ export class SystemHelper {
     }
 }
 
-type availablePlatforms = "darwin" | "linux" | "win32";
+type AvailablePlatforms = "darwin" | "linux" | "win32";
