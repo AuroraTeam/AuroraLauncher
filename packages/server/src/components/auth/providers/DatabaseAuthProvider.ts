@@ -12,20 +12,23 @@ import {
 } from "./AuthProvider";
 import { randomUUID } from "crypto";
 import { ResponseError } from "aurora-rpc-server";
+import { DatabasePasswordProvider } from "./DatabasePasswordProvider";
 
 export class DatabaseAuthProvider implements AuthProvider {
     private userRepository;
+    private passwordProvider;
 
     constructor({ auth }: LauncherServerConfig) {
-        const config = <DatabaseAuthProviderConfig>auth;
+        const authConfig = <DatabaseAuthProviderConfig>auth;
+        this.passwordProvider = new DatabasePasswordProvider(authConfig);
 
-        if (!config.properties.tableName) {
+        if (!authConfig.properties.tableName) {
             LogHelper.fatal("tableName not defined");
         }
-        const UserEntity = getUserEntity(config.properties);
+        const UserEntity = getUserEntity(authConfig.properties);
 
         const connection = new DataSource({
-            ...config.connection,
+            ...authConfig.connection,
             entities: [UserEntity],
         });
 
@@ -34,12 +37,12 @@ export class DatabaseAuthProvider implements AuthProvider {
         this.userRepository = connection.getRepository(UserEntity);
     }
 
-    async auth(username: string): Promise<AuthResponseData> {
+    async auth(username: string, password: string): Promise<AuthResponseData> {
         const user = await this.userRepository.findOneBy({ username });
         if (!user) throw new ResponseError("User not found", 300);
 
-        // TODO!!! Check password
-        // if (user.password !== password) throw new ResponseError("Wrong password", 301);
+        if (!(await this.passwordProvider.checkPassword(password, user.password)))
+            throw new ResponseError("Wrong password", 301);
 
         const userData = {
             username,
@@ -143,6 +146,8 @@ const getUserEntity = (properties: DatabaseAuthProviderConfig["properties"]) => 
 };
 
 export class DatabaseAuthProviderConfig extends AuthProviderConfig {
+    passwordVerfier: string;
+    passwordSalt?: string;
     connection: {
         type: AvaliableDataBaseType;
         host: string;
