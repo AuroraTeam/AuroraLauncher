@@ -2,7 +2,7 @@ name: LaunchServer - PreRelease Build
 
 on:
   push:
-    branches: [testing]
+    branches: [dev]
 
 jobs:
   build:
@@ -28,19 +28,19 @@ jobs:
           npm run build:prod -w packages/server
           npm run build:bin -w packages/server
 
-      - name: Upload release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.PACKAGE_VERSION }}
-          name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
-          prerelease: true
-          files: |
-            packages/server/dist/LauncherServer.js
-            packages/server/dist/LauncherServer-win.exe
-            packages/server/dist/LauncherServer-linux
-            packages/server/dist/LauncherServer-macos
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Upload release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: ${{ env.PACKAGE_VERSION }}
+      #     name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
+      #     prerelease: true
+      #     files: |
+      #       packages/server/dist/LauncherServer.js
+      #       packages/server/dist/LauncherServer-win.exe
+      #       packages/server/dist/LauncherServer-linux
+      #       packages/server/dist/LauncherServer-macos
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload new version to storage
         uses: easingthemes/ssh-deploy@main
