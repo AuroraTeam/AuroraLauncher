@@ -21,7 +21,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/AuroraTeam/LauncherCore.git"
+        "url": "git+https://github.com/AuroraTeam/AuroraLauncher.git"
     },
     "author": "AuroraTeam",
     "contributors": [
@@ -29,9 +29,9 @@
     ],
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/AuroraTeam/LauncherCore/issues"
+        "url": "https://github.com/AuroraTeam/AuroraLauncher/issues"
     },
-    "homepage": "https://github.com/AuroraTeam/LauncherCore#readme",
+    "homepage": "https://github.com/AuroraTeam/AuroraLauncher#readme",
     "importSort": {
         ".js, .ts": {
             "style": "module",

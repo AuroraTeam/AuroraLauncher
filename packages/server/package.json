@@ -9,9 +9,12 @@
     ],
     "homepage": "https://aurora-launcher.ru",
     "bugs": {
-        "url": "https://github.com/AuroraTeam/LauncherServer/issues"
+        "url": "https://github.com/AuroraTeam/AuroraLauncher/issues"
     },
-    "repository": "github:aurorateam/launcherserver",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AuroraTeam/AuroraLauncher.git"
+    },
     "license": "MIT",
     "author": "AuroraTeam",
     "contributors": [
@@ -66,6 +69,7 @@
         "class-transformer": "^0.5.1",
         "cli-progress": "^3.12.0",
         "fast-querystring": "^1.1.1",
+        "hash-wasm": "^4.11.0",
         "hjson": "^3.2.2",
         "lodash-es": "^4.17.21",
         "mysql2": "^3.2.0",
