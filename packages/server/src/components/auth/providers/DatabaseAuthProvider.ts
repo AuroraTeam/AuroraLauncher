@@ -168,17 +168,7 @@ export class DatabaseAuthProviderConfig extends AuthProviderConfig {
     };
 }
 
-// type AvaliableDataBaseType = DatabaseType
-// TODO Скорее всего надо бы установить в зависимости пакеты для работы с этими бд (сейчас установлен только mysql2)
-type AvaliableDataBaseType =
-    | "mysql"
-    | "mariadb"
-    | "postgres"
-    | "sqlite"
-    | "oracle"
-    | "mssql"
-    | "mongodb"
-    | "better-sqlite3";
+type AvaliableDataBaseType = "mysql" | "mariadb" | "postgres" | "sqlite" | "oracle" | "mssql";
 
 interface UserEntity {
     username: string;
