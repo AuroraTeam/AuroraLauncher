@@ -17,16 +17,16 @@ export class UpdateManager {
         darwin: "binary-mac",
         linux: "binary-linux",
     };
-    private readonly fileNameMap: Record<string, string> = {
-        win32: "LauncherServer.exe",
-        darwin: "LauncherServer-mac",
-        linux: "LauncherServer-linux",
+    private readonly fileOsMap: Record<string, string> = {
+        win32: "win.exe",
+        darwin: "mac",
+        linux: "linux",
     };
     private readonly fileType: string = SystemHelper.isStandalone()
         ? this.fileTypeMap[SystemHelper.getPlatform()]
         : "js";
     private readonly execFileName: string = SystemHelper.isStandalone()
-        ? this.fileNameMap[SystemHelper.getPlatform()]
+        ? `LauncherServer-${this.fileOsMap[SystemHelper.getPlatform()]}`
         : "LauncherServer.js";
 
     constructor(
