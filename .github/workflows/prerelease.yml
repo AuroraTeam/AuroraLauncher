@@ -39,8 +39,6 @@ jobs:
             packages/server/dist/LauncherServer-win.exe
             packages/server/dist/LauncherServer-linux
             packages/server/dist/LauncherServer-macos
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload new version to storage
         uses: easingthemes/ssh-deploy@main
@@ -51,4 +49,3 @@ jobs:
           REMOTE_PORT: ${{ secrets.SSH_SERVER_PORT }}
           SOURCE: "packages/server/dist/"
           TARGET: "${{ secrets.STORAGE_DIR }}/${{ env.PACKAGE_VERSION }}"
-          SCRIPT_BEFORE: "mkdir ${{ secrets.STORAGE_DIR }}/${{ env.PACKAGE_VERSION }}"
