@@ -91,7 +91,7 @@ export class WebServerManager {
         url = url.replace(/\/{2,}/g, "/").slice(6);
         if (url.at(-1) === "/") url = url.slice(0, -1);
 
-        const path = join(StorageHelper.gameFilesDir, url);
+        const path = join(StorageHelper.gameFilesDir, decodeURIComponent(url));
 
         // Защита от выхода из директории
         if (!path.startsWith(StorageHelper.gameFilesDir)) {
