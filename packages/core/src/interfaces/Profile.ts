@@ -36,6 +36,7 @@ export interface ProfileLibrary {
     sha1: string
     type: "library" | "native"
     rules?: LibraryRule[]
+    ignoreClassPath?: boolean
 }
 
 export interface LibraryRule {
