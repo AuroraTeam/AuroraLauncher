@@ -1,5 +1,6 @@
 import path from "path";
 
+import { HttpHelper } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper, SystemHelper } from "@root/utils";
 import semver from "semver";
 import { Service } from "typedi";
@@ -7,7 +8,6 @@ import { Service } from "typedi";
 import { version as currentVersion } from "../../../package.json";
 import { ConfigManager } from "../config";
 import { LangManager } from "../langs";
-import { HttpHelper } from "@aurora-launcher/core";
 
 @Service()
 export class UpdateManager {
@@ -60,7 +60,7 @@ export class UpdateManager {
             return LogHelper.info(this.langManager.getTranslate.UpdateManager.checkEnd);
         }
 
-        const latestVersion = versionsData[this.configManager.config.branch as "stable" | "dev"];
+        const latestVersion = versionsData[this.configManager.config.branch];
 
         if (!this.needUpdate(latestVersion)) {
             return LogHelper.info(this.langManager.getTranslate.UpdateManager.checkEnd);
