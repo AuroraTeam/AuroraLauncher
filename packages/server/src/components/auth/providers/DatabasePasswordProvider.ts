@@ -24,8 +24,6 @@ export class DatabasePasswordProvider {
 
         switch (algo) {
             case "hash": {
-                console.log(matches[3]);
-
                 const validatePasswordFormat = this.validatePasswordFormat(matches[3] || "pass");
                 this.verifierFunction = (password: string, passwordHash: string) =>
                     passwordHash === validatePasswordFormat(password, this.passwordSalt);
