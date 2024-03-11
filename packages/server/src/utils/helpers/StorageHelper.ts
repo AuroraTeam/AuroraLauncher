@@ -8,9 +8,11 @@ import { SystemHelper } from "./SystemHelper";
 
 export class StorageHelper extends CoreStorageHelper {
     /* Folders */
-    static readonly storageDir: string = SystemHelper.isStandalone()
-        ? dirname(process.execPath)
-        : __dirname;
+    static readonly storageDir: string = process.env.AURORA_STORAGE_OVERRIDE 
+        ? resolve(process.env.AURORA_STORAGE_OVERRIDE) 
+        : SystemHelper.isStandalone()
+            ? dirname(process.execPath)
+            : __dirname;
     static readonly gameFilesDir: string = resolve(this.storageDir, "gameFiles");
     static readonly clientsDir: string = resolve(this.gameFilesDir, "clients");
     static readonly assetsDir: string = resolve(this.gameFilesDir, "assets");

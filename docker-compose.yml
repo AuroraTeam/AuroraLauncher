@@ -1,0 +1,16 @@
+version: '3'
+services:
+  launcher:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "1370:1370"
+    volumes:
+      - data:/data
+    # environment:
+    #   - AURORA_IS_DEBUG=true
+    #   - AURORA_IS_DEV=true
+
+volumes:
+  data: 
