@@ -8,6 +8,7 @@ import stripAnsi from "strip-ansi";
 
 import { version } from "../../../package.json";
 import { StorageHelper } from "./StorageHelper";
+import { parse } from 'fast-querystring';
 
 const LOG_LEVELS = {
     DEBUG: chalk.green,
@@ -19,9 +20,9 @@ const LOG_LEVELS = {
 };
 
 export class LogHelper {
-    private static readonly isDevEnabled: boolean = process.argv.includes("--dev");
+    private static readonly isDevEnabled: boolean = process.argv.includes("--dev") || process.env.AURORA_IS_DEV === "true";
     private static readonly isDebugEnabled: boolean =
-        process.argv.includes("--debug") || process.argv.includes("--dev");
+        process.argv.includes("--debug") || process.env.AURORA_IS_DEBUG === "true" || this.isDevEnabled;
 
     private static getLogFilePath(): string {
         const dateStr = new Date()
