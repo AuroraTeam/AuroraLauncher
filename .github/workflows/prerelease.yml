@@ -72,8 +72,10 @@ jobs:
           files: |
             packages/server/dist/LauncherServer-win.exe
 
+      - name: Remove blob
+        run: rm packages/server/dist/LauncherServer.blob
 
-      - name: Upload release 
+      - name: Upload release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.PACKAGE_VERSION }}
