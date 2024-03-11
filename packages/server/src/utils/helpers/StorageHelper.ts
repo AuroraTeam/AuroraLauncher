@@ -5,7 +5,6 @@ import { dirname, resolve } from "path";
 import { StorageHelper as CoreStorageHelper } from "@aurora-launcher/core";
 
 import { SystemHelper } from "./SystemHelper";
-import { LogHelper } from "./LogHelper";
 
 export class StorageHelper extends CoreStorageHelper {
     /* Folders */

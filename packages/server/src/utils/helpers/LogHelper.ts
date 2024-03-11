@@ -8,7 +8,6 @@ import stripAnsi from "strip-ansi";
 
 import { version } from "../../../package.json";
 import { StorageHelper } from "./StorageHelper";
-import { parse } from 'fast-querystring';
 
 const LOG_LEVELS = {
     DEBUG: chalk.green,
