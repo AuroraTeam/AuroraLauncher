@@ -6,14 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-          - os: windows-latest
-          - os: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -24,59 +17,19 @@ jobs:
           node-version: 20
 
       - name: Get version value, set to env
-        if: matrix.os != 'windows-latest'
         run: echo "PACKAGE_VERSION=v$(node -p "require('./packages/server/package.json').version")" >> $GITHUB_ENV
 
-      - name: Get version value, set to env on Windows
-        if: matrix.os == 'windows-latest'
-        run: echo "PACKAGE_VERSION=v$(node -p "require('./packages/server/package.json').version")" | Out-File -FilePath $env:GITHUB_ENV -Append
-
       - name: Download dependencies
-        run: npm i
+        run: npm ci
 
       - name: Build Libraries
         run: |
           npm run build:libs
           npm run build:prod -w packages/server
-          npm run build:blob -w packages/server
-
-      - name: Copying Node.js Windows
-        if: matrix.os == 'windows-latest'
-        run: node -e "require('fs').copyFileSync(process.execPath, './packages/server/dist/LauncherServer-win.exe')"
-
-      - name: Copying Node.js Linux and MacOS
-        if: matrix.os != 'windows-latest'
-        run: cp $(command -v node) ./packages/server/dist/LauncherServer
-
-      - name: Build LauncherServer Windows
-        if: matrix.os == 'windows-latest'
-        run: npx postject packages/server/dist/LauncherServer-win.exe NODE_SEA_BLOB packages/server/dist/LauncherServer.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
-
-      - name: Build LauncherServer Linux
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          npx postject packages/server/dist/LauncherServer NODE_SEA_BLOB packages/server/dist/LauncherServer.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
-          mv packages/server/dist/LauncherServer packages/server/dist/LauncherServer-linux
-
-      - name: Build LauncherServer MacOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          npx postject packages/server/dist/LauncherServer NODE_SEA_BLOB packages/server/dist/LauncherServer.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 --macho-segment-name NODE_SEA
-          mv packages/server/dist/LauncherServer packages/server/dist/LauncherServer-macos
-
-      - name: Compress binary Windows
-        if: matrix.os == 'windows-latest'
-        uses: crazy-max/ghaction-upx@v3
-        with:
-          version: latest
-          files: |
-            packages/server/dist/LauncherServer-win.exe
-
-      - name: Remove blob
-        run: rm packages/server/dist/LauncherServer.blob
+          npm run build:bin -w packages/server
 
       - name: Upload release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.PACKAGE_VERSION }}
           name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
