@@ -6,6 +6,8 @@ import {
     ServersResponseData,
     UpdatesRequestData,
     UpdatesResponseData,
+    VerifyRequestData,
+    VerifyResponseData,
 } from "@aurora-launcher/core"
 import { Client, Events, Request, Response, ResponseError } from "aurora-rpc-client"
 
@@ -40,6 +42,10 @@ export class AuroraAPI {
 
     public async getUpdates(dir: string): Promise<UpdatesResponseData> {
         return await this.#getRequest<UpdatesRequestData, UpdatesResponseData>("updates", { dir })
+    }
+
+    public async verify(stage: number, token?: string) {
+        return await this.#getRequest<VerifyRequestData, VerifyResponseData>("verify", { stage, token })
     }
 
     async #getRequest<Req extends Request["params"], Res extends Response["result"]>(

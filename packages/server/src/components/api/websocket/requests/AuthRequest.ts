@@ -1,13 +1,10 @@
-import { AuthRequestData, AuthResponseData } from "@aurora-launcher/core";
+import type { AuthRequestData, AuthResponseData } from "@aurora-launcher/core";
 import type { AuthProvider } from "@root/components/auth/providers";
 import { AbstractRequest } from "aurora-rpc-server";
 import { Inject, Service } from "typedi";
 
-type WebSocketClient = Parameters<AbstractRequest["invoke"]>["1"];
-
-export interface ExtendedWebSocketClient extends WebSocketClient {
-    isAuthed: boolean;
-}
+import type { ExtendedWebSocketClient } from "../ExtendedWebSocketClient";
+import { VerifyMiddleware } from "./VerifyMiddleware";
 
 @Service()
 export class AuthWsRequest extends AbstractRequest {
@@ -23,6 +20,7 @@ export class AuthWsRequest extends AbstractRequest {
      * @param ws - the client that sent the request
      * @returns Promise<AuthResponseData>
      */
+    @VerifyMiddleware()
     async invoke(data: AuthRequestData, ws: ExtendedWebSocketClient): Promise<AuthResponseData> {
         const res = await this.authProvider.auth(data.login, data.password);
         ws.isAuthed = true;

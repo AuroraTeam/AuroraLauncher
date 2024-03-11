@@ -1,6 +1,6 @@
 {
     "name": "@aurora-launcher/api",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "JS/TS API implementation for Aurora Launcher",
     "main": "./dist/index-node.cjs",
     "browser": "./dist/index-web.js",
