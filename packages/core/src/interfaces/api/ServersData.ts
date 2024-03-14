@@ -1,7 +1,6 @@
-export interface Server {
-    ip: string
-    port: number
-    title: string
+import { ProfileServerConfig } from ".."
+
+export type Server = ProfileServerConfig & {
     profileUUID: string
 }
 

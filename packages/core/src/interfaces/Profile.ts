@@ -61,11 +61,21 @@ export enum Name {
     Windows = "windows",
 }
 
-export interface ProfileServerConfig {
-    ip: string
-    port: number
+export interface ProfileServerConfigBase {
     title: string
 }
+export interface ProfileServerHostnameConfig extends ProfileServerConfigBase {
+    hostname: string
+}
+
+export interface ProfileServerAddressConfig extends ProfileServerConfigBase {
+    ip: string
+    port: number
+}
+
+export type ProfileServerConfig =
+    | ProfileServerHostnameConfig
+    | ProfileServerAddressConfig
 
 // export interface ProfileOptional {
 //     id: number

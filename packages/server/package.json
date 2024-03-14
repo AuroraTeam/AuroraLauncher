@@ -62,7 +62,7 @@
         "typescript": "^5.3.3"
     },
     "dependencies": {
-        "@aurora-launcher/core": "^0.19.0",
+        "@aurora-launcher/core": "^0.20.0",
         "aurora-rpc-server": "^0.1.5",
         "chalk": "^5.3.0",
         "class-transformer": "^0.5.1",
