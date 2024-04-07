@@ -48,7 +48,7 @@
         "@types/node": "^20.11.24",
         "@typescript-eslint/eslint-plugin": "^7.1.1",
         "@typescript-eslint/parser": "^7.1.1",
-        "eslint": "^8.57.0",
+        "eslint": "^9.0.0",
         "import-sort-style-module": "^6.0.0",
         "prettier": "^3.2.5",
         "prettier-plugin-import-sort": "0.0.7",

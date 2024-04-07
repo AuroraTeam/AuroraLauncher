@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "fs/promises";
 import path, { resolve } from "path";
 
 import { HttpHelper, JsonHelper, ProfileLibrary } from "@aurora-launcher/core";
+import { MojangAssets } from "@aurora-launcher/core";
 import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 import { Service } from "typedi";
 
@@ -9,7 +10,6 @@ import {
     Action,
     Artifact,
     AssetIndex,
-    Assets,
     Classifiers,
     Client,
     Library,
@@ -104,7 +104,7 @@ export class MojangManager extends AbstractDownloadManager {
         const assetsFile = await HttpHelper.getResource(assetIndex.url);
         await writeFile(indexPath, assetsFile);
 
-        const { objects } = JsonHelper.fromJson<Assets>(assetsFile);
+        const { objects } = JsonHelper.fromJson<MojangAssets>(assetsFile);
 
         const assetsHashes = Object.values(objects)
             .sort((a, b) => b.size - a.size)

@@ -33,7 +33,7 @@
     },
     "homepage": "https://github.com/AuroraTeam/AuroraAPI#readme",
     "dependencies": {
-        "@aurora-launcher/core": "^0.20.0",
+        "@aurora-launcher/core": "^0.21.0",
         "aurora-rpc-client": "^0.3.3"
     },
     "devDependencies": {
