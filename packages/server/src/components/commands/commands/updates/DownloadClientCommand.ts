@@ -6,6 +6,7 @@ import {
     MirrorManager,
     MojangManager,
     ProfilesManager,
+    ClientsManager,
     QuiltManager,
 } from "@root/components";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
@@ -18,6 +19,7 @@ export class DownloadClientCommand extends AbstractCommand {
         private readonly profilesManager: ProfilesManager,
         private readonly configManager: ConfigManager,
         private readonly commandsManager: CommandsManager,
+        private readonly clientsManager: ClientsManager,
     ) {
         super({
             name: "downloadclient",
@@ -47,6 +49,8 @@ export class DownloadClientCommand extends AbstractCommand {
             this.profilesManager,
             this.configManager,
         ).downloadClient(gameVersion, clientName);
+        this.profilesManager.reloadProfiles();
+        this.clientsManager.hashClients();
         this.commandsManager.console.resume();
     }
 
