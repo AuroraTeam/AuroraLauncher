@@ -31,6 +31,12 @@
         "MojangManager": {
             "client": {
                 "download": "Client downloading, please wait...",
+                "downloadAssets": "Downloading assets",
+                "downloadAssetsSuc": "Assets downloaded",
+                "downloadAssetsErr": "Downloading assets failed",
+                "downloadLib": "Downloading libraries",
+                "downloadLibErr": "Downloading libraries failed",
+                "downloadLibSuc": "Libraries downloaded",
                 "downloadErr": "Error downloading the client!",
                 "success": "Client successfully downloaded!"
             },
@@ -79,8 +85,10 @@
             "client": {
                 "notFound": "Client not found!",
                 "download": "Client found, downloading ...",
+                "downloadLib": "Additional libraries found, downloading...",
                 "downloadErr": "Error downloading client!",
                 "unpacking": "Client loaded, unpacking ...",
+                "unpackingLib": "Libraries loaded, unpacking ...",
                 "unpackingErr": "Error unpacking client!",
                 "profileErr": "Error loading the profile!",
                 "success": "Client loaded successfully!"

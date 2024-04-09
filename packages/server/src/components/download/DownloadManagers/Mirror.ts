@@ -1,12 +1,10 @@
-import { mkdir, readFile } from "fs/promises";
 import { resolve } from "path";
 import { URL } from "url";
 
-import { HttpHelper, JsonHelper, ZipHelper } from "@aurora-launcher/core";
+import { HttpHelper, ZipHelper } from "@aurora-launcher/core";
 import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 import { Service } from "typedi";
 
-import { statSync } from "fs";
 import { MojangManager } from "./Mojang";
 import { Profile } from "@aurora-launcher/core";
 
@@ -17,65 +15,63 @@ export class MirrorManager extends MojangManager {
      * @param fileName - Название архива с файлами клиента
      * @param clientName - Название клиента
      */
-    async downloadClient(fileName: string, clientName: string): Promise<void> {
+    async downloadClient(fileName: string, clientName: string) {
+        const mirror = await this.checkMirror(fileName);
+        if (!mirror) return LogHelper.error(
+            this.langManager.getTranslate.DownloadManager.MirrorManager.client.notFound,
+        );
+        const mirrorProfiles: Profile = await HttpHelper.getResourceFromJson(new URL(`/profiles/${fileName}.json`, mirror));
+        
+        const profileUUID = await super.downloadClient(mirrorProfiles.version, clientName);
+        if (!profileUUID) return;
+
+        if (await HttpHelper.existsResource(new URL(`/clients/${fileName}.zip`, mirror))) {
+            await this.installClient(fileName, clientName, mirror)
+        }
+
+        if (await HttpHelper.existsResource(new URL(`/libraries/${fileName}.zip`, mirror))) {
+            await this.installLibraries(fileName, mirror)
+        }
+
+        this.profilesManager.editProfile(profileUUID, () => ({
+            mainClass: mirrorProfiles.mainClass,
+            libraries: mirrorProfiles.libraries,
+            jvmArgs: mirrorProfiles.jvmArgs,
+            clientArgs: mirrorProfiles.clientArgs,
+        }));
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.success);
+    }
+
+    async checkMirror(fileName: string) {
         const mirrors: string[] = this.configManager.config.mirrors;
 
-        const mirror = mirrors.find(async (mirror) => {
-            await HttpHelper.existsResource(new URL(`${fileName}.zip`, mirror));
+        const mirror = await this.findAsync(mirrors, async (url) => {
+            return await HttpHelper.existsResource(new URL(`/profiles/${fileName}.json`, url));
         });
 
-        if (!mirror) {
-            return LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager.client.notFound,
-            );
-        }
+        return mirror
+    }
 
+    async installClient(fileName: string, clientName: string, mirror: string) {
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.download);
+        const progressBar = ProgressHelper.getDownloadProgressBar();
+        progressBar.start(0, 0, { filename: `${fileName}.zip` });
         const clientDirPath = resolve(StorageHelper.clientsDir, clientName);
 
-        try {
-            await mkdir(clientDirPath);
-        } catch (err) {
-            return LogHelper.error(this.langManager.getTranslate.DownloadManager.dirExist);
-        }
-
-        LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.download);
-
-        let progressBar = ProgressHelper.getDownloadProgressBar();
-        progressBar.start(0, 0);
-
-        let client: string;
-        try {
-            client = await HttpHelper.downloadFile(new URL(`${fileName}.zip`, mirror), null, {
+        try{
+            const client = await HttpHelper.downloadFile(new URL(`/clients/${fileName}.zip`, mirror), null, {
                 saveToTempFile: true,
                 onProgress(progress) {
                     progress.total && progressBar.setTotal(progress.total);
                     progressBar.update(progress.transferred);
                 },
-            });
+            })
+
+            LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking);
+            ZipHelper.unzip(client, clientDirPath);
+
+            return true;
         } catch (error) {
-            LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager.client.downloadErr,
-            );
-            LogHelper.debug(error);
-            return;
-        } finally {
-            progressBar.stop();
-        }
-
-        LogHelper.info(
-            this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking,
-        );
-
-        progressBar = ProgressHelper.getLoadingProgressBar();
-        const stat = statSync(client);
-        progressBar.start(stat.size, 0);
-
-        try {
-            ZipHelper.unzip(client, clientDirPath, undefined, (size) => {
-                progressBar.increment(size);
-            });
-        } catch (error) {
-            await StorageHelper.rmdirRecursive(clientDirPath);
             LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingErr,
             );
@@ -83,41 +79,48 @@ export class MirrorManager extends MojangManager {
             return;
         } finally {
             progressBar.stop();
-            await StorageHelper.rmdirRecursive(client).catch();
         }
+    }
 
-        // TODO rework getting profile
-        let profile: Partial<Profile>;
-        try {
-            profile = JsonHelper.fromJson(
-                (await readFile(resolve(clientDirPath, "profile.json"))).toString(),
-            );
+    async installLibraries(fileName: string, mirror: string) {
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.downloadLib);
+        const progressBar = ProgressHelper.getDownloadProgressBar();
+        progressBar.start(0, 0, { filename: `${fileName}.zip` });
+
+        try{
+            const client = await HttpHelper.downloadFile(new URL(`/libraries/${fileName}.zip`, mirror), null, {
+                saveToTempFile: true,
+                onProgress(progress) {
+                    progress.total && progressBar.setTotal(progress.total);
+                    progressBar.update(progress.transferred);
+                },
+            })
+
+            LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingLib);
+            ZipHelper.unzip(client, StorageHelper.librariesDir);
+
+            return true;
         } catch (error) {
             LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.MirrorManager.client.profileErr,
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingErr,
             );
+            LogHelper.debug(error);
+            return;
+        } finally {
+            progressBar.stop();
         }
-
-        const version = await this.getVersionInfo(profile.version);
-        if (!version) return;
-
-        if (!(await this.resolveAssets(version.assetIndex))) return;
-
-        const libraries = await this.resolveLibraries(version.libraries);
-        if (!libraries) return;
-
-        await this.profilesManager.createProfile({
-            ...profile,
-            clientDir: clientName,
-            libraries,
-            servers: [
-                {
-                    title: clientName,
-                    ip: "127.0.0.1",
-                    port: 25565,
-                },
-            ],
-        });
-        LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.success);
     }
+
+    async findAsync(array: string[], predicate: (item: string, index: number, items: string[]) => Promise<any>) {
+        for (const [index, item] of array.entries()) {
+            try {
+              if (await predicate(item, index, array)) {
+                return item
+              }
+            } catch {
+              return undefined
+            }
+        }
+    }
+
 }
