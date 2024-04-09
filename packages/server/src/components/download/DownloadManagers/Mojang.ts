@@ -99,7 +99,7 @@ export class MojangManager extends AbstractDownloadManager {
     protected async resolveAssets(assetIndex: AssetIndex) {
         const indexPath = resolve(StorageHelper.assetsIndexesDir, `${assetIndex.id}.json`);
 
-        LogHelper.info("Downloading assets");
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadAssets);
 
         const assetsFile = await HttpHelper.getResource(assetIndex.url);
         await writeFile(indexPath, assetsFile);
@@ -135,7 +135,7 @@ export class MojangManager extends AbstractDownloadManager {
             //     this.langManager.getTranslate.DownloadManager.MojangManager
             //         .assets.downloadErr
             // );
-            LogHelper.info("Downloading assets failed");
+            LogHelper.info(this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadAssetsErr);
             LogHelper.debug(error);
             return;
         } finally {
@@ -145,7 +145,7 @@ export class MojangManager extends AbstractDownloadManager {
         //     this.langManager.getTranslate.DownloadManager.MojangManager.assets
         //         .success
         // );
-        LogHelper.info("Assets downloaded");
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadAssetsSuc);
 
         return true;
     }
@@ -165,7 +165,7 @@ export class MojangManager extends AbstractDownloadManager {
             })
             .flat();
 
-        LogHelper.info("Downloading libraries");
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadLib);
         const progressBar = ProgressHelper.getProgress("{bar} {percentage}% {value}/{total}", 40);
         progressBar.start(librariesList.length, 0);
 
@@ -183,13 +183,13 @@ export class MojangManager extends AbstractDownloadManager {
                 },
             );
         } catch (error) {
-            LogHelper.info("Downloading libraries failed");
+            LogHelper.info(this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadLibErr);
             LogHelper.debug(error);
             return;
         } finally {
             progressBar.stop();
         }
-        LogHelper.info("Libraries downloaded");
+        LogHelper.info(this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadLibSuc);
 
         return librariesList;
     }
