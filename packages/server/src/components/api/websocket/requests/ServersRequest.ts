@@ -22,11 +22,9 @@ export class ServersWsRequest extends AbstractRequest {
             .getProfiles()
             .sort((a, b) => a.sortIndex - b.sortIndex)
             .forEach((profile) => {
-                profile.servers.forEach(({ ip, port, title }) => {
+                profile.servers.forEach((server) => {
                     servers.push({
-                        ip,
-                        port,
-                        title,
+                        ...server,
                         profileUUID: profile.uuid,
                     });
                 });
