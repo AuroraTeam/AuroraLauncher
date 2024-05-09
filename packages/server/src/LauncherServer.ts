@@ -38,6 +38,7 @@ import {
 } from "./components";
 import { VerifyWsRequest } from "./components/api/websocket/requests/VerifyRequest";
 import { LogHelper, StorageHelper } from "./utils";
+
 @Service()
 export class LauncherServer {
     private _AuthProvider: AuthProvider;

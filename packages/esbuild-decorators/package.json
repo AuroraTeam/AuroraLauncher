@@ -15,7 +15,7 @@
         }
     },
     "dependencies": {
-        "@swc/core": "^1.4.5"
+        "@swc/core": "1.4.11"
     },
     "repository": {
         "type": "git",
