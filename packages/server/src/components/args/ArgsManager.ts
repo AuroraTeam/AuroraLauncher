@@ -1,23 +1,19 @@
 import { Service } from "typedi";
 import { Args } from "@root/utils/interfaces";
 import { ConfigManager } from "@root/components/config";
-import yargs from "yargs";
+import { program } from "commander";
 
 @Service()
 export class ArgsManager {
   #args: Args;
 
-  constructor() {
-      this.#args = yargs
-        .option('port', {
-            type: 'number',
-            default: ConfigManager.config.api.port
-        })
-        .option('host', {
-            type: 'string',
-            default: ConfigManager.config.api.host
-        })
-      .argv as Args;
+  constructor(configManager: ConfigManager) {
+    program
+      .option('--host', null, configManager.config.api.host)
+      .option('--port', null, configManager.config.api.port.toString())
+      .parse();
+    
+    this.#args = program.opts();
   }
 
     /**
