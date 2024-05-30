@@ -10,3 +10,4 @@ export * from "./modules";
 export * from "./profiles";
 export * from "./update";
 export * from "./secure";
+export * from "./args";
