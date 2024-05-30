@@ -67,6 +67,7 @@
         "chalk": "^5.3.0",
         "class-transformer": "^0.5.1",
         "cli-progress": "^3.12.0",
+        "commander": "^12.1.0",
         "fast-querystring": "^1.1.2",
         "hash-wasm": "^4.11.0",
         "hjson": "^3.2.2",
