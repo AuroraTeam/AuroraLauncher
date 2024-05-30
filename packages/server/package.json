@@ -46,6 +46,7 @@
         "@types/semver": "^7.5.8",
         "@types/uuid": "^9.0.8",
         "@types/ws": "^8.5.10",
+        "@types/yargs": "^17.0.32",
         "@typescript-eslint/eslint-plugin": "^7.1.1",
         "@typescript-eslint/parser": "^7.1.1",
         "@yao-pkg/pkg": "^5.11.4",
@@ -84,7 +85,8 @@
         "strip-ansi": "^7.1.0",
         "typedi": "^0.10.0",
         "typeorm": "^0.3.20",
-        "uuid": "^9.0.1"
+        "uuid": "^9.0.1",
+        "yargs": "^17.7.2"
     },
     "importSort": {
         ".js, .mjs, .ts": {
