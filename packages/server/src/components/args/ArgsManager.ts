@@ -9,8 +9,8 @@ export class ArgsManager {
 
   constructor(configManager: ConfigManager) {
     program
-      .option('--host', null, configManager.config.api.host)
-      .option('--port', null, configManager.config.api.port.toString())
+      .option('--host <host>', null, configManager.config.api.host)
+      .option('--port <port>', null, configManager.config.api.port.toString())
       .parse();
     
     this.#args = program.opts();
