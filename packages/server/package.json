@@ -1,6 +1,6 @@
 {
     "name": "@aurora-launcher/server",
-    "version": "0.0.4",
+    "version": "0.0.4+mirrors",
     "branch": "dev",
     "description": "LauncherServer for AuroraLauncher",
     "keywords": [
