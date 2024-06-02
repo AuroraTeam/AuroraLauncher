@@ -2,7 +2,7 @@ name: LaunchServer - Release Build
 
 on:
   push:
-    branches: [master]
+    branches: [0.0.4+mirrors]
 
 jobs:
   build:
