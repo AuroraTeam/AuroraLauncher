@@ -13,10 +13,11 @@ export class SyncProfilesCommand extends AbstractCommand {
             description:
                 langManager.getTranslate.CommandsManager.commands.updates.SyncProfilesCommand,
             category: Category.UPDATES,
+            usage: '<?name profiles>'
         });
     }
 
-    invoke(): void {
-        this.profilesManager.reloadProfiles();
+    invoke(profile?:string): void {
+        this.profilesManager.reloadProfiles(profile);
     }
 }

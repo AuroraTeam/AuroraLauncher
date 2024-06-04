@@ -13,10 +13,11 @@ export class SyncClientsCommand extends AbstractCommand {
             description:
                 langManager.getTranslate.CommandsManager.commands.updates.SyncUpdatesCommand,
             category: Category.UPDATES,
+            usage: '<?client dir>'
         });
     }
 
-    invoke(): void {
-        this.clientsManager.hashClients();
+    invoke(client?: string): void {
+        this.clientsManager.hashClients(client);
     }
 }
