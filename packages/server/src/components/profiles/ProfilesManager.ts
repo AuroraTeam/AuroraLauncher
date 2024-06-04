@@ -46,7 +46,7 @@ export class ProfilesManager {
 
     async reloadProfiles(profile?:string): Promise<void> {
         this.profiles = [];
-        await this.loadProfiles(profile);
+        await this.loadProfiles();
     }
 
     /**

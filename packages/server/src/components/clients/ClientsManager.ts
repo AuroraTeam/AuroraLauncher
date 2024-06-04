@@ -21,7 +21,7 @@ export class ClientsManager {
         });
         let dirs = folders.filter((folder) => folder.isDirectory());
         if (client!== undefined) {
-            dirs = folders.filter((folder) => folder.name == client && folder.isDirectory());
+            dirs = folders.filter((folder) => folder.name == client);
         }
 
         if (dirs.length === 0) {
