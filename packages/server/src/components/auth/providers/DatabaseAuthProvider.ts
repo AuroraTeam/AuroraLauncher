@@ -47,6 +47,8 @@ export class DatabaseAuthProvider implements AuthProvider {
         const userData = {
             username,
             userUUID: user.userUUID,
+            skinUrl: user.skinUrl,
+            capeUrl: user.capeUrl,
             accessToken: randomUUID(),
         };
 
