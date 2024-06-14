@@ -35,7 +35,8 @@ import {
     UpdateManager,
     UpdatesWsRequest,
     WebManager,
-    ArgsManager
+    ArgsManager,
+    Watcher,
 } from "./components";
 import { VerifyWsRequest } from "./components/api/websocket/requests/VerifyRequest";
 import { LogHelper, StorageHelper } from "./utils";
@@ -53,6 +54,7 @@ export class LauncherServer {
     private _ProfilesManager: ProfilesManager;
     private _AuthlibManager: AuthlibManager;
     private _ArgsManager: ArgsManager;
+    private _Watcher: Watcher;
 
     constructor() {
         this.preInit();
@@ -74,6 +76,7 @@ export class LauncherServer {
         this.resolveDependencies();
         this.registerCommands();
         this.registerRequest();
+        this._Watcher = Container.get(Watcher);
     }
 
     private resolveDependencies() {

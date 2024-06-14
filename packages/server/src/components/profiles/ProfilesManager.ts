@@ -16,7 +16,7 @@ export class ProfilesManager {
         this.loadProfiles();
     }
 
-    private async loadProfiles(profile?:string): Promise<void> {
+    private async loadProfiles(): Promise<void> {
         const files = await fs.readdir(StorageHelper.profilesDir);
 
         if (files.length === 0) {
@@ -27,7 +27,6 @@ export class ProfilesManager {
         LogHelper.info(this.langManager.getTranslate.ProfilesManager.sync);
 
         for (const file of files) {
-            if (!file.endsWith(profile + ".json") && profile!== undefined) continue;
 
             try {
                 const data = await fs.readFile(resolve(StorageHelper.profilesDir, file), "utf-8");
@@ -44,7 +43,7 @@ export class ProfilesManager {
         LogHelper.info(this.langManager.getTranslate.ProfilesManager.syncEnd);
     }
 
-    async reloadProfiles(profile?:string): Promise<void> {
+    async reloadProfiles(): Promise<void> {
         this.profiles = [];
         await this.loadProfiles();
     }
