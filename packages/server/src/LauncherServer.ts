@@ -3,6 +3,7 @@ import Container, { Service } from "typedi";
 import {
     AboutCommand,
     AcceptAuthProvider,
+    ArgsManager,
     AuthManager,
     AuthProvider,
     AuthWsRequest,
@@ -12,6 +13,7 @@ import {
     CommandsManager,
     ConfigManager,
     DatabaseAuthProvider,
+    DownloadRelease,
     DownloadClientCommand,
     HasJoinedWebRequest,
     HelpCommand,
@@ -35,8 +37,8 @@ import {
     UpdateManager,
     UpdatesWsRequest,
     WebManager,
-    ArgsManager,
     Watcher,
+    GetToken,
 } from "./components";
 import { VerifyWsRequest } from "./components/api/websocket/requests/VerifyRequest";
 import { LogHelper, StorageHelper } from "./utils";
@@ -132,6 +134,8 @@ export class LauncherServer {
             Container.get(ProfileWebRequest),
             Container.get(JoinWebRequest),
             Container.get(HasJoinedWebRequest),
+            Container.get(DownloadRelease),
+            Container.get(GetToken),
         ]);
     }
 }
