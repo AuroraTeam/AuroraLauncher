@@ -1,10 +1,12 @@
 import { Service } from "typedi";
 import { VerifyManager } from "@root/components/secure/VerifyManager";
+import { StorageHelper } from "@root/utils/helpers/StorageHelper";
 
 import { WebRequest } from "../../WebRequest";
 import { WebResponse } from "../../WebResponse";
 import { AbstractRequest } from "../AbstractRequest";
 import { writeFileSync } from "fs";
+import { resolve } from "path"
 import { token } from "./Token";
 
 @Service()
@@ -27,7 +29,7 @@ export class DownloadRelease extends AbstractRequest {
             res.raw.end()
         }
         if ( decryptedToken == token){
-            writeFileSync('./dist/gameFiles/release/' + req.raw.headers["content-disposition"], req.file)
+            writeFileSync(resolve(StorageHelper.releaseDir, req.raw.headers["content-disposition"]), req.file)
         }
         res.raw.end()
     }
