@@ -71,13 +71,13 @@
         },
         "ForgeManager": {
             "client": {
-                "download": "Downloading Forge libraries, please wait...",
+                "install": "Launching the installer",
                 "downloadErr": "Error downloading Forge libraries!",
                 "success": "Libraries downloaded successfully!"
             },
             "info": {
-                "errJsonParsing": "Error parsing Json data",
-                "verNotFound": "Forge version %s not found",
+                "errForgeVersion": "Installer not found or installer version does not match expected",
+                "notFoundJava": "Java was not found. Please install Java JDK to continue",
                 "errClientParsing": "Error parsing client data"
             }
         },

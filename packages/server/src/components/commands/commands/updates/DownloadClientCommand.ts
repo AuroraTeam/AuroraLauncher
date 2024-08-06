@@ -8,6 +8,8 @@ import {
     ProfilesManager,
     ClientsManager,
     QuiltManager,
+    ForgeManager,
+    NeoForgeManager,
 } from "@root/components";
 import { Watcher } from "@root/components/watcher/Watcher"
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
@@ -68,6 +70,10 @@ export class DownloadClientCommand extends AbstractCommand {
                 return MojangManager;
             case "quilt":
                 return QuiltManager;
+            case "forge":
+                return ForgeManager;
+            case "neoforge":
+                return NeoForgeManager;
             default:
                 return null;
         }
