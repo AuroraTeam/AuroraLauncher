@@ -9,6 +9,7 @@ import {
     ClientsManager,
     QuiltManager,
 } from "@root/components";
+import { Watcher } from "@root/components/watcher/Watcher"
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
 import { Service } from "typedi";
 
@@ -20,6 +21,7 @@ export class DownloadClientCommand extends AbstractCommand {
         private readonly configManager: ConfigManager,
         private readonly commandsManager: CommandsManager,
         private readonly clientsManager: ClientsManager,
+        private readonly watcher: Watcher,
     ) {
         super({
             name: "downloadclient",
@@ -44,6 +46,7 @@ export class DownloadClientCommand extends AbstractCommand {
         }
 
         this.commandsManager.console.pause();
+        this.watcher.closeWatcher();
         await new DownloadManager(
             this.langManager,
             this.profilesManager,
@@ -52,6 +55,7 @@ export class DownloadClientCommand extends AbstractCommand {
         this.profilesManager.reloadProfiles();
         this.clientsManager.hashClients();
         this.commandsManager.console.resume();
+        this.watcher.subscription();
     }
 
     private getDownloadManager(sourceType: string) {
