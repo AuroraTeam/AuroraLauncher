@@ -8,7 +8,6 @@ import {
     ProfileResponseData,
     ProfilesResponseData,
 } from "./AuthProvider";
-import { ResponseError } from "aurora-rpc-server";
 
 export class JsonAuthProvider implements AuthProvider {
     private config: JsonAuthProviderConfig;
@@ -26,7 +25,7 @@ export class JsonAuthProvider implements AuthProvider {
                 }),
             );
         } catch (error) {
-            throw new ResponseError(error.message, 200);
+            throw new Error(error.message);
         }
     }
 

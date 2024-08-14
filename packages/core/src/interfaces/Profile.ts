@@ -1,41 +1,11 @@
-export interface Profile {
-    //Don`t touch
-    configVersion: number
-
-    // Profile information
-    uuid: string
-    sortIndex: number
-    servers: ProfileServerConfig[]
-
-    // Client
-    javaVersion: number
-    version: string
-    clientDir: string
-    assetIndex: string
-    libraries: ProfileLibrary[]
-    gameJar: string
-    mainClass: string
-    jvmArgs: string[]
-    clientArgs: string[]
-
-    // Updates
-    update: string[]
-    updateVerify: string[]
-    updateExclusions: string[]
-    // TODO Продумать опционалки
-    // updateOptional: ProfileOptional[]
-
-    // Whitelist
-    whiteListType: "null" | "uuids" | "permissions"
-    whiteListPermisson?: number // TODO permission в виде чего?
-    whiteListUUIDs?: string[] // Список игроков по uuid
-}
+import * as proto from "@aurora-launcher/proto";
+export interface Profile extends proto.ProfileResponse {}
 
 export interface ProfileLibrary {
     path: string
     sha1: string
     type: "library" | "native"
-    rules?: LibraryRule[]
+    rules?: LibraryRule
     ignoreClassPath?: boolean
 }
 
@@ -61,21 +31,7 @@ export enum Name {
     Windows = "windows",
 }
 
-export interface ProfileServerConfigBase {
-    title: string
-}
-export interface ProfileServerHostnameConfig extends ProfileServerConfigBase {
-    hostname: string
-}
-
-export interface ProfileServerAddressConfig extends ProfileServerConfigBase {
-    ip: string
-    port: number
-}
-
-export type ProfileServerConfig =
-    | ProfileServerHostnameConfig
-    | ProfileServerAddressConfig
+export type ProfileServerConfig = proto.ServerConfig;
 
 // export interface ProfileOptional {
 //     id: number

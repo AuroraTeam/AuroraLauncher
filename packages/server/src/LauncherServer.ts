@@ -36,11 +36,11 @@ import {
     UpdateCommand,
     UpdateManager,
     UpdatesWsRequest,
+    VerifyWsRequest,
     WebManager,
     Watcher,
     GetToken,
 } from "./components";
-import { VerifyWsRequest } from "./components/api/websocket/requests/VerifyRequest";
 import { LogHelper, StorageHelper } from "./utils";
 
 @Service()
@@ -120,14 +120,14 @@ export class LauncherServer {
     }
 
     private registerRequest() {
-        this._WebManager.registerWsRequests([
-            Container.get(AuthWsRequest),
-            Container.get(ProfileWsRequest),
-            Container.get(ServersWsRequest),
-            Container.get(UpdatesWsRequest),
-            Container.get(VerifyWsRequest),
-        ]);
-
+        //this._WebManager.registerWsRequests([
+        //    Container.get(AuthWsRequest),
+        //    Container.get(ProfileWsRequest),
+        //    Container.get(ServersWsRequest),
+        //    Container.get(UpdatesWsRequest),
+        //    Container.get(VerifyWsRequest),
+        //]);
+//
         this._WebManager.registerWebRequests([
             Container.get(InjectorWebRequest),
             Container.get(ProfileWebRequest),

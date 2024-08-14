@@ -11,7 +11,6 @@ import {
     ProfilesResponseData,
 } from "./AuthProvider";
 import { randomUUID } from "crypto";
-import { ResponseError } from "aurora-rpc-server";
 import { DatabasePasswordProvider } from "./DatabasePasswordProvider";
 
 export class DatabaseAuthProvider implements AuthProvider {
@@ -39,10 +38,10 @@ export class DatabaseAuthProvider implements AuthProvider {
 
     async auth(username: string, password: string): Promise<AuthResponseData> {
         const user = await this.userRepository.findOneBy({ username });
-        if (!user) throw new ResponseError("User not found", 300);
+        if (!user) throw new Error("User not found");
 
         if (!(await this.passwordProvider.checkPassword(password, user.password)))
-            throw new ResponseError("Wrong password", 301);
+            throw new Error("Wrong password");
 
         const userData = {
             username,

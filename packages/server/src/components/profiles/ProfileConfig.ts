@@ -23,7 +23,7 @@ export class ProfileConfig implements Profile {
     updateExclusions: string[];
     whiteListType: "null" | "uuids" | "permissions";
     whiteListPermisson?: number;
-    whiteListUUIDs?: string[];
+    whiteListUUIDs?: string;
 
     constructor(config: Partial<Profile>) {
         merge(this, ProfileConfig.defaults, config);

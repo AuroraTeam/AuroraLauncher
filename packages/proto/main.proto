@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package AuroraLauncher.rpc;
+
+import "google/protobuf/empty.proto";
+
+service AuroraLauncherService {
+  rpc auth(AuthRequest) returns (AuthResponse);
+  rpc getServers(.google.protobuf.Empty) returns (ServersResponse);
+  rpc getProfile(ProfileRequest) returns (ProfileResponse);
+  rpc getUpdates(UpdateRequest) returns (UpdateResponse);
+  //rpc verify(VerifyRequest) returns (VerifyResponse);
+}
+
+message AuthRequest {
+  string login = 1;
+  string password = 2;
+}
+message AuthResponse {
+  string username = 1;
+  string userUUID = 2;
+  string accessToken = 3;
+  string token = 4;
+  optional bool isAlex = 5;
+  optional string skinURL = 6;
+  optional string capeURL = 7;
+}
+message ServersResponse {
+  repeated Server servers = 1;
+}
+message Server {
+  string profileUUID = 1;
+  ServerConfig serverInfo = 2;
+}
+message ProfileRequest {
+  string uuid = 1;
+}
+message ProfileResponse {
+  int32 configVersion = 1;
+  string uuid = 2;
+  int32 sortIndex = 3;
+  repeated ServerConfig servers = 4;
+  int32 javaVersion = 5;
+  string version = 6;
+  string clientDir = 7;
+  string assetIndex = 8;
+  repeated ProfileLibrary libraries = 9;
+  string gameJar = 10;
+  string mainClass = 11;
+  repeated string jvmArgs = 12;
+  repeated string clientArgs = 13;
+  repeated string update = 14;
+  repeated string updateVerify = 15;
+  repeated string updateExclusions = 16;
+  WhiteListType whiteListType = 17;
+  optional int32 whiteListPermisson = 18;
+  optional string whiteListUUIDs = 19;
+}
+message ServerConfig {
+  string title = 2;
+  optional string hostname = 3;
+  optional string ip = 4;
+  optional int32 port = 5;
+}
+message ProfileLibrary {
+  string path = 1;
+  string sha1 = 2;
+  TypeLibrary type = 3;
+  optional LibraryRule rules = 4;
+  optional bool ignoreClassPath = 5;
+}
+enum TypeLibrary {
+  reserved "library", "native";
+}
+message LibraryRule {
+  Action action = 1;
+  optional OS os = 2;
+}
+enum Action {
+  allow = 0;
+  disallow = 1;
+}
+message OS {
+  OSName name = 1;
+  optional string arch = 2;
+  optional string version = 3;
+}
+enum OSName {
+  linux = 0;
+  osx = 1;
+  windows = 2;
+}
+enum WhiteListType {
+  null = 0;
+  uuids = 1;
+  permissions = 2;
+}
+message UpdateRequest {
+  string dir = 1;
+}
+message UpdateResponse {
+  repeated HashedFile hashedFile = 1;
+}
+message HashedFile {
+  string path = 1;
+  int32 size = 2;
+  string sha1 = 3;
+}
+message VerifyRequest {
+  int32 stage = 1;
+  optional string token = 2;
+}
+message VerifyResponse {
+  optional string token = 1;
+}

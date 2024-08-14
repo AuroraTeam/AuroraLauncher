@@ -1,7 +1,5 @@
-import { ProfileServerConfig } from ".."
+import * as proto from "@aurora-launcher/proto";
 
-export type Server = ProfileServerConfig & {
-    profileUUID: string
-}
+export type Server = proto.Server;
 
 export type ServersResponseData = Server[]

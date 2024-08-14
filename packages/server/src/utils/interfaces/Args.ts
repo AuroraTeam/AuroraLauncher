@@ -1,4 +1,4 @@
 export interface Args {
-    port: number;
+    port: string;
     host: string;
 }

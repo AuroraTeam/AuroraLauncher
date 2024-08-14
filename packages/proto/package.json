@@ -1,0 +1,37 @@
+{
+    "name": "@aurora-launcher/proto",
+    "version": "0.1.0",
+    "description": "Protocol Buffers file AuroraLauncher",
+    "main": "./dist/main.ts",
+    "scripts": {
+        "build": "grpc_tools_node_protoc --ts_proto_out=./dist --ts_proto_opt=outputServices=nice-grpc,outputServices=generic-definitions,useExactTypes=false,outputJsonMethods=false ./main.proto"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AuroraTeam/AuroraAPI.git"
+    },
+    "author": "AuroraTeam",
+    "contributors": [
+        "JoCat (https://github.com/JoCat)"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/AuroraTeam/AuroraAPI/issues"
+    },
+    "homepage": "https://github.com/AuroraTeam/AuroraAPI#readme",
+    "dependencies": {
+
+    },
+    "devDependencies": {
+        "esbuild": "^0.23.0",
+        "grpc-tools": "^1.12.4",
+        "ts-proto": "^1.181.1",
+        "typescript": "^5.5.4"
+    },
+    "importSort": {
+        ".js, .mjs, .jsx, .ts, .tsx": {
+            "style": "module",
+            "parser": "typescript"
+        }
+    }
+}
