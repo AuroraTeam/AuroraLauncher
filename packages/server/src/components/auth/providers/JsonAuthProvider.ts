@@ -1,5 +1,6 @@
 import { AuthResponseData, HttpHelper } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
+import { ResponseError } from "aurora-rpc-server";
 
 import {
     AuthProvider,
@@ -8,7 +9,6 @@ import {
     ProfileResponseData,
     ProfilesResponseData,
 } from "./AuthProvider";
-import { ResponseError } from "aurora-rpc-server";
 
 export class JsonAuthProvider implements AuthProvider {
     private config: JsonAuthProviderConfig;
@@ -61,7 +61,7 @@ export class JsonAuthProvider implements AuthProvider {
         return this.parseResponse(
             await HttpHelper.postJson<ApiResponse<ProfilesResponseData[]>>(
                 this.config.profilesUrl,
-                usernames,
+                { usernames },
             ),
         );
     }
