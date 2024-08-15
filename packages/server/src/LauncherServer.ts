@@ -13,8 +13,9 @@ import {
     CommandsManager,
     ConfigManager,
     DatabaseAuthProvider,
-    DownloadRelease,
     DownloadClientCommand,
+    DownloadRelease,
+    GetToken,
     HasJoinedWebRequest,
     HelpCommand,
     InjectorWebRequest,
@@ -27,6 +28,7 @@ import {
     ProfileWebRequest,
     ProfileWsRequest,
     ProfilesManager,
+    ProfilesWebRequest,
     RejectAuthProvider,
     ServersWsRequest,
     StopCommand,
@@ -36,9 +38,8 @@ import {
     UpdateCommand,
     UpdateManager,
     UpdatesWsRequest,
-    WebManager,
     Watcher,
-    GetToken,
+    WebManager,
 } from "./components";
 import { VerifyWsRequest } from "./components/api/websocket/requests/VerifyRequest";
 import { LogHelper, StorageHelper } from "./utils";
@@ -131,7 +132,7 @@ export class LauncherServer {
         this._WebManager.registerWebRequests([
             Container.get(InjectorWebRequest),
             Container.get(ProfileWebRequest),
-            Container.get(ProfileWebRequest),
+            Container.get(ProfilesWebRequest),
             Container.get(JoinWebRequest),
             Container.get(HasJoinedWebRequest),
             Container.get(DownloadRelease),
