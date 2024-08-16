@@ -1,2 +1,2 @@
 export * from "./webserver";
-export * from "./websocket";
+export * from "./grpc";

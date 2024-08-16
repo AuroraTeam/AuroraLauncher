@@ -208,7 +208,7 @@ export class MojangManager extends AbstractDownloadManager {
     }
 
     #resolveNewNative(library: Library): ProfileLibrary {
-        const rules = library.rules;
+        const rules = library.rules ?? [];
 
         const { arch } = library.name.match(/natives-\w+(?:-(?<arch>\w+))?/).groups;
         if (arch) {
@@ -265,7 +265,7 @@ export class MojangManager extends AbstractDownloadManager {
 
     #resolveLibrary(library: Library): ProfileLibrary {
         const { path, sha1 } = library.downloads.artifact;
-        return { path, sha1, type: "library", rules: library.rules };
+        return { path, sha1, type: "library", rules: library.rules ?? [] };
     }
 
     #resolveRulesForNatives(library: Library) {

@@ -5,7 +5,7 @@ export interface ProfileLibrary {
     path: string
     sha1: string
     type: "library" | "native"
-    rules?: LibraryRule
+    rules: LibraryRule[]
     ignoreClassPath?: boolean
 }
 

@@ -11,32 +11,6 @@ import { Empty } from "./google/protobuf/empty";
 
 export const protobufPackage = "AuroraLauncher.rpc";
 
-export enum TypeLibrary {
-  library = 0,
-  native = 1,
-  UNRECOGNIZED = -1,
-}
-
-export enum Action {
-  allow = 0,
-  disallow = 1,
-  UNRECOGNIZED = -1,
-}
-
-export enum OSName {
-  linux = 0,
-  osx = 1,
-  windows = 2,
-  UNRECOGNIZED = -1,
-}
-
-export enum WhiteListType {
-  null = 0,
-  uuids = 1,
-  permissions = 2,
-  UNRECOGNIZED = -1,
-}
-
 export interface AuthRequest {
   login: string;
   password: string;
@@ -48,8 +22,8 @@ export interface AuthResponse {
   accessToken: string;
   token: string;
   isAlex?: boolean | undefined;
-  skinURL?: string | undefined;
-  capeURL?: string | undefined;
+  skinUrl?: string | undefined;
+  capeUrl?: string | undefined;
 }
 
 export interface ServersResponse {
@@ -82,7 +56,7 @@ export interface ProfileResponse {
   update: string[];
   updateVerify: string[];
   updateExclusions: string[];
-  whiteListType: WhiteListType;
+  whiteListType: string;
   whiteListPermisson?: number | undefined;
   whiteListUUIDs?: string | undefined;
 }
@@ -97,18 +71,18 @@ export interface ServerConfig {
 export interface ProfileLibrary {
   path: string;
   sha1: string;
-  type: TypeLibrary;
-  rules?: LibraryRule | undefined;
+  type: string;
+  rules: LibraryRule[];
   ignoreClassPath?: boolean | undefined;
 }
 
 export interface LibraryRule {
-  action: Action;
+  action: string;
   os?: OS | undefined;
 }
 
 export interface OS {
-  name: OSName;
+  name: string;
   arch?: string | undefined;
   version?: string | undefined;
 }
@@ -199,8 +173,8 @@ function createBaseAuthResponse(): AuthResponse {
     accessToken: "",
     token: "",
     isAlex: undefined,
-    skinURL: undefined,
-    capeURL: undefined,
+    skinUrl: undefined,
+    capeUrl: undefined,
   };
 }
 
@@ -221,11 +195,11 @@ export const AuthResponse = {
     if (message.isAlex !== undefined) {
       writer.uint32(40).bool(message.isAlex);
     }
-    if (message.skinURL !== undefined) {
-      writer.uint32(50).string(message.skinURL);
+    if (message.skinUrl !== undefined) {
+      writer.uint32(50).string(message.skinUrl);
     }
-    if (message.capeURL !== undefined) {
-      writer.uint32(58).string(message.capeURL);
+    if (message.capeUrl !== undefined) {
+      writer.uint32(58).string(message.capeUrl);
     }
     return writer;
   },
@@ -277,14 +251,14 @@ export const AuthResponse = {
             break;
           }
 
-          message.skinURL = reader.string();
+          message.skinUrl = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.capeURL = reader.string();
+          message.capeUrl = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -305,8 +279,8 @@ export const AuthResponse = {
     message.accessToken = object.accessToken ?? "";
     message.token = object.token ?? "";
     message.isAlex = object.isAlex ?? undefined;
-    message.skinURL = object.skinURL ?? undefined;
-    message.capeURL = object.capeURL ?? undefined;
+    message.skinUrl = object.skinUrl ?? undefined;
+    message.capeUrl = object.capeUrl ?? undefined;
     return message;
   },
 };
@@ -477,7 +451,7 @@ function createBaseProfileResponse(): ProfileResponse {
     update: [],
     updateVerify: [],
     updateExclusions: [],
-    whiteListType: 0,
+    whiteListType: "",
     whiteListPermisson: undefined,
     whiteListUUIDs: undefined,
   };
@@ -533,8 +507,8 @@ export const ProfileResponse = {
     for (const v of message.updateExclusions) {
       writer.uint32(130).string(v!);
     }
-    if (message.whiteListType !== 0) {
-      writer.uint32(136).int32(message.whiteListType);
+    if (message.whiteListType !== "") {
+      writer.uint32(138).string(message.whiteListType);
     }
     if (message.whiteListPermisson !== undefined) {
       writer.uint32(144).int32(message.whiteListPermisson);
@@ -665,11 +639,11 @@ export const ProfileResponse = {
           message.updateExclusions.push(reader.string());
           continue;
         case 17:
-          if (tag !== 136) {
+          if (tag !== 138) {
             break;
           }
 
-          message.whiteListType = reader.int32() as any;
+          message.whiteListType = reader.string();
           continue;
         case 18:
           if (tag !== 144) {
@@ -715,7 +689,7 @@ export const ProfileResponse = {
     message.update = object.update?.map((e) => e) || [];
     message.updateVerify = object.updateVerify?.map((e) => e) || [];
     message.updateExclusions = object.updateExclusions?.map((e) => e) || [];
-    message.whiteListType = object.whiteListType ?? 0;
+    message.whiteListType = object.whiteListType ?? "";
     message.whiteListPermisson = object.whiteListPermisson ?? undefined;
     message.whiteListUUIDs = object.whiteListUUIDs ?? undefined;
     return message;
@@ -801,7 +775,7 @@ export const ServerConfig = {
 };
 
 function createBaseProfileLibrary(): ProfileLibrary {
-  return { path: "", sha1: "", type: 0, rules: undefined, ignoreClassPath: undefined };
+  return { path: "", sha1: "", type: "", rules: [], ignoreClassPath: undefined };
 }
 
 export const ProfileLibrary = {
@@ -812,11 +786,11 @@ export const ProfileLibrary = {
     if (message.sha1 !== "") {
       writer.uint32(18).string(message.sha1);
     }
-    if (message.type !== 0) {
-      writer.uint32(24).int32(message.type);
+    if (message.type !== "") {
+      writer.uint32(26).string(message.type);
     }
-    if (message.rules !== undefined) {
-      LibraryRule.encode(message.rules, writer.uint32(34).fork()).ldelim();
+    for (const v of message.rules) {
+      LibraryRule.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     if (message.ignoreClassPath !== undefined) {
       writer.uint32(40).bool(message.ignoreClassPath);
@@ -846,18 +820,18 @@ export const ProfileLibrary = {
           message.sha1 = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.type = reader.int32() as any;
+          message.type = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.rules = LibraryRule.decode(reader, reader.uint32());
+          message.rules.push(LibraryRule.decode(reader, reader.uint32()));
           continue;
         case 5:
           if (tag !== 40) {
@@ -882,23 +856,21 @@ export const ProfileLibrary = {
     const message = createBaseProfileLibrary();
     message.path = object.path ?? "";
     message.sha1 = object.sha1 ?? "";
-    message.type = object.type ?? 0;
-    message.rules = (object.rules !== undefined && object.rules !== null)
-      ? LibraryRule.fromPartial(object.rules)
-      : undefined;
+    message.type = object.type ?? "";
+    message.rules = object.rules?.map((e) => LibraryRule.fromPartial(e)) || [];
     message.ignoreClassPath = object.ignoreClassPath ?? undefined;
     return message;
   },
 };
 
 function createBaseLibraryRule(): LibraryRule {
-  return { action: 0, os: undefined };
+  return { action: "", os: undefined };
 }
 
 export const LibraryRule = {
   encode(message: LibraryRule, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.action !== 0) {
-      writer.uint32(8).int32(message.action);
+    if (message.action !== "") {
+      writer.uint32(10).string(message.action);
     }
     if (message.os !== undefined) {
       OS.encode(message.os, writer.uint32(18).fork()).ldelim();
@@ -914,11 +886,11 @@ export const LibraryRule = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.action = reader.int32() as any;
+          message.action = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -941,20 +913,20 @@ export const LibraryRule = {
   },
   fromPartial(object: DeepPartial<LibraryRule>): LibraryRule {
     const message = createBaseLibraryRule();
-    message.action = object.action ?? 0;
+    message.action = object.action ?? "";
     message.os = (object.os !== undefined && object.os !== null) ? OS.fromPartial(object.os) : undefined;
     return message;
   },
 };
 
 function createBaseOS(): OS {
-  return { name: 0, arch: undefined, version: undefined };
+  return { name: "", arch: undefined, version: undefined };
 }
 
 export const OS = {
   encode(message: OS, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== 0) {
-      writer.uint32(8).int32(message.name);
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
     }
     if (message.arch !== undefined) {
       writer.uint32(18).string(message.arch);
@@ -973,11 +945,11 @@ export const OS = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.name = reader.int32() as any;
+          message.name = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -1007,7 +979,7 @@ export const OS = {
   },
   fromPartial(object: DeepPartial<OS>): OS {
     const message = createBaseOS();
-    message.name = object.name ?? 0;
+    message.name = object.name ?? "";
     message.arch = object.arch ?? undefined;
     message.version = object.version ?? undefined;
     return message;
@@ -1301,7 +1273,6 @@ export const AuroraLauncherServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** rpc verify(VerifyRequest) returns (VerifyResponse); */
     getUpdates: {
       name: "getUpdates",
       requestType: UpdateRequest,
@@ -1317,7 +1288,6 @@ export interface AuroraLauncherServiceImplementation<CallContextExt = {}> {
   auth(request: AuthRequest, context: CallContext & CallContextExt): Promise<DeepPartial<AuthResponse>>;
   getServers(request: Empty, context: CallContext & CallContextExt): Promise<DeepPartial<ServersResponse>>;
   getProfile(request: ProfileRequest, context: CallContext & CallContextExt): Promise<DeepPartial<ProfileResponse>>;
-  /** rpc verify(VerifyRequest) returns (VerifyResponse); */
   getUpdates(request: UpdateRequest, context: CallContext & CallContextExt): Promise<DeepPartial<UpdateResponse>>;
 }
 
@@ -1325,7 +1295,6 @@ export interface AuroraLauncherServiceClient<CallOptionsExt = {}> {
   auth(request: DeepPartial<AuthRequest>, options?: CallOptions & CallOptionsExt): Promise<AuthResponse>;
   getServers(request: DeepPartial<Empty>, options?: CallOptions & CallOptionsExt): Promise<ServersResponse>;
   getProfile(request: DeepPartial<ProfileRequest>, options?: CallOptions & CallOptionsExt): Promise<ProfileResponse>;
-  /** rpc verify(VerifyRequest) returns (VerifyResponse); */
   getUpdates(request: DeepPartial<UpdateRequest>, options?: CallOptions & CallOptionsExt): Promise<UpdateResponse>;
 }
 

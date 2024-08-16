@@ -6,7 +6,6 @@ import {
     ArgsManager,
     AuthManager,
     AuthProvider,
-    AuthWsRequest,
     AuthlibManager,
     BranchCommand,
     ClientsManager,
@@ -25,19 +24,15 @@ import {
     ModulesCommand,
     ModulesManager,
     ProfileWebRequest,
-    ProfileWsRequest,
     ProfilesManager,
     RejectAuthProvider,
-    ServersWsRequest,
     StopCommand,
     SyncAllCommand,
     SyncClientsCommand,
     SyncProfilesCommand,
     UpdateCommand,
     UpdateManager,
-    UpdatesWsRequest,
-    VerifyWsRequest,
-    WebManager,
+    GrpcServerManager,
     Watcher,
     GetToken,
 } from "./components";
@@ -50,7 +45,7 @@ export class LauncherServer {
     private _LangManager: LangManager;
     private _CommandsManager: CommandsManager;
     private _ModulesManager: ModulesManager;
-    private _WebManager: WebManager;
+    private _GrpcServerManager: GrpcServerManager;
     private _ClientsManager: ClientsManager;
     private _UpdateManager: UpdateManager;
     private _ProfilesManager: ProfilesManager;
@@ -88,7 +83,7 @@ export class LauncherServer {
         this._ProfilesManager = Container.get(ProfilesManager);
         this._ModulesManager = new ModulesManager(this._LangManager, this); // Temporary
         this._UpdateManager = Container.get(UpdateManager);
-        this._WebManager = Container.get(WebManager);
+        this._GrpcServerManager = Container.get(GrpcServerManager);
     }
 
     private registerAuthProviders() {
@@ -128,7 +123,7 @@ export class LauncherServer {
         //    Container.get(VerifyWsRequest),
         //]);
 //
-        this._WebManager.registerWebRequests([
+        this._GrpcServerManager.registerWebRequests([
             Container.get(InjectorWebRequest),
             Container.get(ProfileWebRequest),
             Container.get(ProfileWebRequest),
