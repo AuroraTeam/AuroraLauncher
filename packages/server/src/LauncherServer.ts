@@ -12,18 +12,13 @@ import {
     CommandsManager,
     ConfigManager,
     DatabaseAuthProvider,
-    DownloadRelease,
     DownloadClientCommand,
-    HasJoinedWebRequest,
     HelpCommand,
-    InjectorWebRequest,
-    JoinWebRequest,
     JsonAuthProvider,
     LangCommand,
     LangManager,
     ModulesCommand,
     ModulesManager,
-    ProfileWebRequest,
     ProfilesManager,
     RejectAuthProvider,
     StopCommand,
@@ -34,7 +29,7 @@ import {
     UpdateManager,
     GrpcServerManager,
     Watcher,
-    GetToken,
+    WebServerManager,
 } from "./components";
 import { LogHelper, StorageHelper } from "./utils";
 
@@ -52,6 +47,7 @@ export class LauncherServer {
     private _AuthlibManager: AuthlibManager;
     private _ArgsManager: ArgsManager;
     private _Watcher: Watcher;
+    private _WebServerManager: WebServerManager;
 
     constructor() {
         this.preInit();
@@ -72,7 +68,6 @@ export class LauncherServer {
         this.registerAuthProviders();
         this.resolveDependencies();
         this.registerCommands();
-        this.registerRequest();
         this._Watcher = Container.get(Watcher);
     }
 
@@ -84,6 +79,7 @@ export class LauncherServer {
         this._ModulesManager = new ModulesManager(this._LangManager, this); // Temporary
         this._UpdateManager = Container.get(UpdateManager);
         this._GrpcServerManager = Container.get(GrpcServerManager);
+        this._WebServerManager = Container.get(WebServerManager);
     }
 
     private registerAuthProviders() {
@@ -111,26 +107,6 @@ export class LauncherServer {
             Container.get(DownloadClientCommand),
             Container.get(AboutCommand),
             Container.get(StopCommand),
-        ]);
-    }
-
-    private registerRequest() {
-        //this._WebManager.registerWsRequests([
-        //    Container.get(AuthWsRequest),
-        //    Container.get(ProfileWsRequest),
-        //    Container.get(ServersWsRequest),
-        //    Container.get(UpdatesWsRequest),
-        //    Container.get(VerifyWsRequest),
-        //]);
-//
-        this._GrpcServerManager.registerWebRequests([
-            Container.get(InjectorWebRequest),
-            Container.get(ProfileWebRequest),
-            Container.get(ProfileWebRequest),
-            Container.get(JoinWebRequest),
-            Container.get(HasJoinedWebRequest),
-            Container.get(DownloadRelease),
-            Container.get(GetToken),
         ]);
     }
 }
