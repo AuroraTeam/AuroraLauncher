@@ -10,13 +10,16 @@ export class Watcher {
     #prcess1:FSWatcher
     #prcess2:FSWatcher
 
-    constructor(private readonly profilesManager:ProfilesManager, private readonly clientsManager:ClientsManager) {
+    constructor(
+        private readonly profilesManager:ProfilesManager,
+        private readonly clientsManager:ClientsManager
+    ) {
         this.subscription();
     }
 
     async subscription() {
 
-        this.#prcess1 = watch(StorageHelper.clientsDir, {ignoreInitial: true, cwd: './dist/gameFiles/clients'})
+        this.#prcess1 = watch(StorageHelper.clientsDir, {ignoreInitial: true, cwd: StorageHelper.clientsDir})
             .on('all', (event, path) => this.reloadClient(event, path));
 
         this.#prcess2 = watch(StorageHelper.profilesDir, {ignoreInitial: true, cwd: '.'})
@@ -28,13 +31,13 @@ export class Watcher {
         await this.#prcess2.close()
     }
 
-    private async reloadClient(event:string, path:string) {
+    private reloadClient(event:string, path:string) {
         LogHelper.debug(event, path);
         const dir = path.split(sep);
         this.clientsManager.hashClients(dir[0]);
     }
 
-    private async reloadProfile(event:string, path:string) {
+    private reloadProfile(event:string, path:string) {
         LogHelper.debug(event, path);
         this.profilesManager.reloadProfiles();
     }
