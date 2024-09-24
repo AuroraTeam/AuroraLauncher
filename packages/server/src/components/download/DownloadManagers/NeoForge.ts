@@ -12,7 +12,7 @@ import { InstallProfile, VersionProfiles, Libraries } from "../interfaces/IForge
 
 @Service()
 export class NeoForgeManager extends MojangManager {
-    #forgeInstall = readdirSync(StorageHelper.storageDir).filter(s => s.includes('neoforge')).toString()
+    #forgeInstall = readdirSync(StorageHelper.storageDir).filter(s => s.includes('neoforge') && extname(s) === '.jar')[0].toString()
     #tempDir = StorageHelper.getTmpPath()
 
     async downloadClient(gameVersion: string, clientName: string) {

@@ -2,6 +2,7 @@ import { resolve, extname } from "path";
 import { mkdirSync, cpSync, rmSync, readFileSync, writeFileSync, readdirSync } from "fs";
 import { spawnSync } from 'child_process';
 import { createHash } from "crypto";
+import semver from "semver";
 
 import { ZipHelper, JsonHelper, ProfileLibrary } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper } from "@root/utils";
@@ -12,7 +13,7 @@ import { InstallProfile, VersionProfiles, Libraries } from "../interfaces/IForge
 
 @Service()
 export class ForgeManager extends MojangManager {
-    #forgeInstall = readdirSync(StorageHelper.storageDir).filter(s => s.includes('forge'))[0].toString()
+    #forgeInstall = readdirSync(StorageHelper.storageDir).filter(s => s.includes('forge') && extname(s) === '.jar')[0].toString()
     #tempDir = StorageHelper.getTmpPath()
 
     async downloadClient(gameVersion: string, clientName: string) {
@@ -24,13 +25,30 @@ export class ForgeManager extends MojangManager {
             this.startInstallerFile()
 
             const versionProfiles:VersionProfiles = JsonHelper.fromJson(readFileSync(resolve(this.#tempDir, 'version.json')).toString())
-            const lib = this.libParser(versionProfiles.libraries)
+            const lib = this.libParser(versionProfiles.libraries, gameVersion)
             this.libCopy(lib)
-            this.profilesManager.editProfile(profileUUID, (profile) => ({
+            const mojangProfile = this.profilesManager.getProfiles().filter(p => p.uuid == profileUUID)
+            const finalLib = this.fixLog4j(mojangProfile[0].libraries, lib)
+            
+            let jvm = Array<string>()
+            let game = Array<string>()
+            if (!versionProfiles.arguments) {
+                jvm = []
+                game = [
+                    "--tweakClass",
+                    "net.minecraftforge.fml.common.launcher.FMLTweaker",
+                    "--versionType",
+                    "Forge"
+                ]
+            } else {
+                jvm = versionProfiles.arguments.jvm
+                game = versionProfiles.arguments.game
+            }
+            this.profilesManager.editProfile(profileUUID, () => ({
                 mainClass: versionProfiles.mainClass,
-                libraries: [...profile.libraries, ...lib],
-                jvmArgs: versionProfiles.arguments.jvm,
-                clientArgs: versionProfiles.arguments.game,
+                libraries: finalLib,
+                jvmArgs: jvm,
+                clientArgs: game,
             }));
             rmSync(this.#tempDir, { recursive: true })
             LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.success);
@@ -68,35 +86,37 @@ export class ForgeManager extends MojangManager {
         }
     }
 
-    libParser(libraries: Array<Libraries>): Array<ProfileLibrary> {
+    libParser(libraries: Array<Libraries>, version: string): Array<ProfileLibrary> {
         const list:ProfileLibrary[] = []
         for (const lib of libraries) {
-            list.unshift({path: lib.downloads.artifact.path, sha1: lib.downloads.artifact.sha1, type: 'library'})
+            list.push({path: lib.downloads.artifact.path, sha1: lib.downloads.artifact.sha1, type: 'library'})
         }
 
         const install_profile: InstallProfile = JsonHelper.fromJson(readFileSync(resolve(this.#tempDir, 'install_profile.json')).toString())
         for (const lib of install_profile.libraries) {
             const name = lib.name.split(':')[1]
             if ( name == 'fmlcore' || name == 'javafmllanguage' || name == 'lowcodelanguage' || name == 'mclanguage') {
-                list.unshift({path: lib.downloads.artifact.path, sha1: lib.downloads.artifact.sha1, type: 'library'})
+                list.push({path: lib.downloads.artifact.path, sha1: lib.downloads.artifact.sha1, type: 'library'})
             }
             if (name == 'forge') {
-                list.unshift({path: lib.downloads.artifact.path, sha1: lib.downloads.artifact.sha1, type: 'library'})
+                list.push({path: lib.downloads.artifact.path, sha1: lib.downloads.artifact.sha1, type: 'library'})
                 const forgeClientPath = lib.downloads.artifact.path.replaceAll('universal', 'client')
                 const forgeClientSha1 = createHash('sha1').update(readFileSync(resolve(this.#tempDir, 'libraries', forgeClientPath))).digest("hex")
-                list.unshift({path: forgeClientPath, sha1: forgeClientSha1, type: 'library'})
+                list.push({path: forgeClientPath, sha1: forgeClientSha1, type: 'library'})
             }
         }
 
-        const minecraftDir = readdirSync(resolve(this.#tempDir, 'libraries/net/minecraft/client'))[0]
-        const files = readdirSync(resolve(this.#tempDir, 'libraries/net/minecraft/client', minecraftDir)).filter(s => extname(s) === '.jar')
-        for (const file of files) {
-            list.unshift({
-                path: `net/minecraft/client/${minecraftDir}/${file}`,
-                sha1: createHash('sha1').update(readFileSync(resolve(this.#tempDir, 'libraries/net/minecraft/client', minecraftDir, file))).digest("hex"),
-                type: 'library',
-                ignoreClassPath: true
-            })
+        if (semver.gte(version, '1.13.1')) {
+            for (const clientDir of readdirSync(resolve(this.#tempDir, 'libraries/net/minecraft/client'))) {
+                for (const file of readdirSync(resolve(this.#tempDir, 'libraries/net/minecraft/client', clientDir)).filter(s => extname(s) === '.jar')) {
+                    list.push({
+                        path: `net/minecraft/client/${clientDir}/${file}`,
+                        sha1: createHash('sha1').update(readFileSync(resolve(this.#tempDir, 'libraries/net/minecraft/client', clientDir, file))).digest("hex"),
+                        type: 'library',
+                        ignoreClassPath: true
+                    })
+                }
+            }
         }
 
         return list
@@ -106,5 +126,19 @@ export class ForgeManager extends MojangManager {
         for (const lib of libraries) {
             cpSync(resolve(this.#tempDir, 'libraries', lib.path), resolve(StorageHelper.librariesDir, lib.path))
         }
+    }
+
+    fixLog4j(Mlib: Array<ProfileLibrary>, lib: Array<ProfileLibrary>) {
+        const index1 = Mlib.findIndex(x => x.path.includes('log4j-api'))
+        const index2 = Mlib.findIndex(x => x.path.includes('log4j-core'))
+        const newIndex1 = lib.findIndex(x => x.path.includes('log4j-api'))
+        const newIndex2 = lib.findIndex(x => x.path.includes('log4j-core'))
+        if (newIndex1 !== -1 || newIndex2 !== -1) {
+            Mlib.splice(index1, 1, lib[newIndex1])
+            Mlib.splice(index2, 1, lib[newIndex2])
+            lib.splice(newIndex1, 1)
+            lib.splice(newIndex2, 1)
+        }
+        return Mlib.concat(lib)
     }
 }
