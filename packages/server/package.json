@@ -78,7 +78,6 @@
         "mssql": "^10.0.2",
         "mysql2": "^3.9.2",
         "nice-grpc": "^2.1.9",
-        "oracledb": "^6.3.0",
         "pg": "^8.11.3",
         "prompts": "^2.4.2",
         "reflect-metadata": "^0.2.1",

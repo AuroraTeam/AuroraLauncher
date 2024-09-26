@@ -32,8 +32,12 @@ async function genericRoutes(fastify: FastifyInstance, opts: Options) {
   })
 
   fastify.get('/', async (req, reply) => {
-    reply.header("X-Authlib-Injector-API-Location", "/authlib");
-    reply.redirect('/files/');
+    if (req.headers["user-agent"].includes("Java")) {
+      reply.header("X-Authlib-Injector-API-Location", "/authlib");
+      reply.code(200);
+    } else {
+      reply.redirect('/files/');
+    }
   });
 }
 

@@ -58,7 +58,7 @@ async function authlibRoutes(fastify: FastifyInstance, opts: Options) {
         reply.code(200);
     });
 
-    fastify.post<{Querystring: QueryHasJoinedDto}>('/authlib/sessionserver/session/minecraft/hasJoined', async (req, reply) => {
+    fastify.get<{Querystring: QueryHasJoinedDto}>('/authlib/sessionserver/session/minecraft/hasJoined', async (req, reply) => {
         const user = await opts.authProvider.hasJoined(req.query.username, req.query.serverId);
         if (!user) return reply.code(400).send("ForbiddenOperationException: Invalid credentials.");
 
@@ -101,7 +101,7 @@ async function authlibRoutes(fastify: FastifyInstance, opts: Options) {
         });
     });
 
-    fastify.post<{Params: ParamsProfile, Querystring: QueryProfile}>('authlib/sessionserver/session/minecraft/profile/:uuid', async (req, reply) => {
+    fastify.get<{Params: ParamsProfile, Querystring: QueryProfile}>('/authlib/sessionserver/session/minecraft/profile/:uuid', async (req, reply) => {
         const user = await opts.authProvider.profile(UUIDHelper.getWithDashes(req.params.uuid));
         if (!user) return reply.code(204).send("ForbiddenOperationException: Invalid credentials.");
         const textures: any = {};

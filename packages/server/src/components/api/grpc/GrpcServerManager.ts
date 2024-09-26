@@ -53,7 +53,7 @@ export class GrpcServerManager {
             }
         }
         
-        const server = createServer();//.use(loggingMiddleware);
+        const server = createServer().use(loggingMiddleware);
         server.add(proto.AuroraLauncherServiceDefinition, requests);
 
         await server.listen(`${host}:${Number(port)+1}`);
