@@ -1,11 +1,11 @@
+import { JsonHelper } from "@aurora-launcher/core";
 import type { AuthProvider } from "@root/components/auth/providers";
+import { UUIDHelper } from "@root/utils";
 import { Inject, Service } from "typedi";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
-import { JsonHelper } from "@aurora-launcher/core";
-import { UUIDHelper } from "@root/utils";
 
 interface JoinRequestDto {
     accessToken: string;

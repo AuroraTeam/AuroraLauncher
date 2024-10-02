@@ -1,11 +1,11 @@
 import type { AuthProvider } from "@root/components/auth/providers";
 import { AuthlibManager } from "@root/components/authlib";
+import { UUIDHelper } from "@root/utils";
 import { Inject, Service } from "typedi";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
 import { AbstractRequest } from "../../AbstractRequest";
-import { UUIDHelper } from "@root/utils";
 
 @Service()
 export class ProfileWebRequest extends AbstractRequest {
