@@ -22,6 +22,13 @@ const ctx = await context({
     platform: "node",
     target: "node20",
     bundle: true,
+    external: [
+        "@azure/app-configuration",
+        "@azure/keyvault-secrets",
+        "oci-common",
+        "oci-objectstorage",
+        "oci-secrets",
+    ],
     plugins: [esbuildDecorators()],
     entryPoints: ["src/app.ts"],
     outfile: "dist/LauncherServer.js",
