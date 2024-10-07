@@ -21,7 +21,8 @@ export class WebRequest {
         let body:string
         if (request.headers["content-type"] == 'buffer') {
             file = await getRawBody(request, {
-                limit: "100mb",
+                // TODO Вынести в конфиг
+                limit: "300mb",
             });
         }
         else{
