@@ -33,6 +33,7 @@ jobs:
         with:
           tag_name: ${{ env.PACKAGE_VERSION }}
           name: Aurora LauncherServer ${{ env.PACKAGE_VERSION }}
+          target_commitish: ${{ github.sha }}
           prerelease: true
           files: |
             packages/server/dist/LauncherServer.js
