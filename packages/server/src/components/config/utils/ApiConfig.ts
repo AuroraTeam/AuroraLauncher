@@ -3,6 +3,7 @@ export class ApiConfig {
     port: number;
     useSSL: boolean;
     ssl: {
+        root_cert: string;
         cert: string;
         key: string;
     };
@@ -18,6 +19,7 @@ export class ApiConfig {
             port: 1370,
             useSSL: false,
             ssl: {
+                root_cert: "/path/to/root_cert.pem",
                 cert: "/path/to/cert.pem",
                 key: "/path/to/key.pem",
             },
