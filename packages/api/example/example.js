@@ -1,4 +1,4 @@
-import { AuroraAPI } from "../dist/aurora-api-web.js"
+import { AuroraAPI } from "../dist/index-web.js"
 
 // User data
 const wsUrl = "ws://localhost:1370/ws"
@@ -14,27 +14,25 @@ const log = {
 }
 
 // Api usage example
-;(async () => {
-    let api
-    try {
-        api = new AuroraAPI(wsUrl, {
-            onOpen: () => {
-                log.append("Соединение установлено")
-            },
-            onClose: (event) => {
-                if (event.wasClean) return log.append("Соединение закрыто")
-                if (event.code === 1006) log.append("Разрыв соединения")
-            },
-            onError: () => {
-                log.append("Ошибка при подключении!")
-            },
-        })
-        await api.connect()
-        const test = await api.getServers()
-        log.appendData(test)
-    } catch (error) {
-        log.appendData(error)
-    } finally {
-        api.close()
-    }
-})()
+let api
+try {
+    api = new AuroraAPI(wsUrl, {
+        onOpen: () => {
+            log.append("Соединение установлено")
+        },
+        onClose: (event) => {
+            if (event.wasClean) return log.append("Соединение закрыто")
+            if (event.code === 1006) log.append("Разрыв соединения")
+        },
+        onError: () => {
+            log.append("Ошибка при подключении!")
+        },
+    })
+    await api.connect()
+    const test = await api.getServers()
+    log.appendData(test)
+} catch (error) {
+    log.appendData(error)
+} finally {
+    api.close()
+}

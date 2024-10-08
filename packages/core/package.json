@@ -7,9 +7,9 @@
     "module": "./dist/index.mjs",
     "types": "./dist/types/index.d.ts",
     "exports": {
+        "types": "./dist/types/index.d.ts",
         "import": "./dist/index.mjs",
-        "require": "./dist/index.js",
-        "types": "./dist/types/index.d.ts"
+        "require": "./dist/index.js"
     },
     "scripts": {
         "dev": "tsup --watch",

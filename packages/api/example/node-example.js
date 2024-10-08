@@ -1,4 +1,4 @@
-const { AuroraAPI } = require("../dist/aurora-api-node.cjs")
+const { AuroraAPI } = require("../dist/index-node.cjs")
 
 // User data
 const wsUrl = "ws://localhost:1370/ws"

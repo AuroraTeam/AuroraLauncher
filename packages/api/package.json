@@ -2,14 +2,15 @@
     "name": "@aurora-launcher/api",
     "version": "0.4.0",
     "description": "JS/TS API implementation for Aurora Launcher",
+    "type": "commonjs",
     "main": "./dist/index-node.cjs",
     "browser": "./dist/index-web.js",
     "types": "./dist/types/index.d.ts",
     "exports": {
+        "types": "./dist/types/index.d.ts",
         "browser": "./dist/index-web.js",
         "import": "./dist/index-node.mjs",
-        "require": "./dist/index-node.cjs",
-        "types": "./dist/types/index.d.ts"
+        "require": "./dist/index-node.cjs"
     },
     "scripts": {
         "dev": "concurrently -r \"node build.mjs --watch\" \"tsc --emitDeclarationOnly --watch\"",
