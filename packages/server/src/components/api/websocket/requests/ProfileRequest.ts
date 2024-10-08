@@ -1,7 +1,9 @@
-import { ProfileRequestData, ProfileResponseData } from "@aurora-launcher/core";
+import type { ProfileRequestData, ProfileResponseData } from "@aurora-launcher/core";
 import { ConfigManager, ProfilesManager } from "@root/components";
 import { AbstractRequest } from "aurora-rpc-server";
 import { Inject, Service } from "typedi";
+
+import { VerifyMiddleware } from "./VerifyMiddleware";
 
 @Service()
 export class ProfileWsRequest extends AbstractRequest {
@@ -15,6 +17,7 @@ export class ProfileWsRequest extends AbstractRequest {
         super();
     }
 
+    @VerifyMiddleware()
     invoke({ uuid }: ProfileRequestData): ProfileResponseData {
         return this.profilesManager
             .getProfiles()

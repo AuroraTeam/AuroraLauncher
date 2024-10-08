@@ -71,7 +71,7 @@ export class WebServerManager {
     }
 
     private redirectListener(req: http.IncomingMessage, res: http.ServerResponse) {
-        if (req.headers["user-agent"].startsWith("Java")) {
+        if (req.headers["user-agent"]?.startsWith("Java")) {
             res.setHeader("X-Authlib-Injector-API-Location", "/authlib");
             return res.end();
         }

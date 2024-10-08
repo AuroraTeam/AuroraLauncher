@@ -27,7 +27,6 @@ export class ProfilesManager {
         LogHelper.info(this.langManager.getTranslate.ProfilesManager.sync);
 
         for (const file of files) {
-            if (!file.endsWith(".json")) continue;
 
             try {
                 const data = await fs.readFile(resolve(StorageHelper.profilesDir, file), "utf-8");

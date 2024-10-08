@@ -1,8 +1,8 @@
-import { createSign, generateKeyPairSync } from "crypto";
+import { createSign } from "crypto";
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
-import { LogHelper, StorageHelper } from "@root/utils";
+import { LogHelper, SecureHelper, StorageHelper } from "@root/utils";
 import { Service } from "typedi";
 
 import { LangManager } from "../langs";
@@ -33,17 +33,7 @@ export class AuthlibManager {
      * It generates a pair of RSA keys, saves them to the file system.
      */
     private generateKeys() {
-        const keys = generateKeyPairSync("rsa", {
-            modulusLength: 4096,
-            publicKeyEncoding: {
-                type: "spki",
-                format: "pem",
-            },
-            privateKeyEncoding: {
-                type: "pkcs8",
-                format: "pem",
-            },
-        });
+        const keys = SecureHelper.generateRsaKeys();
 
         writeFileSync(this.privateKeyPath, keys.privateKey);
         LogHelper.info(this.langManager.getTranslate.AuthlibManager.privateKeySaved);

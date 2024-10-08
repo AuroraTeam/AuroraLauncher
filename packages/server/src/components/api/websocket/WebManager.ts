@@ -1,4 +1,5 @@
 import { ConfigManager } from "@root/components/config";
+import { ArgsManager } from "@root/components/args";
 import { LangManager } from "@root/components/langs";
 import { AbstractRequest as AbstractWsRequest, Server } from "aurora-rpc-server";
 import { Service } from "typedi";
@@ -11,8 +12,8 @@ export class WebManager {
     private webServerManager: WebServerManager;
     private webSocketManager: Server;
 
-    constructor(configManager: ConfigManager, langManager: LangManager) {
-        const { host, port } = configManager.config.api;
+    constructor(configManager: ConfigManager, argsManager: ArgsManager, langManager: LangManager) {
+        const { host, port } = argsManager.args;
 
         this.webServerManager = new WebServerManager(configManager, langManager);
         this.webSocketManager = new Server({

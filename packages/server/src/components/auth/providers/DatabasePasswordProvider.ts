@@ -1,6 +1,7 @@
-import { DatabaseAuthProviderConfig } from "./DatabaseAuthProvider";
-import { argon2Verify, bcryptVerify } from "hash-wasm";
 import { HashHelper } from "@aurora-launcher/core";
+import { argon2Verify, bcryptVerify } from "hash-wasm";
+
+import { DatabaseAuthProviderConfig } from "./DatabaseAuthProvider";
 
 export class DatabasePasswordProvider {
     private pattern = /(\w+)\s*(\((.*)\))?(\s*\+\s*(.*))?/;
@@ -51,7 +52,7 @@ export class DatabasePasswordProvider {
     }
 
     private validatePasswordFormat(format: string) {
-        if (!format) throw new Error(`Invalid password format: ${format}`);
+        if (!format) return;
 
         if (format === "pass") return (pass: string) => pass;
         if (format === "salt") return (pass: string, salt: string) => salt;
@@ -64,13 +65,16 @@ export class DatabasePasswordProvider {
 
         const result: any[] = [];
 
-        // TODO Check fail
-        try {
-            result.push((pass: string, salt: string) =>
-                HashHelper.getHash(inner(pass, salt), algo),
-            );
-        } catch (error) {
-            throw new Error(`Unsupported algorithm: ${algo}`);
+        if (["pass", "hash"].includes(algo)) {
+            result.push(this.validatePasswordFormat(algo));
+        } else if (inner) {
+            try {
+                result.push((pass: string, salt: string) =>
+                    HashHelper.getHash(inner(pass, salt), algo),
+                );
+            } catch (error) {
+                throw new Error(`Unsupported algorithm: ${algo}`);
+            }
         }
 
         if (additional) {

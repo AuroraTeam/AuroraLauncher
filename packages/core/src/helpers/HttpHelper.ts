@@ -1,4 +1,4 @@
-import { mkdir } from "fs/promises"
+import { mkdir, rename } from "fs/promises"
 import { dirname } from "path"
 import { URL } from "url"
 
@@ -105,6 +105,26 @@ export class HttpHelper {
         if (filePath === null) throw new Error("File path not found")
 
         return this.download(url, filePath, options.onProgress)
+    }
+
+    /**
+     * Скачивание во временный файл с последующим переименованием в оригинал
+     * @param url - строка или объект URL, содержащий ссылку на файл
+     * @param filePath - путь до сохраняемого файла
+     * @param options - список опций:
+     * @param options.onProgress - коллбэк, в который передаётся текущий прогресс загрузки, если объявлен
+     */
+    public static async downloadSafeFile(
+        url: string | URL,
+        filePath: string,
+        options: {
+            onProgress?: onProgressFunction
+        } = {},
+    ) {
+        if (filePath === null) throw new Error("File path not found")
+
+        await this.download(url, `${filePath}.safe`, options.onProgress)
+        return await rename(`${filePath}.safe`, filePath)
     }
 
     /**

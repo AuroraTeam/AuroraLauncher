@@ -1,41 +1,49 @@
+import Container, { Service } from "typedi";
+
 import {
-    AuthProvider,
-    ConfigManager,
-    LangManager,
-    CommandsManager,
-    ModulesManager,
-    WebManager,
-    ClientsManager,
-    UpdateManager,
-    ProfilesManager,
-    AuthlibManager,
-    AuthManager,
-    JsonAuthProvider,
-    DatabaseAuthProvider,
-    RejectAuthProvider,
-    AcceptAuthProvider,
-    HelpCommand,
-    ModulesCommand,
-    BranchCommand,
-    UpdateCommand,
-    LangCommand,
-    SyncAllCommand,
-    SyncProfilesCommand,
-    SyncClientsCommand,
-    DownloadClientCommand,
     AboutCommand,
-    StopCommand,
+    AcceptAuthProvider,
+    ArgsManager,
+    AuthManager,
+    AuthProvider,
     AuthWsRequest,
-    ProfileWsRequest,
-    ServersWsRequest,
-    UpdatesWsRequest,
+    AuthlibManager,
+    BranchCommand,
+    ClientsManager,
+    CommandsManager,
+    ConfigManager,
+    DatabaseAuthProvider,
+    DownloadClientCommand,
+    DownloadRelease,
+    GetToken,
     HasJoinedWebRequest,
+    HelpCommand,
     InjectorWebRequest,
     JoinWebRequest,
+    JsonAuthProvider,
+    LangCommand,
+    LangManager,
+    ModulesCommand,
+    ModulesManager,
     ProfileWebRequest,
+    ProfileWsRequest,
+    ProfilesManager,
+    ProfilesWebRequest,
+    RejectAuthProvider,
+    ServersWsRequest,
+    StopCommand,
+    SyncAllCommand,
+    SyncClientsCommand,
+    SyncProfilesCommand,
+    UpdateCommand,
+    UpdateManager,
+    UpdatesWsRequest,
+    Watcher,
+    WebManager,
 } from "./components";
+import { VerifyWsRequest } from "./components/api/websocket/requests/VerifyRequest";
 import { LogHelper, StorageHelper } from "./utils";
-import Container, { Service } from "typedi";
+
 @Service()
 export class LauncherServer {
     private _AuthProvider: AuthProvider;
@@ -48,6 +56,8 @@ export class LauncherServer {
     private _UpdateManager: UpdateManager;
     private _ProfilesManager: ProfilesManager;
     private _AuthlibManager: AuthlibManager;
+    private _ArgsManager: ArgsManager;
+    private _Watcher: Watcher;
 
     constructor() {
         this.preInit();
@@ -58,6 +68,7 @@ export class LauncherServer {
         LogHelper.printVersion();
 
         this._ConfigManager = Container.get(ConfigManager);
+        this._ArgsManager = Container.get(ArgsManager);
         this._LangManager = Container.get(LangManager);
 
         StorageHelper.validate();
@@ -68,6 +79,7 @@ export class LauncherServer {
         this.resolveDependencies();
         this.registerCommands();
         this.registerRequest();
+        this._Watcher = Container.get(Watcher);
     }
 
     private resolveDependencies() {
@@ -114,14 +126,17 @@ export class LauncherServer {
             Container.get(ProfileWsRequest),
             Container.get(ServersWsRequest),
             Container.get(UpdatesWsRequest),
+            Container.get(VerifyWsRequest),
         ]);
 
         this._WebManager.registerWebRequests([
             Container.get(InjectorWebRequest),
             Container.get(ProfileWebRequest),
-            Container.get(ProfileWebRequest),
+            Container.get(ProfilesWebRequest),
             Container.get(JoinWebRequest),
             Container.get(HasJoinedWebRequest),
+            Container.get(DownloadRelease),
+            Container.get(GetToken),
         ]);
     }
 }

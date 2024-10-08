@@ -34,7 +34,6 @@ const watchFlag = process.argv[2] === "--watch"
                 sourcemap: true,
                 format: "esm",
                 platform: "node",
-                keepNames: true,
                 ...config,
             }).catch(() => process.exit(1))
 
@@ -45,7 +44,7 @@ const watchFlag = process.argv[2] === "--watch"
                 await ctx.rebuild()
                 await ctx.dispose()
             }
-        })
+        }),
     )
 
     !watchFlag && console.timeEnd("Build successfully")
