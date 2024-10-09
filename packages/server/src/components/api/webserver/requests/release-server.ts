@@ -27,7 +27,7 @@ async function relaseServerRoutes(fastify: FastifyInstance, opts: Options) {
     fastify.post<{Querystring: IQuerystring}>('/release/upload', async (req, reply) => {
         const decryptedToken = opts.verifyManager.decryptToken(req.query.encryptedToken)
         if ( decryptedToken == token){
-            const data = await req.file({ limits: { fileSize: 104857600 } }) // 100MB
+            const data = await req.file({ limits: { fileSize: 314572800 } }) // 300MB
             writeFileSync(resolve(StorageHelper.releaseDir, data.fieldname), await data.toBuffer())
             reply.status(200)
         }

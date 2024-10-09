@@ -9,6 +9,7 @@ service AuroraLauncherService {
   rpc getServers(.google.protobuf.Empty) returns (ServersResponse);
   rpc getProfile(ProfileRequest) returns (ProfileResponse);
   rpc getUpdates(UpdateRequest) returns (UpdateResponse);
+  rpc getToken(.google.protobuf.Empty) returns (VerifyResponse);
 }
 
 message AuthRequest {
@@ -88,10 +89,6 @@ message HashedFile {
   int32 size = 2;
   string sha1 = 3;
 }
-message VerifyRequest {
-  int32 stage = 1;
-  optional string token = 2;
-}
 message VerifyResponse {
-  optional string token = 1;
+  string token = 1;
 }

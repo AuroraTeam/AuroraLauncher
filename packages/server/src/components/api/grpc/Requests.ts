@@ -1,9 +1,12 @@
 import * as proto from "@aurora-launcher/proto";
+import { JsonHelper } from "@aurora-launcher/core";
 import { ServerError, Status } from 'nice-grpc';
 import { Service, Inject } from "typedi";
 import type { AuthProvider } from "@root/components/auth/providers";
 import { ProfilesManager } from "@root/components/profiles";
 import { ClientsManager } from "@root/components/clients";
+import { VerifyManager } from "@root/components/secure/VerifyManager";
+import { token } from "./Token";
 
 @Service()
 export class ServiceImpl implements proto.AuroraLauncherServiceImplementation {
@@ -11,6 +14,7 @@ export class ServiceImpl implements proto.AuroraLauncherServiceImplementation {
         @Inject("AuthProvider") private authProvider: AuthProvider, 
         private profilesManager: ProfilesManager, 
         private clientsManager: ClientsManager,
+        private verifyManager: VerifyManager,
     ) {}
 
     async auth(
@@ -18,8 +22,8 @@ export class ServiceImpl implements proto.AuroraLauncherServiceImplementation {
     ): Promise<proto.DeepPartial<proto.AuthResponse>> {
         try {
             const res = await this.authProvider.auth(request.login, request.password);
-            //const authData = JsonHelper.toJson({"login":request.login, "password":request.password});
-            //res.token = this.verifyManager.encryptToken(Buffer.from(authData, 'utf8').toString('hex'));
+            const authData = JsonHelper.toJson({"login":request.login, "password":request.password});
+            res.token = this.verifyManager.encryptToken(Buffer.from(authData, 'utf8').toString('hex'));
             return res;
         } catch (error) {
             throw new ServerError(Status.NOT_FOUND, error.message);
@@ -60,6 +64,12 @@ export class ServiceImpl implements proto.AuroraLauncherServiceImplementation {
         request:proto.UpdateRequest,
     ): Promise<proto.DeepPartial<proto.UpdateResponse>> {
         const res = {hashedFile: this.clientsManager.hashedClients.get(request.dir)};
+        return res
+    }
+
+    async getToken(
+    ): Promise<proto.DeepPartial<proto.VerifyResponse>> {
+        const res = {token: this.verifyManager.encryptToken(token)};
         return res
     }
   }
