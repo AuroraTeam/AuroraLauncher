@@ -1,6 +1,6 @@
 {
     "name": "@aurora-launcher/server",
-    "version": "0.0.5-dev_2",
+    "version": "0.0.5-dev.2",
     "description": "LauncherServer for AuroraLauncher",
     "keywords": [
         "minecraft",
