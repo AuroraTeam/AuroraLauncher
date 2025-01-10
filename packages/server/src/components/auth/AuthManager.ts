@@ -4,6 +4,7 @@ import { Service } from "typedi";
 import { ConfigManager } from "../config";
 import { LangManager } from "../langs";
 import { AuthProvider, AuthProviderConstructor } from "./providers";
+import { SkinManager } from "../skin/SkinManager";
 
 @Service()
 export class AuthManager {
@@ -23,6 +24,7 @@ export class AuthManager {
         }
 
         const Provider = AuthManager.authProviders.get(providerType);
-        return new Provider(configManager.config);
+        const skinManager = new SkinManager(configManager.config.skin);
+        return new Provider(configManager.config, skinManager);
     }
 }

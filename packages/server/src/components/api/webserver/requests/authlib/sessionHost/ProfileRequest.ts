@@ -28,7 +28,7 @@ export class ProfileWebRequest extends AbstractRequest {
         let user;
         try {
             user = await this.authProvider.profile(UUIDHelper.getWithDashes(uuid));
-        } catch (error) {
+        } catch {
             res.raw.statusCode = 204;
             res.raw.end();
             return;

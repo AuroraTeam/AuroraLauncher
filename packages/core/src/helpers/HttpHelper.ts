@@ -41,7 +41,7 @@ export class HttpHelper {
         try {
             const { statusCode } = await request(url, { method: "HEAD" })
             return statusCode >= 200 && statusCode < 300
-        } catch (error) {
+        } catch {
             return false
         }
     }
@@ -233,16 +233,14 @@ export class HttpHelper {
     private static async verifyFileHash(file: File) {
         if (!file.sha1) return false
 
-        let currentHash
         try {
-            currentHash = await HashHelper.getHashFromFile(
+            return await HashHelper.compareFileHash(
                 file.destinationPath,
                 "sha1",
+                file.sha1,
             )
-        } catch (error) {
+        } catch {
             return false
         }
-
-        return file.sha1 === currentHash
     }
 }

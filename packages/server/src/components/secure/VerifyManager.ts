@@ -14,7 +14,7 @@ export class VerifyManager {
     constructor() {
         try {
             this.readAndSetKey();
-        } catch (error) {
+        } catch {
             this.generateKeys();
             this.readAndSetKey();
         }

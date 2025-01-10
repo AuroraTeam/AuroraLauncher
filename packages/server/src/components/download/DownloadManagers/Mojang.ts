@@ -64,7 +64,7 @@ export class MojangManager extends AbstractDownloadManager {
 
         try {
             await mkdir(clientDirPath);
-        } catch (err) {
+        } catch {
             return LogHelper.error(this.langManager.getTranslate.DownloadManager.dirExist);
         }
 
@@ -137,7 +137,7 @@ export class MojangManager extends AbstractDownloadManager {
             //     this.langManager.getTranslate.DownloadManager.MojangManager
             //         .assets.downloadErr
             // );
-            LogHelper.info(
+            LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MojangManager.client
                     .downloadAssetsErr,
             );
@@ -192,7 +192,7 @@ export class MojangManager extends AbstractDownloadManager {
                 },
             );
         } catch (error) {
-            LogHelper.info(
+            LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MojangManager.client.downloadLibErr,
             );
             LogHelper.debug(error);

@@ -1,6 +1,7 @@
 import { extname } from "path"
 
 import AdmZip from "adm-zip"
+import { HashHelper } from "./HashHelper"
 
 export class ZipHelper {
     /**
@@ -18,7 +19,7 @@ export class ZipHelper {
         onProgress?: (size: number) => void,
     ) {
         const zip = new AdmZip(archive)
-        const extractedFiles: string[] = []
+        const extractedFiles: { path: string; sha1: string }[] = []
 
         zip.getEntries().forEach((entry) => {
             if (
@@ -29,7 +30,11 @@ export class ZipHelper {
                 return
 
             onProgress && onProgress(entry.header.compressedSize)
-            extractedFiles.push(entry.entryName)
+            const sha1 = HashHelper.getHash(entry.getData(), "sha1")
+            extractedFiles.push({
+                path: entry.entryName,
+                sha1,
+            })
             zip.extractEntryTo(entry, destDir, true, true)
         })
 

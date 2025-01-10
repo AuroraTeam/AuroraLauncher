@@ -8,9 +8,6 @@ export class ApiConfig {
     };
     disableListing: boolean;
     hideListing: boolean;
-    injector: {
-        skinDomains: string[];
-    };
 
     static getDefaultConfig(): ApiConfig {
         return {
@@ -23,9 +20,6 @@ export class ApiConfig {
             },
             disableListing: false,
             hideListing: false,
-            injector: {
-                skinDomains: [],
-            },
         };
     }
 }

@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type JsonData = Record<string, any> | any[]
+export type JsonData = unknown
 
 /**
  * Класс хелпер для работы с JSON

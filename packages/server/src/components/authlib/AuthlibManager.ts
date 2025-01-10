@@ -18,7 +18,7 @@ export class AuthlibManager {
         try {
             this.readAndSetKeys();
             LogHelper.info(langManager.getTranslate.AuthlibManager.keysExists);
-        } catch (error) {
+        } catch {
             this.generateKeys();
             this.readAndSetKeys();
         }

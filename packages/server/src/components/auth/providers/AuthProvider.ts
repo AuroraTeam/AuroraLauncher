@@ -1,8 +1,9 @@
 import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
+import { SkinManager } from "../../skin/SkinManager";
 
 export interface AuthProviderConstructor {
-    new (configManager: LauncherServerConfig): AuthProvider;
+    new (configManager: LauncherServerConfig, skinManager: SkinManager): AuthProvider;
 }
 
 export interface AuthProvider {

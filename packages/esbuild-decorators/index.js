@@ -31,7 +31,7 @@ export const esbuildDecorators = () => ({
 
             const result = await swc.transformFile(args.path, {
                 jsc,
-                sourceMaps: true,
+                sourceMaps: false,
                 configFile: false,
                 swcrc: false,
             });
@@ -46,7 +46,7 @@ export const esbuildDecorators = () => ({
                         : source;
                 });
                 code += `//# sourceMappingURL=data:application/json;base64,${Buffer.from(
-                    JSON.stringify(map)
+                    JSON.stringify(map),
                 ).toString("base64")}`;
             }
             return {

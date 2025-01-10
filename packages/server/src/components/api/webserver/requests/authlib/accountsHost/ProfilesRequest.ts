@@ -20,7 +20,7 @@ export class ProfilesWebRequest extends AbstractRequest {
 
         try {
             data = JsonHelper.fromJson(req.body);
-        } catch (error) {
+        } catch {
             return res.error(400, "BadRequestException");
         }
 

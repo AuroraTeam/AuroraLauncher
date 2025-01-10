@@ -1,6 +1,6 @@
 import { parse, stringify } from "hjson";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export type HjsonData = Record<string, any> | any[];
 
 /**

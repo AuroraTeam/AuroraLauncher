@@ -72,7 +72,7 @@ export class DatabasePasswordProvider {
                 result.push((pass: string, salt: string) =>
                     HashHelper.getHash(inner(pass, salt), algo),
                 );
-            } catch (error) {
+            } catch {
                 throw new Error(`Unsupported algorithm: ${algo}`);
             }
         }

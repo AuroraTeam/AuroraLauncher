@@ -12,3 +12,4 @@ export * from "./update";
 export * from "./secure";
 export * from "./args";
 export * from "./watcher";
+export * from "./skin";

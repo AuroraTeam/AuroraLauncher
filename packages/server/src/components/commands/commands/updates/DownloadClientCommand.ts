@@ -1,17 +1,17 @@
 import {
+    ClientsManager,
     CommandsManager,
     ConfigManager,
     FabricManager,
+    ForgeManager,
     LangManager,
     MirrorManager,
     MojangManager,
-    ProfilesManager,
-    ClientsManager,
-    QuiltManager,
-    ForgeManager,
     NeoForgeManager,
+    ProfilesManager,
+    QuiltManager,
 } from "@root/components";
-import { Watcher } from "@root/components/watcher/Watcher"
+import { Watcher } from "@root/components/watcher/Watcher";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
 import { Service } from "typedi";
 

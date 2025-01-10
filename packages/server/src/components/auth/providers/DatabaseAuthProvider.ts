@@ -13,14 +13,17 @@ import {
 import { randomUUID } from "crypto";
 import { ResponseError } from "aurora-rpc-server";
 import { DatabasePasswordProvider } from "./DatabasePasswordProvider";
+import { SkinManager } from "../../skin/SkinManager";
 
 export class DatabaseAuthProvider implements AuthProvider {
     private userRepository;
+    private skinManager: SkinManager;
     private passwordProvider;
 
-    constructor({ auth }: LauncherServerConfig) {
+    constructor({ auth }: LauncherServerConfig, skinManager: SkinManager) {
         const authConfig = <DatabaseAuthProviderConfig>auth;
         this.passwordProvider = new DatabasePasswordProvider(authConfig);
+        this.skinManager = skinManager;
 
         if (!authConfig.properties.tableName) {
             LogHelper.fatal("tableName not defined");
@@ -47,8 +50,8 @@ export class DatabaseAuthProvider implements AuthProvider {
         const userData = {
             username,
             userUUID: user.userUUID,
-            skinUrl: user.skinUrl,
-            capeUrl: user.capeUrl,
+            skinUrl: this.skinManager.getSkin(user.userUUID, username),
+            capeUrl: this.skinManager.getCape(user.userUUID, username),
             accessToken: randomUUID(),
         };
 
@@ -82,8 +85,8 @@ export class DatabaseAuthProvider implements AuthProvider {
 
         return {
             userUUID: user.userUUID,
-            skinUrl: user.skinUrl,
-            capeUrl: user.capeUrl,
+            skinUrl: this.skinManager.getSkin(user.userUUID, username),
+            capeUrl: this.skinManager.getCape(user.userUUID, username),
         };
     }
 
@@ -93,8 +96,8 @@ export class DatabaseAuthProvider implements AuthProvider {
 
         return {
             username: user.username,
-            skinUrl: user.skinUrl,
-            capeUrl: user.capeUrl,
+            skinUrl: this.skinManager.getSkin(userUUID, user.username),
+            capeUrl: this.skinManager.getCape(userUUID, user.username),
         };
     }
 
@@ -135,14 +138,6 @@ const getUserEntity = (properties: DatabaseAuthProviderConfig["properties"]) => 
                 type: String,
                 name: properties.serverIdColumn,
             },
-            skinUrl: {
-                type: String,
-                name: properties.skinUrlColumn,
-            },
-            capeUrl: {
-                type: String,
-                name: properties.capeUrlColumn,
-            },
         },
     });
 };
@@ -165,8 +160,6 @@ export class DatabaseAuthProviderConfig extends AuthProviderConfig {
         passwordColumn: string;
         accessTokenColumn: string;
         serverIdColumn: string;
-        skinUrlColumn: string;
-        capeUrlColumn: string;
     };
 }
 
@@ -178,6 +171,4 @@ interface UserEntity {
     userUUID: string;
     accessToken: string;
     serverID: string;
-    skinUrl: string;
-    capeUrl: string;
 }

@@ -9,6 +9,6 @@
         "build:libs": "npm run build -w packages/core -w packages/api"
     },
     "devDependencies": {
-        "concurrently": "^9.0.1"
+        "concurrently": "^9.1.0"
     }
 }

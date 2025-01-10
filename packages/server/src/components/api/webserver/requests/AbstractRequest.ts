@@ -7,7 +7,6 @@ export abstract class AbstractRequest {
 
     abstract emit(req: WebRequest, res: WebResponse): PromiseOr<void>;
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     protected isInvalidValue(param: any): boolean {
         return typeof param !== "string" || param.trim().length === 0;
     }

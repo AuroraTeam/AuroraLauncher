@@ -2,11 +2,11 @@ import { resolve } from "path";
 import { URL } from "url";
 
 import { HttpHelper, ZipHelper } from "@aurora-launcher/core";
+import { Profile } from "@aurora-launcher/core";
 import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
 import { Service } from "typedi";
 
 import { MojangManager } from "./Mojang";
-import { Profile } from "@aurora-launcher/core";
 
 @Service()
 export class MirrorManager extends MojangManager {
@@ -17,20 +17,23 @@ export class MirrorManager extends MojangManager {
      */
     async downloadClient(fileName: string, clientName: string) {
         const mirror = await this.checkMirror(fileName);
-        if (!mirror) return LogHelper.error(
-            this.langManager.getTranslate.DownloadManager.MirrorManager.client.notFound,
+        if (!mirror)
+            return LogHelper.error(
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.notFound,
+            );
+        const mirrorProfiles: Profile = await HttpHelper.getResourceFromJson(
+            new URL(`/profiles/${fileName}.json`, mirror),
         );
-        const mirrorProfiles: Profile = await HttpHelper.getResourceFromJson(new URL(`/profiles/${fileName}.json`, mirror));
-        
+
         const profileUUID = await super.downloadClient(mirrorProfiles.version, clientName);
         if (!profileUUID) return;
 
         if (await HttpHelper.existsResource(new URL(`/clients/${fileName}.zip`, mirror))) {
-            await this.installClient(fileName, clientName, mirror)
+            await this.installClient(fileName, clientName, mirror);
         }
 
         if (await HttpHelper.existsResource(new URL(`/libraries/${fileName}.zip`, mirror))) {
-            await this.installLibraries(fileName, mirror)
+            await this.installLibraries(fileName, mirror);
         }
 
         this.profilesManager.editProfile(profileUUID, () => ({
@@ -49,7 +52,7 @@ export class MirrorManager extends MojangManager {
             return await HttpHelper.existsResource(new URL(`/profiles/${fileName}.json`, url));
         });
 
-        return mirror
+        return mirror;
     }
 
     async installClient(fileName: string, clientName: string, mirror: string) {
@@ -58,16 +61,24 @@ export class MirrorManager extends MojangManager {
         progressBar.start(0, 0, { filename: `${fileName}.zip` });
         const clientDirPath = resolve(StorageHelper.clientsDir, clientName);
 
-        try{
-            const client = await HttpHelper.downloadFile(new URL(`/clients/${fileName}.zip`, mirror), null, {
-                saveToTempFile: true,
-                onProgress(progress) {
-                    progress.total && progressBar.setTotal(progress.total);
-                    progressBar.update(progress.transferred);
+        try {
+            const client = await HttpHelper.downloadFile(
+                new URL(`/clients/${fileName}.zip`, mirror),
+                null,
+                {
+                    saveToTempFile: true,
+                    onProgress(progress) {
+                        if (progress.total) {
+                            progressBar.setTotal(progress.total);
+                        }
+                        progressBar.update(progress.transferred);
+                    },
                 },
-            })
+            );
 
-            LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking);
+            LogHelper.info(
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking,
+            );
             ZipHelper.unzip(client, clientDirPath);
 
             return true;
@@ -83,20 +94,30 @@ export class MirrorManager extends MojangManager {
     }
 
     async installLibraries(fileName: string, mirror: string) {
-        LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.downloadLib);
+        LogHelper.info(
+            this.langManager.getTranslate.DownloadManager.MirrorManager.client.downloadLib,
+        );
         const progressBar = ProgressHelper.getDownloadProgressBar();
         progressBar.start(0, 0, { filename: `${fileName}.zip` });
 
-        try{
-            const client = await HttpHelper.downloadFile(new URL(`/libraries/${fileName}.zip`, mirror), null, {
-                saveToTempFile: true,
-                onProgress(progress) {
-                    progress.total && progressBar.setTotal(progress.total);
-                    progressBar.update(progress.transferred);
+        try {
+            const client = await HttpHelper.downloadFile(
+                new URL(`/libraries/${fileName}.zip`, mirror),
+                null,
+                {
+                    saveToTempFile: true,
+                    onProgress(progress) {
+                        if (progress.total) {
+                            progressBar.setTotal(progress.total);
+                        }
+                        progressBar.update(progress.transferred);
+                    },
                 },
-            })
+            );
 
-            LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingLib);
+            LogHelper.info(
+                this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingLib,
+            );
             ZipHelper.unzip(client, StorageHelper.librariesDir);
 
             return true;
@@ -111,16 +132,18 @@ export class MirrorManager extends MojangManager {
         }
     }
 
-    async findAsync(array: string[], predicate: (item: string, index: number, items: string[]) => Promise<any>) {
+    async findAsync(
+        array: string[],
+        predicate: (item: string, index: number, items: string[]) => Promise<any>,
+    ) {
         for (const [index, item] of array.entries()) {
             try {
-              if (await predicate(item, index, array)) {
-                return item
-              }
+                if (await predicate(item, index, array)) {
+                    return item;
+                }
             } catch {
-              return undefined
+                return undefined;
             }
         }
     }
-
 }
