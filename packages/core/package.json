@@ -43,22 +43,22 @@
         "src"
     ],
     "devDependencies": {
-        "@eslint/js": "^9.14.0",
-        "@tsconfig/node20": "^20.1.4",
+        "@eslint/js": "^9.18.0",
+        "@tsconfig/node22": "^22.0.0",
         "@tsconfig/strictest": "^2.0.5",
-        "@types/node": "^22.9.0",
-        "eslint": "^9.14.0",
-        "globals": "^15.12.0",
+        "@types/node": "^22.10.7",
+        "eslint": "^9.18.0",
+        "globals": "^15.14.0",
         "import-sort-style-module": "^6.0.0",
-        "prettier": "^3.3.3",
+        "prettier": "^3.4.2",
         "prettier-plugin-import-sort": "0.0.7",
         "tsup": "^8.3.5",
-        "typescript": "^5.6.3",
-        "typescript-eslint": "^8.13.0"
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.20.0"
     },
     "dependencies": {
         "adm-zip": "^0.5.16",
-        "p-map": "^7.0.2",
-        "undici": "^6.20.1"
+        "p-map": "^7.0.3",
+        "undici": "^7.2.3"
     }
 }
