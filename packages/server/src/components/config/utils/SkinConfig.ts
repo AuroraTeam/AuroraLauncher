@@ -4,8 +4,8 @@ export class SkinConfig {
 
     static getDefaultConfig(): SkinConfig {
         return {
-            skinUrl: "https://skins.danielraybone.com/v1/skin/{username}",
-            capeUrl: "https://skins.danielraybone.com/v1/cape/{username}",
+            skinUrl: "https://api.aurora-launcher.ru/mojang/skin?username={username}",
+            capeUrl: "https://api.aurora-launcher.ru/mojang/cape?username={username}",
         };
     }
 }
