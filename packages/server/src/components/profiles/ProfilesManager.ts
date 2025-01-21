@@ -1,12 +1,12 @@
 import fs from "fs/promises";
+import { resolve } from "path";
 
+import { Profile } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper } from "@root/utils";
 import { Service } from "typedi";
 
 import { LangManager } from "../langs";
 import { ProfileConfig } from "./ProfileConfig";
-import { resolve } from "path";
-import { Profile } from "@aurora-launcher/core";
 
 @Service()
 export class ProfilesManager {
@@ -27,6 +27,7 @@ export class ProfilesManager {
         LogHelper.info(this.langManager.getTranslate.ProfilesManager.sync);
 
         for (const file of files) {
+            if (file.includes(".DS_Store")) continue;
 
             try {
                 const data = await fs.readFile(resolve(StorageHelper.profilesDir, file), "utf-8");
