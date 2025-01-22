@@ -76,7 +76,7 @@
                 "success": "Libraries downloaded successfully!"
             },
             "info": {
-                "errForgeVersion": "Installer not found or installer version does not match expected",
+                "errForgeVersion": "Forge version not found",
                 "notFoundJava": "Java was not found. Please install Java JDK to continue",
                 "errClientParsing": "Error parsing client data"
             }

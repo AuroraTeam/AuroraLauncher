@@ -43,3 +43,13 @@ export interface Libraries {
         }
     }
 }
+
+export interface Manifest {
+    data: [{
+        name: string
+        gameVersion: string
+        latest: boolean
+        recommended: boolean
+        dateModified: string
+    }]
+}

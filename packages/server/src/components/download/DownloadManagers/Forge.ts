@@ -3,23 +3,21 @@ import { createHash } from "crypto";
 import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "fs";
 import { extname, resolve } from "path";
 
-import { JsonHelper, ProfileLibrary, ZipHelper } from "@aurora-launcher/core";
+import { JsonHelper, ProfileLibrary, ZipHelper, HttpHelper } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper } from "@root/utils";
 import semver from "semver";
 import { Service } from "typedi";
 
-import { InstallProfile, Libraries, VersionProfiles } from "../interfaces/IForge";
+import { InstallProfile, Libraries, VersionProfiles, Manifest } from "../interfaces/IForge";
 import { MojangManager } from "./Mojang";
 
 @Service()
 export class ForgeManager extends MojangManager {
-    #forgeInstall = readdirSync(StorageHelper.storageDir)
-        .filter((s) => s.includes("forge") && extname(s) === ".jar")[0]
-        ?.toString();
+    #forgeInstall = "";
     #tempDir = StorageHelper.getTmpPath();
 
     async downloadClient(gameVersion: string, clientName: string) {
-        if (this.checkFileInstaller(gameVersion)) {
+        if (await this.downloadForge(gameVersion)) {
             const profileUUID = await super.downloadClient(gameVersion, clientName);
             if (!profileUUID) return;
 
@@ -68,20 +66,25 @@ export class ForgeManager extends MojangManager {
             );
     }
 
-    checkFileInstaller(gameVersion: string): boolean {
-        if (this.#forgeInstall) {
+    async downloadForge(gameVersion: string) {
+        try {
+            const manifest = await HttpHelper.getResourceFromJson<Manifest>(
+                "https://api.curseforge.com/v1/minecraft/modloader",
+            );
+            const dataInstaller = manifest.data.filter((link) => link.gameVersion === gameVersion && link.latest)[0];
+            const forgeVersion = dataInstaller.name.slice(6);
             mkdirSync(this.#tempDir);
-            cpSync(
-                resolve(StorageHelper.storageDir, this.#forgeInstall),
-                resolve(this.#tempDir, this.#forgeInstall),
+            const file = await HttpHelper.downloadFile(
+                `https://maven.minecraftforge.net/net/minecraftforge/forge/${gameVersion}-${forgeVersion}/forge-${gameVersion}-${forgeVersion}-installer.jar`, 
+                resolve(this.#tempDir, `forge-${gameVersion}-${forgeVersion}-installer.jar`),
             );
+            if (!file) {
+                return false;
+            }
+            this.#forgeInstall = file
             ZipHelper.unzip(resolve(this.#tempDir, this.#forgeInstall), this.#tempDir);
-            const install_profile: InstallProfile = JsonHelper.fromJson(
-                readFileSync(resolve(this.#tempDir, "install_profile.json")).toString(),
-            );
-            if (install_profile.profile == "forge" && install_profile.minecraft == gameVersion)
-                return true;
-        } else {
+            return true;
+        } catch {
             return false;
         }
     }
