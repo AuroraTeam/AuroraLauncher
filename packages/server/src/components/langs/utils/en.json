@@ -81,6 +81,11 @@
                 "errClientParsing": "Error parsing client data"
             }
         },
+        "NeoforgeManager": {
+            "info": {
+                "errForgeVersion": "NeoForge version not found"
+            }
+        },
         "MirrorManager": {
             "client": {
                 "notFound": "Client not found!",

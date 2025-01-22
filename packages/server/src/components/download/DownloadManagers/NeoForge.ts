@@ -3,20 +3,20 @@ import { mkdirSync, cpSync, rmSync, readFileSync, writeFileSync, readdirSync } f
 import { spawnSync } from 'child_process';
 import { createHash } from "crypto";
 
-import { ZipHelper, JsonHelper, ProfileLibrary } from "@aurora-launcher/core";
+import { ZipHelper, JsonHelper, ProfileLibrary, HttpHelper } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper } from "@root/utils";
 import { Service } from "typedi";
 
 import { MojangManager } from "./Mojang";
-import { InstallProfile, VersionProfiles, Libraries } from "../interfaces/IForge";
+import { InstallProfile, VersionProfiles, Libraries, NeoManifest } from "../interfaces/IForge";
 
 @Service()
 export class NeoForgeManager extends MojangManager {
-    #forgeInstall = readdirSync(StorageHelper.storageDir).filter(s => s.includes('neoforge') && extname(s) === '.jar')[0]?.toString()
+    #forgeInstall = ""
     #tempDir = StorageHelper.getTmpPath()
 
     async downloadClient(gameVersion: string, clientName: string) {
-        if (this.checkFileInstaller(gameVersion)) {
+        if (await this.downloadForge(gameVersion)) {
             const profileUUID = await super.downloadClient(gameVersion, clientName)
             if (!profileUUID) return
             
@@ -35,18 +35,27 @@ export class NeoForgeManager extends MojangManager {
             rmSync(this.#tempDir, { recursive: true })
             LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.success);
         }
-        else LogHelper.error(this.langManager.getTranslate.DownloadManager.ForgeManager.info.errForgeVersion);
+        else LogHelper.error(this.langManager.getTranslate.DownloadManager.NeoforgeManager.info.errForgeVersion);
     }
 
-    checkFileInstaller(gameVersion: string): boolean {
-        if (this.#forgeInstall) {
-            mkdirSync(this.#tempDir)
-            cpSync(resolve(StorageHelper.storageDir, this.#forgeInstall), resolve(this.#tempDir, this.#forgeInstall))
-            ZipHelper.unzip(resolve(this.#tempDir, this.#forgeInstall), this.#tempDir)
-            const install_profile: InstallProfile = JsonHelper.fromJson(readFileSync(resolve(this.#tempDir, 'install_profile.json')).toString())
-            if (install_profile.profile == 'NeoForge' && install_profile.minecraft == gameVersion) return true
-        } else {
-            return false
+    async downloadForge(gameVersion: string) {
+        try {
+            const manifest = await HttpHelper.getResourceFromJson<NeoManifest>(
+                `https://maven.neoforged.net/api/maven/latest/version/releases/net/neoforged/neoforge?filter=${gameVersion.slice(2)}`,
+            );
+            mkdirSync(this.#tempDir);
+            const file = await HttpHelper.downloadFile(
+                `https://maven.neoforged.net/releases/net/neoforged/neoforge/${manifest.version}/neoforge-${manifest.version}-installer.jar`, 
+                resolve(this.#tempDir, `neoforge-${manifest.version}-installer.jar`),
+            );
+            if (!file) {
+                return false;
+            }
+            this.#forgeInstall = file
+            ZipHelper.unzip(resolve(this.#tempDir, this.#forgeInstall), this.#tempDir);
+            return true;
+        } catch {
+            return false;
         }
     }
 

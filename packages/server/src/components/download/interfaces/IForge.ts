@@ -53,3 +53,8 @@ export interface Manifest {
         dateModified: string
     }]
 }
+
+export interface NeoManifest {
+    isSnapshot: boolean
+    version: string
+}

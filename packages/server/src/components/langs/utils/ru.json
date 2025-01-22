@@ -80,6 +80,11 @@
                 "errClientParsing": "Ошибка при разборе данных клиента"
             }
         },
+        "NeoforgeManager": {
+            "info": {
+                "errForgeVersion": "Версия NeoForge не найдена"
+            }
+        },
         "MirrorManager": {
             "client": {
                 "notFound": "Клиент не найден!",
