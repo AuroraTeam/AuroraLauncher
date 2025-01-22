@@ -28,6 +28,7 @@ const ctx = await context({
         "oci-common",
         "oci-objectstorage",
         "oci-secrets",
+        "oracledb",
     ],
     plugins: [esbuildDecorators()],
     entryPoints: ["src/app.ts"],
