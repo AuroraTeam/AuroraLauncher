@@ -27,7 +27,7 @@
         "dev": "node scripts/dev.mjs",
         "build:dev": "node scripts/build.mjs",
         "build:prod": "node scripts/build.mjs --prod",
-        "build:bin": "pkg dist/LauncherServer.js -t node22-linux-x64,node22-macos-x64,node22-win-x64 --out-path dist --compress GZip",
+        "build:bin": "pkg dist/LauncherServer.js -t node20-linux-x64,node20-macos-x64,node20-win-x64 --out-path dist --compress GZip",
         "clean": "rimraf dist",
         "prettier": "prettier --write src",
         "typecheck": "tsc --noEmit",
