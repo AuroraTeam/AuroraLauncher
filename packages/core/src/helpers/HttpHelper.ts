@@ -57,6 +57,16 @@ export class HttpHelper {
     }
 
     /**
+     * Чтение ресурса
+     * @param url - строка или объект URL, содержащий ссылку на ресурс
+     * @returns Promise, который вернёт содержимое ресурса, в случае успеха
+     */
+    public static async getHeaders(url: string | URL) {
+        const { headers } = await request(url)
+        return headers
+    }
+
+    /**
      * Получение данных из JSON ресурса
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт обработанный объект, в случае успеха

@@ -40,6 +40,7 @@ import {
     UpdatesWsRequest,
     Watcher,
     WebManager,
+    YggdrasilAuthProvider,
 } from "./components";
 import { VerifyWsRequest } from "./components/api/websocket/requests/VerifyRequest";
 import { LogHelper, StorageHelper } from "./utils";
@@ -98,6 +99,7 @@ export class LauncherServer {
             db: DatabaseAuthProvider,
             reject: RejectAuthProvider,
             accept: AcceptAuthProvider,
+            yggdrasil: YggdrasilAuthProvider,
         });
 
         this._AuthProvider = AuthManager.getProvider(this._ConfigManager, this._LangManager);
