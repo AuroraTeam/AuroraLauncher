@@ -18,6 +18,6 @@ export class SkinManager {
     }
 
     getDomainUrl() {
-        return new URL(this.skinUrl).hostname;
+        return [(new URL(this.skinUrl).hostname), new URL(this.capeUrl).hostname];
     }
 }

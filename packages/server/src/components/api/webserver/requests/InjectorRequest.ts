@@ -27,7 +27,7 @@ export class InjectorWebRequest extends AbstractRequest {
                 implementationName: "aurora-launchserver",
                 implementationVersion: "0.0.1",
             },
-            skinDomains: [skinManeger.getDomainUrl()],
+            skinDomains: skinManeger.getDomainUrl(),
             signaturePublickey: this.authlibManager.getPublicKey(),
         });
     }
