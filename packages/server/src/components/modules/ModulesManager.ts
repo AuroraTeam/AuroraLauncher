@@ -4,9 +4,9 @@ import path from "path";
 import { LauncherServer } from "@root/LauncherServer";
 import { ILauncherServerModule, IModuleInfo, LogHelper, StorageHelper } from "@root/utils";
 import chalk from "chalk";
+import { Service } from "typedi";
 
 import { LangManager } from "../langs";
-import { Service } from "typedi";
 
 @Service()
 export class ModulesManager {
@@ -79,8 +79,8 @@ export class ModulesManager {
             }
 
             const modulePath = path.resolve(StorageHelper.modulesDir, moduleName);
-            const moduleUrl = `file://${modulePath}`;
-            const module = (await import(moduleUrl)).Module;
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const module = require(modulePath).Module;
 
             if (!this.isValidModule(module)) {
                 LogHelper.dev(
