@@ -2,7 +2,6 @@ import { randomUUID } from "crypto";
 
 import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { SkinManager } from "../../skin";
 import { v5 } from "uuid";
 
 import {
@@ -14,23 +13,18 @@ import {
 
 export class AcceptAuthProvider implements AuthProvider {
     private projectID: string;
-    private skinManager: SkinManager;
     private sessionsDB: UserData[] = [];
 
-    constructor({ projectID }: LauncherServerConfig, skinManager: SkinManager) {
+    constructor({ projectID }: LauncherServerConfig) {
         this.projectID = projectID;
-        this.skinManager = skinManager;
     }
 
     auth(username: string): AuthResponseData {
-        
-        const userUUID = v5(username, this.projectID)
+        const userUUID = v5(username, this.projectID);
         const data = {
             username,
             userUUID,
             accessToken: randomUUID(),
-            skinUrl: this.skinManager.getSkin(userUUID, username),
-            capeUrl: this.skinManager.getCape(userUUID, username),
         };
 
         const userIndex = this.sessionsDB.findIndex((user) => user.username === username);

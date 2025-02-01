@@ -6,7 +6,6 @@ import { HjsonCommented, HjsonHelper } from "@root/utils";
 import { instanceToPlain, plainToInstance } from "class-transformer";
 
 import { ApiConfig } from "./ApiConfig";
-import { SkinConfig } from "./SkinConfig";
 
 export class LauncherServerConfig extends HjsonCommented {
     configVersion: number;
@@ -17,7 +16,6 @@ export class LauncherServerConfig extends HjsonCommented {
     env: Environment;
     mirrors: string[];
     auth: AuthProviderConfig;
-    skin: SkinConfig;
     api: ApiConfig;
 
     static getDefaults(): LauncherServerConfig {
@@ -30,7 +28,6 @@ export class LauncherServerConfig extends HjsonCommented {
         config.env = Environment.DEV;
         config.mirrors = [];
         config.auth = AuthProviderConfig.getDefaultConfig();
-        config.skin = SkinConfig.getDefaultConfig();
         config.api = ApiConfig.getDefaultConfig();
         return config;
     }

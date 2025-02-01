@@ -12,7 +12,6 @@ import {
     ClientsManager,
     CommandsManager,
     ConfigManager,
-    DatabaseAuthProvider,
     DownloadClientCommand,
     DownloadRelease,
     GetToken,
@@ -96,7 +95,6 @@ export class LauncherServer {
     private registerAuthProviders() {
         AuthManager.registerProviders({
             json: JsonAuthProvider,
-            db: DatabaseAuthProvider,
             reject: RejectAuthProvider,
             accept: AcceptAuthProvider,
             yggdrasil: YggdrasilAuthProvider,

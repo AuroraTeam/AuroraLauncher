@@ -1,89 +1,57 @@
 import { AuthResponseData, HttpHelper } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-
-import {
-    AuthProvider,
-    AuthProviderConfig,
-    HasJoinedResponseData,
-    ProfileResponseData,
-    ProfilesResponseData,
-} from "./AuthProvider";
 import { ResponseError } from "aurora-rpc-server";
-import { SkinManager } from "../../skin/SkinManager";
+
+import { AuthProvider, AuthProviderConfig } from "./AuthProvider";
 
 export class YggdrasilAuthProvider implements AuthProvider {
-    private skinManager: SkinManager;
     private config: YggdrasilAuthProviderConfig;
 
-    constructor({ auth }: LauncherServerConfig, skinManager: SkinManager) {
-        this.config = <YggdrasilAuthProviderConfig>auth;
-        //const headers = HttpHelper.getHeaders(new URL("/authserver/refresh", conf.url));
-        //headers.then(header => {
-        //    console.log(header);
-        //    if (header['x-authlib-injector-api-location']) this.config.url = header['x-authlib-injector-api-location'][0];
-        //});
-        this.skinManager = skinManager;
+    constructor(config: LauncherServerConfig) {
+        this.config = <YggdrasilAuthProviderConfig>config.auth;
     }
-    
+
     async auth(login: string, password: string): Promise<AuthResponseData> {
         try {
-            const response = await HttpHelper.postJson(this.config.url + "/authserver/authenticate", {
-                "username": login,
-                "password": password,
-            });
-            let request: AuthResponseData = {};
-            if (response.accessToken) {
-                request.username = response.selectedProfile.name;
-                request.userUUID = response.selectedProfile.id;
-                request.accessToken = response.accessToken;
-                request.capeUrl = this.skinManager.getCape(response.selectedProfile.id, response.selectedProfile.name);
-                request.skinUrl = this.skinManager.getSkin(response.selectedProfile.id, response.selectedProfile.name);
-            }
+            const response = await HttpHelper.postJson<YggdrasilAuthResponseData>(
+                this.config.url + "/authserver/authenticate",
+                {
+                    username: login,
+                    password: password,
+                },
+            );
+
             if (response.error) {
                 throw new ResponseError(response.errorMessage, 200);
             }
-            return request;
+
+            return {
+                accessToken: response.accessToken,
+                userUUID: response.selectedProfile.id,
+                username: response.selectedProfile.name,
+                refreshToken: response.clientToken,
+                // capeUrl: ,
+                // skinUrl: ,
+            };
         } catch (error) {
             throw new ResponseError(error.message, 200);
         }
     }
 
-    async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {
-        return await HttpHelper.postJson<boolean>(this.config.url + "/sessionserver/session/minecraft/join", {
-            accessToken,
-            userUUID,
-            serverID,
-        })
+    join(): never {
+        throw new Error();
     }
 
-    async hasJoined(username: string, serverID: string): Promise<HasJoinedResponseData> {
-        const response: HasJoinedResponseData = await HttpHelper.getResourceFromJson<ApiHasJoinedResponseData>(
-            this.config.url + `/sessionserver/session/minecraft/hasJoined?username=${username}&serverId=${serverID}`
-        );
-        // TODO: Проверка ошибок API
-        response.capeUrl = this.skinManager.getCape(response.userUUID, username);
-        response.skinUrl = this.skinManager.getSkin(response.userUUID, username);
-        console.log("1", response);
-        return response;
+    hasJoined(): never {
+        throw new Error();
     }
 
-    async profile(userUUID: string): Promise<ProfileResponseData> {
-        const response: ProfileResponseData = await HttpHelper.postJson<ApiProfileResponseData>(
-            this.config.url + "/sessionserver/session/minecraft/profile", {
-            userUUID,
-        });
-        // TODO: Проверка ошибок API
-        response.capeUrl = this.skinManager.getCape(userUUID, response.username);
-        response.skinUrl = this.skinManager.getSkin(userUUID, response.username);
-        console.log("2", response);
-        return response;
+    profile(): never {
+        throw new Error();
     }
 
-    async profiles(usernames: string[]): Promise<ProfilesResponseData[]> {
-        return await HttpHelper.postJson<ProfilesResponseData[]>(
-            this.config.url + "/api/profiles/minecraft",
-            { usernames },
-        )
+    profiles(): never {
+        throw new Error();
     }
 }
 
@@ -91,29 +59,13 @@ interface YggdrasilAuthProviderConfig extends AuthProviderConfig {
     url: string;
 }
 
-interface ApiAuthResponseData {
-    username: string;
-    password: string;
-}
-
-interface ApiAuthRequestData {
+interface YggdrasilAuthResponseData {
+    error?: string;
+    errorMessage?: string;
     accessToken: string;
     clientToken: string;
     selectedProfile: {
         id: string;
         name: string;
-    }
-    availableProfiles: [{
-        id: string;
-        name: string;
-    }]
-}
-
-interface ApiHasJoinedResponseData {
-    userUUID: string;
-}
-
-interface ApiError {
-    error: string;
-    errorMessage: string;
+    };
 }
