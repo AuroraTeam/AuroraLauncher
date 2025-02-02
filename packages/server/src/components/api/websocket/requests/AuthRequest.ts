@@ -1,7 +1,6 @@
 import type { AuthRequestData, AuthResponseData } from "@aurora-launcher/core";
-import { VerifyManager } from "@root/components";
+import { AbstractRequest } from "@aurora-rpc/server";
 import type { AuthProvider } from "@root/components/auth/providers";
-import { AbstractRequest } from "aurora-rpc-server";
 import { Inject, Service } from "typedi";
 
 import type { ExtendedWebSocketClient } from "../ExtendedWebSocketClient";
@@ -11,10 +10,7 @@ import { VerifyMiddleware } from "./VerifyMiddleware";
 export class AuthWsRequest extends AbstractRequest {
     method = "auth";
 
-    constructor(
-        @Inject("AuthProvider") private authProvider: AuthProvider,
-        private verifyManager: VerifyManager,
-    ) {
+    constructor(@Inject("AuthProvider") private authProvider: AuthProvider) {
         super();
     }
 

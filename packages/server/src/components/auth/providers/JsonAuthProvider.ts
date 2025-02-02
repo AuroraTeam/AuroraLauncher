@@ -1,6 +1,6 @@
 import { AuthResponseData, HttpHelper } from "@aurora-launcher/core";
+import { ResponseError } from "@aurora-rpc/server";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { ResponseError } from "aurora-rpc-server";
 
 import {
     AuthProvider,

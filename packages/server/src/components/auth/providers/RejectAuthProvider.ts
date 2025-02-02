@@ -1,5 +1,5 @@
+import { ResponseError } from "@aurora-rpc/server";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { ResponseError } from "aurora-rpc-server";
 
 import { AuthProvider, AuthProviderConfig } from "./AuthProvider";
 

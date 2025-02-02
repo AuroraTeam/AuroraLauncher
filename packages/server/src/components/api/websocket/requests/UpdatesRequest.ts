@@ -1,6 +1,6 @@
 import type { UpdatesRequestData, UpdatesResponseData } from "@aurora-launcher/core";
+import { AbstractRequest } from "@aurora-rpc/server";
 import { ClientsManager } from "@root/components/clients";
-import { AbstractRequest } from "aurora-rpc-server";
 import { Service } from "typedi";
 
 import { VerifyMiddleware } from "./VerifyMiddleware";

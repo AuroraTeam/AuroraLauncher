@@ -1,6 +1,6 @@
 import { Server, ServersResponseData } from "@aurora-launcher/core";
+import { AbstractRequest } from "@aurora-rpc/server";
 import { ProfilesManager } from "@root/components/profiles";
-import { AbstractRequest } from "aurora-rpc-server";
 import { Service } from "typedi";
 
 @Service()

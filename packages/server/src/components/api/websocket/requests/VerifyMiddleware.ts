@@ -1,5 +1,5 @@
 import { AuthRequestData } from "@aurora-launcher/core";
-import { ResponseError } from "aurora-rpc-server";
+import { ResponseError } from "@aurora-rpc/server";
 
 import { ExtendedWebSocketClient } from "../ExtendedWebSocketClient";
 

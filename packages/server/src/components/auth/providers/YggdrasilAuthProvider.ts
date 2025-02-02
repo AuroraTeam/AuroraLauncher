@@ -1,6 +1,6 @@
 import { AuthResponseData, HttpHelper } from "@aurora-launcher/core";
+import { ResponseError } from "@aurora-rpc/server";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { ResponseError } from "aurora-rpc-server";
 
 import { AuthProvider, AuthProviderConfig } from "./AuthProvider";
 
@@ -9,6 +9,9 @@ export class YggdrasilAuthProvider implements AuthProvider {
 
     constructor(config: LauncherServerConfig) {
         this.config = <YggdrasilAuthProviderConfig>config.auth;
+        if (!this.config.url) {
+            throw new Error("Yggdrasil auth url not set");
+        }
     }
 
     async auth(login: string, password: string): Promise<AuthResponseData> {
@@ -55,7 +58,7 @@ export class YggdrasilAuthProvider implements AuthProvider {
     }
 }
 
-interface YggdrasilAuthProviderConfig extends AuthProviderConfig {
+export interface YggdrasilAuthProviderConfig extends AuthProviderConfig {
     url: string;
 }
 
