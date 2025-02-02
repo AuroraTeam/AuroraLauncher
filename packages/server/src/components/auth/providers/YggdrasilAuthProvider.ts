@@ -1,10 +1,11 @@
-import { AuthResponseData, HttpHelper } from "@aurora-launcher/core";
+import { AuthResponseData, HttpHelper, JsonHelper } from "@aurora-launcher/core";
 import { ResponseError } from "@aurora-rpc/server";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 
 import { AuthProvider, AuthProviderConfig } from "./AuthProvider";
+import { MojangTextures, SkinableAuthProvider } from "./SkinableAuthProvider";
 
-export class YggdrasilAuthProvider implements AuthProvider {
+export class YggdrasilAuthProvider implements AuthProvider, SkinableAuthProvider {
     private config: YggdrasilAuthProviderConfig;
 
     constructor(config: LauncherServerConfig) {
@@ -28,13 +29,15 @@ export class YggdrasilAuthProvider implements AuthProvider {
                 throw new ResponseError(response.errorMessage, 200);
             }
 
+            const skinData = await this.getSkinData(response.selectedProfile.id);
+
             return {
                 accessToken: response.accessToken,
                 userUUID: response.selectedProfile.id,
                 username: response.selectedProfile.name,
                 refreshToken: response.clientToken,
-                // capeUrl: ,
-                // skinUrl: ,
+                skinUrl: skinData.SKIN?.url,
+                capeUrl: skinData.CAPE?.url,
             };
         } catch (error) {
             throw new ResponseError(error.message, 200);
@@ -55,6 +58,24 @@ export class YggdrasilAuthProvider implements AuthProvider {
 
     profiles(): never {
         throw new Error();
+    }
+
+    async getSkinData(uuid: string) {
+        let data: any;
+
+        try {
+            data = await HttpHelper.getResourceFromJson<any>(
+                this.config.url + "/session/minecraft/profile/" + uuid,
+            );
+        } catch {
+            return {};
+        }
+
+        const profile = JsonHelper.fromJson<MojangTextures>(
+            Buffer.from(data.properties[0].value, "base64").toString("utf-8"),
+        );
+
+        return profile.textures;
     }
 }
 
