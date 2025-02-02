@@ -59,6 +59,6 @@
     "dependencies": {
         "adm-zip": "^0.5.16",
         "p-map": "^7.0.3",
-        "undici": "6"
+        "undici": "^6"
     }
 }
