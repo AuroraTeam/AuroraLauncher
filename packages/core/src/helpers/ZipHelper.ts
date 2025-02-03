@@ -1,7 +1,6 @@
-import { extname } from "path"
-
-import AdmZip from "adm-zip"
-import { HashHelper } from "./HashHelper"
+import { extname } from "path";
+import StreamZip from "node-stream-zip";
+import { HashHelper } from "./HashHelper";
 
 export class ZipHelper {
     /**
@@ -12,32 +11,42 @@ export class ZipHelper {
      * @param onProgress - функция для отслеживания прогресса распаковки
      * @returns список распакованных файлов
      */
-    static unzip(
+    static async unzip(
         archive: string,
         destDir: string,
         whitelist: string[] = [],
-        onProgress?: (size: number) => void,
-    ) {
-        const zip = new AdmZip(archive)
-        const extractedFiles: { path: string; sha1: string }[] = []
-
-        zip.getEntries().forEach((entry) => {
-            if (
-                entry.isDirectory ||
-                (whitelist.length > 0 &&
-                    !whitelist.includes(extname(entry.entryName)))
-            )
-                return
-
-            onProgress && onProgress(entry.header.compressedSize)
-            const sha1 = HashHelper.getHash(entry.getData(), "sha1")
-            extractedFiles.push({
-                path: entry.entryName,
-                sha1,
-            })
-            zip.extractEntryTo(entry, destDir, true, true)
-        })
-
-        return extractedFiles
+        onProgress?: (size: number) => void
+    ): Promise<{ path: string; sha1: string }[]> {
+        // Открываем ZIP архив в асинхронном режиме
+        const zip = new StreamZip.async({ file: archive });
+        const extractedFiles: { path: string; sha1: string }[] = [];
+        
+        try {
+            // Получаем список всех записей в архиве
+            const entries = await zip.entries();
+            // Проходим по записям (ключами является имя файла в архиве)
+            for (const entry of Object.values(entries)) {
+                // Пропускаем директории
+                if (entry.isDirectory) continue;
+                // Если задан whitelist и расширение файла не включено в него, пропускаем
+                if (whitelist.length > 0 && !whitelist.includes(extname(entry.name))) {
+                    continue;
+                }
+                // Вызываем функцию обратного вызова для отслеживания прогресса
+                onProgress && onProgress(entry.compressedSize);
+                // Получаем данные записи
+                const data = await zip.entryData(entry);
+                const sha1 = HashHelper.getHash(data, "sha1");
+                extractedFiles.push({
+                    path: entry.name,
+                    sha1,
+                });
+            }
+            await zip.extract(null, destDir);
+        } finally {
+            // Не забудьте закрыть архив для освобождения ресурсов
+            await zip.close();
+        }
+        return extractedFiles;
     }
 }

@@ -52,7 +52,7 @@ export class NeoForgeManager extends MojangManager {
                 return false;
             }
             this.#forgeInstall = file
-            ZipHelper.unzip(resolve(this.#tempDir, this.#forgeInstall), this.#tempDir);
+            await ZipHelper.unzip(resolve(this.#tempDir, this.#forgeInstall), this.#tempDir);
             return true;
         } catch {
             return false;

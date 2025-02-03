@@ -79,7 +79,7 @@ export class MirrorManager extends MojangManager {
             LogHelper.info(
                 this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking,
             );
-            ZipHelper.unzip(client, clientDirPath);
+            await ZipHelper.unzip(client, clientDirPath);
 
             return true;
         } catch (error) {
@@ -118,7 +118,7 @@ export class MirrorManager extends MojangManager {
             LogHelper.info(
                 this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingLib,
             );
-            ZipHelper.unzip(client, StorageHelper.librariesDir);
+            await ZipHelper.unzip(client, StorageHelper.librariesDir);
 
             return true;
         } catch (error) {

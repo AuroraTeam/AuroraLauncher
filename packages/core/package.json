@@ -57,7 +57,7 @@
         "typescript-eslint": "^8.20.0"
     },
     "dependencies": {
-        "adm-zip": "^0.5.16",
+        "node-stream-zip": "^1.15.0",
         "p-map": "^7.0.3",
         "undici": "^6"
     }
