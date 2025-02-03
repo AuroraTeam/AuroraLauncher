@@ -1,16 +1,17 @@
-import { extname } from "path";
+import { extname, join, dirname } from "path";
+import { mkdir } from "fs/promises"
 import StreamZip from "node-stream-zip";
 import { HashHelper } from "./HashHelper";
 
 export class ZipHelper {
     /**
-     * Распаковка архива в папку
-     * @param archive - путь до архива
-     * @param destDir - конечная папка
-     * @param whitelist - распаковать файлы с определённым расширением (указывать с точкой, например: .so)
-     * @param onProgress - функция для отслеживания прогресса распаковки
-     * @returns список распакованных файлов
-     */
+    * Распаковка архива в папку
+    * @param archive - путь до архива
+    * @param destDir - конечная папка
+    * @param whitelist - распаковать файлы с определённым расширением (указывать с точкой, например: .so)
+    * @param onProgress - функция для отслеживания прогресса распаковки
+    * @returns список распакованных файлов
+    */
     static async unzip(
         archive: string,
         destDir: string,
@@ -41,8 +42,15 @@ export class ZipHelper {
                     path: entry.name,
                     sha1,
                 });
+                // Определяем полный путь для сохранения файла
+                const filePath = join(destDir, entry.name);
+                const fileDir = dirname(filePath);
+                
+                // Гарантируем, что каталог существует
+                await mkdir(fileDir, { recursive: true });
+                // Извлекаем файл 
+                await zip.extract(entry, filePath);
             }
-            await zip.extract(null, destDir);
         } finally {
             // Не забудьте закрыть архив для освобождения ресурсов
             await zip.close();
