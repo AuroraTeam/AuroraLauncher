@@ -12,9 +12,9 @@ import {
     ClientsManager,
     CommandsManager,
     ConfigManager,
-    DatabaseAuthProvider,
     DownloadClientCommand,
     DownloadRelease,
+    EndpointWsRequest,
     GetToken,
     HasJoinedWebRequest,
     HelpCommand,
@@ -38,10 +38,11 @@ import {
     UpdateCommand,
     UpdateManager,
     UpdatesWsRequest,
+    VerifyWsRequest,
     Watcher,
     WebManager,
+    YggdrasilAuthProvider,
 } from "./components";
-import { VerifyWsRequest } from "./components/api/websocket/requests/VerifyRequest";
 import { LogHelper, StorageHelper } from "./utils";
 
 @Service()
@@ -95,9 +96,9 @@ export class LauncherServer {
     private registerAuthProviders() {
         AuthManager.registerProviders({
             json: JsonAuthProvider,
-            db: DatabaseAuthProvider,
             reject: RejectAuthProvider,
             accept: AcceptAuthProvider,
+            yggdrasil: YggdrasilAuthProvider,
         });
 
         this._AuthProvider = AuthManager.getProvider(this._ConfigManager, this._LangManager);
@@ -127,6 +128,7 @@ export class LauncherServer {
             Container.get(ServersWsRequest),
             Container.get(UpdatesWsRequest),
             Container.get(VerifyWsRequest),
+            Container.get(EndpointWsRequest),
         ]);
 
         this._WebManager.registerWebRequests([

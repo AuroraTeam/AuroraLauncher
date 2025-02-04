@@ -1,6 +1,6 @@
 import type { ProfileRequestData, ProfileResponseData } from "@aurora-launcher/core";
+import { AbstractRequest } from "@aurora-rpc/server";
 import { ConfigManager, ProfilesManager } from "@root/components";
-import { AbstractRequest } from "aurora-rpc-server";
 import { Inject, Service } from "typedi";
 
 import { VerifyMiddleware } from "./VerifyMiddleware";

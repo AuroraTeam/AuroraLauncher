@@ -1,6 +1,6 @@
 {
     "name": "@aurora-launcher/core",
-    "version": "0.25.0",
+    "version": "0.27.2",
     "description": "Base library for Aurora Launcher",
     "type": "commonjs",
     "main": "./dist/index.js",
@@ -57,8 +57,8 @@
         "typescript-eslint": "^8.20.0"
     },
     "dependencies": {
-        "adm-zip": "^0.5.16",
+        "node-stream-zip": "^1.15.0",
         "p-map": "^7.0.3",
-        "undici": "6"
+        "undici": "^6"
     }
 }

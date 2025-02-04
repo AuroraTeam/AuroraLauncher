@@ -1,6 +1,6 @@
 {
     "name": "@aurora-launcher/server",
-    "version": "0.0.5-dev.5",
+    "version": "0.0.5-dev.6",
     "description": "LauncherServer for AuroraLauncher",
     "keywords": [
         "minecraft",
@@ -38,7 +38,6 @@
     "devDependencies": {
         "@aurora-launcher/esbuild-decorators": "^0.0.1",
         "@eslint/js": "^9.18.0",
-        "@types/adm-zip": "^0.5.7",
         "@types/cli-progress": "^3.11.6",
         "@types/hjson": "^2.4.6",
         "@types/lodash-es": "^4.17.12",
@@ -61,8 +60,8 @@
         "typescript-eslint": "^8.20.0"
     },
     "dependencies": {
-        "@aurora-launcher/core": "^0.25.0",
-        "aurora-rpc-server": "^0.1.6",
+        "@aurora-launcher/core": "^0.27.2",
+        "@aurora-rpc/server": "^0.1.8",
         "chalk": "^5.4.1",
         "chokidar": "^4.0.3",
         "class-transformer": "^0.5.1",
@@ -72,18 +71,12 @@
         "hash-wasm": "^4.12.0",
         "hjson": "^3.2.2",
         "lodash-es": "^4.17.21",
-        "mssql": "^11.0.1",
-        "mysql2": "^3.12.0",
-        "oracledb": "^6.7.1",
-        "pg": "^8.13.1",
         "raw-body": "^3.0.0",
         "reflect-metadata": "^0.2.2",
         "semver": "^7.6.3",
         "source-map-support": "^0.5.21",
-        "sqlite3": "^5.1.7",
         "strip-ansi": "^7.1.0",
         "typedi": "^0.10.0",
-        "typeorm": "^0.3.20",
         "uuid": "^11.0.5"
     },
     "importSort": {

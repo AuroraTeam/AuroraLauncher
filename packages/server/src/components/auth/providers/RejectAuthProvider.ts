@@ -1,10 +1,10 @@
+import { ResponseError } from "@aurora-rpc/server";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 
 import { AuthProvider, AuthProviderConfig } from "./AuthProvider";
-import { ResponseError } from "aurora-rpc-server";
 
 export class RejectAuthProvider implements AuthProvider {
-    private message: string;
+    protected message: string;
 
     constructor({ auth }: LauncherServerConfig) {
         const { message = "Auth rejected" } = auth as RejectAuthProviderConfig;

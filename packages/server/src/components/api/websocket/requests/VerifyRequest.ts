@@ -1,7 +1,7 @@
 import { VerifyRequestData, VerifyResponseData } from "@aurora-launcher/core";
+import { AbstractRequest, ResponseError } from "@aurora-rpc/server";
 import { VerifyManager } from "@root/components";
 import { SecureHelper } from "@root/utils";
-import { AbstractRequest, ResponseError } from "aurora-rpc-server";
 import { Service } from "typedi";
 
 import { ExtendedWebSocketClient } from "../ExtendedWebSocketClient";

@@ -1,7 +1,7 @@
-import { ConfigManager } from "@root/components/config";
+import { AbstractRequest as AbstractWsRequest, Server } from "@aurora-rpc/server";
 import { ArgsManager } from "@root/components/args";
+import { ConfigManager } from "@root/components/config";
 import { LangManager } from "@root/components/langs";
-import { AbstractRequest as AbstractWsRequest, Server } from "aurora-rpc-server";
 import { Service } from "typedi";
 
 import { WebServerManager } from "../index";

@@ -1,9 +1,8 @@
 import { AuthResponseData } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { SkinManager } from "../../skin/SkinManager";
 
 export interface AuthProviderConstructor {
-    new (configManager: LauncherServerConfig, skinManager: SkinManager): AuthProvider;
+    new (configManager: LauncherServerConfig): AuthProvider;
 }
 
 export interface AuthProvider {
@@ -20,9 +19,10 @@ export interface AuthProvider {
 
 export class AuthProviderConfig {
     type: string;
+    skinDomains?: string[];
 
     static getDefaultConfig(): AuthProviderConfig {
-        return { type: "accept" };
+        return { type: "accept", skinDomains: ["textures.minecraft.net"] };
     }
 }
 

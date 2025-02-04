@@ -1,8 +1,7 @@
 import { randomUUID } from "crypto";
 
-import { AuthResponseData } from "@aurora-launcher/core";
+import { AuthResponseData, HttpHelper, JsonHelper } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
-import { SkinManager } from "../../skin";
 import { v5 } from "uuid";
 
 import {
@@ -11,26 +10,23 @@ import {
     ProfileResponseData,
     ProfilesResponseData,
 } from "./AuthProvider";
+import { MojangTextures, SkinableAuthProvider } from "./SkinableAuthProvider";
 
-export class AcceptAuthProvider implements AuthProvider {
+export class AcceptAuthProvider implements AuthProvider, SkinableAuthProvider {
     private projectID: string;
-    private skinManager: SkinManager;
     private sessionsDB: UserData[] = [];
 
-    constructor({ projectID }: LauncherServerConfig, skinManager: SkinManager) {
+    constructor({ projectID }: LauncherServerConfig) {
         this.projectID = projectID;
-        this.skinManager = skinManager;
     }
 
-    auth(username: string): AuthResponseData {
-        
-        const userUUID = v5(username, this.projectID)
+    async auth(username: string): Promise<AuthResponseData> {
+        const userUUID = v5(username, this.projectID);
         const data = {
             username,
             userUUID,
             accessToken: randomUUID(),
-            skinUrl: this.skinManager.getSkin(userUUID, username),
-            capeUrl: this.skinManager.getCape(userUUID, username),
+            refreshToken: randomUUID(),
         };
 
         const userIndex = this.sessionsDB.findIndex((user) => user.username === username);
@@ -43,7 +39,13 @@ export class AcceptAuthProvider implements AuthProvider {
             serverId: undefined,
         });
 
-        return data;
+        const skinData = await this.getSkinData(username);
+
+        return {
+            ...data,
+            skinUrl: skinData.SKIN?.url,
+            capeUrl: skinData.CAPE?.url,
+        };
     }
 
     join(accessToken: string, userUUID: string, serverId: string): boolean {
@@ -79,6 +81,32 @@ export class AcceptAuthProvider implements AuthProvider {
                 id: user.userUUID,
                 name: user.username,
             }));
+    }
+
+    async getSkinData(username: string) {
+        let data: any;
+
+        try {
+            data = await HttpHelper.getResourceFromJson<any>(
+                "https://api.mojang.com/users/profiles/minecraft/" + username,
+            );
+        } catch {
+            return {};
+        }
+
+        try {
+            data = await HttpHelper.getResourceFromJson<any>(
+                "https://sessionserver.mojang.com/session/minecraft/profile/" + data.id,
+            );
+        } catch {
+            return {};
+        }
+
+        const profile = JsonHelper.fromJson<MojangTextures>(
+            Buffer.from(data.properties[0].value, "base64").toString("utf-8"),
+        );
+
+        return profile.textures;
     }
 }
 

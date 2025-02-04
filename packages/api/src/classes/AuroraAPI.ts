@@ -8,13 +8,14 @@ import {
     UpdatesResponseData,
     VerifyRequestData,
     VerifyResponseData,
+    EndpointResponseData,
 } from "@aurora-launcher/core"
-import { Client, Events, Request, Response, ResponseError } from "aurora-rpc-client"
+import { Client, Events, Request, Response, ResponseError } from "@aurora-rpc/client"
 
 import { APIError } from "./APIError"
 
 export class AuroraAPI {
-    #clientInstance
+    #clientInstance: Client
 
     constructor(url?: string, events?: Events) {
         this.#clientInstance = new Client(url, events)
@@ -26,6 +27,10 @@ export class AuroraAPI {
 
     public close(code?: number, data?: string) {
         this.#clientInstance.close(code, data)
+    }
+
+    public async getEndpoint(): Promise<EndpointResponseData> {
+        return await this.#getRequest<AuthRequestData, EndpointResponseData>("getEndpoint")
     }
 
     public async auth(login: string, password: string): Promise<AuthResponseData> {

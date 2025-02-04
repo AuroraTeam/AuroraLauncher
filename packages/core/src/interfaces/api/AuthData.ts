@@ -7,7 +7,7 @@ export interface AuthResponseData {
     username: string
     userUUID: string
     accessToken: string
-    token?: string
+    refreshToken: string
     isAlex?: boolean
     skinUrl?: string
     capeUrl?: string
