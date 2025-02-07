@@ -76,6 +76,7 @@
                 "success": "Libraries downloaded successfully!"
             },
             "info": {
+                "supportError": "Forge auto-installation for clients with versions lower than 1.12.2 is not supported",
                 "errForgeVersion": "Forge version not found",
                 "notFoundJava": "Java was not found. Please install Java JDK to continue",
                 "errClientParsing": "Error parsing client data"

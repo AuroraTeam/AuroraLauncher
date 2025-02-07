@@ -1,14 +1,14 @@
-import { spawnSync } from "child_process";
+import { spawn } from "child_process";
 import { createHash } from "crypto";
 import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "fs";
 import { extname, resolve } from "path";
 
-import { JsonHelper, ProfileLibrary, ZipHelper, HttpHelper } from "@aurora-launcher/core";
+import { HttpHelper, JsonHelper, ProfileLibrary, ZipHelper } from "@aurora-launcher/core";
 import { LogHelper, StorageHelper } from "@root/utils";
-import semver from "semver";
+import { coerce, gte, lt } from "semver";
 import { Service } from "typedi";
 
-import { InstallProfile, Libraries, VersionProfiles, Manifest } from "../interfaces/IForge";
+import { InstallProfile, Libraries, Manifest, VersionProfiles } from "../interfaces/IForge";
 import { MojangManager } from "./Mojang";
 
 @Service()
@@ -17,6 +17,12 @@ export class ForgeManager extends MojangManager {
     #tempDir = StorageHelper.getTmpPath();
 
     async downloadClient(gameVersion: string, clientName: string) {
+        if (lt(coerce(gameVersion).version, "1.12.2")) {
+            return LogHelper.error(
+                this.langManager.getTranslate.DownloadManager.ForgeManager.info.supportError,
+            );
+        }
+
         if (await this.downloadForge(gameVersion)) {
             const profileUUID = await super.downloadClient(gameVersion, clientName);
             if (!profileUUID) return;
@@ -24,7 +30,7 @@ export class ForgeManager extends MojangManager {
             LogHelper.info(
                 this.langManager.getTranslate.DownloadManager.ForgeManager.client.install,
             );
-            this.startInstallerFile();
+            await this.startInstallerFile();
 
             const versionProfiles: VersionProfiles = JsonHelper.fromJson(
                 readFileSync(resolve(this.#tempDir, "version.json")).toString(),
@@ -71,25 +77,28 @@ export class ForgeManager extends MojangManager {
             const manifest = await HttpHelper.getResourceFromJson<Manifest>(
                 "https://api.curseforge.com/v1/minecraft/modloader",
             );
-            const dataInstaller = manifest.data.filter((link) => link.gameVersion === gameVersion && link.latest)[0];
+            const dataInstaller = manifest.data.filter(
+                (link) => link.gameVersion === gameVersion && link.latest,
+            )[0];
             const forgeVersion = dataInstaller.name.slice(6);
             mkdirSync(this.#tempDir);
             const file = await HttpHelper.downloadFile(
-                `https://maven.minecraftforge.net/net/minecraftforge/forge/${gameVersion}-${forgeVersion}/forge-${gameVersion}-${forgeVersion}-installer.jar`, 
+                `https://maven.minecraftforge.net/net/minecraftforge/forge/${gameVersion}-${forgeVersion}/forge-${gameVersion}-${forgeVersion}-installer.jar`,
                 resolve(this.#tempDir, `forge-${gameVersion}-${forgeVersion}-installer.jar`),
             );
             if (!file) {
                 return false;
             }
-            this.#forgeInstall = file
+            this.#forgeInstall = file;
             await ZipHelper.unzip(resolve(this.#tempDir, this.#forgeInstall), this.#tempDir);
             return true;
-        } catch {
+        } catch (error) {
+            LogHelper.debug(error);
             return false;
         }
     }
 
-    startInstallerFile() {
+    async startInstallerFile() {
         const launcherProfiles = JsonHelper.toJson({
             selectedProfile: "(Default)",
             profiles: {
@@ -100,17 +109,32 @@ export class ForgeManager extends MojangManager {
             clientToken: "",
         });
         writeFileSync(resolve(this.#tempDir, "launcher_profiles.json"), launcherProfiles);
-        const installerProcess = spawnSync(
-            "java",
-            ["-jar", resolve(this.#tempDir, this.#forgeInstall), "--installClient", this.#tempDir],
-            { stdio: "ignore" },
-        );
-        if (installerProcess.error) {
-            LogHelper.error(
-                this.langManager.getTranslate.DownloadManager.ForgeManager.info.notFoundJava,
-            );
-            LogHelper.debug(installerProcess.error);
-        }
+
+        const installerProcess = spawn("java", [
+            "-jar",
+            resolve(this.#tempDir, this.#forgeInstall),
+            "--installClient",
+            this.#tempDir,
+        ]);
+        installerProcess.stdout.on("data", (data: Buffer) => {
+            LogHelper.debug(data.toString().trimEnd());
+        });
+        installerProcess.stderr.on("error", (data: Buffer) => {
+            LogHelper.error(data.toString().trimEnd());
+        });
+
+        await new Promise((resolve, reject) => {
+            installerProcess.on("close", (code) => {
+                if (code != 0) {
+                    LogHelper.error(
+                        this.langManager.getTranslate.DownloadManager.ForgeManager.info
+                            .notFoundJava,
+                    );
+                    reject();
+                }
+                resolve(true);
+            });
+        });
     }
 
     libParser(libraries: Array<Libraries>, version: string): Array<ProfileLibrary> {
@@ -157,7 +181,7 @@ export class ForgeManager extends MojangManager {
             }
         }
 
-        if (semver.gte(version, "1.13.1")) {
+        if (gte(version, "1.13.1")) {
             for (const clientDir of readdirSync(
                 resolve(this.#tempDir, "libraries/net/minecraft/client"),
             )) {
