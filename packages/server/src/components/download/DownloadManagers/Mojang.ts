@@ -14,7 +14,6 @@ import {
     Client,
     Library,
     Name,
-    Type,
     VersionProfile,
     VersionsManifest,
 } from "../interfaces/IMojang";
