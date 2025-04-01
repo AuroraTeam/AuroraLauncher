@@ -305,9 +305,7 @@ export class MojangManager extends AbstractDownloadManager {
         const versionInfo = await this.#getVersions();
         if (!versionInfo) return;
 
-        const version = versionInfo.versions
-            .filter(({ type }) => type === Type.Release)
-            .find(({ id }) => id === gameVersion);
+        const version = versionInfo.versions.find(({ id }) => id === gameVersion);
 
         if (!version) {
             return LogHelper.error(
