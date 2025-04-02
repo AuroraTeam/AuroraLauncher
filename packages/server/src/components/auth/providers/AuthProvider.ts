@@ -8,6 +8,12 @@ export interface AuthProviderConstructor {
 export interface AuthProvider {
     auth(username: string, password: string): PromiseOr<AuthResponseData>;
 
+    // refresh(): PromiseOr<null>;
+
+    // validate(): PromiseOr<null>;
+
+    // logout(): PromiseOr<null>;
+
     join(accessToken: string, userUUID: string, serverID: string): PromiseOr<boolean>;
 
     hasJoined(username: string, serverID: string): PromiseOr<HasJoinedResponseData>;
