@@ -1,8 +1,6 @@
 export enum AuthType {
+    INTERNAL = "internal",
     YGGDRASIL = "yggdrasil",
     MICROSOFT = "microsoft",
-    ACCEPT = "accept",
-    REJECT = "reject",
-    JSON = "json",
-    MODULE = "module",
+    OFFLINE = "offline",
 }

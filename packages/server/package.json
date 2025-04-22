@@ -60,7 +60,7 @@
         "typescript-eslint": "^8.20.0"
     },
     "dependencies": {
-        "@aurora-launcher/core": "^0.27.2",
+        "@aurora-launcher/core": "^0.28.1",
         "@aurora-rpc/server": "^0.1.8",
         "chalk": "^5.4.1",
         "chokidar": "^4.0.3",
