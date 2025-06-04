@@ -1,3 +1,13 @@
+import { AuthType } from "../AuthType"
+
+export const GET_AUTH_TYPE_METHOD = "getAuthType"
+export const AUTH_METHOD = "auth"
+
+export interface AuthTypeResponseData {
+    type: AuthType
+    extra: unknown
+}
+
 export interface AuthRequestData {
     login: string
     password: string

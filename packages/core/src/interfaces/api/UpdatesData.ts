@@ -1,3 +1,5 @@
+export const GET_UPDATES_METHOD = "getUpdates"
+
 export interface UpdatesRequestData {
     dir: string
 }

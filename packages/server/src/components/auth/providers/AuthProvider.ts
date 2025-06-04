@@ -1,4 +1,4 @@
-import { AuthResponseData } from "@aurora-launcher/core";
+import { AuthResponseData, AuthType } from "@aurora-launcher/core";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 
 export interface AuthProviderConstructor {
@@ -21,6 +21,9 @@ export interface AuthProvider {
     profile(userUUID: string): PromiseOr<ProfileResponseData>;
 
     profiles(usernames: string[]): PromiseOr<ProfilesResponseData[]>;
+
+    getAuthType(): AuthType;
+    getExtraAuthData(): any;
 }
 
 export class AuthProviderConfig {

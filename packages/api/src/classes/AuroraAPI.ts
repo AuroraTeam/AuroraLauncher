@@ -9,6 +9,7 @@ import {
     VerifyRequestData,
     VerifyResponseData,
     EndpointResponseData,
+    AuthTypeResponseData,
 } from "@aurora-launcher/core"
 import { Client, Events, Request, Response, ResponseError } from "@aurora-rpc/client"
 
@@ -33,20 +34,24 @@ export class AuroraAPI {
         return await this.#getRequest<AuthRequestData, EndpointResponseData>("getEndpoint")
     }
 
+    public async getAuthType(): Promise<AuthTypeResponseData> {
+        return await this.#getRequest<AuthRequestData, AuthTypeResponseData>("getAuthType")
+    }
+
     public async auth(login: string, password: string): Promise<AuthResponseData> {
         return await this.#getRequest<AuthRequestData, AuthResponseData>("auth", { login, password })
     }
 
     public async getServers(): Promise<ServersResponseData> {
-        return await this.#getRequest<undefined, ServersResponseData>("servers")
+        return await this.#getRequest<undefined, ServersResponseData>("getServers")
     }
 
     public async getProfile(uuid: string): Promise<ProfileResponseData> {
-        return await this.#getRequest<ProfileRequestData, ProfileResponseData>("profile", { uuid })
+        return await this.#getRequest<ProfileRequestData, ProfileResponseData>("getProfile", { uuid })
     }
 
     public async getUpdates(dir: string): Promise<UpdatesResponseData> {
-        return await this.#getRequest<UpdatesRequestData, UpdatesResponseData>("updates", { dir })
+        return await this.#getRequest<UpdatesRequestData, UpdatesResponseData>("getUpdates", { dir })
     }
 
     public async verify(stage: number, token?: string) {

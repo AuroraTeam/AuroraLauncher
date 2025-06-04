@@ -1,6 +1,6 @@
 {
     "name": "@aurora-launcher/api",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "description": "JS/TS API implementation for Aurora Launcher",
     "type": "commonjs",
     "main": "./dist/index-node.cjs",
@@ -34,7 +34,7 @@
     },
     "homepage": "https://github.com/AuroraTeam/AuroraAPI#readme",
     "dependencies": {
-        "@aurora-launcher/core": "^0.28.1",
+        "@aurora-launcher/core": "^0.28.2",
         "@aurora-rpc/client": "^0.3.6"
     },
     "devDependencies": {
