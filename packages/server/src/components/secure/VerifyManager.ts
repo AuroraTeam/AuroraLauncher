@@ -2,8 +2,8 @@ import { privateDecrypt, privateEncrypt } from "crypto";
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
+import { Service } from "@freshgum/typedi";
 import { SecureHelper, StorageHelper } from "@root/utils";
-import { Service } from "typedi";
 
 @Service()
 export class VerifyManager {

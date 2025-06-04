@@ -30,7 +30,7 @@ const ctx = await context({
         "oci-secrets",
         "oracledb",
     ],
-    plugins: [esbuildDecorators()],
+    // plugins: [esbuildDecorators()],
     entryPoints: ["src/app.ts"],
     outfile: "dist/LauncherServer.js",
     ...args,

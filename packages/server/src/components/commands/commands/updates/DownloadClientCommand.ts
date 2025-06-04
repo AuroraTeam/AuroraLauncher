@@ -1,3 +1,4 @@
+import { Service } from "@freshgum/typedi";
 import {
     ClientsManager,
     CommandsManager,
@@ -13,9 +14,8 @@ import {
 } from "@root/components";
 import { Watcher } from "@root/components/watcher/Watcher";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
-import { Service } from "typedi";
 
-@Service()
+@Service([LangManager, ProfilesManager, ConfigManager, CommandsManager, ClientsManager, Watcher])
 export class DownloadClientCommand extends AbstractCommand {
     constructor(
         private readonly langManager: LangManager,

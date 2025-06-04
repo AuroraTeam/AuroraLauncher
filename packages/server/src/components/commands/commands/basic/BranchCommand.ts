@@ -1,9 +1,9 @@
+import { Service } from "@freshgum/typedi";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
-import { Service } from "typedi";
 
 // import prompts from "prompts"
 
-@Service()
+@Service([])
 export class BranchCommand extends AbstractCommand {
     constructor() {
         super({

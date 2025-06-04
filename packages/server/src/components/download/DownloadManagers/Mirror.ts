@@ -3,8 +3,8 @@ import { URL } from "url";
 
 import { HttpHelper, ZipHelper } from "@aurora-launcher/core";
 import { Profile } from "@aurora-launcher/core";
+import { Service } from "@freshgum/typedi";
 import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import { MojangManager } from "./Mojang";
 

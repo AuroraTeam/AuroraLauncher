@@ -1,13 +1,13 @@
 import { sep } from "path";
 
+import { Service } from "@freshgum/typedi";
 import { StorageHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import { ClientsManager } from "../clients/ClientsManager";
 import { ProfilesManager } from "../profiles/ProfilesManager";
 import { WatchService } from "./WatchService";
 
-@Service()
+@Service([ProfilesManager, ClientsManager])
 export class Watcher {
     #clientsWatcher = new WatchService();
     #profilesWatcher = new WatchService();

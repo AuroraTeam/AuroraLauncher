@@ -2,12 +2,12 @@ import { createSign } from "crypto";
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
+import { Service } from "@freshgum/typedi";
 import { LogHelper, SecureHelper, StorageHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import { LangManager } from "../langs";
 
-@Service()
+@Service([LangManager])
 export class AuthlibManager {
     private publicKeyPath = resolve(StorageHelper.authlibDir, "public.pem");
     private privateKeyPath = resolve(StorageHelper.authlibDir, "private.pem");

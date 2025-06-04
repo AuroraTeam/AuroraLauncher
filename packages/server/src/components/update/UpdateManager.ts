@@ -1,15 +1,15 @@
 import path from "path";
 
 import { HttpHelper } from "@aurora-launcher/core";
+import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper, SystemHelper } from "@root/utils";
 import semver from "semver";
-import { Service } from "typedi";
 
 import { version as currentVersion } from "../../../package.json";
 import { ConfigManager } from "../config";
 import { LangManager } from "../langs";
 
-@Service()
+@Service([ConfigManager, LangManager])
 export class UpdateManager {
     private readonly apiUrl = new URL("versions", "https://api.aurora-launcher.ru/");
     private readonly fileTypeMap: Record<string, string> = {

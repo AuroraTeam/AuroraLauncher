@@ -1,12 +1,13 @@
 import fs from "fs";
 import { resolve } from "path";
 
+import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/utils";
 import { set } from "lodash-es";
-import { LauncherServerConfig } from "./utils";
-import { Service } from "typedi";
 
-@Service()
+import { LauncherServerConfig } from "./utils";
+
+@Service([])
 export class ConfigManager {
     #config: LauncherServerConfig;
     #configFile: string = resolve(StorageHelper.storageDir, "LauncherServerConfig.hjson");

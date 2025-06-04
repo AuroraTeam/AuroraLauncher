@@ -1,8 +1,8 @@
+import { Service } from "@freshgum/typedi";
 import { LangManager, ProfilesManager } from "@root/components";
 import { AbstractCommand, Category } from "@root/utils";
-import { Service } from "typedi";
 
-@Service()
+@Service([LangManager, ProfilesManager])
 export class SyncProfilesCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,

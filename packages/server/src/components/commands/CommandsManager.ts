@@ -1,11 +1,11 @@
 import ReadLine from "readline";
 
+import { Service } from "@freshgum/typedi";
 import { AbstractCommand, LogHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import { LangManager } from "../langs";
 
-@Service()
+@Service([LangManager])
 export class CommandsManager {
     public commands: Map<string, AbstractCommand> = new Map();
     console: ReadLine.Interface;

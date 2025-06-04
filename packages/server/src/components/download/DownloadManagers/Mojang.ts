@@ -3,8 +3,8 @@ import path, { resolve } from "path";
 
 import { HttpHelper, JsonHelper, OS, ProfileLibrary } from "@aurora-launcher/core";
 import { MojangAssets } from "@aurora-launcher/core";
+import { Service } from "@freshgum/typedi";
 import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import {
     Action,
@@ -19,7 +19,7 @@ import {
 } from "../interfaces/IMojang";
 import { AbstractDownloadManager } from "./AbstractManager";
 
-@Service()
+@Service([])
 export class MojangManager extends AbstractDownloadManager {
     #versionManifestLink = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
     #assetsLink = "https://resources.download.minecraft.net/";

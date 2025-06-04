@@ -2,18 +2,24 @@ import { spawn } from "child_process";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
-import nodemon from "nodemon";
+function write(inp, out, prefix) {
+    inp.on("data", (data) => out.write(`${prefix} ${data.toString()}`));
+}
 
 const cwd = fileURLToPath(dirname(dirname(import.meta.url)));
 
-nodemon({
-    script: "dist/LauncherServer.js",
-    watch: ["dist/LauncherServer.js"],
-    args: ["--dev"],
+const build = spawn("npm", "run build:dev -- --watch --logLevel info".split(" "), {
+    shell: true,
     cwd,
 });
 
-spawn("npm", "run build:dev -- --watch --logLevel info".split(" "), {
+write(build.stdout, process.stdout, "[build stdout]");
+write(build.stderr, process.stderr, "[build error]");
+
+const node = spawn("node", "--watch dist/LauncherServer.js".split(" "), {
     shell: true,
     cwd,
-}).stderr.on("data", (data) => console.log(data.toString()));
+});
+
+write(node.stdout, process.stdout, "[node stdout]");
+write(node.stderr, process.stderr, "[node error]");

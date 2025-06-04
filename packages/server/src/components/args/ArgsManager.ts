@@ -1,9 +1,9 @@
+import { Service } from "@freshgum/typedi";
 import { ConfigManager } from "@root/components/config";
 import { Args } from "@root/utils/interfaces";
 import { program } from "commander";
-import { Service } from "typedi";
 
-@Service()
+@Service([ConfigManager])
 export class ArgsManager {
     #args: Args;
 

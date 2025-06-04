@@ -1,8 +1,8 @@
+import { Service } from "@freshgum/typedi";
 import { LangManager } from "@root/components/langs";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
-import { Service } from "typedi";
 
-@Service()
+@Service([LangManager])
 export class StatusCommand extends AbstractCommand {
     constructor(langManager: LangManager) {
         super({

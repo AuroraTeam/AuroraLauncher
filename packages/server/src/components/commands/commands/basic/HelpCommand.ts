@@ -1,15 +1,14 @@
+import { Service } from "@freshgum/typedi";
 import { LangManager } from "@root/components/langs";
 import { AbstractCommand, Category, LogHelper } from "@root/utils";
 import chalk from "chalk";
 
 import { CommandsManager } from "../..";
-import { Inject, Service } from "typedi";
 
-@Service()
+@Service([])
 export class HelpCommand extends AbstractCommand {
     constructor(
         langManager: LangManager,
-        @Inject(() => CommandsManager)
         private readonly commandsManager: CommandsManager,
     ) {
         super({

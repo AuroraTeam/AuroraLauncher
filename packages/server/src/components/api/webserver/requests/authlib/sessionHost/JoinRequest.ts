@@ -1,7 +1,7 @@
 import { JsonHelper } from "@aurora-launcher/core";
+import { Service } from "@freshgum/typedi";
 import type { AuthProvider } from "@root/components/auth/providers";
 import { UUIDHelper } from "@root/utils";
-import { Inject, Service } from "typedi";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
@@ -18,7 +18,7 @@ export class JoinWebRequest extends AbstractRequest {
     method = "POST";
     url = /^\/authlib\/sessionserver\/session\/minecraft\/join$/;
 
-    constructor(@Inject("AuthProvider") private authProvider: AuthProvider) {
+    constructor(private authProvider: AuthProvider) {
         super();
     }
 

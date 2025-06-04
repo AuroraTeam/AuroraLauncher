@@ -1,4 +1,4 @@
-import { Service } from "typedi";
+import { Service } from "@freshgum/typedi";
 
 import { WebRequest } from "../../WebRequest";
 import { WebResponse } from "../../WebResponse";
@@ -15,6 +15,6 @@ export class GetToken extends AbstractRequest {
     }
 
     async emit(req: WebRequest, res: WebResponse): Promise<void> {
-        res.json({token: this.tokenManager.getEncryptedToken()})
+        res.json({ token: this.tokenManager.getEncryptedToken() });
     }
 }

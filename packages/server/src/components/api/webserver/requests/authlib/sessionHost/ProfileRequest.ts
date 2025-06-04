@@ -1,7 +1,7 @@
+import { Service } from "@freshgum/typedi";
 import type { AuthProvider } from "@root/components/auth/providers";
 import { AuthlibManager } from "@root/components/authlib";
 import { UUIDHelper } from "@root/utils";
-import { Inject, Service } from "typedi";
 
 import { WebRequest } from "../../../WebRequest";
 import { WebResponse } from "../../../WebResponse";
@@ -14,7 +14,7 @@ export class ProfileWebRequest extends AbstractRequest {
         /^\/authlib\/sessionserver\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/;
 
     constructor(
-        @Inject("AuthProvider") private authProvider: AuthProvider,
+        private authProvider: AuthProvider,
         private authlibManager: AuthlibManager,
     ) {
         super();

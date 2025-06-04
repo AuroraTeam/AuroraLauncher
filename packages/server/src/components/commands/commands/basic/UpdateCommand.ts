@@ -1,8 +1,8 @@
+import { Service } from "@freshgum/typedi";
 import { UpdateManager } from "@root/components/update";
 import { AbstractCommand, Category } from "@root/utils";
-import { Service } from "typedi";
 
-@Service()
+@Service([UpdateManager])
 export class UpdateCommand extends AbstractCommand {
     constructor(private readonly updateManager: UpdateManager) {
         super({

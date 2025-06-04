@@ -1,11 +1,11 @@
+import { Service } from "@freshgum/typedi";
 import { LogHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import { ConfigManager } from "../config";
 import { LangManager } from "../langs";
 import { AuthProvider, AuthProviderConstructor } from "./providers";
 
-@Service()
+@Service([ConfigManager, LangManager])
 export class AuthManager {
     private static authProviders: Map<string, AuthProviderConstructor> = new Map();
 

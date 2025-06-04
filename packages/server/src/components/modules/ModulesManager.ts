@@ -1,10 +1,10 @@
 import fs from "fs/promises";
 import path from "path";
 
+import { Service } from "@freshgum/typedi";
 import { LauncherServer } from "@root/LauncherServer";
 import { ILauncherServerModule, IModuleInfo, LogHelper, StorageHelper } from "@root/utils";
 import chalk from "chalk";
-import { Service } from "typedi";
 
 import { LangManager } from "../langs";
 

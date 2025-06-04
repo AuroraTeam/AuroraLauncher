@@ -58,7 +58,7 @@ export class LogHelper {
         this.log("ERROR", msg, ...args);
     }
 
-    public static fatal(msg: any, ...args: any[]): void {
+    public static fatal(msg: any, ...args: any[]): never {
         this.log("FATAL", msg, ...args);
         process.abort();
     }

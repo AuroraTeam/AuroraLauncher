@@ -134,9 +134,11 @@
         "privateKeySaved": "Приватный ключ сохранен",
         "publicKeySaved": "Публичный ключ сохранен"
     },
-    "WebSocketManager": {
+    "WebServerManager": {
         "certNotFound": "Файл сертификата не найден",
-        "keyNotFound": "Файл ключа не найден"
+        "keyNotFound": "Файл ключа не найден",
+        "http2Ignore": "Поддержка HTTP/2 отключена, так как useSSL установлено в false",
+        "createServerError": "Ошибка при создании сервера. Проверьте правильность конфигурации. Для получения дополнительной информации обратитесь к документации: <link>."
     },
     "ModulesManager": {
         "loadingStart": "Начало загрузки модулей",

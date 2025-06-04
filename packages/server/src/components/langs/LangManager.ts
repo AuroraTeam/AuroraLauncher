@@ -1,10 +1,10 @@
+import { Service } from "@freshgum/typedi";
 import { LogHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import { ConfigManager } from "../config";
 import { Lang, Translate, langList } from "./utils";
 
-@Service()
+@Service([ConfigManager])
 export class LangManager {
     private currentLang: Translate;
 

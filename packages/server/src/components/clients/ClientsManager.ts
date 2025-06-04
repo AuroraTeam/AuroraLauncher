@@ -2,25 +2,28 @@ import fs from "fs/promises";
 import { join } from "path";
 
 import { HashHelper, HashedFile } from "@aurora-launcher/core";
+import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import { LangManager } from "../langs";
 
-@Service()
+@Service([LangManager])
 export class ClientsManager {
     readonly hashedClients = new Map<string, HashedFile[]>();
 
-    constructor(private readonly langManager: LangManager, client?:string) {
+    constructor(
+        private readonly langManager: LangManager,
+        client?: string,
+    ) {
         this.hashClients(client);
     }
 
-    async hashClients(client?:string): Promise<void> {
+    async hashClients(client?: string): Promise<void> {
         const folders = await fs.readdir(StorageHelper.clientsDir, {
             withFileTypes: true,
         });
         let dirs = folders.filter((folder) => folder.isDirectory());
-        if (client!== undefined) {
+        if (client !== undefined) {
             dirs = folders.filter((folder) => folder.name == client);
         }
 

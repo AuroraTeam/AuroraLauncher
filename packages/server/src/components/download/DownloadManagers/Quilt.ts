@@ -1,9 +1,9 @@
+import { HttpHelper } from "@aurora-launcher/core";
+import { Service } from "@freshgum/typedi";
 import { LogHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import { ClientMeta, VersionMeta } from "../interfaces/IQuilt";
 import { FabricLikeManager } from "./FabricLike";
-import { HttpHelper } from "@aurora-launcher/core";
 
 @Service()
 export class QuiltManager extends FabricLikeManager {

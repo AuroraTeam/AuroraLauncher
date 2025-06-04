@@ -1,65 +1,14 @@
-import Container, { Service } from "typedi";
+import { Container, Service } from "@freshgum/typedi";
 
-import {
-    AboutCommand,
-    AcceptAuthProvider,
-    ArgsManager,
-    AuthManager,
-    AuthProvider,
-    AuthWsRequest,
-    AuthlibManager,
-    BranchCommand,
-    ClientsManager,
-    CommandsManager,
-    ConfigManager,
-    DownloadClientCommand,
-    DownloadRelease,
-    EndpointWsRequest,
-    GetToken,
-    HasJoinedWebRequest,
-    HelpCommand,
-    InjectorWebRequest,
-    JoinWebRequest,
-    JsonAuthProvider,
-    LangCommand,
-    LangManager,
-    ModulesCommand,
-    ModulesManager,
-    ProfileWebRequest,
-    ProfileWsRequest,
-    ProfilesManager,
-    ProfilesWebRequest,
-    RejectAuthProvider,
-    ServersWsRequest,
-    StopCommand,
-    SyncAllCommand,
-    SyncClientsCommand,
-    SyncProfilesCommand,
-    UpdateCommand,
-    UpdateManager,
-    UpdatesWsRequest,
-    VerifyWsRequest,
-    Watcher,
-    WebManager,
-    YggdrasilAuthProvider,
-} from "./components";
+import { WebServerManager } from "./components/api/webserver";
+import { InjectorWebRequest } from "./components/api/webserver/requests/InjectorRequest";
+import { ArgsManager } from "./components/args";
+import { ConfigManager } from "./components/config";
+import { LangManager } from "./components/langs";
 import { LogHelper, StorageHelper } from "./utils";
 
-@Service()
+@Service([])
 export class LauncherServer {
-    private _AuthProvider: AuthProvider;
-    private _ConfigManager: ConfigManager;
-    private _LangManager: LangManager;
-    private _CommandsManager: CommandsManager;
-    private _ModulesManager: ModulesManager;
-    private _WebManager: WebManager;
-    private _ClientsManager: ClientsManager;
-    private _UpdateManager: UpdateManager;
-    private _ProfilesManager: ProfilesManager;
-    private _AuthlibManager: AuthlibManager;
-    private _ArgsManager: ArgsManager;
-    private _Watcher: Watcher;
-
     constructor() {
         this.preInit();
         this.init();
@@ -68,77 +17,63 @@ export class LauncherServer {
     private preInit() {
         LogHelper.printVersion();
 
-        this._ConfigManager = Container.get(ConfigManager);
-        this._ArgsManager = Container.get(ArgsManager);
-        this._LangManager = Container.get(LangManager);
+        Container.get(ConfigManager);
+        Container.get(ArgsManager);
+        Container.get(LangManager);
 
         StorageHelper.validate();
     }
 
     private init() {
-        this.registerAuthProviders();
-        this.resolveDependencies();
-        this.registerCommands();
-        this.registerRequest();
-        this._Watcher = Container.get(Watcher);
+        // this.registerAuthProviders();
+        this.#loadWebServer();
+        // this.registerCommands();
+        // Container.get(Watcher);
     }
 
-    private resolveDependencies() {
-        this._AuthlibManager = Container.get(AuthlibManager);
-        this._CommandsManager = Container.get(CommandsManager);
-        this._ClientsManager = Container.get(ClientsManager);
-        this._ProfilesManager = Container.get(ProfilesManager);
-        this._ModulesManager = new ModulesManager(this._LangManager, this); // Temporary
-        this._UpdateManager = Container.get(UpdateManager);
-        this._WebManager = Container.get(WebManager);
+    // private resolveDependencies() {
+    // this._AuthlibManager = Container.get(AuthlibManager);
+    // this._CommandsManager = Container.get(CommandsManager);
+    // this._ClientsManager = Container.get(ClientsManager);
+    // this._ProfilesManager = Container.get(ProfilesManager);
+    // this._ModulesManager = new ModulesManager(this._LangManager, this); // Temporary
+    // this._UpdateManager = Container.get(UpdateManager);
+    // this.WebServerManager = new WebServerManager(this._ConfigManager, this._LangManager);
+    // Container.set("WebServerManager", this.WebServerManager);
+    // }
+
+    #loadWebServer() {
+        Container.get(InjectorWebRequest);
+
+        const webServerManager = Container.get(WebServerManager);
+        webServerManager.start();
     }
 
-    private registerAuthProviders() {
-        AuthManager.registerProviders({
-            json: JsonAuthProvider,
-            reject: RejectAuthProvider,
-            accept: AcceptAuthProvider,
-            yggdrasil: YggdrasilAuthProvider,
-        });
+    // private registerAuthProviders() {
+    //     AuthManager.registerProviders({
+    //         json: JsonAuthProvider,
+    //         reject: RejectAuthProvider,
+    //         accept: AcceptAuthProvider,
+    //         yggdrasil: YggdrasilAuthProvider,
+    //     });
 
-        this._AuthProvider = AuthManager.getProvider(this._ConfigManager, this._LangManager);
-        Container.set("AuthProvider", this._AuthProvider);
-    }
+    //     this._AuthProvider = AuthManager.getProvider(this._ConfigManager, this._LangManager);
+    //     Container.set("AuthProvider", this._AuthProvider);
+    // }
 
-    private registerCommands() {
-        this._CommandsManager.registerCommands([
-            Container.get(HelpCommand),
-            Container.get(ModulesCommand),
-            Container.get(BranchCommand),
-            Container.get(UpdateCommand),
-            Container.get(LangCommand),
-            Container.get(SyncAllCommand),
-            Container.get(SyncProfilesCommand),
-            Container.get(SyncClientsCommand),
-            Container.get(DownloadClientCommand),
-            Container.get(AboutCommand),
-            Container.get(StopCommand),
-        ]);
-    }
-
-    private registerRequest() {
-        this._WebManager.registerWsRequests([
-            Container.get(AuthWsRequest),
-            Container.get(ProfileWsRequest),
-            Container.get(ServersWsRequest),
-            Container.get(UpdatesWsRequest),
-            Container.get(VerifyWsRequest),
-            Container.get(EndpointWsRequest),
-        ]);
-
-        this._WebManager.registerWebRequests([
-            Container.get(InjectorWebRequest),
-            Container.get(ProfileWebRequest),
-            Container.get(ProfilesWebRequest),
-            Container.get(JoinWebRequest),
-            Container.get(HasJoinedWebRequest),
-            Container.get(DownloadRelease),
-            Container.get(GetToken),
-        ]);
-    }
+    // private registerCommands() {
+    //     this._CommandsManager.registerCommands([
+    //         Container.get(HelpCommand),
+    //         Container.get(ModulesCommand),
+    //         Container.get(BranchCommand),
+    //         Container.get(UpdateCommand),
+    //         Container.get(LangCommand),
+    //         Container.get(SyncAllCommand),
+    //         Container.get(SyncProfilesCommand),
+    //         Container.get(SyncClientsCommand),
+    //         Container.get(DownloadClientCommand),
+    //         Container.get(AboutCommand),
+    //         Container.get(StopCommand),
+    //     ]);
+    // }
 }

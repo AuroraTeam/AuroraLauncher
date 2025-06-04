@@ -2,13 +2,13 @@ import fs from "fs/promises";
 import { resolve } from "path";
 
 import { Profile } from "@aurora-launcher/core";
+import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/utils";
-import { Service } from "typedi";
 
 import { LangManager } from "../langs";
 import { ProfileConfig } from "./ProfileConfig";
 
-@Service()
+@Service([LangManager])
 export class ProfilesManager {
     private profiles: ProfileConfig[] = [];
 
