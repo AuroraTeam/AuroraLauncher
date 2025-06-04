@@ -9,13 +9,19 @@ import { LangManager } from "./components/langs";
 import { LogHelper, StorageHelper } from "./utils";
 
 @Service([])
-export class LauncherServer {
+export class LauncherServer /* extends EventEmitter */ {
+    webServer: WebServerManager;
+
     constructor() {
+        // super();
         this.preInit();
         this.init();
+        this.postInit();
     }
 
     private preInit() {
+        // this.emit("preInit");
+
         LogHelper.printVersion();
 
         Container.get(ConfigManager);
@@ -23,13 +29,19 @@ export class LauncherServer {
         Container.get(LangManager);
 
         StorageHelper.validate();
+
+        // this.emit("preInitDone");
     }
 
     private init() {
+        // this.emit("init");
+
         // this.registerAuthProviders();
         this.#loadWebServer();
         // this.registerCommands();
         // Container.get(Watcher);
+
+        // this.emit("initDone");
     }
 
     // private resolveDependencies() {
@@ -44,12 +56,10 @@ export class LauncherServer {
     // }
 
     #loadWebServer() {
-        const webServer = Container.get(WebServerManager);
+        this.webServer = Container.get(WebServerManager);
 
-        webServer.registerRequest(Container.get(IndexWebRequest));
-        webServer.registerRequest(Container.get(InjectorWebRequest));
-
-        webServer.start();
+        this.webServer.registerRequest(Container.get(IndexWebRequest));
+        this.webServer.registerRequest(Container.get(InjectorWebRequest));
     }
 
     // private registerAuthProviders() {
@@ -79,4 +89,12 @@ export class LauncherServer {
     //         Container.get(StopCommand),
     //     ]);
     // }
+
+    private postInit() {
+        // this.emit("postInit");
+
+        this.webServer.start();
+
+        // this.emit("postInitDone");
+    }
 }
