@@ -4,10 +4,11 @@ import { resolve } from "path";
 import fastifyStatic, { ListOptionsHtmlFormat } from "@fastify/static";
 import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/utils";
-import fastify, { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 
 import { ConfigManager } from "../../config";
 import { LangManager } from "../../langs";
+import { AbstractWebRequest } from "./requests/AbstractRequest";
 
 @Service([ConfigManager, LangManager])
 export class WebServerManager {
@@ -25,7 +26,8 @@ export class WebServerManager {
     }
 
     private async init() {
-        const { ssl, useSSL, useHTTP2 } = this.configManager.config.api;
+        const { ssl, useSSL, useHTTP2, disableListing, hideListing } =
+            this.configManager.config.api;
 
         const config: { http2?: boolean; https?: { cert?: Buffer; key?: Buffer } } = {};
 
@@ -55,12 +57,6 @@ export class WebServerManager {
             LogHelper.fatal(this.langManager.getTranslate.WebServerManager.createServerError);
         }
 
-        this.initListing();
-        this.#server.get("/", (req, rep) => this.redirectListener(req, rep));
-    }
-
-    private initListing() {
-        const { disableListing, hideListing } = this.configManager.config.api;
         if (!disableListing) {
             let list: boolean | ListOptionsHtmlFormat = false;
 
@@ -82,15 +78,12 @@ export class WebServerManager {
         }
     }
 
-    private redirectListener(req: FastifyRequest, rep: FastifyReply) {
-        if (req.headers["user-agent"]?.startsWith("Java")) {
-            rep.header("X-Authlib-Injector-API-Location", "/authlib");
-            return rep.send();
-        }
-
-        const { useSSL } = this.configManager.config.api;
-        rep.redirect(`http${useSSL ? "s" : ""}://${req.headers.host}/files/`, 301);
-        rep.send();
+    registerRequest(request: AbstractWebRequest) {
+        this.#server.route({
+            method: request.method,
+            url: request.url,
+            handler: request.handler.bind(request),
+        });
     }
 
     start() {

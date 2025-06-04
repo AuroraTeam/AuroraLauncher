@@ -1,6 +1,7 @@
 import { Container, Service } from "@freshgum/typedi";
 
 import { WebServerManager } from "./components/api/webserver";
+import { IndexWebRequest } from "./components/api/webserver/requests/IndexRequest";
 import { InjectorWebRequest } from "./components/api/webserver/requests/InjectorRequest";
 import { ArgsManager } from "./components/args";
 import { ConfigManager } from "./components/config";
@@ -43,10 +44,12 @@ export class LauncherServer {
     // }
 
     #loadWebServer() {
-        Container.get(InjectorWebRequest);
+        const webServer = Container.get(WebServerManager);
 
-        const webServerManager = Container.get(WebServerManager);
-        webServerManager.start();
+        webServer.registerRequest(Container.get(IndexWebRequest));
+        webServer.registerRequest(Container.get(InjectorWebRequest));
+
+        webServer.start();
     }
 
     // private registerAuthProviders() {

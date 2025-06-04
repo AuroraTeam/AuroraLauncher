@@ -2,24 +2,24 @@ import { Service } from "@freshgum/typedi";
 import { AuthlibManager } from "@root/components/authlib";
 import { ConfigManager } from "@root/components/config";
 
-import { WebServerManager } from "../WebServerManager";
+import { AbstractWebRequest } from "./AbstractRequest";
 
-@Service([WebServerManager, ConfigManager, AuthlibManager])
-export class InjectorWebRequest {
+@Service([ConfigManager, AuthlibManager])
+export class InjectorWebRequest implements AbstractWebRequest {
+    readonly method = "get";
+    readonly url = "/injector";
+
     constructor(
-        private webServerManager: WebServerManager,
         private configManager: ConfigManager,
         private authlibManager: AuthlibManager,
-    ) {
-        this.webServerManager.server.get("/injector", this.run.bind(this));
-    }
+    ) {}
 
-    async run() {
+    async handler() {
         return {
             meta: {
                 serverName: this.configManager.config.projectName || "Aurora Launcher",
                 implementationName: "aurora-launchserver",
-                implementationVersion: "0.0.1",
+                implementationVersion: "0.0.5",
             },
             skinDomains: this.configManager.config.auth.skinDomains || [],
             signaturePublickey: this.authlibManager.getPublicKey(),
