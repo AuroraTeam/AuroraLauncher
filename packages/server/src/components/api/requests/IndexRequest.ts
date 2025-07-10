@@ -2,10 +2,10 @@ import { Service } from "@freshgum/typedi";
 import { ConfigManager } from "@root/components/config";
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import { AbstractWebRequest } from "./AbstractRequest";
+import { AbstractRequest } from "./AbstractRequest";
 
 @Service([ConfigManager])
-export class IndexWebRequest implements AbstractWebRequest {
+export class IndexRequest implements AbstractRequest {
     readonly method = "get";
     readonly url = "/";
 

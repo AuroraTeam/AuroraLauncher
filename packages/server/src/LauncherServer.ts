@@ -1,16 +1,36 @@
-import { Container, Service } from "@freshgum/typedi";
+import { Container, Token } from "@freshgum/typedi";
 
-import { WebServerManager } from "./components/api/webserver";
-import { IndexWebRequest } from "./components/api/webserver/requests/IndexRequest";
-import { InjectorWebRequest } from "./components/api/webserver/requests/InjectorRequest";
+import { WebServerManager } from "./components/api/ApiManager";
+import {
+    HasJoinedRequest,
+    IndexRequest,
+    InjectorRequest,
+    JoinRequest,
+    ProfileRequest,
+    ProfilesRequest,
+    TestRequest,
+} from "./components/api/requests";
 import { ArgsManager } from "./components/args";
+import {
+    AcceptAuthProvider,
+    AuthManager,
+    AuthProvider,
+    JsonAuthProvider,
+    RejectAuthProvider,
+    YggdrasilAuthProvider,
+} from "./components/auth";
 import { ConfigManager } from "./components/config";
 import { LangManager } from "./components/langs";
+import { AuthProviderToken } from "./tokens";
 import { LogHelper, StorageHelper } from "./utils";
 
-@Service([])
 export class LauncherServer /* extends EventEmitter */ {
     webServer: WebServerManager;
+    authManager: AuthManager;
+
+    private configManager: ConfigManager;
+    private langManager: LangManager;
+    private authProvider: AuthProvider;
 
     constructor() {
         // super();
@@ -24,9 +44,9 @@ export class LauncherServer /* extends EventEmitter */ {
 
         LogHelper.printVersion();
 
-        Container.get(ConfigManager);
+        this.configManager = Container.get(ConfigManager);
         Container.get(ArgsManager);
-        Container.get(LangManager);
+        this.langManager = Container.get(LangManager);
 
         StorageHelper.validate();
 
@@ -36,8 +56,8 @@ export class LauncherServer /* extends EventEmitter */ {
     private init() {
         // this.emit("init");
 
-        // this.registerAuthProviders();
-        this.#loadWebServer();
+        this.registerAuthProviders();
+        this.loadWebServer();
         // this.registerCommands();
         // Container.get(Watcher);
 
@@ -55,24 +75,29 @@ export class LauncherServer /* extends EventEmitter */ {
     // Container.set("WebServerManager", this.WebServerManager);
     // }
 
-    #loadWebServer() {
+    private loadWebServer() {
         this.webServer = Container.get(WebServerManager);
 
-        this.webServer.registerRequest(Container.get(IndexWebRequest));
-        this.webServer.registerRequest(Container.get(InjectorWebRequest));
+        this.webServer.registerRequest(Container.get(IndexRequest));
+        this.webServer.registerRequest(Container.get(InjectorRequest));
+        this.webServer.registerRequest(Container.get(ProfilesRequest));
+        this.webServer.registerRequest(Container.get(TestRequest));
+        this.webServer.registerRequest(Container.get(JoinRequest));
+        this.webServer.registerRequest(Container.get(HasJoinedRequest));
+        this.webServer.registerRequest(Container.get(ProfileRequest));
     }
 
-    // private registerAuthProviders() {
-    //     AuthManager.registerProviders({
-    //         json: JsonAuthProvider,
-    //         reject: RejectAuthProvider,
-    //         accept: AcceptAuthProvider,
-    //         yggdrasil: YggdrasilAuthProvider,
-    //     });
+    private registerAuthProviders() {
+        AuthManager.registerProviders({
+            json: JsonAuthProvider,
+            reject: RejectAuthProvider,
+            accept: AcceptAuthProvider,
+            yggdrasil: YggdrasilAuthProvider,
+        });
 
-    //     this._AuthProvider = AuthManager.getProvider(this._ConfigManager, this._LangManager);
-    //     Container.set("AuthProvider", this._AuthProvider);
-    // }
+        this.authProvider = AuthManager.getProvider(this.configManager, this.langManager);
+        Container.set({ id: AuthProviderToken, value: this.authProvider, dependencies: [] });
+    }
 
     // private registerCommands() {
     //     this._CommandsManager.registerCommands([

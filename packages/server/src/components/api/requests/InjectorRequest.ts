@@ -2,10 +2,10 @@ import { Service } from "@freshgum/typedi";
 import { AuthlibManager } from "@root/components/authlib";
 import { ConfigManager } from "@root/components/config";
 
-import { AbstractWebRequest } from "./AbstractRequest";
+import { AbstractRequest } from "./AbstractRequest";
 
 @Service([ConfigManager, AuthlibManager])
-export class InjectorWebRequest implements AbstractWebRequest {
+export class InjectorRequest implements AbstractRequest {
     readonly method = "get";
     readonly url = "/injector";
 

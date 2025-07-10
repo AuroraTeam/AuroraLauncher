@@ -2,35 +2,53 @@ import { JsonHelper } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
 import type { AuthProvider } from "@root/components/auth/providers";
 import { AuthlibManager } from "@root/components/authlib";
+import { FastifyReply, FastifyRequest } from "fastify";
 
-import { WebRequest } from "../../../WebRequest";
-import { WebResponse } from "../../../WebResponse";
+import { AuthProviderToken } from "../../../../../tokens";
 import { AbstractRequest } from "../../AbstractRequest";
 
-@Service()
-export class HasJoinedWebRequest extends AbstractRequest {
-    method = "GET";
-    url = /^\/authlib\/sessionserver\/session\/minecraft\/hasJoined/;
+@Service([AuthProviderToken, AuthlibManager])
+export class HasJoinedRequest implements AbstractRequest {
+    method = "get";
+    url = "/authlib/sessionserver/session/minecraft/hasJoined";
+    schema = {
+        querystring: {
+            type: "object",
+            properties: {
+                username: { type: "string" },
+                serverId: { type: "string" },
+            },
+        },
+    };
 
     constructor(
         private authProvider: AuthProvider,
         private authlibManager: AuthlibManager,
-    ) {
-        super();
-    }
+    ) {}
 
-    async emit(req: WebRequest, res: WebResponse): Promise<void> {
+    async handler(
+        req: FastifyRequest<{ Querystring: { username: string; serverId: string } }>,
+        rep: FastifyReply,
+    ) {
         const { username, serverId } = req.query;
 
-        if (this.isInvalidValue(username) || this.isInvalidValue(serverId)) {
-            return res.error(400, "BadRequestException", "Empty values are not allowed.");
+        if (!username || !serverId) {
+            rep.status(400);
+            return {
+                error: "BadRequestException",
+                errorMessage: "Empty values are not allowed",
+            };
         }
 
         let user;
         try {
             user = await this.authProvider.hasJoined(username, serverId);
         } catch (error) {
-            return res.error(400, error.message);
+            rep.status(400);
+            return {
+                error: "ForbiddenOperationException",
+                errorMessage: error.message,
+            };
         }
 
         const textures: any = {};
@@ -60,7 +78,7 @@ export class HasJoinedWebRequest extends AbstractRequest {
             }),
         ).toString("base64");
 
-        res.json({
+        return {
             id: user.userUUID,
             name: username,
             properties: [
@@ -70,6 +88,6 @@ export class HasJoinedWebRequest extends AbstractRequest {
                     signature: this.authlibManager.getSignature(texturesValue),
                 },
             ],
-        });
+        };
     }
 }

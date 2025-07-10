@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 
 import { AuthResponseData, HttpHelper, JsonHelper } from "@aurora-launcher/core";
+import { Service } from "@freshgum/typedi";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 import { v5 } from "uuid";
 
@@ -12,6 +13,7 @@ import {
 } from "./AuthProvider";
 import { MojangTextures, SkinableAuthProvider } from "./SkinableAuthProvider";
 
+@Service([])
 export class AcceptAuthProvider implements AuthProvider, SkinableAuthProvider {
     private projectID: string;
     private sessionsDB: UserData[] = [];

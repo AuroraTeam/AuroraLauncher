@@ -6,9 +6,9 @@ import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/utils";
 import fastify, { FastifyInstance } from "fastify";
 
-import { ConfigManager } from "../../config";
-import { LangManager } from "../../langs";
-import { AbstractWebRequest } from "./requests/AbstractRequest";
+import { ConfigManager } from "../config";
+import { LangManager } from "../langs";
+import { AbstractRequest } from "./requests";
 
 @Service([ConfigManager, LangManager])
 export class WebServerManager {
@@ -78,16 +78,17 @@ export class WebServerManager {
         }
     }
 
-    registerRequest(request: AbstractWebRequest) {
+    registerRequest(request: AbstractRequest) {
         this.#server.route({
             method: request.method,
             url: request.url,
+            schema: request.schema,
             handler: request.handler.bind(request),
         });
     }
 
     start() {
         const { host, port } = this.configManager.config.api;
-        this.server.listen({ host, port });
+        this.#server.listen({ host, port });
     }
 }

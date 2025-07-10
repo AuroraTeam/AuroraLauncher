@@ -42,6 +42,7 @@ export class AuthlibManager {
         LogHelper.info(this.langManager.getTranslate.AuthlibManager.privateKeySaved);
     }
 
+    // TODO Rename method
     /**
      * Issuing signature
      * @param {string} data - The data to be signed.

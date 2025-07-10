@@ -2,35 +2,48 @@ import { Service } from "@freshgum/typedi";
 import type { AuthProvider } from "@root/components/auth/providers";
 import { AuthlibManager } from "@root/components/authlib";
 import { UUIDHelper } from "@root/utils";
+import { FastifyReply, FastifyRequest } from "fastify";
 
-import { WebRequest } from "../../../WebRequest";
-import { WebResponse } from "../../../WebResponse";
+import { AuthProviderToken } from "../../../../../tokens";
 import { AbstractRequest } from "../../AbstractRequest";
 
-@Service()
-export class ProfileWebRequest extends AbstractRequest {
-    method = "GET";
-    url =
-        /^\/authlib\/sessionserver\/session\/minecraft\/profile\/(?<uuid>\w{32})(\?unsigned=(true|false))?$/;
+@Service([AuthProviderToken, AuthlibManager])
+export class ProfileRequest implements AbstractRequest {
+    method = "get";
+    url = "/authlib/sessionserver/session/minecraft/profile/:uuid";
+    schema = {
+        params: {
+            type: "object",
+            properties: {
+                uuid: { type: "string" },
+            },
+        },
+        querystring: {
+            type: "object",
+            properties: {
+                unsigned: { type: "boolean", default: true },
+            },
+        },
+    };
 
     constructor(
         private authProvider: AuthProvider,
         private authlibManager: AuthlibManager,
-    ) {
-        super();
-    }
+    ) {}
 
-    async emit(req: WebRequest, res: WebResponse): Promise<void> {
-        const matches = req.raw.url.match(this.url);
-        const uuid = matches.groups.uuid;
-        const signed = matches[3] === "false";
+    async handler(
+        req: FastifyRequest<{ Params: { uuid: string }; Querystring: { unsigned: boolean } }>,
+        rep: FastifyReply,
+    ) {
+        const uuid = req.params.uuid;
+        const signed = req.query.unsigned === false;
 
         let user;
         try {
             user = await this.authProvider.profile(UUIDHelper.getWithDashes(uuid));
         } catch {
-            res.raw.statusCode = 204;
-            res.raw.end();
+            rep.raw.statusCode = 204;
+            rep.raw.end();
             return;
         }
 
@@ -73,6 +86,6 @@ export class ProfileWebRequest extends AbstractRequest {
         texturesValue = Buffer.from(JSON.stringify(texturesValue));
         data.properties[0].value = texturesValue.toString("base64");
         if (signed) data.properties[0].signature = this.authlibManager.getSignature(texturesValue);
-        res.json(data);
+        return data;
     }
 }

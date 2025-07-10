@@ -5,7 +5,7 @@ import { Service } from "@freshgum/typedi";
 import { VerifyManager } from "@root/components/secure/VerifyManager";
 import { StorageHelper } from "@root/utils/helpers/StorageHelper";
 
-import { WebRequest } from "../../WebRequest";
+import { Request } from "../../Request";
 import { WebResponse } from "../../WebResponse";
 import { AbstractRequest } from "../AbstractRequest";
 import { TokenManager } from "./Token";
@@ -22,7 +22,7 @@ export class DownloadRelease extends AbstractRequest {
         super();
     }
 
-    async emit(req: WebRequest, res: WebResponse): Promise<void> {
+    async emit(req: Request, res: WebResponse): Promise<void> {
         const { encryptedToken } = req.query;
         let decryptedToken: string;
         try {
