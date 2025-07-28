@@ -16,8 +16,8 @@
         "dev": "concurrently -r \"node build.mjs --watch\" \"tsc --emitDeclarationOnly --watch\"",
         "test": "node example/node-example.js",
         "build": "rimraf dist && node build.mjs && tsc --emitDeclarationOnly",
-        "prepublishOnly": "npm run build",
-        "release": "npm publish .",
+        "prepublishOnly": "pnpm run build",
+        "release": "pnpm publish .",
         "prettier": "prettier --write src"
     },
     "repository": {
@@ -34,7 +34,7 @@
     },
     "homepage": "https://github.com/AuroraTeam/AuroraAPI#readme",
     "dependencies": {
-        "@aurora-launcher/core": "^0.28.2",
+        "@aurora-launcher/core": "workspace:^",
         "@aurora-rpc/client": "^0.3.6"
     },
     "devDependencies": {

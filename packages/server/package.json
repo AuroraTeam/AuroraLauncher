@@ -59,7 +59,7 @@
         "typescript-eslint": "^8.20.0"
     },
     "dependencies": {
-        "@aurora-launcher/core": "^0.28.2",
+        "@aurora-launcher/core": "workspace:^",
         "@aurora-rpc/server": "^0.1.8",
         "@fastify/static": "^8.2.0",
         "@freshgum/typedi": "^0.7.2",

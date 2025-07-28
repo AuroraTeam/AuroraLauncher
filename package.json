@@ -1,14 +1,12 @@
 {
     "name": "aurora-launcher",
     "private": true,
-    "workspaces": [
-        "packages/*"
-    ],
     "scripts": {
-        "dev": "concurrently -i -n server,launcher,core,api \"npm:dev -w packages/server\" \"npm:dev -w packages/launcher\" \"npm:dev -w packages/core\" \"npm:dev -w packages/api\"",
-        "build:libs": "npm run build -w packages/core -w packages/api"
+        "dev": "concurrently -i -n server,launcher,core,api \"pnpm --filter @aurora-launcher/server run dev\" \"pnpm --filter @aurora-launcher/launcher run dev\" \"pnpm --filter @aurora-launcher/core run dev\" \"pnpm --filter @aurora-launcher/api run dev\"",
+        "build:libs": "pnpm --filter @aurora-launcher/core --filter @aurora-launcher/api build"
     },
     "devDependencies": {
-        "concurrently": "^9.1.0"
-    }
+        "concurrently": "^9.2.0"
+    },
+    "packageManager": "pnpm@9.12.1+sha512.e5a7e52a4183a02d5931057f7a0dbff9d5e9ce3161e33fa68ae392125b79282a8a8a470a51dfc8a0ed86221442eb2fb57019b0990ed24fab519bf0e1bc5ccfc4"
 }

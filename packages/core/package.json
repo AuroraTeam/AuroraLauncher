@@ -17,7 +17,7 @@
         "prettier": "prettier --write src",
         "lint": "eslint",
         "lint:fix": "eslint --fix",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "pnpm run build"
     },
     "repository": {
         "type": "git",
