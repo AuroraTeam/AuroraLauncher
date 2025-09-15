@@ -1,35 +1,33 @@
-import { mkdir, rename } from "fs/promises"
-import { dirname } from "path"
-import { URL } from "url"
-
-import pMap from "p-map"
-
-import { HashHelper, JsonData, JsonHelper, StorageHelper } from "."
-import { createWriteStream } from "fs"
-import { request } from "undici"
+import { HashHelper, JsonData, JsonHelper, StorageHelper } from ".";
+import { createWriteStream } from "fs";
+import { mkdir, rename } from "fs/promises";
+import pMap from "p-map";
+import { dirname } from "path";
+import { request } from "undici";
+import { URL } from "url";
 
 interface Progress {
-    url: string | URL
-    transferred: number
-    total: number
+    url: string | URL;
+    transferred: number;
+    total: number;
 }
-type onProgressFunction = (progress: Progress) => void
+type onProgressFunction = (progress: Progress) => void;
 
 export interface File {
-    sourceUrl: string
-    destinationPath: string
-    sha1?: string
+    sourceUrl: string;
+    destinationPath: string;
+    sha1?: string;
 }
 
 export class HttpHelper {
-    private static concurrency = 4
+    private static concurrency = 4;
 
     /**
      * Изменить количество одновременно скачиваемых файлов
      * @param concurrency
      */
     public static setConcurrency(concurrency: number) {
-        this.concurrency = concurrency
+        this.concurrency = concurrency;
     }
 
     /**
@@ -39,10 +37,10 @@ export class HttpHelper {
      */
     public static async existsResource(url: string | URL) {
         try {
-            const { statusCode } = await request(url, { method: "HEAD" })
-            return statusCode >= 200 && statusCode < 300
+            const { statusCode } = await request(url, { method: "HEAD" });
+            return statusCode >= 200 && statusCode < 300;
         } catch {
-            return false
+            return false;
         }
     }
 
@@ -52,8 +50,8 @@ export class HttpHelper {
      * @returns Promise, который вернёт содержимое ресурса, в случае успеха
      */
     public static async getResource(url: string | URL) {
-        const { body } = await request(url)
-        return body.text()
+        const { body } = await request(url);
+        return body.text();
     }
 
     /**
@@ -62,8 +60,8 @@ export class HttpHelper {
      * @returns Promise, который вернёт содержимое ресурса, в случае успеха
      */
     public static async getHeaders(url: string | URL) {
-        const { headers } = await request(url)
-        return headers
+        const { headers } = await request(url);
+        return headers;
     }
 
     /**
@@ -72,7 +70,7 @@ export class HttpHelper {
      * @returns Promise, который вернёт обработанный объект, в случае успеха
      */
     public static async getResourceFromJson<T>(url: string | URL): Promise<T> {
-        return JsonHelper.fromJson<T>(await this.getResource(url))
+        return JsonHelper.fromJson<T>(await this.getResource(url));
     }
 
     /**
@@ -80,16 +78,13 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт обработанный объект, в случае успеха
      */
-    public static async postJson<T>(
-        url: string | URL,
-        json: JsonData,
-    ): Promise<T> {
+    public static async postJson<T>(url: string | URL, json: JsonData): Promise<T> {
         const { body } = await request(url, {
             method: "POST",
             body: JsonHelper.toJson(json),
             headers: { "Content-Type": "application/json" },
-        })
-        return (await body.json()) as T
+        });
+        return <T>await body.json();
     }
 
     /**
@@ -105,16 +100,16 @@ export class HttpHelper {
         url: string | URL,
         filePath: string | null,
         options: {
-            onProgress?: onProgressFunction
-            saveToTempFile?: boolean
+            onProgress?: onProgressFunction;
+            saveToTempFile?: boolean;
         } = {
             saveToTempFile: false,
         },
     ) {
-        if (options.saveToTempFile) filePath = StorageHelper.getTmpPath()
-        if (filePath === null) throw new Error("File path not found")
+        if (options.saveToTempFile) filePath = StorageHelper.getTmpPath();
+        if (filePath === null) throw new Error("File path not found");
 
-        return this.download(url, filePath, options.onProgress)
+        return this.download(url, filePath, options.onProgress);
     }
 
     /**
@@ -128,13 +123,13 @@ export class HttpHelper {
         url: string | URL,
         filePath: string,
         options: {
-            onProgress?: onProgressFunction
+            onProgress?: onProgressFunction;
         } = {},
     ) {
-        if (filePath === null) throw new Error("File path not found")
+        if (filePath === null) throw new Error("File path not found");
 
-        await this.download(url, `${filePath}.safe`, options.onProgress)
-        return await rename(`${filePath}.safe`, filePath)
+        await this.download(url, `${filePath}.safe`, options.onProgress);
+        return await rename(`${filePath}.safe`, filePath);
     }
 
     /**
@@ -147,9 +142,9 @@ export class HttpHelper {
     public static async downloadFiles(
         filesList: File[],
         options: {
-            onProgress?: onProgressFunction
-            beforeDownload?: (data: { url: string | URL }) => void
-            afterDownload?: (data: { url: string | URL }) => void
+            onProgress?: onProgressFunction;
+            beforeDownload?: (data: { url: string | URL }) => void;
+            afterDownload?: (data: { url: string | URL }) => void;
         } = {},
     ) {
         await pMap(
@@ -159,8 +154,8 @@ export class HttpHelper {
                     if (options.afterDownload)
                         options.afterDownload({
                             url: file.sourceUrl,
-                        })
-                    return
+                        });
+                    return;
                 }
 
                 await this.download(
@@ -169,10 +164,10 @@ export class HttpHelper {
                     options.onProgress,
                     options.beforeDownload,
                     options.afterDownload,
-                )
+                );
             },
             { concurrency: this.concurrency },
-        )
+        );
     }
 
     /**
@@ -189,68 +184,56 @@ export class HttpHelper {
         beforeDownload?: (data: { url: string | URL }) => void,
         afterDownload?: (data: { url: string | URL }) => void,
     ): Promise<string> {
-        await mkdir(dirname(filePath), { recursive: true })
+        await mkdir(dirname(filePath), { recursive: true });
 
-        const { statusCode, headers, body } = await request(url)
+        const { statusCode, headers, body } = await request(url);
 
         if (statusCode >= 400) {
-            throw new Error(
-                `Failed to download ${url} with status code ${statusCode}`,
-            )
+            throw new Error(`Failed to download ${url.toString()} with status code ${statusCode}`);
         }
 
-        const location = <string | undefined>headers["location"]
+        const location = <string | undefined>headers["location"];
         // handle redirects
         if (statusCode > 300 && statusCode < 400 && !!location) {
-            return this.download(
-                location,
-                filePath,
-                onProgress,
-                beforeDownload,
-                afterDownload,
-            )
+            return this.download(location, filePath, onProgress, beforeDownload, afterDownload);
         }
 
         if (onProgress) {
-            let transferred = 0
-            const total = +(headers["content-length"] || 0)
+            let transferred = 0;
+            const total = +(headers["content-length"] || 0);
 
-            body.on("data", (chunk) => {
+            body.on("data", (chunk: Buffer) => {
                 onProgress({
                     url,
                     transferred: (transferred += chunk.byteLength),
                     total,
-                })
-            })
+                });
+            });
         }
 
         if (beforeDownload) {
-            beforeDownload({ url })
+            beforeDownload({ url });
         }
 
         return new Promise((resolve, reject) => {
             body.pipe(createWriteStream(filePath))
                 .on("finish", () => {
-                    resolve(filePath)
+                    resolve(filePath);
                     if (afterDownload) {
-                        afterDownload({ url })
+                        afterDownload({ url });
                     }
                 })
-                .on("error", (error) => reject(error))
-        })
+                .on("error", (error) => reject(error));
+        });
     }
 
     private static async verifyFileHash(file: File) {
-        if (!file.sha1) return false
+        if (!file.sha1) return false;
 
         try {
-            return await HashHelper.compareFileHash(
-                file.destinationPath,
-                "sha1",
-                file.sha1,
-            )
+            return await HashHelper.compareFileHash(file.destinationPath, "sha1", file.sha1);
         } catch {
-            return false
+            return false;
         }
     }
 }

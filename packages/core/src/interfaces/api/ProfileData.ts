@@ -1,9 +1,9 @@
-import { Profile } from "../Profile"
+import { Profile } from "../Profile";
 
-export const GET_PROFILE_METHOD = "getProfile"
+export const PROFILE_METHOD = "/profile";
 
 export interface ProfileRequestData {
-    uuid: string
+    uuid: string;
 }
 
-export type ProfileResponseData = Profile
+export type ProfileResponseData = Profile;

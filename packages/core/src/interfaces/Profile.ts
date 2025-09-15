@@ -1,53 +1,53 @@
 export interface Profile {
     //Don`t touch
-    configVersion: number
+    configVersion: number;
 
     // Profile information
-    uuid: string
-    sortIndex: number
-    servers: ProfileServerConfig[]
+    uuid: string;
+    sortIndex: number;
+    servers: ProfileServerConfig[];
 
     // Client
-    javaVersion: number
-    version: string
-    clientDir: string
-    assetIndex: string
-    libraries: ProfileLibrary[]
-    gameJar: string
-    mainClass: string
-    jvmArgs: string[]
-    clientArgs: string[]
+    javaVersion: number;
+    version: string;
+    clientDir: string;
+    assetIndex: string;
+    libraries: ProfileLibrary[];
+    gameJar: string;
+    mainClass: string;
+    jvmArgs: string[];
+    clientArgs: string[];
 
     // Updates
-    update: string[]
-    updateVerify: string[]
-    updateExclusions: string[]
+    update: string[];
+    updateVerify: string[];
+    updateExclusions: string[];
     // TODO Продумать опционалки
     // updateOptional: ProfileOptional[]
 
     // Whitelist
-    whiteListType: "null" | "uuids" | "permissions"
-    whiteListPermisson?: number // TODO permission в виде чего?
-    whiteListUUIDs?: string[] // Список игроков по uuid
+    whiteListType: "null" | "uuids" | "permissions";
+    whiteListPermisson?: number; // TODO permission в виде чего?
+    whiteListUUIDs?: string[]; // Список игроков по uuid
 }
 
 export interface ProfileLibrary {
-    path: string
-    sha1: string
-    type: "library" | "native"
-    rules?: LibraryRule[]
-    ignoreClassPath?: boolean
+    path: string;
+    sha1: string;
+    type: "library" | "native";
+    rules?: LibraryRule[];
+    ignoreClassPath?: boolean;
 }
 
 export interface LibraryRule {
-    action: Action
-    os?: OS
+    action: Action;
+    os?: OS;
 }
 
 export interface OS {
-    name: Name
-    arch?: string
-    version?: string
+    name: Name;
+    arch?: string;
+    version?: string;
 }
 
 export enum Action {
@@ -62,20 +62,18 @@ export enum Name {
 }
 
 export interface ProfileServerConfigBase {
-    title: string
+    title: string;
 }
 export interface ProfileServerHostnameConfig extends ProfileServerConfigBase {
-    hostname: string
+    hostname: string;
 }
 
 export interface ProfileServerAddressConfig extends ProfileServerConfigBase {
-    ip: string
-    port: number
+    ip: string;
+    port: number;
 }
 
-export type ProfileServerConfig =
-    | ProfileServerHostnameConfig
-    | ProfileServerAddressConfig
+export type ProfileServerConfig = ProfileServerHostnameConfig | ProfileServerAddressConfig;
 
 // export interface ProfileOptional {
 //     id: number

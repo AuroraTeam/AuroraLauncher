@@ -1,13 +1,13 @@
-export const GET_UPDATES_METHOD = "getUpdates"
+export const UPDATES_METHOD = "/updates";
 
 export interface UpdatesRequestData {
-    dir: string
+    dir: string;
 }
 
 export interface HashedFile {
-    path: string
-    size: number
-    sha1: string
+    path: string;
+    size: number;
+    sha1: string;
 }
 
-export type UpdatesResponseData = HashedFile[]
+export type UpdatesResponseData = HashedFile[];

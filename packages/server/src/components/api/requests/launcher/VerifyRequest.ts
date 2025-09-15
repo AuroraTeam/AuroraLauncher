@@ -1,11 +1,12 @@
+import { VERIFY_METHOD } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
 
 import { AbstractRequest } from "../AbstractRequest";
 
 @Service([])
-export class TestRequest implements AbstractRequest {
+export class VerifyRequest implements AbstractRequest {
     method = "get";
-    url = "/test";
+    url = VERIFY_METHOD;
 
     handler() {
         return {};

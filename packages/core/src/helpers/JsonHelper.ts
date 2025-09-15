@@ -1,4 +1,4 @@
-export type JsonData = unknown
+export type JsonData = unknown;
 
 /**
  * Класс хелпер для работы с JSON
@@ -10,7 +10,7 @@ export class JsonHelper {
      * @returns `Object | Array`
      */
     static fromJson<T>(string: string): T {
-        return JSON.parse(string)
+        return <T>JSON.parse(string);
     }
 
     /**
@@ -20,6 +20,6 @@ export class JsonHelper {
      * @returns JSON сторка
      */
     static toJson(object: JsonData, pretty = false): string {
-        return pretty ? JSON.stringify(object, null, 4) : JSON.stringify(object)
+        return pretty ? JSON.stringify(object, null, 4) : JSON.stringify(object);
     }
 }

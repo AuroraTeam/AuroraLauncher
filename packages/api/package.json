@@ -1,24 +1,18 @@
 {
     "name": "@aurora-launcher/api",
-    "version": "0.6.0",
+    "version": "1.0.0",
     "description": "JS/TS API implementation for Aurora Launcher",
-    "type": "commonjs",
-    "main": "./dist/index-node.cjs",
-    "browser": "./dist/index-web.js",
+    "type": "module",
+    "main": "./dist/index.js",
     "types": "./dist/types/index.d.ts",
-    "exports": {
-        "types": "./dist/types/index.d.ts",
-        "browser": "./dist/index-web.js",
-        "import": "./dist/index-node.mjs",
-        "require": "./dist/index-node.cjs"
-    },
     "scripts": {
-        "dev": "concurrently -r \"node build.mjs --watch\" \"tsc --emitDeclarationOnly --watch\"",
-        "test": "node example/node-example.js",
-        "build": "rimraf dist && node build.mjs && tsc --emitDeclarationOnly",
+        "dev": "tsup --watch",
+        "build": "tsup",
         "prepublishOnly": "pnpm run build",
         "release": "pnpm publish .",
-        "prettier": "prettier --write src"
+        "prettier": "prettier --write src",
+        "lint": "eslint",
+        "lint:fix": "eslint --fix"
     },
     "repository": {
         "type": "git",
@@ -34,26 +28,23 @@
     },
     "homepage": "https://github.com/AuroraTeam/AuroraAPI#readme",
     "dependencies": {
-        "@aurora-launcher/core": "workspace:^",
-        "@aurora-rpc/client": "^0.3.6"
+        "@aurora-launcher/core": "workspace:^"
     },
     "devDependencies": {
-        "@types/ws": "^8.5.13",
-        "concurrently": "^9.1.2",
-        "esbuild": "^0.24.2",
-        "import-sort-style-module": "^6.0.0",
+        "@eslint/js": "^9.35.0",
+        "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+        "@tsconfig/node22": "^22.0.2",
+        "@tsconfig/strictest": "^2.0.5",
+        "@types/node": "^22.18.3",
+        "eslint-plugin-prettier": "^5.5.4",
+        "globals": "^16.4.0",
         "prettier": "^3.4.2",
-        "prettier-plugin-import-sort": "0.0.7",
         "rimraf": "^6.0.1",
-        "typescript": "^5.7.3"
+        "tsup": "^8.5.0",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.44.0"
     },
     "directories": {
         "example": "example"
-    },
-    "importSort": {
-        ".js, .mjs, .jsx, .ts, .tsx": {
-            "style": "module",
-            "parser": "typescript"
-        }
     }
 }

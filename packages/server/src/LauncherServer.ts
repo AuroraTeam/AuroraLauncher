@@ -1,15 +1,9 @@
-import { Container, Token } from "@freshgum/typedi";
+import { Container } from "@freshgum/typedi";
 
 import { WebServerManager } from "./components/api/ApiManager";
-import {
-    HasJoinedRequest,
-    IndexRequest,
-    InjectorRequest,
-    JoinRequest,
-    ProfileRequest,
-    ProfilesRequest,
-    TestRequest,
-} from "./components/api/requests";
+import { IndexRequest, InjectorRequest } from "./components/api/requests";
+import * as AuthLibRequests from "./components/api/requests/authlib";
+import * as LauncherRequests from "./components/api/requests/launcher";
 import { ArgsManager } from "./components/args";
 import {
     AcceptAuthProvider,
@@ -78,13 +72,22 @@ export class LauncherServer /* extends EventEmitter */ {
     private loadWebServer() {
         this.webServer = Container.get(WebServerManager);
 
+        // internal
         this.webServer.registerRequest(Container.get(IndexRequest));
         this.webServer.registerRequest(Container.get(InjectorRequest));
-        this.webServer.registerRequest(Container.get(ProfilesRequest));
-        this.webServer.registerRequest(Container.get(TestRequest));
-        this.webServer.registerRequest(Container.get(JoinRequest));
-        this.webServer.registerRequest(Container.get(HasJoinedRequest));
-        this.webServer.registerRequest(Container.get(ProfileRequest));
+        // mojang
+        this.webServer.registerRequest(Container.get(AuthLibRequests.ProfilesRequest));
+        this.webServer.registerRequest(Container.get(AuthLibRequests.JoinRequest));
+        this.webServer.registerRequest(Container.get(AuthLibRequests.HasJoinedRequest));
+        this.webServer.registerRequest(Container.get(AuthLibRequests.ProfileRequest));
+        // launcher
+        this.webServer.registerRequest(Container.get(LauncherRequests.LauncherRequest));
+        this.webServer.registerRequest(Container.get(LauncherRequests.AuthTypeRequest));
+        this.webServer.registerRequest(Container.get(LauncherRequests.AuthRequest));
+        this.webServer.registerRequest(Container.get(LauncherRequests.ServersRequest));
+        this.webServer.registerRequest(Container.get(LauncherRequests.ProfileRequest));
+        this.webServer.registerRequest(Container.get(LauncherRequests.VerifyRequest));
+        this.webServer.registerRequest(Container.get(LauncherRequests.UpdatesRequest));
     }
 
     private registerAuthProviders() {

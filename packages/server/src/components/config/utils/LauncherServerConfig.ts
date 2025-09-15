@@ -1,10 +1,11 @@
 import { randomUUID } from "crypto";
 
-import { Lang } from "@root/components";
+// import { Lang } from "@root/components";
 import { AuthProviderConfig } from "@root/components/auth/providers";
 import { HjsonCommented, HjsonHelper } from "@root/utils";
 import { instanceToPlain, plainToInstance } from "class-transformer";
 
+import { Lang } from "../../langs";
 import { ApiConfig } from "./ApiConfig";
 
 export class LauncherServerConfig extends HjsonCommented {

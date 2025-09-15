@@ -1,9 +1,9 @@
-import { ProfileServerConfig } from ".."
+import { ProfileServerConfig } from "..";
 
-export const GET_SERVERS_METHOD = "getServers"
+export const SERVERS_METHOD = "/servers";
 
 export type Server = ProfileServerConfig & {
-    profileUUID: string
-}
+    profileUUID: string;
+};
 
-export type ServersResponseData = Server[]
+export type ServersResponseData = Server[];

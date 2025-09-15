@@ -1,80 +1,52 @@
 import {
+    AUTH_METHOD,
+    AUTH_TYPE_METHOD,
     AuthRequestData,
     AuthResponseData,
+    AuthTypeResponseData,
+    HttpHelper,
+    LAUNCHER_METHOD,
+    LauncherResponse,
+    PROFILE_METHOD,
     ProfileRequestData,
     ProfileResponseData,
+    SERVERS_METHOD,
     ServersResponseData,
     UpdatesRequestData,
     UpdatesResponseData,
+    VERIFY_METHOD,
     VerifyRequestData,
     VerifyResponseData,
-    EndpointResponseData,
-    AuthTypeResponseData,
-} from "@aurora-launcher/core"
-import { Client, Events, Request, Response, ResponseError } from "@aurora-rpc/client"
-
-import { APIError } from "./APIError"
+} from "@aurora-launcher/core";
 
 export class AuroraAPI {
-    #clientInstance: Client
+    constructor(private baseUrl: string) {}
 
-    constructor(url?: string, events?: Events) {
-        this.#clientInstance = new Client(url, events)
+    launcherRequest() {
+        return HttpHelper.getResourceFromJson<LauncherResponse>(new URL(LAUNCHER_METHOD, this.baseUrl));
     }
 
-    public connect(url?: string, events?: Events) {
-        return this.#clientInstance.connect(url, events)
+    authTypeRequest() {
+        return HttpHelper.getResourceFromJson<AuthTypeResponseData>(new URL(AUTH_TYPE_METHOD, this.baseUrl));
     }
 
-    public close(code?: number, data?: string) {
-        this.#clientInstance.close(code, data)
+    authRequest(data: AuthRequestData) {
+        return HttpHelper.postJson<AuthResponseData>(new URL(AUTH_METHOD, this.baseUrl), data);
     }
 
-    public async getEndpoint(): Promise<EndpointResponseData> {
-        return await this.#getRequest<AuthRequestData, EndpointResponseData>("getEndpoint")
+    serversRequest() {
+        return HttpHelper.getResourceFromJson<ServersResponseData>(new URL(SERVERS_METHOD, this.baseUrl));
     }
 
-    public async getAuthType(): Promise<AuthTypeResponseData> {
-        return await this.#getRequest<AuthRequestData, AuthTypeResponseData>("getAuthType")
+    profileRequest(data: ProfileRequestData) {
+        return HttpHelper.postJson<ProfileResponseData>(new URL(PROFILE_METHOD, this.baseUrl), data);
     }
 
-    public async auth(login: string, password: string): Promise<AuthResponseData> {
-        return await this.#getRequest<AuthRequestData, AuthResponseData>("auth", { login, password })
+    updateRequest(data: UpdatesRequestData) {
+        return HttpHelper.postJson<UpdatesResponseData>(new URL(VERIFY_METHOD, this.baseUrl), data);
     }
 
-    public async getServers(): Promise<ServersResponseData> {
-        return await this.#getRequest<undefined, ServersResponseData>("getServers")
-    }
-
-    public async getProfile(uuid: string): Promise<ProfileResponseData> {
-        return await this.#getRequest<ProfileRequestData, ProfileResponseData>("getProfile", { uuid })
-    }
-
-    public async getUpdates(dir: string): Promise<UpdatesResponseData> {
-        return await this.#getRequest<UpdatesRequestData, UpdatesResponseData>("getUpdates", { dir })
-    }
-
-    public async verify(stage: number, token?: string) {
-        return await this.#getRequest<VerifyRequestData, VerifyResponseData>("verify", { stage, token })
-    }
-
-    async #getRequest<Req extends Request["params"], Res extends Response["result"]>(
-        method: string,
-        params?: Req,
-    ): Promise<Res> {
-        try {
-            const { result } = await this.#clientInstance.send(method, params)
-            return <Res>result
-        } catch (error) {
-            if (this.#isResponseError(error)) {
-                const { code, message } = error.error
-                throw new APIError(code, message)
-            }
-            throw error
-        }
-    }
-
-    #isResponseError(error: unknown): error is ResponseError {
-        return (error as ResponseError).error !== undefined
+    verifyRequest(data: VerifyRequestData) {
+        return HttpHelper.postJson<VerifyResponseData>(new URL(VERIFY_METHOD, this.baseUrl), data);
     }
 }

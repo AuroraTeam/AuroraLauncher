@@ -1,5 +1,5 @@
-import { BinaryLike, createHash } from "crypto"
-import { readFile } from "fs/promises"
+import { BinaryLike, createHash } from "crypto";
+import { readFile } from "fs/promises";
 
 export class HashHelper {
     /**
@@ -9,7 +9,7 @@ export class HashHelper {
      * @returns Хеш данных
      */
     static getHash(data: BinaryLike, type: string) {
-        return createHash(type).update(data).digest("hex")
+        return createHash(type).update(data).digest("hex");
     }
 
     /**
@@ -19,7 +19,7 @@ export class HashHelper {
      * @returns Хеш файла
      */
     static async getHashFromFile(path: string, type: string) {
-        return this.getHash(await readFile(path), type)
+        return this.getHash(await readFile(path), type);
     }
 
     /**
@@ -30,6 +30,6 @@ export class HashHelper {
      * @returns `true` в случае совпадения, `false` в противном случае
      */
     static async compareFileHash(path: string, type: string, fileHash: string) {
-        return (await this.getHashFromFile(path, type)) === fileHash
+        return (await this.getHashFromFile(path, type)) === fileHash;
     }
 }

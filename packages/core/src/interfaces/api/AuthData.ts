@@ -1,24 +1,24 @@
-import { AuthType } from "../AuthType"
+import { AuthType } from "../AuthType";
 
-export const GET_AUTH_TYPE_METHOD = "getAuthType"
-export const AUTH_METHOD = "auth"
+export const AUTH_TYPE_METHOD = "/auth-type";
+export const AUTH_METHOD = "/auth";
 
 export interface AuthTypeResponseData {
-    type: AuthType
-    extra: unknown
+    type: AuthType;
+    extra: unknown;
 }
 
 export interface AuthRequestData {
-    login: string
-    password: string
+    login: string;
+    password: string;
 }
 
 export interface AuthResponseData {
-    username: string
-    userUUID: string
-    accessToken: string
-    refreshToken: string
-    isAlex?: boolean
-    skinUrl?: string
-    capeUrl?: string
+    username: string;
+    userUUID: string;
+    accessToken: string;
+    refreshToken: string;
+    isAlex?: boolean;
+    skinUrl?: string;
+    capeUrl?: string;
 }
