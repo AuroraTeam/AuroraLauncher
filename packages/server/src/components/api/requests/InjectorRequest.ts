@@ -7,7 +7,7 @@ import { AbstractRequest } from "./AbstractRequest";
 @Service([ConfigManager, AuthlibManager])
 export class InjectorRequest implements AbstractRequest {
     readonly method = "get";
-    readonly url = "/injector";
+    readonly url = "/authlib";
 
     constructor(
         private configManager: ConfigManager,
