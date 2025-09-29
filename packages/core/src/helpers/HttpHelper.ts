@@ -54,14 +54,14 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт обработанный объект, в случае успеха
      */
-    public static async postJson(url: string | URL, json: JsonData, headers?: Record<string, string>) {
+    public static async postJson<T>(url: string | URL, json: JsonData, headers?: Record<string, string>) {
         const { body } = await request(url, {
             method: "POST",
             body: JsonHelper.toJson(json),
             headers: { "Content-Type": "application/json", ...headers },
             throwOnError: true,
         });
-        return await body.text();
+        return <T>await body.json();
     }
 
     /**
