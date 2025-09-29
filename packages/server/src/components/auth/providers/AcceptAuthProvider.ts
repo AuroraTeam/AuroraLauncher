@@ -1,15 +1,16 @@
 import { randomUUID } from "crypto";
 
-import { AuthResponseData, HttpHelper, JsonHelper } from "@aurora-launcher/core";
+import { HttpHelper, JsonHelper } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 import { v5 } from "uuid";
 
 import {
     AuthProvider,
-    HasJoinedResponseData,
-    ProfileResponseData,
-    ProfilesResponseData,
+    AuthenticateRequestData,
+    InvalidateRequestData,
+    RefreshRequestData,
+    ValidateRequestData,
 } from "./AuthProvider";
 import { MojangTextures, SkinableAuthProvider } from "./SkinableAuthProvider";
 
@@ -22,35 +23,65 @@ export class AcceptAuthProvider implements AuthProvider, SkinableAuthProvider {
         this.projectID = projectID;
     }
 
-    async auth(username: string): Promise<AuthResponseData> {
+    async authenticate({ username, clientToken }: AuthenticateRequestData) {
         const userUUID = v5(username, this.projectID);
-        const data = {
-            username,
-            userUUID,
-            accessToken: randomUUID(),
-            refreshToken: randomUUID(),
-        };
+        const accessToken = randomUUID(); // TODO: generate access token (JWT)
+        clientToken ||= randomUUID();
 
-        const userIndex = this.sessionsDB.findIndex((user) => user.username === username);
-        if (userIndex !== -1) {
-            this.sessionsDB.splice(userIndex, 1);
-        }
-
-        this.sessionsDB.push({
-            ...data,
-            serverId: undefined,
-        });
+        this.sessionsDB = this.sessionsDB.filter((user) => user.username !== username);
 
         const skinData = await this.getSkinData(username);
 
-        return {
-            ...data,
+        this.sessionsDB.push({
+            username,
+            userUUID,
+            accessToken,
+            clientToken,
+            serverId: undefined,
             skinUrl: skinData.SKIN?.url,
             capeUrl: skinData.CAPE?.url,
+            isAlex: skinData.SKIN?.metadata?.model === "slim",
+        });
+
+        return {
+            accessToken,
+            clientToken,
+            selectedProfile: {
+                id: userUUID,
+                name: username,
+            },
         };
     }
 
-    join(accessToken: string, userUUID: string, serverId: string): boolean {
+    refresh({ accessToken, clientToken }: RefreshRequestData) {
+        const user = this.sessionsDB.find((user) =>
+            this.userMatch(user, { accessToken, clientToken }),
+        );
+        if (!user) throw new Error("User not found");
+
+        user.accessToken = randomUUID(); // TODO: generate access token (JWT)
+
+        return {
+            accessToken: user.accessToken,
+            clientToken: user.clientToken,
+            selectedProfile: {
+                id: user.userUUID,
+                name: user.username,
+            },
+        };
+    }
+
+    validate({ accessToken, clientToken }: ValidateRequestData) {
+        return this.sessionsDB.some((user) => this.userMatch(user, { accessToken, clientToken }));
+    }
+
+    invalidate({ accessToken, clientToken }: InvalidateRequestData) {
+        this.sessionsDB = this.sessionsDB.filter((user) =>
+            this.userMatch(user, { accessToken, clientToken }),
+        );
+    }
+
+    join(accessToken: string, userUUID: string, serverId: string) {
         const user = this.sessionsDB.find(
             (user) => user.accessToken === accessToken && user.userUUID === userUUID,
         );
@@ -60,7 +91,7 @@ export class AcceptAuthProvider implements AuthProvider, SkinableAuthProvider {
         return true;
     }
 
-    hasJoined(username: string, serverId: string): HasJoinedResponseData {
+    hasJoined(username: string, serverId: string) {
         const user = this.sessionsDB.find((user) => user.username === username);
         if (!user) throw new Error("User not found");
 
@@ -70,13 +101,13 @@ export class AcceptAuthProvider implements AuthProvider, SkinableAuthProvider {
         return user;
     }
 
-    profile(userUUID: string): ProfileResponseData {
+    profile(userUUID: string) {
         const user = this.sessionsDB.find((e) => e.userUUID === userUUID);
         if (!user) throw new Error("User not found");
         return user;
     }
 
-    profiles(usernames: string[]): ProfilesResponseData[] {
+    profiles(usernames: string[]) {
         return this.sessionsDB
             .filter(({ username }) => usernames.includes(username))
             .map((user) => ({
@@ -112,13 +143,25 @@ export class AcceptAuthProvider implements AuthProvider, SkinableAuthProvider {
 
         return profile.textures;
     }
+
+    private userMatch(
+        user: UserData,
+        { accessToken, clientToken }: { accessToken: string; clientToken?: string },
+    ) {
+        if (clientToken) {
+            return user.clientToken === clientToken && user.accessToken === accessToken;
+        }
+        return user.accessToken === accessToken;
+    }
 }
 
 interface UserData {
     username: string;
     userUUID: string;
     accessToken: string;
+    clientToken: string;
     serverId: string;
     skinUrl?: string;
     capeUrl?: string;
+    isAlex?: boolean;
 }

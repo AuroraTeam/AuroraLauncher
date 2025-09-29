@@ -1,9 +1,4 @@
 import {
-    AUTH_METHOD,
-    AUTH_TYPE_METHOD,
-    AuthRequestData,
-    AuthResponseData,
-    AuthTypeResponseData,
     HttpHelper,
     LAUNCHER_METHOD,
     LauncherResponse,
@@ -12,6 +7,7 @@ import {
     ProfileResponseData,
     SERVERS_METHOD,
     ServersResponseData,
+    UPDATES_METHOD,
     UpdatesRequestData,
     UpdatesResponseData,
     VERIFY_METHOD,
@@ -26,14 +22,6 @@ export class AuroraAPI {
         return HttpHelper.getResourceFromJson<LauncherResponse>(new URL(LAUNCHER_METHOD, this.baseUrl));
     }
 
-    authTypeRequest() {
-        return HttpHelper.getResourceFromJson<AuthTypeResponseData>(new URL(AUTH_TYPE_METHOD, this.baseUrl));
-    }
-
-    authRequest(data: AuthRequestData) {
-        return HttpHelper.postJson<AuthResponseData>(new URL(AUTH_METHOD, this.baseUrl), data);
-    }
-
     serversRequest() {
         return HttpHelper.getResourceFromJson<ServersResponseData>(new URL(SERVERS_METHOD, this.baseUrl));
     }
@@ -43,7 +31,7 @@ export class AuroraAPI {
     }
 
     updateRequest(data: UpdatesRequestData) {
-        return HttpHelper.postJson<UpdatesResponseData>(new URL(VERIFY_METHOD, this.baseUrl), data);
+        return HttpHelper.postJson<UpdatesResponseData>(new URL(UPDATES_METHOD, this.baseUrl), data);
     }
 
     verifyRequest(data: VerifyRequestData) {

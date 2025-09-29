@@ -7,7 +7,7 @@ export interface MojangTextures {
         SKIN?: {
             url: string;
             metadata?: {
-                model?: string;
+                model?: "slim";
             };
         };
         CAPE?: {

@@ -39,7 +39,7 @@ export class JoinRequest implements AbstractRequest {
         );
 
         if (!status) {
-            rep.status(400);
+            rep.code(400);
             return {
                 error: "ForbiddenOperationException",
                 errorMessage: "Invalid credentials",

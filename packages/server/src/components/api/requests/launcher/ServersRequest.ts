@@ -1,4 +1,4 @@
-import { SERVERS_METHOD, Server } from "@aurora-launcher/core";
+import { SERVERS_METHOD, Server, ServersResponseData } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
 
 import { ProfilesManager } from "../../../profiles";
@@ -11,7 +11,7 @@ export class ServersRequest implements AbstractRequest {
 
     constructor(private profilesManager: ProfilesManager) {}
 
-    handler() {
+    handler(): ServersResponseData {
         const servers: Server[] = [];
 
         this.profilesManager

@@ -42,9 +42,7 @@ export class ProfileRequest implements AbstractRequest {
         try {
             user = await this.authProvider.profile(UUIDHelper.getWithDashes(uuid));
         } catch {
-            rep.raw.statusCode = 204;
-            rep.raw.end();
-            return;
+            return rep.code(204);
         }
 
         const textures: any = {};

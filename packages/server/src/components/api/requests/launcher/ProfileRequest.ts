@@ -1,11 +1,11 @@
-import { PROFILE_METHOD } from "@aurora-launcher/core";
+import { PROFILE_METHOD, ProfileRequestData, ProfileResponseData } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
 import { FastifyRequest } from "fastify";
 
 import { ProfilesManager } from "../../../profiles";
 import { AbstractRequest } from "../AbstractRequest";
 
-@Service([])
+@Service([ProfilesManager])
 export class ProfileRequest implements AbstractRequest {
     method = "post";
     url = PROFILE_METHOD;
@@ -20,7 +20,7 @@ export class ProfileRequest implements AbstractRequest {
 
     constructor(private profilesManager: ProfilesManager) {}
 
-    handler(req: FastifyRequest<{ Body: { uuid: string } }>) {
+    handler(req: FastifyRequest<{ Body: ProfileRequestData }>): ProfileResponseData {
         return this.profilesManager
             .getProfiles()
             .find((p) => p.uuid === req.body.uuid)

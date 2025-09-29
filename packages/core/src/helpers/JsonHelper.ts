@@ -1,3 +1,5 @@
+import { parse } from "@hapi/bourne";
+
 export type JsonData = unknown;
 
 /**
@@ -10,7 +12,7 @@ export class JsonHelper {
      * @returns `Object | Array`
      */
     static fromJson<T>(string: string): T {
-        return <T>JSON.parse(string);
+        return <T>parse(string);
     }
 
     /**

@@ -1,5 +1,4 @@
 // @index('./*.ts', f => `export * from "${f.path}"`)
-export * from "./AuthData";
 export * from "./LauncherData";
 export * from "./ProfileData";
 export * from "./ServersData";

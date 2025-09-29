@@ -64,6 +64,7 @@ export enum Name {
 export interface ProfileServerConfigBase {
     title: string;
 }
+
 export interface ProfileServerHostnameConfig extends ProfileServerConfigBase {
     hostname: string;
 }

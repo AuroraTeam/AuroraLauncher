@@ -33,7 +33,7 @@ export class HasJoinedRequest implements AbstractRequest {
         const { username, serverId } = req.query;
 
         if (!username || !serverId) {
-            rep.status(400);
+            rep.code(400);
             return {
                 error: "BadRequestException",
                 errorMessage: "Empty values are not allowed",
@@ -44,7 +44,7 @@ export class HasJoinedRequest implements AbstractRequest {
         try {
             user = await this.authProvider.hasJoined(username, serverId);
         } catch (error) {
-            rep.status(400);
+            rep.code(400);
             return {
                 error: "ForbiddenOperationException",
                 errorMessage: error.message,

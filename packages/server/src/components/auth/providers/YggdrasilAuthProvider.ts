@@ -1,4 +1,4 @@
-import { AuthResponseData, HttpHelper, JsonHelper } from "@aurora-launcher/core";
+import { HttpHelper, JsonHelper } from "@aurora-launcher/core";
 import { ResponseError } from "@aurora-rpc/server";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 
@@ -15,7 +15,7 @@ export class YggdrasilAuthProvider implements AuthProvider, SkinableAuthProvider
         }
     }
 
-    async auth(login: string, password: string): Promise<AuthResponseData> {
+    async authenticate(login: string, password: string): Promise<string> {
         try {
             const response = await HttpHelper.postJson<YggdrasilAuthResponseData>(
                 this.config.url + "/authserver/authenticate",
@@ -29,19 +29,22 @@ export class YggdrasilAuthProvider implements AuthProvider, SkinableAuthProvider
                 throw new ResponseError(response.errorMessage, 200);
             }
 
-            const skinData = await this.getSkinData(response.selectedProfile.id);
-
-            return {
-                accessToken: response.accessToken,
-                userUUID: response.selectedProfile.id,
-                username: response.selectedProfile.name,
-                refreshToken: response.clientToken,
-                skinUrl: skinData.SKIN?.url,
-                capeUrl: skinData.CAPE?.url,
-            };
+            return response.accessToken;
         } catch (error) {
             throw new ResponseError(error.message, 200);
         }
+    }
+
+    validate(): never {
+        throw new Error();
+    }
+
+    refresh(): never {
+        throw new Error();
+    }
+
+    invalidate(): never {
+        throw new Error();
     }
 
     join(): never {

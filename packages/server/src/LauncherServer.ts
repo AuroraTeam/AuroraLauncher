@@ -9,9 +9,7 @@ import {
     AcceptAuthProvider,
     AuthManager,
     AuthProvider,
-    JsonAuthProvider,
     RejectAuthProvider,
-    YggdrasilAuthProvider,
 } from "./components/auth";
 import { ConfigManager } from "./components/config";
 import { LangManager } from "./components/langs";
@@ -75,15 +73,20 @@ export class LauncherServer /* extends EventEmitter */ {
         // internal
         this.webServer.registerRequest(Container.get(IndexRequest));
         this.webServer.registerRequest(Container.get(InjectorRequest));
-        // mojang
+        // authlib (authserver)
+        this.webServer.registerRequest(Container.get(AuthLibRequests.AuthenticateRequest));
+        this.webServer.registerRequest(Container.get(AuthLibRequests.RefreshRequest));
+        this.webServer.registerRequest(Container.get(AuthLibRequests.ValidateRequest));
+        this.webServer.registerRequest(Container.get(AuthLibRequests.InvalidateRequest));
+        // authlib (api)
         this.webServer.registerRequest(Container.get(AuthLibRequests.ProfilesRequest));
+        // authlib (sessionserver)
         this.webServer.registerRequest(Container.get(AuthLibRequests.JoinRequest));
         this.webServer.registerRequest(Container.get(AuthLibRequests.HasJoinedRequest));
         this.webServer.registerRequest(Container.get(AuthLibRequests.ProfileRequest));
+        // this.webServer.registerRequest(Container.get(AuthLibRequests.NewProfileRequest));
         // launcher
         this.webServer.registerRequest(Container.get(LauncherRequests.LauncherRequest));
-        this.webServer.registerRequest(Container.get(LauncherRequests.AuthTypeRequest));
-        this.webServer.registerRequest(Container.get(LauncherRequests.AuthRequest));
         this.webServer.registerRequest(Container.get(LauncherRequests.ServersRequest));
         this.webServer.registerRequest(Container.get(LauncherRequests.ProfileRequest));
         this.webServer.registerRequest(Container.get(LauncherRequests.VerifyRequest));
@@ -92,10 +95,9 @@ export class LauncherServer /* extends EventEmitter */ {
 
     private registerAuthProviders() {
         AuthManager.registerProviders({
-            json: JsonAuthProvider,
+            // json: JsonAuthProvider,
             reject: RejectAuthProvider,
             accept: AcceptAuthProvider,
-            yggdrasil: YggdrasilAuthProvider,
         });
 
         this.authProvider = AuthManager.getProvider(this.configManager, this.langManager);

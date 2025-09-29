@@ -1,4 +1,4 @@
-import { AuthResponseData, HttpHelper } from "@aurora-launcher/core";
+import { HttpHelper } from "@aurora-launcher/core";
 import { ResponseError } from "@aurora-rpc/server";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 
@@ -17,7 +17,7 @@ export class JsonAuthProvider implements AuthProvider {
         this.config = <JsonAuthProviderConfig>auth;
     }
 
-    async auth(login: string, password: string): Promise<AuthResponseData> {
+    async authenticate(login: string, password: string): Promise<AuthResponseData> {
         try {
             return this.parseResponse(
                 await HttpHelper.postJson<ApiResponse<AuthResponseData>>(this.config.authUrl, {
@@ -28,6 +28,18 @@ export class JsonAuthProvider implements AuthProvider {
         } catch (error) {
             throw new ResponseError(error.message, 200);
         }
+    }
+
+    validate(): never {
+        throw new Error();
+    }
+
+    refresh(): never {
+        throw new Error();
+    }
+
+    invalidate(): never {
+        throw new Error();
     }
 
     async join(accessToken: string, userUUID: string, serverID: string): Promise<boolean> {

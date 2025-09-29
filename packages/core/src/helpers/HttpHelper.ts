@@ -31,37 +31,13 @@ export class HttpHelper {
     }
 
     /**
-     * Проверка наличия ресурса
-     * @param url - строка или объект URL, содержащий ссылку на ресурс
-     * @returns Promise, который вернёт `true`, в случае существования ресурса или `false` при его отсутствии или ошибке
-     */
-    public static async existsResource(url: string | URL) {
-        try {
-            const { statusCode } = await request(url, { method: "HEAD" });
-            return statusCode >= 200 && statusCode < 300;
-        } catch {
-            return false;
-        }
-    }
-
-    /**
      * Чтение ресурса
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт содержимое ресурса, в случае успеха
      */
-    public static async getResource(url: string | URL) {
-        const { body } = await request(url);
+    public static async getResource(url: string | URL, headers: Record<string, string> | null = null) {
+        const { body } = await request(url, { headers, throwOnError: true });
         return body.text();
-    }
-
-    /**
-     * Чтение ресурса
-     * @param url - строка или объект URL, содержащий ссылку на ресурс
-     * @returns Promise, который вернёт содержимое ресурса, в случае успеха
-     */
-    public static async getHeaders(url: string | URL) {
-        const { headers } = await request(url);
-        return headers;
     }
 
     /**
@@ -69,8 +45,8 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт обработанный объект, в случае успеха
      */
-    public static async getResourceFromJson<T>(url: string | URL): Promise<T> {
-        return JsonHelper.fromJson<T>(await this.getResource(url));
+    public static async getResourceFromJson<T>(url: string | URL, headers?: Record<string, string>): Promise<T> {
+        return JsonHelper.fromJson<T>(await this.getResource(url, headers));
     }
 
     /**
@@ -78,13 +54,14 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт обработанный объект, в случае успеха
      */
-    public static async postJson<T>(url: string | URL, json: JsonData): Promise<T> {
+    public static async postJson(url: string | URL, json: JsonData, headers?: Record<string, string>) {
         const { body } = await request(url, {
             method: "POST",
             body: JsonHelper.toJson(json),
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", ...headers },
+            throwOnError: true,
         });
-        return <T>await body.json();
+        return await body.text();
     }
 
     /**

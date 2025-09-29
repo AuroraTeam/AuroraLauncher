@@ -19,7 +19,7 @@ export class InjectorRequest implements AbstractRequest {
             meta: {
                 serverName: this.configManager.config.projectName || "Aurora Launcher",
                 implementationName: "aurora-launchserver",
-                implementationVersion: "0.0.5",
+                implementationVersion: "1.0.0",
             },
             skinDomains: this.configManager.config.auth.skinDomains || [],
             signaturePublickey: this.authlibManager.getPublicKey(),

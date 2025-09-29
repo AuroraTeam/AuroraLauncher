@@ -1,2 +1,5 @@
-export * from "./accountsHost";
-export * from "./sessionHost";
+// @index(['./*/index.ts'], f => `export * from "${f.path.replace(/\/index$/, '')}";`)
+export * from "./api";
+export * from "./authserver";
+export * from "./minecraftservices";
+export * from "./sessionserver";
