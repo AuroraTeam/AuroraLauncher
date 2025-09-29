@@ -178,9 +178,6 @@ importers:
       skinview3d:
         specifier: ^3.1.0
         version: 3.4.1
-      undici:
-        specifier: ^6.21.3
-        version: 6.21.3
       uuid:
         specifier: ^11.0.5
         version: 11.1.0
