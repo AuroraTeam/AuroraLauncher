@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
 import { Service } from "@freshgum/typedi";
-import { LogHelper, SecureHelper, StorageHelper } from "@root/utils";
+import { LogHelper, SecureHelper, StorageHelper } from "@root/helpers";
 
 import { LangManager } from "../langs";
 

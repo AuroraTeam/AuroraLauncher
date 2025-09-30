@@ -1,7 +1,7 @@
 import { Service } from "@freshgum/typedi";
 import type { AuthProvider } from "@root/components/auth/providers";
 import { AuthlibManager } from "@root/components/authlib";
-import { UUIDHelper } from "@root/utils";
+import { UUIDHelper } from "@root/helpers";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { AuthProviderToken } from "../../../../../tokens";

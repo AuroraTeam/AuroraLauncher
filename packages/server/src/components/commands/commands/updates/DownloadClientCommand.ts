@@ -15,7 +15,7 @@ import {
     QuiltManager,
     Watcher,
 } from "@root/components";
-import { LogHelper } from "@root/utils";
+import { LogHelper } from "@root/helpers";
 
 @Service([LangManager, ProfilesManager, ConfigManager, CommandsManager, ClientsManager, Watcher])
 export class DownloadClientCommand extends AbstractCommand {

@@ -5,12 +5,12 @@ import { extname, resolve } from "path";
 
 import { HttpHelper, JsonHelper, ProfileLibrary, ZipHelper } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
-import { LogHelper, StorageHelper } from "@root/utils";
+import { LogHelper, StorageHelper } from "@root/helpers";
 
 import { InstallProfile, Libraries, NeoManifest, VersionProfiles } from "../interfaces/IForge";
 import { MojangManager } from "./Mojang";
 
-@Service()
+@Service([])
 export class NeoForgeManager extends MojangManager {
     #forgeInstall = "";
     #tempDir = StorageHelper.getTmpPath();

@@ -3,7 +3,7 @@ import { resolve } from "path";
 
 import { Profile } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
-import { LogHelper, StorageHelper } from "@root/utils";
+import { LogHelper, StorageHelper } from "@root/helpers";
 
 import { LangManager } from "../langs";
 import { ProfileConfig } from "./ProfileConfig";

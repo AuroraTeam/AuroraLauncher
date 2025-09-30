@@ -6,7 +6,7 @@ import { format } from "util";
 import chalk from "chalk";
 import stripAnsi from "strip-ansi";
 
-import { version } from "../../../package.json";
+import { version } from "../../package.json";
 import { StorageHelper } from "./StorageHelper";
 
 const LOG_LEVELS = {

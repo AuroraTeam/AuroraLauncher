@@ -2,7 +2,7 @@ import path from "path";
 
 import { HttpHelper } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
-import { LogHelper, StorageHelper, SystemHelper } from "@root/utils";
+import { LogHelper, StorageHelper, SystemHelper } from "@root/helpers";
 import semver from "semver";
 
 import { version as currentVersion } from "../../../package.json";

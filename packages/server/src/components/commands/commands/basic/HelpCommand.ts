@@ -1,6 +1,6 @@
 import { Service } from "@freshgum/typedi";
 import { AbstractCommand, CommandCategory, LangManager } from "@root/components";
-import { LogHelper } from "@root/utils";
+import { LogHelper } from "@root/helpers";
 import chalk from "chalk";
 
 import { CommandsManager } from "../..";
@@ -20,7 +20,7 @@ export class HelpCommand extends AbstractCommand {
 
     invoke(): void {
         const commandsList: Map<CommandCategory, AbstractCommand[]> = new Map(
-            Object.values(CommandCategory).map((c) => [c, []]),
+            Object.values(CommandCategory).map((c) => [c, <AbstractCommand[]>[]]),
         );
 
         this.commandsManager.commands.forEach((command: AbstractCommand) => {

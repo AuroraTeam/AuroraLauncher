@@ -1,7 +1,7 @@
 import { resolve } from "path";
 
 import { HashHelper, HttpHelper, ProfileLibrary } from "@aurora-launcher/core";
-import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
+import { LogHelper, ProgressHelper, StorageHelper } from "@root/helpers";
 
 import { Library } from "../interfaces/IFabric";
 import { MojangManager } from "./Mojang";

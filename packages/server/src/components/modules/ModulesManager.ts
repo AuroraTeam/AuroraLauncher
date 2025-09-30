@@ -1,9 +1,10 @@
 import fs from "fs/promises";
 import path from "path";
 
+import { ILauncherServerModule, IModuleInfo } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
+import { LogHelper, StorageHelper } from "@root/helpers";
 import { LauncherServer } from "@root/LauncherServer";
-import { ILauncherServerModule, IModuleInfo, LogHelper, StorageHelper } from "@root/utils";
 import chalk from "chalk";
 
 import { LangManager } from "../langs";

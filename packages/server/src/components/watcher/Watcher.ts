@@ -1,7 +1,7 @@
 import { sep } from "path";
 
 import { Service } from "@freshgum/typedi";
-import { StorageHelper } from "@root/utils";
+import { StorageHelper } from "@root/helpers";
 
 import { ClientsManager } from "../clients/ClientsManager";
 import { ProfilesManager } from "../profiles/ProfilesManager";

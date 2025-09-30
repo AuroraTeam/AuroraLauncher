@@ -1,20 +1,16 @@
 import { Service } from "@freshgum/typedi";
 
-import { Request } from "../../Request";
-import { WebResponse } from "../../WebResponse";
 import { AbstractRequest } from "../AbstractRequest";
 import { TokenManager } from "./Token";
 
-@Service()
-export class GetToken extends AbstractRequest {
+@Service([TokenManager])
+export class GetTokenRequest implements AbstractRequest {
     method = "GET";
-    url = /^\/release\/get_token$/;
+    url = "/release/get_token/";
 
-    constructor(private tokenManager: TokenManager) {
-        super();
-    }
+    constructor(private tokenManager: TokenManager) {}
 
-    async emit(req: Request, res: WebResponse): Promise<void> {
-        res.json({ token: this.tokenManager.getEncryptedToken() });
+    handler() {
+        return { token: this.tokenManager.getEncryptedToken() };
     }
 }

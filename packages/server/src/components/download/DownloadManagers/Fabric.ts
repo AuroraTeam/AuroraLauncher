@@ -1,11 +1,11 @@
 import { HttpHelper } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
-import { LogHelper } from "@root/utils";
+import { LogHelper } from "@root/helpers";
 
 import { ClientMeta, VersionMeta } from "../interfaces/IFabric";
 import { FabricLikeManager } from "./FabricLike";
 
-@Service()
+@Service([])
 export class FabricManager extends FabricLikeManager {
     fabricMetaLink = "https://meta.fabricmc.net/v2/versions/loader/";
 

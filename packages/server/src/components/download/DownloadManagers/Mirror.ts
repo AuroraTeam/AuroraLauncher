@@ -1,14 +1,15 @@
+import { rm } from "fs/promises";
 import { resolve } from "path";
 import { URL } from "url";
 
 import { HttpHelper, ZipHelper } from "@aurora-launcher/core";
 import { Profile } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
-import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
+import { LogHelper, ProgressHelper, StorageHelper } from "@root/helpers";
 
 import { MojangManager } from "./Mojang";
 
-@Service()
+@Service([])
 export class MirrorManager extends MojangManager {
     /**
      * Скачивание клиена с зеркала
@@ -16,43 +17,35 @@ export class MirrorManager extends MojangManager {
      * @param clientName - Название клиента
      */
     async downloadClient(fileName: string, clientName: string) {
-        const mirror = await this.checkMirror(fileName);
-        if (!mirror)
+        let mirror: string;
+        let profile: Profile;
+
+        for (const selectedMirror of this.configManager.config.mirrors) {
+            profile = await HttpHelper.getResourceFromJson<Profile>(
+                new URL(`/profiles/${fileName}.json`, selectedMirror),
+            ).catch<undefined>(() => undefined);
+            mirror = selectedMirror;
+            if (profile) break;
+        }
+
+        if (!profile)
             return LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MirrorManager.client.notFound,
             );
-        const mirrorProfiles: Profile = await HttpHelper.getResourceFromJson(
-            new URL(`/profiles/${fileName}.json`, mirror),
-        );
 
-        const profileUUID = await super.downloadClient(mirrorProfiles.version, clientName);
+        const profileUUID = await super.downloadClient(profile.version, clientName);
         if (!profileUUID) return;
 
-        if (await HttpHelper.existsResource(new URL(`/clients/${fileName}.zip`, mirror))) {
-            await this.installClient(fileName, clientName, mirror);
-        }
-
-        if (await HttpHelper.existsResource(new URL(`/libraries/${fileName}.zip`, mirror))) {
-            await this.installLibraries(fileName, mirror);
-        }
+        await this.installClient(fileName, clientName, mirror);
+        await this.installLibraries(fileName, mirror);
 
         this.profilesManager.editProfile(profileUUID, () => ({
-            mainClass: mirrorProfiles.mainClass,
-            libraries: mirrorProfiles.libraries,
-            jvmArgs: mirrorProfiles.jvmArgs,
-            clientArgs: mirrorProfiles.clientArgs,
+            mainClass: profile.mainClass,
+            libraries: profile.libraries,
+            jvmArgs: profile.jvmArgs,
+            clientArgs: profile.clientArgs,
         }));
         LogHelper.info(this.langManager.getTranslate.DownloadManager.MirrorManager.client.success);
-    }
-
-    async checkMirror(fileName: string) {
-        const mirrors: string[] = this.configManager.config.mirrors;
-
-        const mirror = await this.findAsync(mirrors, async (url) => {
-            return await HttpHelper.existsResource(new URL(`/profiles/${fileName}.json`, url));
-        });
-
-        return mirror;
     }
 
     async installClient(fileName: string, clientName: string, mirror: string) {
@@ -61,8 +54,9 @@ export class MirrorManager extends MojangManager {
         progressBar.start(0, 0, { filename: `${fileName}.zip` });
         const clientDirPath = resolve(StorageHelper.clientsDir, clientName);
 
+        let clientTempFilePath;
         try {
-            const client = await HttpHelper.downloadFile(
+            const clientTempFilePath = await HttpHelper.downloadFile(
                 new URL(`/clients/${fileName}.zip`, mirror),
                 null,
                 {
@@ -79,7 +73,7 @@ export class MirrorManager extends MojangManager {
             LogHelper.info(
                 this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpacking,
             );
-            await ZipHelper.unzip(client, clientDirPath);
+            await ZipHelper.unzip(clientTempFilePath, clientDirPath);
 
             return true;
         } catch (error) {
@@ -89,6 +83,7 @@ export class MirrorManager extends MojangManager {
             LogHelper.debug(error);
             return;
         } finally {
+            await rm(clientTempFilePath);
             progressBar.stop();
         }
     }
@@ -100,8 +95,9 @@ export class MirrorManager extends MojangManager {
         const progressBar = ProgressHelper.getDownloadProgressBar();
         progressBar.start(0, 0, { filename: `${fileName}.zip` });
 
+        let librariesTempFilePath;
         try {
-            const client = await HttpHelper.downloadFile(
+            librariesTempFilePath = await HttpHelper.downloadFile(
                 new URL(`/libraries/${fileName}.zip`, mirror),
                 null,
                 {
@@ -118,7 +114,7 @@ export class MirrorManager extends MojangManager {
             LogHelper.info(
                 this.langManager.getTranslate.DownloadManager.MirrorManager.client.unpackingLib,
             );
-            await ZipHelper.unzip(client, StorageHelper.librariesDir);
+            await ZipHelper.unzip(librariesTempFilePath, StorageHelper.librariesDir);
 
             return true;
         } catch (error) {
@@ -128,22 +124,8 @@ export class MirrorManager extends MojangManager {
             LogHelper.debug(error);
             return;
         } finally {
+            await rm(librariesTempFilePath);
             progressBar.stop();
-        }
-    }
-
-    async findAsync(
-        array: string[],
-        predicate: (item: string, index: number, items: string[]) => Promise<any>,
-    ) {
-        for (const [index, item] of array.entries()) {
-            try {
-                if (await predicate(item, index, array)) {
-                    return item;
-                }
-            } catch {
-                return undefined;
-            }
         }
     }
 }

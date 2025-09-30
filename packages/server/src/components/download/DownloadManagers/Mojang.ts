@@ -4,7 +4,7 @@ import path, { resolve } from "path";
 import { HttpHelper, JsonHelper, OS, ProfileLibrary } from "@aurora-launcher/core";
 import { MojangAssets } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
-import { LogHelper, ProgressHelper, StorageHelper } from "@root/utils";
+import { LogHelper, ProgressHelper, StorageHelper } from "@root/helpers";
 
 import {
     Action,

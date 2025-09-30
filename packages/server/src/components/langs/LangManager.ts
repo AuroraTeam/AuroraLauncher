@@ -1,5 +1,5 @@
 import { Service } from "@freshgum/typedi";
-import { LogHelper } from "@root/utils";
+import { LogHelper } from "@root/helpers";
 
 import { ConfigManager } from "../config";
 import { Lang, Translate, langList } from "./utils";

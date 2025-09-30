@@ -1,4 +1,4 @@
-import { LogHelper } from "@root/utils";
+import { LogHelper } from "@root/helpers";
 import { FSWatcher, watch } from "chokidar";
 
 export class WatchService {

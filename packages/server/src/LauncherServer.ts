@@ -4,17 +4,20 @@ import { WebServerManager } from "./components/api/ApiManager";
 import { IndexRequest, InjectorRequest } from "./components/api/requests";
 import * as AuthLibRequests from "./components/api/requests/authlib";
 import * as LauncherRequests from "./components/api/requests/launcher";
+import * as ReleaseServerRequests from "./components/api/requests/release-server";
 import { ArgsManager } from "./components/args";
 import {
     AcceptAuthProvider,
     AuthManager,
     AuthProvider,
+    JsonAuthProvider,
     RejectAuthProvider,
 } from "./components/auth";
+import { YggdrasilAuthProvider } from "./components/auth/providers/YggdrasilAuthProvider";
 import { ConfigManager } from "./components/config";
 import { LangManager } from "./components/langs";
+import { LogHelper, StorageHelper } from "./helpers";
 import { AuthProviderToken } from "./tokens";
-import { LogHelper, StorageHelper } from "./utils";
 
 export class LauncherServer /* extends EventEmitter */ {
     webServer: WebServerManager;
@@ -84,20 +87,23 @@ export class LauncherServer /* extends EventEmitter */ {
         this.webServer.registerRequest(Container.get(AuthLibRequests.JoinRequest));
         this.webServer.registerRequest(Container.get(AuthLibRequests.HasJoinedRequest));
         this.webServer.registerRequest(Container.get(AuthLibRequests.ProfileRequest));
-        // this.webServer.registerRequest(Container.get(AuthLibRequests.NewProfileRequest));
         // launcher
         this.webServer.registerRequest(Container.get(LauncherRequests.LauncherRequest));
         this.webServer.registerRequest(Container.get(LauncherRequests.ServersRequest));
         this.webServer.registerRequest(Container.get(LauncherRequests.ProfileRequest));
         this.webServer.registerRequest(Container.get(LauncherRequests.VerifyRequest));
         this.webServer.registerRequest(Container.get(LauncherRequests.UpdatesRequest));
+        // release-server
+        this.webServer.registerRequest(Container.get(ReleaseServerRequests.GetTokenRequest));
+        this.webServer.registerRequest(Container.get(ReleaseServerRequests.DownloadReleaseRequest));
     }
 
     private registerAuthProviders() {
         AuthManager.registerProviders({
-            // json: JsonAuthProvider,
+            json: JsonAuthProvider,
             reject: RejectAuthProvider,
             accept: AcceptAuthProvider,
+            yggdrasil: YggdrasilAuthProvider,
         });
 
         this.authProvider = AuthManager.getProvider(this.configManager, this.langManager);

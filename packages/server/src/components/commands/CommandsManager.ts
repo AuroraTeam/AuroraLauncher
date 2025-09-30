@@ -1,7 +1,7 @@
 import ReadLine from "readline";
 
 import { Service } from "@freshgum/typedi";
-import { LogHelper } from "@root/utils";
+import { LogHelper } from "@root/helpers";
 
 import { LangManager } from "../langs";
 import { AbstractCommand } from "./AbstractCommand";

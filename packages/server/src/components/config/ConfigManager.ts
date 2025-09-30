@@ -2,7 +2,7 @@ import fs from "fs";
 import { resolve } from "path";
 
 import { Service } from "@freshgum/typedi";
-import { LogHelper, StorageHelper } from "@root/utils";
+import { LogHelper, StorageHelper } from "@root/helpers";
 import { set } from "es-toolkit/compat";
 
 import { LauncherServerConfig } from "./utils";

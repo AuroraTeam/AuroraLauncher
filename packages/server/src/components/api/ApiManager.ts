@@ -1,9 +1,10 @@
 import { readFile } from "fs/promises";
 import { resolve } from "path";
 
+import fastifyMultipart from "@fastify/multipart";
 import fastifyStatic, { ListOptionsHtmlFormat } from "@fastify/static";
 import { Service } from "@freshgum/typedi";
-import { LogHelper, StorageHelper } from "@root/utils";
+import { LogHelper, StorageHelper } from "@root/helpers";
 import fastify, { FastifyInstance } from "fastify";
 
 import { ConfigManager } from "../config";
@@ -75,6 +76,8 @@ export class WebServerManager {
                 redirect: true,
                 list,
             });
+
+            this.#server.register(fastifyMultipart);
         }
     }
 

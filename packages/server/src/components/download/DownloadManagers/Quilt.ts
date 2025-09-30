@@ -1,11 +1,11 @@
 import { HttpHelper } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
-import { LogHelper } from "@root/utils";
+import { LogHelper } from "@root/helpers";
 
 import { ClientMeta, VersionMeta } from "../interfaces/IQuilt";
 import { FabricLikeManager } from "./FabricLike";
 
-@Service()
+@Service([])
 export class QuiltManager extends FabricLikeManager {
     quiltMetaLink = "https://meta.quiltmc.org/v3/versions/loader/";
 

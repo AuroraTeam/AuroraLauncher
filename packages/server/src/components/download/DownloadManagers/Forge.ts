@@ -5,13 +5,13 @@ import { extname, resolve } from "path";
 
 import { HttpHelper, JsonHelper, ProfileLibrary, ZipHelper } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
-import { LogHelper, StorageHelper } from "@root/utils";
+import { LogHelper, StorageHelper } from "@root/helpers";
 import { coerce, gte, lt } from "semver";
 
 import { InstallProfile, Libraries, Manifest, VersionProfiles } from "../interfaces/IForge";
 import { MojangManager } from "./Mojang";
 
-@Service()
+@Service([])
 export class ForgeManager extends MojangManager {
     #forgeInstall = "";
     #tempDir = StorageHelper.getTmpPath();

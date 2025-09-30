@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
 import { Service } from "@freshgum/typedi";
-import { SecureHelper, StorageHelper } from "@root/utils";
+import { SecureHelper, StorageHelper } from "@root/helpers";
 
 @Service([])
 export class VerifyManager {

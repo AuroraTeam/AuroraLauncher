@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 
 // import { Lang } from "@root/components";
 import { AuthProviderConfig } from "@root/components/auth/providers";
-import { HjsonCommented, HjsonHelper } from "@root/utils";
+import { HjsonCommented, HjsonHelper } from "@root/helpers";
 import { instanceToPlain, plainToInstance } from "class-transformer";
 
 import { Lang } from "../../langs";

@@ -1,10 +1,11 @@
 import { HttpHelper } from "@aurora-launcher/core";
-import { ResponseError } from "@aurora-rpc/server";
 import { LauncherServerConfig } from "@root/components/config/utils/LauncherServerConfig";
 
 import {
     AuthProvider,
     AuthProviderConfig,
+    AuthenticateRequestData,
+    AuthenticateResponseData,
     HasJoinedResponseData,
     ProfileResponseData,
     ProfilesResponseData,
@@ -17,16 +18,16 @@ export class JsonAuthProvider implements AuthProvider {
         this.config = <JsonAuthProviderConfig>auth;
     }
 
-    async authenticate(login: string, password: string): Promise<AuthResponseData> {
+    async authenticate(payload: AuthenticateRequestData) {
         try {
             return this.parseResponse(
-                await HttpHelper.postJson<ApiResponse<AuthResponseData>>(this.config.authUrl, {
-                    login,
-                    password,
-                }),
+                await HttpHelper.postJson<ApiResponse<AuthenticateResponseData>>(
+                    this.config.authUrl,
+                    payload,
+                ),
             );
         } catch (error) {
-            throw new ResponseError(error.message, 200);
+            throw new Error(error.message);
         }
     }
 
