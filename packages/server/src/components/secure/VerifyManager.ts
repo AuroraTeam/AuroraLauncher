@@ -5,7 +5,7 @@ import { resolve } from "path";
 import { Service } from "@freshgum/typedi";
 import { SecureHelper, StorageHelper } from "@root/utils";
 
-@Service()
+@Service([])
 export class VerifyManager {
     private publicKeyPath = resolve(StorageHelper.storageDir, "public.pem");
     private privateKeyPath = resolve(StorageHelper.storageDir, "private.pem");

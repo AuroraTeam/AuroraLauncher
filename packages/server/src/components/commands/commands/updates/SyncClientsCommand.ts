@@ -1,6 +1,5 @@
 import { Service } from "@freshgum/typedi";
-import { ClientsManager, LangManager } from "@root/components";
-import { AbstractCommand, Category } from "@root/utils";
+import { AbstractCommand, ClientsManager, CommandCategory, LangManager } from "@root/components";
 
 @Service([LangManager, ClientsManager])
 export class SyncClientsCommand extends AbstractCommand {
@@ -12,7 +11,7 @@ export class SyncClientsCommand extends AbstractCommand {
             name: "syncclients",
             description:
                 langManager.getTranslate.CommandsManager.commands.updates.SyncUpdatesCommand,
-            category: Category.UPDATES,
+            category: CommandCategory.UPDATES,
             usage: "<?client dir>",
         });
     }

@@ -12,10 +12,10 @@ export interface CommandInfo {
     name: string;
     description: string;
     usage?: string;
-    category: Category;
+    category: CommandCategory;
 }
 
-export enum Category {
+export enum CommandCategory {
     AUTH = "auth",
     BASIC = "basic",
     UPDATES = "updates",

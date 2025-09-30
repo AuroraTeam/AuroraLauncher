@@ -8,7 +8,7 @@ import chalk from "chalk";
 
 import { LangManager } from "../langs";
 
-@Service()
+@Service([LangManager])
 export class ModulesManager {
     private static readonly modulesList: Map<IModuleInfo, ILauncherServerModule[]> = new Map();
     private readonly moduleQueue: string[] = [];

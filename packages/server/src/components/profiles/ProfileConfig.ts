@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 
 import { JsonHelper, Profile, ProfileLibrary, ProfileServerConfig } from "@aurora-launcher/core";
 import { instanceToPlain, plainToInstance } from "class-transformer";
-import { merge } from "lodash-es";
+import { merge } from "es-toolkit";
 
 export class ProfileConfig implements Profile {
     configVersion: number;
@@ -26,7 +26,8 @@ export class ProfileConfig implements Profile {
     whiteListUUIDs?: string[];
 
     constructor(config: Partial<Profile>) {
-        merge(this, ProfileConfig.defaults, config);
+        merge(this, ProfileConfig.defaults);
+        merge(this, config);
         this.uuid = randomUUID();
     }
 

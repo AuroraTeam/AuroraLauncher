@@ -1,6 +1,11 @@
 import { Service } from "@freshgum/typedi";
-import { ClientsManager, LangManager, ProfilesManager } from "@root/components";
-import { AbstractCommand, Category } from "@root/utils";
+import {
+    AbstractCommand,
+    ClientsManager,
+    CommandCategory,
+    LangManager,
+    ProfilesManager,
+} from "@root/components";
 
 @Service([LangManager, ProfilesManager, ClientsManager])
 export class SyncAllCommand extends AbstractCommand {
@@ -12,7 +17,7 @@ export class SyncAllCommand extends AbstractCommand {
         super({
             name: "syncall",
             description: langManager.getTranslate.CommandsManager.commands.updates.SyncAllCommand,
-            category: Category.UPDATES,
+            category: CommandCategory.UPDATES,
         });
     }
 

@@ -54,7 +54,7 @@ export class UpdateManager {
 
     public async checkUpdate(): Promise<Version | void> {
         LogHelper.info(this.langManager.getTranslate.UpdateManager.check);
-        const versionsData: VersionsData = await this.getVersionsData().catch(() => undefined);
+        const versionsData = await this.getVersionsData().catch<undefined>(() => undefined);
 
         if (!versionsData) {
             return LogHelper.info(this.langManager.getTranslate.UpdateManager.checkEnd);

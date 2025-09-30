@@ -1,9 +1,10 @@
 import ReadLine from "readline";
 
 import { Service } from "@freshgum/typedi";
-import { AbstractCommand, LogHelper } from "@root/utils";
+import { LogHelper } from "@root/utils";
 
 import { LangManager } from "../langs";
+import { AbstractCommand } from "./AbstractCommand";
 
 @Service([LangManager])
 export class CommandsManager {

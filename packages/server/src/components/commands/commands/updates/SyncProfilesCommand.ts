@@ -1,6 +1,5 @@
 import { Service } from "@freshgum/typedi";
-import { LangManager, ProfilesManager } from "@root/components";
-import { AbstractCommand, Category } from "@root/utils";
+import { AbstractCommand, CommandCategory, LangManager, ProfilesManager } from "@root/components";
 
 @Service([LangManager, ProfilesManager])
 export class SyncProfilesCommand extends AbstractCommand {
@@ -12,7 +11,7 @@ export class SyncProfilesCommand extends AbstractCommand {
             name: "syncprofiles",
             description:
                 langManager.getTranslate.CommandsManager.commands.updates.SyncProfilesCommand,
-            category: Category.UPDATES,
+            category: CommandCategory.UPDATES,
         });
     }
 

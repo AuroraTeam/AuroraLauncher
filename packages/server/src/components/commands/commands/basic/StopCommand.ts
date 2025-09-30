@@ -1,14 +1,13 @@
 import { Service } from "@freshgum/typedi";
-import { LangManager } from "@root/components/langs";
-import { AbstractCommand, Category } from "@root/utils";
+import { AbstractCommand, CommandCategory, LangManager } from "@root/components";
 
-@Service([])
+@Service([LangManager])
 export class StopCommand extends AbstractCommand {
     constructor(langManager: LangManager) {
         super({
             name: "stop",
             description: langManager.getTranslate.CommandsManager.commands.basic.StopCommand,
-            category: Category.BASIC,
+            category: CommandCategory.BASIC,
         });
     }
 

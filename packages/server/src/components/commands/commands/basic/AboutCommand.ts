@@ -1,6 +1,6 @@
 import { Service } from "@freshgum/typedi";
-import { LangManager } from "@root/components/langs";
-import { AbstractCommand, Category, LogHelper } from "@root/utils";
+import { AbstractCommand, CommandCategory, LangManager } from "@root/components";
+import { LogHelper } from "@root/utils";
 import chalk from "chalk";
 
 import { version } from "../../../../../package.json";
@@ -11,7 +11,7 @@ export class AboutCommand extends AbstractCommand {
         super({
             name: "about",
             description: langManager.getTranslate.CommandsManager.commands.basic.AboutCommand,
-            category: Category.BASIC,
+            category: CommandCategory.BASIC,
         });
     }
 

@@ -3,7 +3,7 @@ import { resolve } from "path";
 
 import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/utils";
-import { set } from "lodash-es";
+import { set } from "es-toolkit/compat";
 
 import { LauncherServerConfig } from "./utils";
 

@@ -1,6 +1,8 @@
 import { Service } from "@freshgum/typedi";
 import {
+    AbstractCommand,
     ClientsManager,
+    CommandCategory,
     CommandsManager,
     ConfigManager,
     FabricManager,
@@ -11,9 +13,9 @@ import {
     NeoForgeManager,
     ProfilesManager,
     QuiltManager,
+    Watcher,
 } from "@root/components";
-import { Watcher } from "@root/components/watcher/Watcher";
-import { AbstractCommand, Category, LogHelper } from "@root/utils";
+import { LogHelper } from "@root/utils";
 
 @Service([LangManager, ProfilesManager, ConfigManager, CommandsManager, ClientsManager, Watcher])
 export class DownloadClientCommand extends AbstractCommand {
@@ -29,7 +31,7 @@ export class DownloadClientCommand extends AbstractCommand {
             name: "downloadclient",
             description:
                 langManager.getTranslate.CommandsManager.commands.updates.DownloadClientCommand,
-            category: Category.UPDATES,
+            category: CommandCategory.UPDATES,
             usage: "<version> <client name> <?source type>",
         });
     }
