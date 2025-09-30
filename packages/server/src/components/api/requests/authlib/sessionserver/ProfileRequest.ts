@@ -14,6 +14,7 @@ export class ProfileRequest implements AbstractRequest {
     schema = {
         params: {
             type: "object",
+            required: ["uuid"],
             properties: {
                 uuid: { type: "string" },
             },
@@ -42,7 +43,8 @@ export class ProfileRequest implements AbstractRequest {
         try {
             user = await this.authProvider.profile(UUIDHelper.getWithDashes(uuid));
         } catch {
-            return rep.code(204);
+            rep.code(204);
+            return;
         }
 
         const textures: any = {};

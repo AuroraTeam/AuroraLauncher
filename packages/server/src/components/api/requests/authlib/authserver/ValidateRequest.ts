@@ -24,7 +24,10 @@ export class ValidateRequest implements AbstractRequest {
 
     async handler(req: FastifyRequest<{ Body: ValidateRequestData }>, rep: FastifyReply) {
         const result = await this.authProvider.validate(req.body);
-        if (result) return rep.code(204);
-        return rep.code(403);
+        if (result) {
+            rep.code(204);
+        } else {
+            rep.code(403);
+        }
     }
 }
