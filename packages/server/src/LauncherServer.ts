@@ -14,18 +14,20 @@ import {
     RejectAuthProvider,
 } from "./components/auth";
 import { YggdrasilAuthProvider } from "./components/auth/providers/YggdrasilAuthProvider";
+import { CommandsManager } from "./components/commands/CommandsManager";
 import { ConfigManager } from "./components/config";
 import { LangManager } from "./components/langs";
 import { LogHelper, StorageHelper } from "./helpers";
 import { AuthProviderToken } from "./tokens";
 
 export class LauncherServer /* extends EventEmitter */ {
-    webServer: WebServerManager;
-    authManager: AuthManager;
+    webServer!: WebServerManager;
+    authManager!: AuthManager;
 
-    private configManager: ConfigManager;
-    private langManager: LangManager;
-    private authProvider: AuthProvider;
+    private configManager!: ConfigManager;
+    private langManager!: LangManager;
+    private commandsManager!: CommandsManager;
+    private authProvider!: AuthProvider;
 
     constructor() {
         // super();
@@ -42,6 +44,8 @@ export class LauncherServer /* extends EventEmitter */ {
         this.configManager = Container.get(ConfigManager);
         Container.get(ArgsManager);
         this.langManager = Container.get(LangManager);
+
+        this.commandsManager = Container.get(CommandsManager);
 
         StorageHelper.validate();
 

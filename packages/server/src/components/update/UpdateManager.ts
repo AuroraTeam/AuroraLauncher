@@ -12,19 +12,23 @@ import { LangManager } from "../langs";
 @Service([ConfigManager, LangManager])
 export class UpdateManager {
     private readonly apiUrl = new URL("versions", "https://api.aurora-launcher.ru/");
+
     private readonly fileTypeMap: Record<string, string> = {
         win32: "binary-win",
         darwin: "binary-mac",
         linux: "binary-linux",
     };
+
     private readonly fileOsMap: Record<string, string> = {
         win32: "win.exe",
         darwin: "mac",
         linux: "linux",
     };
-    private readonly fileType: string = SystemHelper.isStandalone()
+
+    private readonly fileType = SystemHelper.isStandalone()
         ? this.fileTypeMap[SystemHelper.getPlatform()]
         : "js";
+
     private readonly execFileName: string = SystemHelper.isStandalone()
         ? `LauncherServer-${this.fileOsMap[SystemHelper.getPlatform()]}`
         : "LauncherServer.js";
@@ -43,7 +47,18 @@ export class UpdateManager {
         LogHelper.info(this.langManager.getTranslate.UpdateManager.updating);
         LogHelper.info(this.langManager.getTranslate.UpdateManager.downloadingLatestVer);
 
+        if (!this.fileType) {
+            LogHelper.error("Invalid file type");
+            return;
+        }
+
         const downloadUrl = latestVersion.files[this.fileType];
+
+        if (!downloadUrl) {
+            LogHelper.error("Invalid download URL");
+            return;
+        }
+
         const downloadPath = path.resolve(StorageHelper.storageDir, this.execFileName);
 
         await HttpHelper.downloadFile(new URL(downloadUrl), downloadPath);

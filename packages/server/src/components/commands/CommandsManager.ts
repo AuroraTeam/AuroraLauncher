@@ -12,16 +12,6 @@ export class CommandsManager {
     console: ReadLine.Interface;
 
     constructor(private readonly langManager: LangManager) {
-        this.consoleInit();
-    }
-
-    registerCommands(commands: AbstractCommand[]): void {
-        commands.forEach((command: AbstractCommand) => {
-            this.commands.set(command.info.name, command);
-        });
-    }
-
-    private consoleInit(): void {
         this.console = ReadLine.createInterface({
             input: process.stdin,
             output: process.stdout,
@@ -30,6 +20,12 @@ export class CommandsManager {
         });
 
         this.console.on("line", this.handleLine);
+    }
+
+    registerCommands(commands: AbstractCommand[]): void {
+        commands.forEach((command: AbstractCommand) => {
+            this.commands.set(command.info.name, command);
+        });
     }
 
     /**
@@ -54,15 +50,15 @@ export class CommandsManager {
         LogHelper.handleUserPrompt(line);
 
         const args = line.match(/"[^"]*"|[^\s"]+/g)?.map((s) => s.trim().replace(/"/g, ""));
-        if (!args) return;
+        if (!args?.length) return;
 
-        const cmd = args.shift().toLowerCase();
+        const cmd = args.shift()!.toLowerCase();
         if (!cmd || !this.commands.has(cmd)) {
             return LogHelper.error(this.langManager.getTranslate.CommandsManager.cmdNotFound, cmd);
         }
 
         LogHelper.dev(this.langManager.getTranslate.CommandsManager.invokeCmd, cmd);
 
-        this.commands.get(cmd).invoke(...args);
+        this.commands.get(cmd)?.invoke(...args);
     };
 }
