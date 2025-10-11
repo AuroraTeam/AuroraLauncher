@@ -1,6 +1,5 @@
 import { parse, stringify } from "hjson";
 
- 
 export type HjsonData = Record<string, any> | any[];
 
 /**
