@@ -56,6 +56,14 @@ export class DownloadReleaseRequest implements AbstractRequest {
         }
 
         const data = await req.file({ limits: { fileSize: 314572800 } }); // 300MB
+        if (!data) {
+            rep.code(400);
+            return {
+                error: "Bad request",
+                message: "No file uploaded",
+            };
+        }
+
         const filePath = resolve(StorageHelper.releaseDir, data.fieldname);
 
         const stream = createWriteStream(filePath);
@@ -65,5 +73,6 @@ export class DownloadReleaseRequest implements AbstractRequest {
             await rm(filePath);
             return req.server.multipartErrors.RequestFileTooLargeError();
         }
+        return;
     }
 }

@@ -1,5 +1,5 @@
 import { Service } from "@freshgum/typedi";
-import { ConfigManager } from "@root/components/config";
+import { ConfigManager } from "@root/components/config/ConfigManager";
 import { program } from "commander";
 
 export interface Args {
@@ -13,9 +13,9 @@ export class ArgsManager {
 
     constructor(configManager: ConfigManager) {
         program
-            .option("--dev", null, false)
-            .option("--host <host>", null, configManager.config.api.host)
-            .option("--port <port>", null, configManager.config.api.port.toString())
+            .option("--dev", undefined, false)
+            .option("--host <host>", undefined, configManager.config.api.host)
+            .option("--port <port>", undefined, configManager.config.api.port.toString())
             .parse();
 
         this.#args = program.opts();

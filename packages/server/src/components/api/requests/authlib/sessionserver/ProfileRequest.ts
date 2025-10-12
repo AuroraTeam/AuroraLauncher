@@ -1,6 +1,6 @@
 import { Service } from "@freshgum/typedi";
-import type { AuthProvider } from "@root/components/auth/providers";
-import { AuthlibManager } from "@root/components/authlib";
+import { AuthProvider } from "@root/components/auth/providers/AuthProvider";
+import { AuthlibManager } from "@root/components/authlib/AuthlibManager";
 import { UUIDHelper } from "@root/helpers";
 import { FastifyReply, FastifyRequest } from "fastify";
 
@@ -48,7 +48,7 @@ export class ProfileRequest implements AbstractRequest {
         }
 
         const textures: any = {};
-        if (user.skinUrl?.length > 0) {
+        if (user.skinUrl?.length) {
             textures.SKIN = {
                 url: user.skinUrl,
             };
@@ -58,7 +58,7 @@ export class ProfileRequest implements AbstractRequest {
                 };
             }
         }
-        if (user.capeUrl?.length > 0) {
+        if (user.capeUrl?.length) {
             textures.CAPE = {
                 url: user.capeUrl,
             };

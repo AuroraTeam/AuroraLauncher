@@ -5,14 +5,14 @@ import { resolve } from "path";
 import { Service } from "@freshgum/typedi";
 import { LogHelper, SecureHelper, StorageHelper } from "@root/helpers";
 
-import { LangManager } from "../langs";
+import { LangManager } from "../langs/LangManager";
 
 @Service([LangManager])
 export class AuthlibManager {
     private publicKeyPath = resolve(StorageHelper.authlibDir, "public.pem");
     private privateKeyPath = resolve(StorageHelper.authlibDir, "private.pem");
-    private privateKey: Buffer;
-    private publicKey: string;
+    private privateKey!: Buffer;
+    private publicKey!: string;
 
     constructor(private readonly langManager: LangManager) {
         try {

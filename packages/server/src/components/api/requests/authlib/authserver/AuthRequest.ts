@@ -2,23 +2,23 @@ import { Service } from "@freshgum/typedi";
 import { FastifyRequest } from "fastify";
 
 import { AuthProviderToken } from "../../../../../tokens";
-import { AuthProvider, AuthenticateRequestData } from "../../../../auth";
+import { AuthProvider, AuthenticateRequestData } from "../../../../auth/providers/AuthProvider";
 import { AbstractRequest } from "../../AbstractRequest";
 
 @Service([AuthProviderToken])
 export class AuthenticateRequest implements AbstractRequest {
     method = "post";
     url = "/authlib/authserver/authenticate";
-    schema: {
+    schema = {
         body: {
-            type: "object";
-            required: ["username", "password"];
+            type: "object",
+            required: ["username", "password"],
             properties: {
-                username: { type: "string" };
-                password: { type: "string" };
-                clientToken?: { type: "string" };
-            };
-        };
+                username: { type: "string" },
+                password: { type: "string" },
+                clientToken: { type: "string" },
+            },
+        },
     };
 
     constructor(private authProvider: AuthProvider) {}

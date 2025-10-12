@@ -1,6 +1,6 @@
 import { Service } from "@freshgum/typedi";
-import { AuthlibManager } from "@root/components/authlib";
-import { ConfigManager } from "@root/components/config";
+import { AuthlibManager } from "@root/components/authlib/AuthlibManager";
+import { ConfigManager } from "@root/components/config/ConfigManager";
 
 import { AbstractRequest } from "./AbstractRequest";
 

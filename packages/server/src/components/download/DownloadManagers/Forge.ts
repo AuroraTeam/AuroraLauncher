@@ -16,8 +16,8 @@ export class ForgeManager extends MojangManager {
     #forgeInstall = "";
     #tempDir = StorageHelper.getTmpPath();
 
-    async downloadClient(gameVersion: string, clientName: string) {
-        if (lt(coerce(gameVersion).version, "1.12.2")) {
+    override async downloadClient(gameVersion: string, clientName: string) {
+        if (lt(coerce(gameVersion)!.version, "1.12.2")) {
             return LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.ForgeManager.info.supportError,
             );
@@ -39,8 +39,8 @@ export class ForgeManager extends MojangManager {
             this.libCopy(lib);
             const mojangProfile = this.profilesManager
                 .getProfiles()
-                .filter((p) => p.uuid == profileUUID);
-            const finalLib = this.fixLog4j(mojangProfile[0].libraries, lib);
+                .find((p) => p.uuid == profileUUID);
+            const finalLib = this.fixLog4j(mojangProfile.libraries, lib);
 
             let jvm = Array<string>();
             let game = Array<string>();

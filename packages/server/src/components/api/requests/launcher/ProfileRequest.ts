@@ -2,7 +2,7 @@ import { PROFILE_METHOD, ProfileRequestData, ProfileResponseData } from "@aurora
 import { Service } from "@freshgum/typedi";
 import { FastifyRequest } from "fastify";
 
-import { ProfilesManager } from "../../../profiles";
+import { ProfilesManager } from "../../../profiles/ProfilesManager";
 import { AbstractRequest } from "../AbstractRequest";
 
 @Service([ProfilesManager])
@@ -21,9 +21,12 @@ export class ProfileRequest implements AbstractRequest {
     constructor(private profilesManager: ProfilesManager) {}
 
     handler(req: FastifyRequest<{ Body: ProfileRequestData }>): ProfileResponseData {
-        return this.profilesManager
-            .getProfiles()
-            .find((p) => p.uuid === req.body.uuid)
-            ?.toObject();
+        const profile = this.profilesManager.getProfiles().find((p) => p.uuid === req.body.uuid);
+
+        if (!profile) {
+            throw new Error("Profile not found");
+        }
+
+        return profile.toObject();
     }
 }

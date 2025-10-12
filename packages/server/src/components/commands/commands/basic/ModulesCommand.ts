@@ -1,6 +1,7 @@
 import { Service } from "@freshgum/typedi";
-import { AbstractCommand, CommandCategory } from "@root/components";
 import { LogHelper } from "@root/helpers";
+
+import { AbstractCommand, CommandCategory } from "../../AbstractCommand";
 
 @Service([])
 export class ModulesCommand extends AbstractCommand {

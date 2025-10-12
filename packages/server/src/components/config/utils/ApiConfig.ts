@@ -10,18 +10,16 @@ export class ApiConfig {
     disableListing: boolean;
     hideListing: boolean;
 
-    static getDefaultConfig(): ApiConfig {
-        return {
-            host: "0.0.0.0",
-            port: 1370,
-            useSSL: false,
-            useHTTP2: false,
-            ssl: {
-                cert: "/path/to/cert.pem",
-                key: "/path/to/key.pem",
-            },
-            disableListing: false,
-            hideListing: false,
+    constructor() {
+        this.host = "0.0.0.0";
+        this.port = 1370;
+        this.useSSL = false;
+        this.useHTTP2 = false;
+        this.ssl = {
+            cert: "/path/to/cert.pem",
+            key: "/path/to/key.pem",
         };
+        this.disableListing = false;
+        this.hideListing = false;
     }
 }

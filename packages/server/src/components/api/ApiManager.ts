@@ -7,13 +7,13 @@ import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/helpers";
 import fastify, { FastifyInstance } from "fastify";
 
-import { ConfigManager } from "../config";
-import { LangManager } from "../langs";
-import { AbstractRequest } from "./requests";
+import { ConfigManager } from "../config/ConfigManager";
+import { LangManager } from "../langs/LangManager";
+import { AbstractRequest } from "./requests/AbstractRequest";
 
 @Service([ConfigManager, LangManager])
 export class WebServerManager {
-    #server: FastifyInstance;
+    #server!: FastifyInstance;
 
     constructor(
         private readonly configManager: ConfigManager,
@@ -30,14 +30,11 @@ export class WebServerManager {
         const { ssl, useSSL, useHTTP2, disableListing, hideListing } =
             this.configManager.config.api;
 
-        const config: { http2?: boolean; https?: { cert?: Buffer; key?: Buffer } } = {};
+        const config: { http2: boolean; https?: { cert: Buffer; key: Buffer }; http?: object } =
+            {} as any;
 
         if (useHTTP2) {
-            if (useSSL) {
-                config.http2 = true;
-            } else {
-                LogHelper.warn(this.langManager.getTranslate.WebServerManager.http2Ignore);
-            }
+            config.http2 = true;
         }
 
         if (useSSL) {
@@ -52,7 +49,7 @@ export class WebServerManager {
         }
 
         try {
-            this.#server = fastify(<unknown>config);
+            this.#server = fastify(config);
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.fatal(this.langManager.getTranslate.WebServerManager.createServerError);
@@ -85,7 +82,7 @@ export class WebServerManager {
         this.#server.route({
             method: request.method,
             url: request.url,
-            schema: request.schema,
+            schema: request.schema!,
             handler: request.handler.bind(request),
         });
     }

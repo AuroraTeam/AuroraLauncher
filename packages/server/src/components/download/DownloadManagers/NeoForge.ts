@@ -15,7 +15,7 @@ export class NeoForgeManager extends MojangManager {
     #forgeInstall = "";
     #tempDir = StorageHelper.getTmpPath();
 
-    async downloadClient(gameVersion: string, clientName: string) {
+    override async downloadClient(gameVersion: string, clientName: string) {
         if (await this.downloadForge(gameVersion)) {
             const profileUUID = await super.downloadClient(gameVersion, clientName);
             if (!profileUUID) return;
@@ -95,7 +95,7 @@ export class NeoForgeManager extends MojangManager {
         const list: ProfileLibrary[] = [];
         for (const lib of libraries) {
             const name = lib.name.split(":")[1];
-            if (name.search(/log4j|slf4j|failureaccess|jopt-simple/) == -1) {
+            if (name?.search(/log4j|slf4j|failureaccess|jopt-simple/) == -1) {
                 list.unshift({
                     path: lib.downloads.artifact.path,
                     sha1: lib.downloads.artifact.sha1,

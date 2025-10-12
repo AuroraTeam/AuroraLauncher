@@ -3,7 +3,7 @@ import ReadLine from "readline";
 import { Service } from "@freshgum/typedi";
 import { LogHelper } from "@root/helpers";
 
-import { LangManager } from "../langs";
+import { LangManager } from "../langs/LangManager";
 import { AbstractCommand } from "./AbstractCommand";
 
 @Service([LangManager])

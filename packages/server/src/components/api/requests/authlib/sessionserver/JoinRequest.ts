@@ -1,9 +1,9 @@
 import { Service } from "@freshgum/typedi";
-import type { AuthProvider } from "@root/components/auth/providers";
 import { UUIDHelper } from "@root/helpers";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { AuthProviderToken } from "../../../../../tokens";
+import { AuthProvider } from "../../../../auth/providers/AuthProvider";
 import { AbstractRequest } from "../../AbstractRequest";
 
 interface JoinRequestDto {
@@ -46,6 +46,6 @@ export class JoinRequest implements AbstractRequest {
             };
         }
 
-        rep.raw.end();
+        return;
     }
 }

@@ -37,7 +37,6 @@ export class AcceptAuthProvider implements AuthProvider, SkinableAuthProvider {
             userUUID,
             accessToken,
             clientToken,
-            serverId: undefined,
             skinUrl: skinData.SKIN?.url,
             capeUrl: skinData.CAPE?.url,
             isAlex: skinData.SKIN?.metadata?.model === "slim",
@@ -160,7 +159,7 @@ interface UserData {
     userUUID: string;
     accessToken: string;
     clientToken: string;
-    serverId: string;
+    serverId?: string;
     skinUrl?: string;
     capeUrl?: string;
     isAlex?: boolean;

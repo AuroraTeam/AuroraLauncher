@@ -5,11 +5,11 @@ import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/helpers";
 import { set } from "es-toolkit/compat";
 
-import { LauncherServerConfig } from "./utils";
+import { LauncherServerConfig } from "./utils/LauncherServerConfig";
 
 @Service([])
 export class ConfigManager {
-    #config: LauncherServerConfig;
+    #config!: LauncherServerConfig;
     #configFile: string = resolve(StorageHelper.storageDir, "LauncherServerConfig.hjson");
 
     constructor() {
@@ -22,7 +22,7 @@ export class ConfigManager {
         } else {
             LogHelper.info("Configuration not found! Create default config");
 
-            this.#config = LauncherServerConfig.getDefaults();
+            this.#config = new LauncherServerConfig();
             this.save();
 
             LogHelper.info(

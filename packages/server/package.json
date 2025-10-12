@@ -35,7 +35,7 @@
         "start": "node ."
     },
     "devDependencies": {
-        "@eslint/js": "^9.18.0",
+        "@eslint/js": "^9.32.0",
         "@types/cli-progress": "^3.11.6",
         "@types/hjson": "^2.4.6",
         "@types/node": "^22.10.7",
@@ -44,15 +44,15 @@
         "@types/ws": "^8.5.13",
         "@yao-pkg/pkg": "^6.2.0",
         "concurrently": "^9.1.2",
-        "eslint": "^9.18.0",
+        "eslint": "^9.32.0",
         "globals": "^15.14.0",
         "import-sort-style-module": "^6.0.0",
         "prettier": "^3.4.2",
         "prettier-plugin-import-sort": "0.0.7",
         "rimraf": "^6.0.1",
         "tsup": "^8.5.0",
-        "typescript": "^5.7.3",
-        "typescript-eslint": "^8.20.0"
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.38.0"
     },
     "dependencies": {
         "@aurora-launcher/core": "workspace:^",

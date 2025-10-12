@@ -7,7 +7,7 @@ import { LogHelper, StorageHelper } from "@root/helpers";
 import { LauncherServer } from "@root/LauncherServer";
 import chalk from "chalk";
 
-import { LangManager } from "../langs";
+import { LangManager } from "../langs/LangManager";
 
 @Service([LangManager])
 export class ModulesManager {
@@ -50,7 +50,7 @@ export class ModulesManager {
                 Date.now() - startTime,
             );
         } catch (error) {
-            LogHelper.debug(error.message);
+            LogHelper.debug((error as Error).message);
             LogHelper.error(this.langManager.getTranslate.ModulesManager.loadingErr);
         }
     }
@@ -94,7 +94,7 @@ export class ModulesManager {
                 ModulesManager.modulesList.set(module.getInfo(), new module().init(this.app));
             }
         } catch (error) {
-            LogHelper.debug(error.message);
+            LogHelper.debug((error as Error).message);
             LogHelper.error(
                 this.langManager.getTranslate.ModulesManager.moduleLoadingErr,
                 moduleName,
@@ -127,7 +127,7 @@ export class ModulesManager {
     public static listModules(): void {
         LogHelper.info("Загруженные модули:");
 
-        ModulesManager.modulesList.forEach((value, key) => {
+        ModulesManager.modulesList.forEach((_value, key) => {
             LogHelper.info(`${chalk.bold(key.name)} - ${key.description}`);
         });
     }

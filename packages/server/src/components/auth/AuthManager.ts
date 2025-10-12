@@ -1,9 +1,9 @@
 import { Service } from "@freshgum/typedi";
 import { LogHelper } from "@root/helpers";
 
-import { ConfigManager } from "../config";
-import { LangManager } from "../langs";
-import { AuthProvider, AuthProviderConstructor } from "./providers";
+import { ConfigManager } from "../config/ConfigManager";
+import { LangManager } from "../langs/LangManager";
+import { AuthProvider, AuthProviderConstructor } from "./providers/AuthProvider";
 
 @Service([ConfigManager, LangManager])
 export class AuthManager {
@@ -22,7 +22,7 @@ export class AuthManager {
             LogHelper.fatal(langManager.getTranslate.AuthManager.invalidProvider, providerType);
         }
 
-        const Provider = AuthManager.authProviders.get(providerType);
+        const Provider = AuthManager.authProviders.get(providerType)!;
         return new Provider(configManager.config);
     }
 }

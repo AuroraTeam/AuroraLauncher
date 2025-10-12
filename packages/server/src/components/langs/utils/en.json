@@ -138,7 +138,6 @@
     "WebServerManager": {
         "certNotFound": "Certificate file not found",
         "keyNotFound": "Key file not found",
-        "http2Ignore": "HTTP/2 support disabled because useSSL is false",
         "createServerError": "Error creating server. Check configuration. For more information, see documentation: <link>."
     },
     "ModulesManager": {

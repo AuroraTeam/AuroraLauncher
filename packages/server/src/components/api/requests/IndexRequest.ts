@@ -1,5 +1,5 @@
 import { Service } from "@freshgum/typedi";
-import { ConfigManager } from "@root/components/config";
+import { ConfigManager } from "@root/components/config/ConfigManager";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { AbstractRequest } from "./AbstractRequest";

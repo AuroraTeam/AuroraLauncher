@@ -1,10 +1,10 @@
 import { JsonHelper } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
-import type { AuthProvider } from "@root/components/auth/providers";
-import { AuthlibManager } from "@root/components/authlib";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { AuthProviderToken } from "../../../../../tokens";
+import { AuthProvider } from "../../../../auth/providers/AuthProvider";
+import { AuthlibManager } from "../../../../authlib/AuthlibManager";
 import { AbstractRequest } from "../../AbstractRequest";
 
 @Service([AuthProviderToken, AuthlibManager])
@@ -47,12 +47,12 @@ export class HasJoinedRequest implements AbstractRequest {
             rep.code(400);
             return {
                 error: "ForbiddenOperationException",
-                errorMessage: error.message,
+                errorMessage: (error as Error).message,
             };
         }
 
         const textures: any = {};
-        if (user.skinUrl?.length > 0) {
+        if (user.skinUrl?.length) {
             textures.SKIN = {
                 url: user.skinUrl,
             };
@@ -62,7 +62,7 @@ export class HasJoinedRequest implements AbstractRequest {
                 };
             }
         }
-        if (user.capeUrl?.length > 0) {
+        if (user.capeUrl?.length) {
             textures.CAPE = {
                 url: user.capeUrl,
             };

@@ -14,7 +14,7 @@ export class FabricManager extends FabricLikeManager {
      * @param clientVer - Версия клиента
      * @param clientName - Название клиента
      */
-    async downloadClient(clientVer: string, clientName: string) {
+    override async downloadClient(clientVer: string, clientName: string) {
         const fabricVersion = await this.getFabricClientInfo(clientVer);
         if (!fabricVersion) return;
 
@@ -31,14 +31,17 @@ export class FabricManager extends FabricLikeManager {
         LogHelper.info(this.langManager.getTranslate.DownloadManager.FabricManager.client.success);
     }
 
-    getFabricVersions(version: string): Promise<void | VersionMeta[]> {
+    getFabricVersions(version: string) {
         try {
-            return HttpHelper.getResourceFromJson(`${this.fabricMetaLink}${version}`);
+            return HttpHelper.getResourceFromJson<VersionMeta[]>(
+                `${this.fabricMetaLink}${version}`,
+            );
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.FabricManager.info.errJsonParsing,
             );
+            return;
         }
     }
 

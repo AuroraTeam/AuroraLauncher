@@ -1,4 +1,4 @@
-import { LauncherServerConfig } from "../../config";
+import { LauncherServerConfig } from "../../config/utils/LauncherServerConfig";
 
 export interface AuthProviderConstructor {
     new (configManager: LauncherServerConfig): AuthProvider;
@@ -22,13 +22,9 @@ export interface AuthProvider {
     profiles(usernames: string[]): PromiseOr<ProfilesResponseData[]>;
 }
 
-export class AuthProviderConfig {
+export interface AuthProviderConfig {
     type: string;
     skinDomains?: string[];
-
-    static getDefaultConfig(): AuthProviderConfig {
-        return { type: "accept", skinDomains: ["textures.minecraft.net"] };
-    }
 }
 
 export interface AuthenticateRequestData {

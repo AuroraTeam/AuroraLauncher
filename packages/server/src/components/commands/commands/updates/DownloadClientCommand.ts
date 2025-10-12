@@ -1,21 +1,19 @@
 import { Service } from "@freshgum/typedi";
-import {
-    AbstractCommand,
-    ClientsManager,
-    CommandCategory,
-    CommandsManager,
-    ConfigManager,
-    FabricManager,
-    ForgeManager,
-    LangManager,
-    MirrorManager,
-    MojangManager,
-    NeoForgeManager,
-    ProfilesManager,
-    QuiltManager,
-    Watcher,
-} from "@root/components";
 import { LogHelper } from "@root/helpers";
+
+import { ClientsManager } from "../../../clients/ClientsManager";
+import { ConfigManager } from "../../../config/ConfigManager";
+import { FabricManager } from "../../../download/DownloadManagers/Fabric";
+import { ForgeManager } from "../../../download/DownloadManagers/Forge";
+import { MirrorManager } from "../../../download/DownloadManagers/Mirror";
+import { MojangManager } from "../../../download/DownloadManagers/Mojang";
+import { NeoForgeManager } from "../../../download/DownloadManagers/NeoForge";
+import { QuiltManager } from "../../../download/DownloadManagers/Quilt";
+import { LangManager } from "../../../langs/LangManager";
+import { ProfilesManager } from "../../../profiles/ProfilesManager";
+import { Watcher } from "../../../watcher/Watcher";
+import { AbstractCommand, CommandCategory } from "../../AbstractCommand";
+import { CommandsManager } from "../../CommandsManager";
 
 @Service([LangManager, ProfilesManager, ConfigManager, CommandsManager, ClientsManager, Watcher])
 export class DownloadClientCommand extends AbstractCommand {

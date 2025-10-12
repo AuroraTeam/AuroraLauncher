@@ -16,16 +16,18 @@ export class MirrorManager extends MojangManager {
      * @param fileName - Название архива с файлами клиента
      * @param clientName - Название клиента
      */
-    async downloadClient(fileName: string, clientName: string) {
-        let mirror: string;
-        let profile: Profile;
+    override async downloadClient(fileName: string, clientName: string) {
+        let mirror!: string;
+        let profile: Profile | undefined;
 
         for (const selectedMirror of this.configManager.config.mirrors) {
             profile = await HttpHelper.getResourceFromJson<Profile>(
                 new URL(`/profiles/${fileName}.json`, selectedMirror),
             ).catch<undefined>(() => undefined);
-            mirror = selectedMirror;
-            if (profile) break;
+            if (profile) {
+                mirror = selectedMirror;
+                break;
+            }
         }
 
         if (!profile)
@@ -56,7 +58,7 @@ export class MirrorManager extends MojangManager {
 
         let clientTempFilePath;
         try {
-            const clientTempFilePath = await HttpHelper.downloadFile(
+            clientTempFilePath = await HttpHelper.downloadFile(
                 new URL(`/clients/${fileName}.zip`, mirror),
                 null,
                 {
@@ -83,7 +85,7 @@ export class MirrorManager extends MojangManager {
             LogHelper.debug(error);
             return;
         } finally {
-            await rm(clientTempFilePath);
+            if (clientTempFilePath) await rm(clientTempFilePath);
             progressBar.stop();
         }
     }
@@ -124,7 +126,7 @@ export class MirrorManager extends MojangManager {
             LogHelper.debug(error);
             return;
         } finally {
-            await rm(librariesTempFilePath);
+            if (librariesTempFilePath) await rm(librariesTempFilePath);
             progressBar.stop();
         }
     }

@@ -9,7 +9,7 @@ import { SecureHelper, StorageHelper } from "@root/helpers";
 export class VerifyManager {
     private publicKeyPath = resolve(StorageHelper.storageDir, "public.pem");
     private privateKeyPath = resolve(StorageHelper.storageDir, "private.pem");
-    private privateKey: Buffer;
+    private privateKey!: Buffer;
 
     constructor() {
         try {

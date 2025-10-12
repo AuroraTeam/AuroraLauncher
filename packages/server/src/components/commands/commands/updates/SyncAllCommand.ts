@@ -1,11 +1,9 @@
 import { Service } from "@freshgum/typedi";
-import {
-    AbstractCommand,
-    ClientsManager,
-    CommandCategory,
-    LangManager,
-    ProfilesManager,
-} from "@root/components";
+
+import { ClientsManager } from "../../../clients/ClientsManager";
+import { LangManager } from "../../../langs/LangManager";
+import { ProfilesManager } from "../../../profiles/ProfilesManager";
+import { AbstractCommand, CommandCategory } from "../../AbstractCommand";
 
 @Service([LangManager, ProfilesManager, ClientsManager])
 export class SyncAllCommand extends AbstractCommand {

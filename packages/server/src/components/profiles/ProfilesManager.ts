@@ -5,7 +5,7 @@ import { Profile } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/helpers";
 
-import { LangManager } from "../langs";
+import { LangManager } from "../langs/LangManager";
 import { ProfileConfig } from "./ProfileConfig";
 
 @Service([LangManager])
@@ -67,6 +67,7 @@ export class ProfilesManager {
         parameters: Partial<Profile> | ((profile: ProfileConfig) => Partial<Profile>),
     ): Promise<void> {
         const profile = this.profiles.find((p) => p.uuid === uuid);
+        if (!profile) throw new Error("Profile not found");
 
         Object.assign(profile, typeof parameters === "object" ? parameters : parameters(profile));
 

@@ -19,7 +19,7 @@ export class ProgressHelper {
 
     public static getProgress(
         format: string | GenericFormatter,
-        barsize = this.barsize
+        barsize = this.barsize,
     ): SingleBar {
         return new SingleBar(this.getDefaultParams(format, barsize));
     }
@@ -30,7 +30,7 @@ export class ProgressHelper {
 
     private static getDefaultParams(
         format: string | GenericFormatter,
-        barsize = this.barsize
+        barsize = this.barsize,
     ): Options {
         return {
             format,
@@ -53,7 +53,7 @@ export class ProgressHelper {
             speed: string;
             value_formatted: string;
             total_formatted: string;
-        }
+        },
     ) {
         const elapsedTime = Math.round((Date.now() - params.startTime) / 1000);
         const speed = params.value / elapsedTime;
@@ -69,7 +69,7 @@ export class ProgressHelper {
                 format: "{bar} {percentage}% | Осталось: {eta_formatted} | Скорость: {speed}/s | {value_formatted}/{total_formatted} | {filename}",
             },
             params,
-            payload
+            payload,
         );
     }
 

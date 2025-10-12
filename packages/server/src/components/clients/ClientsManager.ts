@@ -5,7 +5,7 @@ import { HashHelper, HashedFile } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
 import { LogHelper, StorageHelper } from "@root/helpers";
 
-import { LangManager } from "../langs";
+import { LangManager } from "../langs/LangManager";
 
 @Service([LangManager])
 export class ClientsManager {

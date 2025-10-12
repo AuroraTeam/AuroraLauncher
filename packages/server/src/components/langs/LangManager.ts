@@ -1,7 +1,7 @@
 import { Service } from "@freshgum/typedi";
 import { LogHelper } from "@root/helpers";
 
-import { ConfigManager } from "../config";
+import { ConfigManager } from "../config/ConfigManager";
 import { Lang, Translate, langList } from "./utils";
 
 @Service([ConfigManager])
@@ -11,7 +11,7 @@ export class LangManager {
     constructor(private readonly configManager: ConfigManager) {
         const selectedLang = this.validateLanguage(configManager.config.lang);
 
-        this.currentLang = langList.get(selectedLang);
+        this.currentLang = langList.get(selectedLang)!;
 
         LogHelper.dev(this.getTranslate.LangManager.init, selectedLang);
     }
@@ -34,7 +34,7 @@ export class LangManager {
             return;
         }
 
-        this.currentLang = langList.get(lang);
+        this.currentLang = langList.get(lang)!;
         this.configManager.setProp("lang", lang);
 
         LogHelper.info(this.getTranslate.LangManager.changeLang);

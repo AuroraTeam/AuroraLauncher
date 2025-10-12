@@ -6,8 +6,8 @@ import { LogHelper, StorageHelper, SystemHelper } from "@root/helpers";
 import semver from "semver";
 
 import { version as currentVersion } from "../../../package.json";
-import { ConfigManager } from "../config";
-import { LangManager } from "../langs";
+import { ConfigManager } from "../config/ConfigManager";
+import { LangManager } from "../langs/LangManager";
 
 @Service([ConfigManager, LangManager])
 export class UpdateManager {

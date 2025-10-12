@@ -1,5 +1,7 @@
 import { Service } from "@freshgum/typedi";
-import { AbstractCommand, CommandCategory, LangManager } from "@root/components";
+
+import { LangManager } from "../../../langs/LangManager";
+import { AbstractCommand, CommandCategory } from "../../AbstractCommand";
 
 @Service([LangManager])
 export class StopCommand extends AbstractCommand {

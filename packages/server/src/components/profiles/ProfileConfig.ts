@@ -26,36 +26,32 @@ export class ProfileConfig implements Profile {
     whiteListUUIDs?: string[];
 
     constructor(config: Partial<Profile>) {
-        merge(this, ProfileConfig.defaults);
-        merge(this, config);
+        this.configVersion = 0;
         this.uuid = randomUUID();
-    }
-
-    private static readonly defaults: Profile = {
-        configVersion: 0,
-        uuid: "",
-        servers: [
+        this.servers = [
             {
                 ip: "127.0.0.1",
                 port: 25565,
                 title: "Test Server",
             },
-        ],
-        sortIndex: 0,
-        javaVersion: 8,
-        version: "",
-        clientDir: "",
-        assetIndex: "",
-        update: [],
-        updateVerify: [],
-        updateExclusions: [],
-        gameJar: "minecraft.jar",
-        mainClass: "net.minecraft.client.main.Main",
-        libraries: [],
-        jvmArgs: [],
-        clientArgs: [],
-        whiteListType: "null",
-    };
+        ];
+        this.sortIndex = 0;
+        this.javaVersion = 8;
+        this.version = "";
+        this.clientDir = "";
+        this.assetIndex = "";
+        this.update = [];
+        this.updateVerify = [];
+        this.updateExclusions = [];
+        this.gameJar = "minecraft.jar";
+        this.mainClass = "net.minecraft.client.main.Main";
+        this.libraries = [];
+        this.jvmArgs = [];
+        this.clientArgs = [];
+        this.whiteListType = "null";
+
+        merge(this, config);
+    }
 
     public toObject() {
         return <Profile>instanceToPlain(this);

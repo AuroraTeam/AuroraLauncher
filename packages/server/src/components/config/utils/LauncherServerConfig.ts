@@ -1,11 +1,11 @@
 import { randomUUID } from "crypto";
 
 // import { Lang } from "@root/components";
-import { AuthProviderConfig } from "@root/components/auth/providers";
 import { HjsonCommented, HjsonHelper } from "@root/helpers";
 import { instanceToPlain, plainToInstance } from "class-transformer";
 
-import { Lang } from "../../langs";
+import { AuthProviderConfig } from "../../auth/providers/AuthProvider";
+import { Lang } from "../../langs/utils";
 import { ApiConfig } from "./ApiConfig";
 
 export class LauncherServerConfig extends HjsonCommented {
@@ -19,21 +19,21 @@ export class LauncherServerConfig extends HjsonCommented {
     auth: AuthProviderConfig;
     api: ApiConfig;
 
-    static getDefaults(): LauncherServerConfig {
-        const config = new LauncherServerConfig();
-        config.configVersion = 0;
-        config.projectID = randomUUID();
-        config.projectName = "";
-        config.lang = "ru";
-        config.branch = "stable";
-        config.env = Environment.DEV;
-        config.mirrors = [];
-        config.auth = AuthProviderConfig.getDefaultConfig();
-        config.api = ApiConfig.getDefaultConfig();
-        return config;
+    constructor() {
+        super();
+
+        this.configVersion = 0;
+        this.projectID = randomUUID();
+        this.projectName = "";
+        this.lang = "ru";
+        this.branch = "stable";
+        this.env = Environment.DEV;
+        this.mirrors = [];
+        this.auth = { type: "accept" };
+        this.api = new ApiConfig();
     }
 
-    public toString(): string {
+    override toString(): string {
         const object = instanceToPlain(this);
 
         HjsonHelper.defineComments(this, object);
@@ -41,7 +41,7 @@ export class LauncherServerConfig extends HjsonCommented {
         return HjsonHelper.toHjson(object);
     }
 
-    public static fromString(json: string): LauncherServerConfig {
+    static fromString(json: string): LauncherServerConfig {
         const data = HjsonHelper.fromHjson<LauncherServerConfig>(json);
 
         const _class = plainToInstance(LauncherServerConfig, data);

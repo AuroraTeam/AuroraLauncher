@@ -1,7 +1,7 @@
 import { SERVERS_METHOD, Server, ServersResponseData } from "@aurora-launcher/core";
 import { Service } from "@freshgum/typedi";
 
-import { ProfilesManager } from "../../../profiles";
+import { ProfilesManager } from "../../../profiles/ProfilesManager";
 import { AbstractRequest } from "../AbstractRequest";
 
 @Service([ProfilesManager])

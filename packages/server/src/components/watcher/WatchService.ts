@@ -2,8 +2,8 @@ import { LogHelper } from "@root/helpers";
 import { FSWatcher, watch } from "chokidar";
 
 export class WatchService {
-    #watcherInstance: FSWatcher;
-    #timer: NodeJS.Timeout;
+    #watcherInstance!: FSWatcher;
+    #timer!: NodeJS.Timeout;
 
     subscribe(dir: string, cwd: string, reload: (path: string) => void) {
         this.#watcherInstance = watch(dir, { ignoreInitial: true, cwd }).on(

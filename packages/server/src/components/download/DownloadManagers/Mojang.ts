@@ -209,12 +209,12 @@ export class MojangManager extends AbstractDownloadManager {
     #resolveNewNative(library: Library): ProfileLibrary {
         const rules = library.rules;
 
-        const { arch } = library.name.match(/natives-\w+(?:-(?<arch>\w+))?/).groups;
+        const { arch } = library.name.match(/natives-\w+(?:-(?<arch>\w+))?/)?.groups || {};
         if (arch) {
-            (rules.find((rule) => rule.action === Action.Allow).os as OS).arch = arch;
+            (rules!.find((rule) => rule.action === Action.Allow)?.os as OS).arch = arch;
         }
 
-        const { path, sha1 } = library.downloads.artifact;
+        const { path, sha1 } = library.downloads.artifact!;
         return {
             path,
             sha1,
@@ -246,42 +246,43 @@ export class MojangManager extends AbstractDownloadManager {
 
         return downloads
             .map(([os, nativeIndex]) => {
+                // natives-windows-${arch}
                 if ((<string>nativeIndex).includes("${arch}")) {
                     return ["32", "64"].map((arch) => {
                         const formattedNativeIndex = (<string>nativeIndex).replace("${arch}", arch);
                         return resolveNative(
-                            library.downloads.classifiers[formattedNativeIndex],
+                            library.downloads.classifiers![formattedNativeIndex]!,
                             <Name>os,
                             `x${arch}`,
                         );
                     });
                 } else {
-                    return resolveNative(library.downloads.classifiers[nativeIndex], <Name>os);
+                    return resolveNative(library.downloads.classifiers![nativeIndex]!, <Name>os);
                 }
             })
             .flat();
     }
 
     #resolveLibrary(library: Library): ProfileLibrary {
-        const { path, sha1 } = library.downloads.artifact;
+        const { path, sha1 } = library.downloads.artifact!;
         return { path, sha1, type: "library", rules: library.rules };
     }
 
     #resolveRulesForNatives(library: Library) {
         if (!library.rules) {
-            return Object.entries(library.natives);
+            return Object.entries(library.natives!);
         }
 
         let res: [string, keyof Classifiers][] = [];
         library.rules.forEach((rule) => {
             if (rule.action === Action.Allow) {
                 if (rule.os) {
-                    res.push([rule.os.name, library.natives[rule.os.name]]);
+                    res.push([rule.os.name, library.natives![rule.os.name]!]);
                 } else {
-                    res.push(...Object.entries(library.natives));
+                    res.push(...Object.entries(library.natives!));
                 }
             } else {
-                res = res.filter(([os]) => os !== rule.os.name);
+                res = res.filter(([os]) => os !== rule.os!.name);
             }
         });
         return res;
@@ -297,6 +298,7 @@ export class MojangManager extends AbstractDownloadManager {
             LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.MojangManager.info.errVerParsing,
             );
+            return;
         }
     }
 

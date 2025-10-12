@@ -1,5 +1,5 @@
 import { Service } from "@freshgum/typedi";
-import type { AuthProvider } from "@root/components/auth/providers";
+import { AuthProvider } from "@root/components/auth/providers/AuthProvider";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { AbstractRequest } from "../../AbstractRequest";

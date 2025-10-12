@@ -14,7 +14,7 @@ export class QuiltManager extends FabricLikeManager {
      * @param clientVer - Версия клиента
      * @param clientName - Название клиента
      */
-    async downloadClient(clientVer: string, clientName: string) {
+    override async downloadClient(clientVer: string, clientName: string) {
         const quiltVersion = await this.getQuiltClientInfo(clientVer);
         if (!quiltVersion) return;
 
@@ -32,22 +32,23 @@ export class QuiltManager extends FabricLikeManager {
         LogHelper.info(this.langManager.getTranslate.DownloadManager.QuiltManager.client.success);
     }
 
-    getQuiltVersions(version: string): Promise<void | VersionMeta[]> {
+    getQuiltVersions(version: string) {
         try {
-            return HttpHelper.getResourceFromJson(`${this.quiltMetaLink}${version}`);
+            return HttpHelper.getResourceFromJson<VersionMeta[]>(`${this.quiltMetaLink}${version}`);
         } catch (error) {
             LogHelper.debug(error);
             LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.QuiltManager.info.errJsonParsing,
             );
+            return;
         }
     }
 
     async getQuiltClientInfo(version: string) {
         const loaders = await this.getQuiltVersions(version);
-        if (!loaders) return;
+        if (!loaders || loaders.length === 0) return;
 
-        const { loader } = loaders[0];
+        const { loader } = loaders[0]!;
 
         try {
             return await HttpHelper.getResourceFromJson<ClientMeta>(
@@ -58,6 +59,7 @@ export class QuiltManager extends FabricLikeManager {
             LogHelper.error(
                 this.langManager.getTranslate.DownloadManager.QuiltManager.info.errClientParsing,
             );
+            return;
         }
     }
 }

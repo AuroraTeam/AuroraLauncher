@@ -36,7 +36,7 @@ export class FabricLikeManager extends MojangManager {
         } catch (error) {
             LogHelper.info(`Downloading ${loaderName} libraries failed`);
             LogHelper.debug(error);
-            return;
+            return [];
         } finally {
             progressBar.stop();
         }

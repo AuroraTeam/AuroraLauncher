@@ -27,7 +27,7 @@ export class JsonAuthProvider implements AuthProvider {
                 ),
             );
         } catch (error) {
-            throw new Error(error.message);
+            throw new Error((error as Error).message);
         }
     }
 
