@@ -1,2 +1,11 @@
 packages:
-    - "packages/*"
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@swc/core'
+  - bufferutil
+  - electron
+  - esbuild
+  - javascript-obfuscator
+  - utf-8-validate

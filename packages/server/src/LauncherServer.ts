@@ -38,7 +38,7 @@ import { SyncProfilesCommand } from "./components/commands/commands/updates/Sync
 import { CommandsManager } from "./components/commands/CommandsManager";
 import { ConfigManager } from "./components/config/ConfigManager";
 import { LangManager } from "./components/langs/LangManager";
-import { LogHelper, StorageHelper } from "./helpers";
+import { LogHelper } from "./helpers";
 import { AuthProviderToken } from "./tokens";
 
 export class LauncherServer /* extends EventEmitter */ {
@@ -65,8 +65,6 @@ export class LauncherServer /* extends EventEmitter */ {
         this.configManager = Container.get(ConfigManager);
         Container.get(ArgsManager);
         this.langManager = Container.get(LangManager);
-
-        StorageHelper.validate();
 
         // this.emit("preInitDone");
     }

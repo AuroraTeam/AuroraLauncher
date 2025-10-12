@@ -1,4 +1,5 @@
 import { randomBytes } from "crypto";
+import { existsSync, mkdirSync } from "fs";
 import { tmpdir } from "os";
 import { resolve } from "path";
 
@@ -10,5 +11,24 @@ export class StorageHelper {
      */
     static getTmpPath() {
         return resolve(tmpdir(), randomBytes(16).toString("hex"));
+    }
+
+    /**
+     * Получить или создать директорию
+     * @param path Путь к директории
+     */
+    static getOrCreateDir(path: string) {
+        if (!existsSync(path)) mkdirSync(path, { recursive: true });
+    }
+
+    /**
+     * Получить нормализованный путь до папки и создать её в случае её отсутствия
+     * @param paths Последовательность путей или сегментов пути
+     * @returns Нормализованный путь до папки
+     */
+    static resolveDir(...paths: string[]) {
+        const path = resolve(...paths);
+        this.getOrCreateDir(path);
+        return path;
     }
 }

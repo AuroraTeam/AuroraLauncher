@@ -1,4 +1,4 @@
-import { PathLike, existsSync, mkdirSync } from "fs";
+import { PathLike } from "fs";
 import { rm } from "fs/promises";
 import { dirname, resolve } from "path";
 
@@ -7,44 +7,29 @@ import { StorageHelper as CoreStorageHelper } from "@aurora-launcher/core";
 import { SystemHelper } from "./SystemHelper";
 
 export class StorageHelper extends CoreStorageHelper {
-    /* Folders */
-    static readonly storageDir: string = process.env.AURORA_STORAGE_OVERRIDE
-        ? resolve(process.env.AURORA_STORAGE_OVERRIDE)
-        : SystemHelper.isStandalone()
-          ? dirname(process.execPath)
-          : __dirname;
-    static readonly gameFilesDir: string = resolve(this.storageDir, "gameFiles");
-    static readonly releaseDir: string = resolve(this.gameFilesDir, "release");
-    static readonly clientsDir: string = resolve(this.gameFilesDir, "clients");
-    static readonly assetsDir: string = resolve(this.gameFilesDir, "assets");
-    static readonly assetsIndexesDir: string = resolve(this.assetsDir, "indexes");
-    static readonly assetsObjectsDir: string = resolve(this.assetsDir, "objects");
-    static readonly librariesDir: string = resolve(this.gameFilesDir, "libraries");
-    static readonly profilesDir: string = resolve(this.storageDir, "profiles");
-    static readonly modulesDir: string = resolve(this.storageDir, "modules");
-    static readonly authlibDir: string = resolve(this.storageDir, "authlib");
-    static readonly logsDir: string = resolve(this.storageDir, "logs");
+    static readonly storageDir: string = this.getStorageDir();
+    static readonly gameFilesDir: string = this.resolveDir("gameFiles");
+    static readonly releaseDir: string = super.resolveDir(this.gameFilesDir, "release");
+    static readonly clientsDir: string = super.resolveDir(this.gameFilesDir, "clients");
+    static readonly assetsDir: string = super.resolveDir(this.gameFilesDir, "assets");
+    static readonly assetsIndexesDir: string = super.resolveDir(this.assetsDir, "indexes");
+    static readonly assetsObjectsDir: string = super.resolveDir(this.assetsDir, "objects");
+    static readonly librariesDir: string = super.resolveDir(this.gameFilesDir, "libraries");
+    static readonly profilesDir: string = this.resolveDir("profiles");
+    static readonly modulesDir: string = this.resolveDir("modules");
+    static readonly authlibDir: string = this.resolveDir("authlib");
+    static readonly logsDir: string = this.resolveDir("logs");
 
-    static validate() {
-        const foldersToCreate: PathLike[] = [
-            this.gameFilesDir,
-            this.releaseDir,
-            this.clientsDir,
-            this.assetsDir,
-            this.assetsIndexesDir,
-            this.assetsObjectsDir,
-            this.librariesDir,
-            this.profilesDir,
-            this.modulesDir,
-            this.authlibDir,
-            this.logsDir,
-        ];
+    private static getStorageDir() {
+        return process.env.AURORA_STORAGE_OVERRIDE
+            ? resolve(process.env.AURORA_STORAGE_OVERRIDE)
+            : SystemHelper.isStandalone()
+              ? dirname(process.execPath)
+              : __dirname;
+    }
 
-        for (const folder of foldersToCreate) {
-            if (!existsSync(folder)) {
-                mkdirSync(folder);
-            }
-        }
+    static override resolveDir(dirname: string) {
+        return super.resolveDir(this.storageDir, dirname);
     }
 
     static rmdirRecursive(path: PathLike) {
