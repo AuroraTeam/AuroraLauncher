@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 
 import { JsonHelper, Profile, ProfileLibrary, ProfileServerConfig } from "@aurora-launcher/core";
-import { instanceToPlain, plainToInstance } from "class-transformer";
+import { instanceToPlain } from "class-transformer";
 import { merge } from "es-toolkit";
 
 export class ProfileConfig implements Profile {
@@ -62,6 +62,8 @@ export class ProfileConfig implements Profile {
     }
 
     public static fromJSON(json: string) {
-        return plainToInstance(ProfileConfig, JsonHelper.parse<ProfileConfig>(json));
+        const data = JsonHelper.parse<ProfileConfig>(json);
+        // TODO Validate
+        return new ProfileConfig(data);
     }
 }
