@@ -3,7 +3,8 @@ import { createWriteStream } from "fs";
 import { mkdir, rename } from "fs/promises";
 import pMap from "p-map";
 import { dirname } from "path";
-import { request } from "undici";
+import { Readable } from "stream";
+import { FormData, request } from "undici";
 import { URL } from "url";
 
 interface Progress {
@@ -26,7 +27,7 @@ export class HttpHelper {
      * Изменить количество одновременно скачиваемых файлов
      * @param concurrency
      */
-    public static setConcurrency(concurrency: number) {
+    static setConcurrency(concurrency: number) {
         this.concurrency = concurrency;
     }
 
@@ -35,7 +36,7 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт содержимое ресурса, в случае успеха
      */
-    public static async getResource(url: string | URL, headers: Record<string, string> | null = null) {
+    static async getResource(url: string | URL, headers: Record<string, string> | null = null) {
         const { body } = await request(url, { headers, throwOnError: true });
         return body.text();
     }
@@ -45,8 +46,22 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт обработанный объект, в случае успеха
      */
-    public static async getResourceFromJson<T>(url: string | URL, headers?: Record<string, string>): Promise<T> {
-        return JsonHelper.fromJson<T>(await this.getResource(url, headers));
+    static async getResourceFromJson<T>(url: string | URL, headers?: Record<string, string>): Promise<T> {
+        return JsonHelper.parse<T>(await this.getResource(url, headers));
+    }
+
+    static async post<T>(
+        url: string | URL,
+        body: string | Buffer | Uint8Array | Readable | null | FormData,
+        headers?: Record<string, string>,
+    ) {
+        const { body: responseBody } = await request(url, {
+            method: "POST",
+            body,
+            headers: { ...headers },
+            throwOnError: true,
+        });
+        return (await responseBody.text()) as T;
     }
 
     /**
@@ -54,14 +69,10 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт обработанный объект, в случае успеха
      */
-    public static async postJson<T>(url: string | URL, json: JsonData, headers?: Record<string, string>) {
-        const { body } = await request(url, {
-            method: "POST",
-            body: JsonHelper.toJson(json),
-            headers: { "Content-Type": "application/json", ...headers },
-            throwOnError: true,
-        });
-        return <T>await body.json();
+    static async postJson<T>(url: string | URL, json: JsonData, headers?: Record<string, string>) {
+        return JsonHelper.parse<T>(
+            await this.post(url, JsonHelper.stringify(json), { "Content-Type": "application/json", ...headers }),
+        );
     }
 
     /**
@@ -73,7 +84,7 @@ export class HttpHelper {
      * @param options.saveToTempFile - сохранять во временный файл, по умолчанию `false`
      * @returns Promise который вернёт название файла в случае успеха
      */
-    public static downloadFile(
+    static downloadFile(
         url: string | URL,
         filePath: string | null,
         options: {
@@ -96,7 +107,7 @@ export class HttpHelper {
      * @param options - список опций:
      * @param options.onProgress - коллбэк, в который передаётся текущий прогресс загрузки, если объявлен
      */
-    public static async downloadSafeFile(
+    static async downloadSafeFile(
         url: string | URL,
         filePath: string,
         options: {
@@ -116,7 +127,7 @@ export class HttpHelper {
      * @param options.onProgress - коллбэк, в который передаётся текущий прогресс загрузки, если объявлен
      * @param options.saveToTempFile - сохранять во временный файл, по умолчанию `false`
      */
-    public static async downloadFiles(
+    static async downloadFiles(
         filesList: File[],
         options: {
             onProgress?: onProgressFunction;

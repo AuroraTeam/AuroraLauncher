@@ -32,7 +32,7 @@ export class ForgeManager extends MojangManager {
             );
             await this.startInstallerFile();
 
-            const versionProfiles: VersionProfiles = JsonHelper.fromJson(
+            const versionProfiles: VersionProfiles = JsonHelper.parse(
                 readFileSync(resolve(this.#tempDir, "version.json")).toString(),
             );
             const lib = this.libParser(versionProfiles.libraries, gameVersion);
@@ -99,7 +99,7 @@ export class ForgeManager extends MojangManager {
     }
 
     async startInstallerFile() {
-        const launcherProfiles = JsonHelper.toJson({
+        const launcherProfiles = JsonHelper.stringify({
             selectedProfile: "(Default)",
             profiles: {
                 "(Default)": {
@@ -147,7 +147,7 @@ export class ForgeManager extends MojangManager {
             });
         }
 
-        const install_profile: InstallProfile = JsonHelper.fromJson(
+        const install_profile: InstallProfile = JsonHelper.parse(
             readFileSync(resolve(this.#tempDir, "install_profile.json")).toString(),
         );
         for (const lib of install_profile.libraries) {

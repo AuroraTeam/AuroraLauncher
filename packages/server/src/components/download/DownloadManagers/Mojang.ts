@@ -105,7 +105,7 @@ export class MojangManager extends AbstractDownloadManager {
         const assetsFile = await HttpHelper.getResource(assetIndex.url);
         await writeFile(indexPath, assetsFile);
 
-        const { objects } = JsonHelper.fromJson<MojangAssets>(assetsFile);
+        const { objects } = JsonHelper.parse<MojangAssets>(assetsFile);
 
         const assetsHashes = Object.values(objects)
             .sort((a, b) => b.size - a.size)

@@ -58,10 +58,10 @@ export class ProfileConfig implements Profile {
     }
 
     public toJSON() {
-        return JsonHelper.toJson(this.toObject(), true);
+        return JsonHelper.stringify(this.toObject(), true);
     }
 
     public static fromJSON(json: string) {
-        return plainToInstance(ProfileConfig, JsonHelper.fromJson<ProfileConfig>(json));
+        return plainToInstance(ProfileConfig, JsonHelper.parse<ProfileConfig>(json));
     }
 }

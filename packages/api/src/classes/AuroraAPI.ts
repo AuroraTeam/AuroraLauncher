@@ -15,6 +15,8 @@ import {
     VerifyResponseData,
 } from "@aurora-launcher/core";
 
+// TODO Отвязать от внутренних хелперов
+
 export class AuroraAPI {
     constructor(private baseUrl: string) {}
 

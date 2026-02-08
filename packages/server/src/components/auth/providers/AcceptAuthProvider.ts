@@ -136,7 +136,7 @@ export class AcceptAuthProvider implements AuthProvider, SkinableAuthProvider {
 
         if (!data.properties) return {};
 
-        const profile = JsonHelper.fromJson<MojangTextures>(
+        const profile = JsonHelper.parse<MojangTextures>(
             Buffer.from(data.properties[0].value, "base64").toString("utf-8"),
         );
 
