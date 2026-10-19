@@ -30,6 +30,7 @@
         "clean": "rimraf dist",
         "prettier": "prettier --write src",
         "typecheck": "tsc --noEmit",
+        "test": "node --test test/*.test.cjs",
         "lint": "eslint",
         "lint:fix": "eslint --fix",
         "start": "node ."

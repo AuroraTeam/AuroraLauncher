@@ -15,26 +15,26 @@ export class Watcher {
     constructor(
         private readonly profilesManager: ProfilesManager,
         private readonly clientsManager: ClientsManager,
-    ) {
-        this.subscription();
-    }
+    ) {}
 
-    subscription() {
-        this.#clientsWatcher.subscribe(
+    async subscription(): Promise<void> {
+        await this.#clientsWatcher.subscribe(
             StorageHelper.clientsDir,
             StorageHelper.clientsDir,
             (path) => {
                 const dir = path.split(sep);
-                this.clientsManager.hashClients(dir[0]);
+                return this.clientsManager.hashClients(dir[0]);
             },
         );
-        this.#profilesWatcher.subscribe(StorageHelper.profilesDir, ".", () =>
+        await this.#profilesWatcher.subscribe(StorageHelper.profilesDir, ".", () =>
             this.profilesManager.reloadProfiles(),
         );
     }
 
     async closeWatcher() {
-        await this.#clientsWatcher.unsubscribe();
-        await this.#profilesWatcher.unsubscribe();
+        await Promise.all([
+            this.#clientsWatcher.unsubscribe(),
+            this.#profilesWatcher.unsubscribe(),
+        ]);
     }
 }

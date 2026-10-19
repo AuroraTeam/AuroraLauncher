@@ -36,9 +36,7 @@ export class UpdateManager {
     constructor(
         private readonly configManager: ConfigManager,
         private readonly langManager: LangManager,
-    ) {
-        this.checkUpdate();
-    }
+    ) {}
 
     public async installUpdate() {
         const latestVersion = await this.checkUpdate();

@@ -4,7 +4,7 @@ import { resolve } from "path";
 import fastifyMultipart from "@fastify/multipart";
 import fastifyStatic, { ListOptionsHtmlFormat } from "@fastify/static";
 import { Service } from "@freshgum/typedi";
-import { LogHelper, StorageHelper } from "@root/helpers";
+import { StorageHelper } from "@root/helpers";
 import fastify, { FastifyInstance } from "fastify";
 
 import { ConfigManager } from "../config/ConfigManager";
@@ -18,15 +18,14 @@ export class WebServerManager {
     constructor(
         private readonly configManager: ConfigManager,
         private readonly langManager: LangManager,
-    ) {
-        this.init();
-    }
+    ) {}
 
     public get server(): FastifyInstance {
+        if (!this.#server) throw new Error("Web server has not been initialized");
         return this.#server;
     }
 
-    private async init() {
+    async init(): Promise<void> {
         const { ssl, useSSL, useHTTP2, disableListing, hideListing } =
             this.configManager.config.api;
 
@@ -39,11 +38,21 @@ export class WebServerManager {
 
         if (useSSL) {
             config.https = {
-                cert: await readFile(resolve(StorageHelper.storageDir, ssl.cert)).catch(() =>
-                    LogHelper.fatal(this.langManager.getTranslate.WebServerManager.certNotFound),
+                cert: await readFile(resolve(StorageHelper.storageDir, ssl.cert)).catch(
+                    (error: unknown) => {
+                        throw new Error(
+                            this.langManager.getTranslate.WebServerManager.certNotFound,
+                            { cause: error },
+                        );
+                    },
                 ),
-                key: await readFile(resolve(StorageHelper.storageDir, ssl.key)).catch(() =>
-                    LogHelper.fatal(this.langManager.getTranslate.WebServerManager.keyNotFound),
+                key: await readFile(resolve(StorageHelper.storageDir, ssl.key)).catch(
+                    (error: unknown) => {
+                        throw new Error(
+                            this.langManager.getTranslate.WebServerManager.keyNotFound,
+                            { cause: error },
+                        );
+                    },
                 ),
             };
         }
@@ -51,8 +60,9 @@ export class WebServerManager {
         try {
             this.#server = fastify(config);
         } catch (error) {
-            LogHelper.debug(error);
-            LogHelper.fatal(this.langManager.getTranslate.WebServerManager.createServerError);
+            throw new Error(this.langManager.getTranslate.WebServerManager.createServerError, {
+                cause: error,
+            });
         }
 
         if (!disableListing) {
@@ -79,7 +89,7 @@ export class WebServerManager {
     }
 
     registerRequest(request: AbstractRequest) {
-        this.#server.route({
+        this.server.route({
             method: request.method,
             url: request.url,
             schema: request.schema!,
@@ -87,8 +97,12 @@ export class WebServerManager {
         });
     }
 
-    start() {
+    async start(): Promise<void> {
         const { host, port } = this.configManager.config.api;
-        this.#server.listen({ host, port });
+        await this.server.listen({ host, port });
+    }
+
+    async stop(): Promise<void> {
+        await this.#server?.close();
     }
 }

@@ -11,11 +11,10 @@ import { LangManager } from "../langs/LangManager";
 export class ClientsManager {
     readonly hashedClients = new Map<string, HashedFile[]>();
 
-    constructor(
-        private readonly langManager: LangManager,
-        client?: string,
-    ) {
-        this.hashClients(client);
+    constructor(private readonly langManager: LangManager) {}
+
+    async init(): Promise<void> {
+        await this.hashClients();
     }
 
     async hashClients(client?: string): Promise<void> {

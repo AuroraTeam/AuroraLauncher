@@ -25,6 +25,7 @@ import { AuthProvider } from "./components/auth/providers/AuthProvider";
 import { JsonAuthProvider } from "./components/auth/providers/JsonAuthProvider";
 import { RejectAuthProvider } from "./components/auth/providers/RejectAuthProvider";
 import { YggdrasilAuthProvider } from "./components/auth/providers/YggdrasilAuthProvider";
+import { ClientsManager } from "./components/clients/ClientsManager";
 import { AboutCommand } from "./components/commands/commands/basic/AboutCommand";
 import { HelpCommand } from "./components/commands/commands/basic/HelpCommand";
 import { LangCommand } from "./components/commands/commands/basic/LangCommand";
@@ -38,10 +39,13 @@ import { SyncProfilesCommand } from "./components/commands/commands/updates/Sync
 import { CommandsManager } from "./components/commands/CommandsManager";
 import { ConfigManager } from "./components/config/ConfigManager";
 import { LangManager } from "./components/langs/LangManager";
+import { ProfilesManager } from "./components/profiles/ProfilesManager";
+import { UpdateManager } from "./components/update/UpdateManager";
+import { Watcher } from "./components/watcher/Watcher";
 import { LogHelper } from "./helpers";
 import { AuthProviderToken } from "./tokens";
 
-export class LauncherServer /* extends EventEmitter */ {
+export class LauncherServer {
     webServer!: WebServerManager;
     authManager!: AuthManager;
 
@@ -49,50 +53,45 @@ export class LauncherServer /* extends EventEmitter */ {
     private langManager!: LangManager;
     private commandsManager!: CommandsManager;
     private authProvider!: AuthProvider;
+    private watcher?: Watcher;
+    private startPromise?: Promise<void>;
 
-    constructor() {
-        // super();
-        this.preInit();
-        this.init();
-        this.postInit();
+    start(): Promise<void> {
+        return (this.startPromise ??= this.initialize());
+    }
+
+    private async initialize(): Promise<void> {
+        try {
+            this.preInit();
+            await this.init();
+            await this.postInit();
+        } catch (error) {
+            await this.stop();
+            throw error;
+        }
     }
 
     private preInit() {
-        // this.emit("preInit");
-
         LogHelper.printVersion();
 
         this.configManager = Container.get(ConfigManager);
         Container.get(ArgsManager);
         this.langManager = Container.get(LangManager);
-
-        // this.emit("preInitDone");
     }
 
-    private init() {
-        // this.emit("init");
-
+    private async init(): Promise<void> {
         this.registerAuthProviders();
-        this.registerCommands();
-        // Container.get(Watcher);
+        await Container.get(ProfilesManager).init();
+        await Container.get(ClientsManager).init();
 
-        // this.emit("initDone");
+        this.webServer = Container.get(WebServerManager);
+        await this.webServer.init();
+
+        this.registerCommands();
+        this.registerRequests();
     }
 
-    // private resolveDependencies() {
-    // this._AuthlibManager = Container.get(AuthlibManager);
-    // this._CommandsManager = Container.get(CommandsManager);
-    // this._ClientsManager = Container.get(ClientsManager);
-    // this._ProfilesManager = Container.get(ProfilesManager);
-    // this._ModulesManager = new ModulesManager(this._LangManager, this); // Temporary
-    // this._UpdateManager = Container.get(UpdateManager);
-    // this.WebServerManager = new WebServerManager(this._ConfigManager, this._LangManager);
-    // Container.set("WebServerManager", this.WebServerManager);
-    // }
-
-    private loadWebServer() {
-        this.webServer = Container.get(WebServerManager);
-
+    private registerRequests() {
         // internal
         this.webServer.registerRequest(Container.get(IndexRequest));
         this.webServer.registerRequest(Container.get(InjectorRequest));
@@ -147,12 +146,26 @@ export class LauncherServer /* extends EventEmitter */ {
         ]);
     }
 
-    private postInit() {
-        // this.emit("postInit");
+    private async postInit(): Promise<void> {
+        await this.webServer.start();
+        this.watcher = Container.get(Watcher);
+        await this.watcher.subscription();
+        this.commandsManager.start();
 
-        this.loadWebServer();
-        this.webServer.start();
+        // Checking for updates is optional and must not delay server readiness.
+        void Container.get(UpdateManager)
+            .checkUpdate()
+            .catch((error: unknown) => LogHelper.error(error));
+    }
 
-        // this.emit("postInitDone");
+    async stop(): Promise<void> {
+        this.commandsManager?.stop();
+        const results = await Promise.allSettled([
+            this.watcher?.closeWatcher(),
+            this.webServer?.stop(),
+        ]);
+        for (const result of results) {
+            if (result.status === "rejected") LogHelper.error(result.reason);
+        }
     }
 }

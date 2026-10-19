@@ -12,8 +12,10 @@ import { ProfileConfig } from "./ProfileConfig";
 export class ProfilesManager {
     private profiles: ProfileConfig[] = [];
 
-    constructor(private readonly langManager: LangManager) {
-        this.loadProfiles();
+    constructor(private readonly langManager: LangManager) {}
+
+    async init(): Promise<void> {
+        await this.reloadProfiles();
     }
 
     private async loadProfiles(): Promise<void> {

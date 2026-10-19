@@ -48,16 +48,22 @@ export class DownloadClientCommand extends AbstractCommand {
         }
 
         this.commandsManager.console.pause();
-        this.watcher.closeWatcher();
-        await new DownloadManager(
-            this.langManager,
-            this.profilesManager,
-            this.configManager,
-        ).downloadClient(gameVersion, clientName);
-        this.profilesManager.reloadProfiles();
-        this.clientsManager.hashClients();
-        this.commandsManager.console.resume();
-        this.watcher.subscription();
+        try {
+            await this.watcher.closeWatcher();
+            await new DownloadManager(
+                this.langManager,
+                this.profilesManager,
+                this.configManager,
+            ).downloadClient(gameVersion, clientName);
+            await this.profilesManager.reloadProfiles();
+            await this.clientsManager.hashClients();
+        } finally {
+            try {
+                await this.watcher.subscription();
+            } finally {
+                this.commandsManager.console.resume();
+            }
+        }
     }
 
     private getDownloadManager(sourceType: string) {

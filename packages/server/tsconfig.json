@@ -14,5 +14,6 @@
             "@root/*": ["./*"]
         },
         "exactOptionalPropertyTypes": false
-    }
+    },
+    "exclude": ["node_modules", "dist", "test"]
 }

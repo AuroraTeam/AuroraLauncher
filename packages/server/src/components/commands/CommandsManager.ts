@@ -9,9 +9,13 @@ import { AbstractCommand } from "./AbstractCommand";
 @Service([LangManager])
 export class CommandsManager {
     public commands: Map<string, AbstractCommand> = new Map();
-    console: ReadLine.Interface;
+    console!: ReadLine.Interface;
 
-    constructor(private readonly langManager: LangManager) {
+    constructor(private readonly langManager: LangManager) {}
+
+    start(): void {
+        if (this.console) return;
+
         this.console = ReadLine.createInterface({
             input: process.stdin,
             output: process.stdout,
@@ -20,6 +24,10 @@ export class CommandsManager {
         });
 
         this.console.on("line", this.handleLine);
+    }
+
+    stop(): void {
+        this.console?.close();
     }
 
     registerCommands(commands: AbstractCommand[]): void {
@@ -59,6 +67,8 @@ export class CommandsManager {
 
         LogHelper.dev(this.langManager.getTranslate.CommandsManager.invokeCmd, cmd);
 
-        this.commands.get(cmd)?.invoke(...args);
+        Promise.resolve()
+            .then(() => this.commands.get(cmd)?.invoke(...args))
+            .catch((error: unknown) => LogHelper.error(error));
     };
 }
