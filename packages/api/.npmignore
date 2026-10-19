@@ -4,3 +4,4 @@ example
 .prettierrc.json
 tsconfig.json
 src
+tsdown.config.ts

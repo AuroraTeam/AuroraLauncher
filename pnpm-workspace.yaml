@@ -1,11 +1,11 @@
 packages:
   - packages/*
 
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@swc/core'
-  - bufferutil
-  - electron
-  - esbuild
-  - javascript-obfuscator
-  - utf-8-validate
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  bufferutil: true
+  electron: true
+  esbuild: true
+  javascript-obfuscator: true
+  utf-8-validate: true

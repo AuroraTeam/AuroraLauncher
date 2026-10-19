@@ -1,8 +1,7 @@
 {
-    "extends": ["@tsconfig/strictest/tsconfig", "@tsconfig/node22/tsconfig"],
+    "extends": ["@tsconfig/strictest/tsconfig", "@tsconfig/node26/tsconfig"],
     "compilerOptions": {
         "declaration": true,
-        "declarationDir": "dist/types",
         "declarationMap": true,
         "emitDeclarationOnly": true,
         "module": "ES2022",
