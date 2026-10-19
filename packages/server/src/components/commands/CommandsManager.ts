@@ -2,16 +2,20 @@ import ReadLine from "readline";
 
 import { Service } from "@freshgum/typedi";
 import { LogHelper } from "@root/helpers";
+import { ShutdownToken } from "@root/tokens";
 
 import { LangManager } from "../langs/LangManager";
 import { AbstractCommand } from "./AbstractCommand";
 
-@Service([LangManager])
+@Service([LangManager, ShutdownToken])
 export class CommandsManager {
     public commands: Map<string, AbstractCommand> = new Map();
     console!: ReadLine.Interface;
 
-    constructor(private readonly langManager: LangManager) {}
+    constructor(
+        private readonly langManager: LangManager,
+        private readonly shutdown: () => Promise<void>,
+    ) {}
 
     start(): void {
         if (this.console) return;
@@ -24,6 +28,9 @@ export class CommandsManager {
         });
 
         this.console.on("line", this.handleLine);
+        this.console.on("SIGINT", () => {
+            void this.shutdown().catch((error: unknown) => LogHelper.error(error));
+        });
     }
 
     stop(): void {

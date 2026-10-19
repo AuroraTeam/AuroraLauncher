@@ -36,8 +36,12 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт содержимое ресурса, в случае успеха
      */
-    static async getResource(url: string | URL, headers: Record<string, string> | null = null) {
-        const { body } = await request(url, { headers, throwOnError: true });
+    static async getResource(
+        url: string | URL,
+        headers: Record<string, string> | null = null,
+        signal?: AbortSignal,
+    ) {
+        const { body } = await request(url, { headers, throwOnError: true, signal });
         return body.text();
     }
 
@@ -46,8 +50,12 @@ export class HttpHelper {
      * @param url - строка или объект URL, содержащий ссылку на ресурс
      * @returns Promise, который вернёт обработанный объект, в случае успеха
      */
-    static async getResourceFromJson<T>(url: string | URL, headers?: Record<string, string>): Promise<T> {
-        return JsonHelper.parse<T>(await this.getResource(url, headers));
+    static async getResourceFromJson<T>(
+        url: string | URL,
+        headers?: Record<string, string>,
+        signal?: AbortSignal,
+    ): Promise<T> {
+        return JsonHelper.parse<T>(await this.getResource(url, headers, signal));
     }
 
     static async post<T>(

@@ -1,11 +1,15 @@
 import { Service } from "@freshgum/typedi";
+import { ShutdownToken } from "@root/tokens";
 
 import { LangManager } from "../../../langs/LangManager";
 import { AbstractCommand, CommandCategory } from "../../AbstractCommand";
 
-@Service([LangManager])
+@Service([LangManager, ShutdownToken])
 export class StopCommand extends AbstractCommand {
-    constructor(langManager: LangManager) {
+    constructor(
+        langManager: LangManager,
+        private readonly shutdown: () => Promise<void>,
+    ) {
         super({
             name: "stop",
             description: langManager.getTranslate.CommandsManager.commands.basic.StopCommand,
@@ -13,7 +17,7 @@ export class StopCommand extends AbstractCommand {
         });
     }
 
-    invoke(): void {
-        process.exit(0);
+    async invoke(): Promise<void> {
+        await this.shutdown();
     }
 }

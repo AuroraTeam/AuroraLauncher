@@ -43,7 +43,7 @@ import { ProfilesManager } from "./components/profiles/ProfilesManager";
 import { UpdateManager } from "./components/update/UpdateManager";
 import { Watcher } from "./components/watcher/Watcher";
 import { LogHelper } from "./helpers";
-import { AuthProviderToken } from "./tokens";
+import { AuthProviderToken, ShutdownToken } from "./tokens";
 
 export class LauncherServer {
     webServer!: WebServerManager;
@@ -55,8 +55,15 @@ export class LauncherServer {
     private authProvider!: AuthProvider;
     private watcher?: Watcher;
     private startPromise?: Promise<void>;
+    private stopPromise?: Promise<void>;
+    private cleanupPromise?: Promise<void>;
+    private stopping = false;
+    private updateManager?: UpdateManager;
 
     start(): Promise<void> {
+        if (this.stopping && !this.startPromise) {
+            return Promise.reject(new Error("Cannot start a stopped LauncherServer"));
+        }
         return (this.startPromise ??= this.initialize());
     }
 
@@ -64,9 +71,11 @@ export class LauncherServer {
         try {
             this.preInit();
             await this.init();
+            if (this.stopping) return;
             await this.postInit();
         } catch (error) {
-            await this.stop();
+            this.stopping = true;
+            await this.cleanup().catch((cleanupError: unknown) => LogHelper.error(cleanupError));
             throw error;
         }
     }
@@ -77,15 +86,30 @@ export class LauncherServer {
         this.configManager = Container.get(ConfigManager);
         Container.get(ArgsManager);
         this.langManager = Container.get(LangManager);
+        Container.set({
+            id: ShutdownToken,
+            value: async () => {
+                try {
+                    await this.stop();
+                } catch (error) {
+                    process.exitCode = 1;
+                    throw error;
+                }
+            },
+            dependencies: [],
+        });
     }
 
     private async init(): Promise<void> {
         this.registerAuthProviders();
         await Container.get(ProfilesManager).init();
+        if (this.stopping) return;
         await Container.get(ClientsManager).init();
+        if (this.stopping) return;
 
         this.webServer = Container.get(WebServerManager);
         await this.webServer.init();
+        if (this.stopping) return;
 
         this.registerCommands();
         this.registerRequests();
@@ -148,24 +172,44 @@ export class LauncherServer {
 
     private async postInit(): Promise<void> {
         await this.webServer.start();
+        if (this.stopping) return;
         this.watcher = Container.get(Watcher);
         await this.watcher.subscription();
+        if (this.stopping) return;
         this.commandsManager.start();
 
         // Checking for updates is optional and must not delay server readiness.
-        void Container.get(UpdateManager)
-            .checkUpdate()
-            .catch((error: unknown) => LogHelper.error(error));
+        this.updateManager = Container.get(UpdateManager);
+        void this.updateManager.checkUpdate().catch((error: unknown) => LogHelper.error(error));
     }
 
-    async stop(): Promise<void> {
-        this.commandsManager?.stop();
-        const results = await Promise.allSettled([
-            this.watcher?.closeWatcher(),
-            this.webServer?.stop(),
-        ]);
-        for (const result of results) {
-            if (result.status === "rejected") LogHelper.error(result.reason);
-        }
+    stop(): Promise<void> {
+        this.stopping = true;
+        return (this.stopPromise ??= this.shutdown());
+    }
+
+    private async shutdown(): Promise<void> {
+        // Let the current startup operation settle before releasing its resources.
+        await this.startPromise?.catch(() => {});
+        await this.cleanup();
+    }
+
+    private cleanup(): Promise<void> {
+        return (this.cleanupPromise ??= this.releaseResources());
+    }
+
+    private async releaseResources(): Promise<void> {
+        const tasks = [
+            () => this.commandsManager?.stop(),
+            () => this.watcher?.stop(),
+            () => this.webServer?.stop(),
+            () => this.updateManager?.stop(),
+        ];
+        const results = await Promise.allSettled(tasks.map((task) => Promise.resolve().then(task)));
+        const errors = results.flatMap((result) =>
+            result.status === "rejected" ? [result.reason] : [],
+        );
+        if (errors.length > 0)
+            throw new AggregateError(errors, "Failed to release server resources");
     }
 }

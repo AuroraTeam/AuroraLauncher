@@ -40,6 +40,7 @@ export class ForgeManager extends MojangManager {
             const mojangProfile = this.profilesManager
                 .getProfiles()
                 .find((p) => p.uuid == profileUUID);
+            if (!mojangProfile) throw new Error(`Minecraft profile not found: ${profileUUID}`);
             const finalLib = this.fixLog4j(mojangProfile.libraries, lib);
 
             let jvm = Array<string>();
@@ -56,7 +57,7 @@ export class ForgeManager extends MojangManager {
                 jvm = versionProfiles.arguments.jvm;
                 game = versionProfiles.arguments.game;
             }
-            this.profilesManager.editProfile(profileUUID, () => ({
+            await this.profilesManager.editProfile(profileUUID, () => ({
                 mainClass: versionProfiles.mainClass,
                 libraries: finalLib,
                 jvmArgs: jvm,
@@ -77,9 +78,11 @@ export class ForgeManager extends MojangManager {
             const manifest = await HttpHelper.getResourceFromJson<Manifest>(
                 "https://api.curseforge.com/v1/minecraft/modloader",
             );
-            const dataInstaller = manifest.data.filter(
+            const dataInstaller = manifest.data.find(
                 (link) => link.gameVersion === gameVersion && link.latest,
-            )[0];
+            );
+            if (!dataInstaller)
+                throw new Error(`Forge installer not found for Minecraft ${gameVersion}`);
             const forgeVersion = dataInstaller.name.slice(6);
             mkdirSync(this.#tempDir);
             const file = await HttpHelper.downloadFile(
@@ -222,16 +225,17 @@ export class ForgeManager extends MojangManager {
     }
 
     fixLog4j(Mlib: Array<ProfileLibrary>, lib: Array<ProfileLibrary>) {
-        const index1 = Mlib.findIndex((x) => x.path.includes("log4j-api"));
-        const index2 = Mlib.findIndex((x) => x.path.includes("log4j-core"));
-        const newIndex1 = lib.findIndex((x) => x.path.includes("log4j-api"));
-        const newIndex2 = lib.findIndex((x) => x.path.includes("log4j-core"));
-        if (newIndex1 !== -1 || newIndex2 !== -1) {
-            Mlib.splice(index1, 1, lib[newIndex1]);
-            Mlib.splice(index2, 1, lib[newIndex2]);
-            lib.splice(newIndex1, 1);
-            lib.splice(newIndex2, 1);
+        const result = [...Mlib];
+        for (const library of lib) {
+            const artifact = ["log4j-api", "log4j-core"].find((name) =>
+                library.path.includes(name),
+            );
+            const index = artifact
+                ? result.findIndex((entry) => entry.path.includes(artifact))
+                : -1;
+            if (index === -1) result.push(library);
+            else result.splice(index, 1, library);
         }
-        return Mlib.concat(lib);
+        return result;
     }
 }

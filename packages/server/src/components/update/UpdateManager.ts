@@ -11,6 +11,7 @@ import { LangManager } from "../langs/LangManager";
 
 @Service([ConfigManager, LangManager])
 export class UpdateManager {
+    private readonly abortController = new AbortController();
     private readonly apiUrl = new URL("versions", "https://api.aurora-launcher.ru/");
 
     private readonly fileTypeMap: Record<string, string> = {
@@ -66,8 +67,10 @@ export class UpdateManager {
     }
 
     public async checkUpdate(): Promise<Version | void> {
+        if (this.abortController.signal.aborted) return;
         LogHelper.info(this.langManager.getTranslate.UpdateManager.check);
         const versionsData = await this.getVersionsData().catch<undefined>(() => undefined);
+        if (this.abortController.signal.aborted) return;
 
         if (!versionsData) {
             return LogHelper.info(this.langManager.getTranslate.UpdateManager.checkEnd);
@@ -102,7 +105,15 @@ export class UpdateManager {
     }
 
     public async getVersionsData(): Promise<VersionsData> {
-        return await HttpHelper.getResourceFromJson<VersionsData>(this.apiUrl);
+        return await HttpHelper.getResourceFromJson<VersionsData>(
+            this.apiUrl,
+            undefined,
+            this.abortController.signal,
+        );
+    }
+
+    public stop(): void {
+        this.abortController.abort();
     }
 
     public needUpdate(latestVersion: string): boolean {

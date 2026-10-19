@@ -30,7 +30,7 @@ export class NeoForgeManager extends MojangManager {
             );
             const lib = this.libParser(versionProfiles.libraries);
             this.libCopy(lib);
-            this.profilesManager.editProfile(profileUUID, (profile) => ({
+            await this.profilesManager.editProfile(profileUUID, (profile) => ({
                 mainClass: versionProfiles.mainClass,
                 libraries: [...profile.libraries, ...lib],
                 jvmArgs: versionProfiles.arguments.jvm,
@@ -129,6 +129,8 @@ export class NeoForgeManager extends MojangManager {
         const minecraftDir = readdirSync(
             resolve(this.#tempDir, "libraries/net/minecraft/client"),
         )[0];
+        if (!minecraftDir)
+            throw new Error("Minecraft client directory missing from NeoForge installation");
         const files = readdirSync(
             resolve(this.#tempDir, "libraries/net/minecraft/client", minecraftDir),
         ).filter((s) => extname(s) === ".jar");
