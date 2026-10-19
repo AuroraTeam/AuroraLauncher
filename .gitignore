@@ -2,4 +2,3 @@ node_modules
 .idea
 .fleet
 package-lock.json
-docs/*

@@ -9,10 +9,21 @@ import { AbstractRequest } from "../AbstractRequest";
 export class UpdatesRequest implements AbstractRequest {
     method = "post";
     url = UPDATES_METHOD;
+    schema = {
+        body: {
+            type: "object",
+            required: ["dir"],
+            properties: { dir: { type: "string", minLength: 1 } },
+        },
+    };
 
     constructor(private clientsManager: ClientsManager) {}
 
     handler(req: FastifyRequest<{ Body: UpdatesRequestData }>): UpdatesResponseData {
-        return this.clientsManager.hashedClients.get(req.body.dir) || [];
+        const files = this.clientsManager.hashedClients.get(req.body.dir);
+        if (!files) {
+            throw Object.assign(new Error("Client not found"), { statusCode: 404 });
+        }
+        return files;
     }
 }

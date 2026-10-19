@@ -3,4 +3,3 @@ node_modules
 .idea
 .fleet
 package-lock.json
-test/*
