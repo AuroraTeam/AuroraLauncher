@@ -2,52 +2,48 @@
     "name": "@aurora-launcher/core",
     "version": "1.0.0",
     "description": "Base library for Aurora Launcher",
-    "type": "module",
-    "main": "./dist/index.js",
-    "types": "./dist/types/index.d.ts",
-    "scripts": {
-        "dev": "tsup --watch",
-        "build": "tsup",
-        "prettier": "prettier --write src",
-        "lint": "eslint",
-        "lint:fix": "eslint --fix",
-        "prepublishOnly": "pnpm run build"
+    "homepage": "https://github.com/AuroraTeam/AuroraLauncher#readme",
+    "bugs": {
+        "url": "https://github.com/AuroraTeam/AuroraLauncher/issues"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/AuroraTeam/AuroraLauncher.git"
-    },
+    "license": "MIT",
     "author": "AuroraTeam",
     "contributors": [
         "JoCat (https://github.com/JoCat)"
     ],
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/AuroraTeam/AuroraLauncher/issues"
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AuroraTeam/AuroraLauncher.git"
     },
-    "homepage": "https://github.com/AuroraTeam/AuroraLauncher#readme",
     "files": [
         "dist",
         "src"
     ],
-    "devDependencies": {
-        "@eslint/js": "^9.39.1",
-        "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@tsconfig/node24": "^24.0.3",
-        "@tsconfig/strictest": "^2.0.8",
-        "@types/node": "^24.10.1",
-        "eslint": "^9.39.1",
-        "eslint-config-prettier": "^10.1.8",
-        "globals": "^15.15.0",
-        "prettier": "^3.7.4",
-        "tsup": "^8.5.1",
-        "typescript": "^5.9.3",
-        "typescript-eslint": "^8.48.1"
+    "type": "module",
+    "main": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
+    "scripts": {
+        "dev": "tsdown --watch",
+        "build": "tsdown",
+        "prepublishOnly": "pnpm run build",
+        "lint": "oxlint",
+        "lint:fix": "oxlint --fix",
+        "fmt": "oxfmt",
+        "fmt:check": "oxfmt --check"
     },
     "dependencies": {
-        "@hapi/bourne": "^3.0.0",
-        "node-stream-zip": "^1.15.0",
-        "p-map": "^7.0.4",
-        "undici": "^6.22.0"
+        "@hapi/bourne": "^4.0.1",
+        "node-stream-zip": "^1.16.0",
+        "p-map": "^7.1.1",
+        "undici": "^6.29.1"
+    },
+    "devDependencies": {
+        "@tsconfig/node26": "^26.0.1",
+        "@tsconfig/strictest": "^2.0.8",
+        "@types/node": "^26.6.5",
+        "oxfmt": "^0.73.0",
+        "oxlint": "^1.88.0",
+        "tsdown": "0.23.1",
+        "typescript": "^7.0.2"
     }
 }

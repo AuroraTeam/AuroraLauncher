@@ -1,7 +1,9 @@
-import { HashHelper } from './HashHelper';
-import { mkdir } from 'fs/promises';
-import StreamZip from 'node-stream-zip';
-import { dirname, extname, join } from 'path';
+import { mkdir } from "fs/promises";
+import { dirname, extname, join } from "path";
+
+import StreamZip from "node-stream-zip";
+
+import { HashHelper } from "./HashHelper";
 
 export class ZipHelper {
     /**
@@ -31,10 +33,7 @@ export class ZipHelper {
                 if (entry.isDirectory) continue;
                 // Если задан whitelist и расширение файла не включено в него, пропускаем
                 // TODO Regex match
-                if (
-                    whitelist.length > 0 &&
-                    !whitelist.includes(extname(entry.name))
-                ) {
+                if (whitelist.length > 0 && !whitelist.includes(extname(entry.name))) {
                     continue;
                 }
 
@@ -45,7 +44,7 @@ export class ZipHelper {
 
                 // Получаем данные записи
                 const data = await zip.entryData(entry);
-                const sha1 = HashHelper.getHash(data, 'sha1');
+                const sha1 = HashHelper.getHash(data, "sha1");
                 extractedFiles.push({
                     path: entry.name,
                     sha1,

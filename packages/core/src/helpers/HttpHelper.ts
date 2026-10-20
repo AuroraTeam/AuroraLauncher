@@ -1,11 +1,13 @@
-import { HashHelper, JsonData, JsonHelper, StorageHelper } from ".";
 import { createWriteStream } from "fs";
 import { mkdir, rename } from "fs/promises";
-import pMap from "p-map";
 import { dirname } from "path";
 import { Readable } from "stream";
-import { FormData, request } from "undici";
 import { URL } from "url";
+
+import pMap from "p-map";
+import { FormData, request } from "undici";
+
+import { HashHelper, JsonData, JsonHelper, StorageHelper } from ".";
 
 interface Progress {
     url: string | URL;
@@ -41,7 +43,11 @@ export class HttpHelper {
         headers: Record<string, string> | null = null,
         signal?: AbortSignal,
     ) {
-        const { body } = await request(url, { headers, throwOnError: true, signal });
+        const { body } = await request(url, {
+            headers,
+            throwOnError: true,
+            signal,
+        });
         return body.text();
     }
 
@@ -79,7 +85,10 @@ export class HttpHelper {
      */
     static async postJson<T>(url: string | URL, json: JsonData, headers?: Record<string, string>) {
         return JsonHelper.parse<T>(
-            await this.post(url, JsonHelper.stringify(json), { "Content-Type": "application/json", ...headers }),
+            await this.post(url, JsonHelper.stringify(json), {
+                "Content-Type": "application/json",
+                ...headers,
+            }),
         );
     }
 

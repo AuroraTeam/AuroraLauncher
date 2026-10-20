@@ -1,7 +1,0 @@
-node_modules
-example
-.editorconfig
-.prettierrc.json
-tsconfig.json
-src
-tsdown.config.ts

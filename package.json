@@ -2,11 +2,11 @@
     "name": "aurora-launcher",
     "private": true,
     "scripts": {
-        "dev": "concurrently -i -n server,launcher,core,api \"pnpm --filter @aurora-launcher/server run dev\" \"pnpm --filter @aurora-launcher/launcher run dev\" \"pnpm --filter @aurora-launcher/core run dev\" \"pnpm --filter @aurora-launcher/api run dev\"",
-        "build:libs": "pnpm --filter @aurora-launcher/core --filter @aurora-launcher/api build"
+        "dev": "concurrently -i -n server,launcher,core \"pnpm --filter @aurora-launcher/server run dev\" \"pnpm --filter @aurora-launcher/launcher run dev\" \"pnpm --filter @aurora-launcher/core run dev\"",
+        "build:libs": "pnpm --filter @aurora-launcher/core build"
     },
     "devDependencies": {
-        "concurrently": "^9.2.1"
+        "concurrently": "^9.2.5"
     },
     "packageManager": "pnpm@12.14.0"
 }

@@ -1,11 +1,16 @@
 packages:
-  - packages/*
+    - packages/*
+
+overrides:
+    # yauzl 2.x silently stops ZIP extraction on recent Node.js versions.
+    "extract-zip>yauzl": "^3.3.1"
 
 allowBuilds:
-  '@parcel/watcher': true
-  '@swc/core': true
-  bufferutil: true
-  electron: true
-  esbuild: true
-  javascript-obfuscator: true
-  utf-8-validate: true
+    "@parcel/watcher": true
+    "@swc/core": true
+    bufferutil: true
+    electron: true
+    electron-winstaller: true
+    esbuild: true
+    javascript-obfuscator: true
+    utf-8-validate: true

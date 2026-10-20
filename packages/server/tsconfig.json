@@ -1,5 +1,5 @@
 {
-    "extends": ["@tsconfig/strictest/tsconfig", "@tsconfig/node22/tsconfig"],
+    "extends": ["@tsconfig/strictest/tsconfig", "@tsconfig/node26/tsconfig"],
     "compilerOptions": {
         "outDir": "./dist/",
         "sourceMap": true,
@@ -9,11 +9,11 @@
         "target": "esnext",
         "esModuleInterop": true,
         "resolveJsonModule": true,
-        "baseUrl": "src",
         "paths": {
-            "@root/*": ["./*"]
+            "@root/*": ["./src/*"]
         },
         "exactOptionalPropertyTypes": false
     },
+    "include": ["src"],
     "exclude": ["node_modules", "dist", "test"]
 }

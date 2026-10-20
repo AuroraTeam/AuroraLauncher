@@ -1,4 +1,4 @@
-import { BinaryLike, createHash } from "crypto";
+import { createHash } from "crypto";
 import { readFile } from "fs/promises";
 
 export class HashHelper {
@@ -8,7 +8,7 @@ export class HashHelper {
      * @param type Тип хеша
      * @returns Хеш данных
      */
-    static getHash(data: BinaryLike, type: string) {
+    static getHash(data: string | NodeJS.ArrayBufferView, type: string) {
         return createHash(type).update(data).digest("hex");
     }
 
