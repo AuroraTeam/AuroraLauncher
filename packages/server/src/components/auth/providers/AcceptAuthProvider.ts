@@ -75,8 +75,8 @@ export class AcceptAuthProvider implements AuthProvider, SkinableAuthProvider {
     }
 
     invalidate({ accessToken, clientToken }: InvalidateRequestData) {
-        this.sessionsDB = this.sessionsDB.filter((user) =>
-            !this.userMatch(user, { accessToken, clientToken }),
+        this.sessionsDB = this.sessionsDB.filter(
+            (user) => !this.userMatch(user, { accessToken, clientToken }),
         );
     }
 
