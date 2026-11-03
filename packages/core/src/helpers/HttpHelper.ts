@@ -1,7 +1,8 @@
 import { createWriteStream } from "fs";
-import { mkdir, rename } from "fs/promises";
-import { dirname } from "path";
+import { mkdir, mkdtemp, rename, rm } from "fs/promises";
+import { dirname, join } from "path";
 import { Readable } from "stream";
+import { pipeline } from "stream/promises";
 import { URL } from "url";
 
 import pMap from "p-map";
@@ -119,22 +120,46 @@ export class HttpHelper {
 
     /**
      * Скачивание во временный файл с последующим переименованием в оригинал
+     * При передаче sha1 основной файл заменяется только после проверки хеша.
      * @param url - строка или объект URL, содержащий ссылку на файл
      * @param filePath - путь до сохраняемого файла
      * @param options - список опций:
      * @param options.onProgress - коллбэк, в который передаётся текущий прогресс загрузки, если объявлен
+     * @param options.sha1 - ожидаемый SHA-1 скачанного файла
      */
     static async downloadSafeFile(
         url: string | URL,
         filePath: string,
         options: {
             onProgress?: onProgressFunction;
+            sha1?: string;
         } = {},
     ) {
         if (filePath === null) throw new Error("File path not found");
 
-        await this.download(url, `${filePath}.safe`, options.onProgress);
-        return await rename(`${filePath}.safe`, filePath);
+        if (options.sha1 !== undefined && !/^[a-f\d]{40}$/i.test(options.sha1)) {
+            throw new Error(`Invalid SHA-1 for ${url.toString()}`);
+        }
+
+        await mkdir(dirname(filePath), { recursive: true });
+        const temporaryDir = await mkdtemp(join(dirname(filePath), ".download-"));
+        const temporaryFile = join(temporaryDir, "file");
+        try {
+            await this.download(url, temporaryFile, options.onProgress);
+            if (
+                options.sha1 !== undefined &&
+                !(await HashHelper.compareFileHash(
+                    temporaryFile,
+                    "sha1",
+                    options.sha1.toLowerCase(),
+                ))
+            ) {
+                throw new Error(`SHA-1 mismatch for ${url.toString()}`);
+            }
+            await rename(temporaryFile, filePath);
+        } finally {
+            await rm(temporaryDir, { recursive: true, force: true });
+        }
     }
 
     /**
@@ -188,19 +213,32 @@ export class HttpHelper {
         onProgress?: onProgressFunction,
         beforeDownload?: (data: { url: string | URL }) => void,
         afterDownload?: (data: { url: string | URL }) => void,
+        redirects = 0,
     ): Promise<string> {
         await mkdir(dirname(filePath), { recursive: true });
 
         const { statusCode, headers, body } = await request(url);
 
         if (statusCode >= 400) {
+            body.on("error", () => {}).destroy();
             throw new Error(`Failed to download ${url.toString()} with status code ${statusCode}`);
         }
 
         const location = <string | undefined>headers["location"];
         // handle redirects
-        if (statusCode > 300 && statusCode < 400 && !!location) {
-            return this.download(location, filePath, onProgress, beforeDownload, afterDownload);
+        if (statusCode >= 300 && statusCode < 400) {
+            body.on("error", () => {}).destroy();
+            if (!location || redirects >= 10) {
+                throw new Error(`Invalid or excessive redirects for ${url.toString()}`);
+            }
+            return this.download(
+                new URL(location, url),
+                filePath,
+                onProgress,
+                beforeDownload,
+                afterDownload,
+                redirects + 1,
+            );
         }
 
         if (onProgress) {
@@ -220,16 +258,9 @@ export class HttpHelper {
             beforeDownload({ url });
         }
 
-        return new Promise((resolve, reject) => {
-            body.pipe(createWriteStream(filePath))
-                .on("finish", () => {
-                    resolve(filePath);
-                    if (afterDownload) {
-                        afterDownload({ url });
-                    }
-                })
-                .on("error", (error) => reject(error));
-        });
+        await pipeline(body, createWriteStream(filePath));
+        afterDownload?.({ url });
+        return filePath;
     }
 
     private static async verifyFileHash(file: File) {
